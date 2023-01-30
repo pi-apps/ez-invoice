@@ -38,7 +38,7 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     width:100%;
-    background: url("/images/MaskBG.svg") ${({ theme }) =>theme.isDark ? "#FFF8E7" : "#FFFFFF"};
+    background: url("/images/MaskBG.svg") ${({ theme }) => theme.colors.background};
 `
 
 const PageMeta = () => {

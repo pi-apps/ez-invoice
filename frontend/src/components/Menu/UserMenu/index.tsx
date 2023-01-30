@@ -1,20 +1,18 @@
-import React, { useState } from 'react'
 import {
-  Button,
-  Flex,
-  LogoutIcon,
-  useModal,
-  UserMenu as UIKitUserMenu,
-  UserMenuItem
-} from '@phamphu19498/pibridge_uikit'
-import styled from 'styled-components';
-import { AuthResult, PaymentDTO, User } from './type';
+  Button, useModal
+} from '@phamphu19498/pibridge_uikit';
 import { axiosClient } from 'config/htttp';
+import { useState } from 'react';
+import styled from 'styled-components';
+import AccpetModal from './AccpetModal';
+import LogoutModal from './LogoutModal';
+import { AuthResult, PaymentDTO, User } from './type';
 
 const UserMenu = () => {
-  const avatarSrc =  undefined
-  
   const [user, setUser] = useState<User | null>(null);
+  const [onPresentAccpetModal] = useModal(<AccpetModal />)
+  const [onPresentLogoutModal] = useModal(<LogoutModal />)
+  
   const signIn = async () => {
     const scopes = ['username', 'payments'];
     const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
@@ -38,32 +36,21 @@ const UserMenu = () => {
   }
   if ( user ) {
     return (
-      <Button onClick={signOut}> Sign out </Button>
+      <CsButton onClick={onPresentLogoutModal}> Sign out </CsButton>
     )
   }
+  // check điều kiện
+  // đã đăng ký gọi hàm login
+  // chưa đăng ký gọi modal accpet để đăng ký
   return (
-    <Button onClick={signIn}>
+    <CsButton onClick={onPresentAccpetModal}>
       Sign in
-    </Button>
+    </CsButton>
   )
-  // return (
-  //   <UIKitUserMenu avatarSrc={avatarSrc}>
-  //     <UserMenuItem>
-  //       <CsFlex alignItems="center" justifyContent="space-between" width="100%">
-  //           Disconnect
-  //         <CsLogoutIcon/>
-  //       </CsFlex>
-  //     </UserMenuItem>
-  //   </UIKitUserMenu>
-  // )
 }
 
 export default UserMenu
 
-
-const CsFlex = styled(Flex)`
-   color: #494949;
-`
-const CsLogoutIcon =styled(LogoutIcon)`
-  fill: #494949;
+const CsButton = styled(Button)`
+    height: 42px;
 `

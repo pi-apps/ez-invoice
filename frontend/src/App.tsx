@@ -1,14 +1,14 @@
-import React, { lazy } from 'react'
-import { Router, Redirect, Route, Switch } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
-import Shop from "./Shop/index"
-import ResetCSS  from './style/ResetCSS'
-import GlobalStyle from './style/Global'
+import { createBrowserHistory } from 'history'
+import React from 'react'
+import { Route, Router, Switch } from 'react-router-dom'
+import Home from 'views/Home'
+import Register from 'views/Register'
 import Menu, { IsOpenProvider } from './components/Menu'
-import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import { ToastListener } from './contexts/ToastsContext'
-import PageLoader from './components/Loader/PageLoader'
-import history from './routerHistory'
+import Shop from "./Shop/index"
+import GlobalStyle from './style/Global'
+import ResetCSS from './style/ResetCSS'
 
 
 // Route-based code splitting
@@ -18,6 +18,7 @@ BigNumber.config({
   EXPONENTIAL_AT: 1000,
   DECIMAL_PLACES: 80,
 })
+const history = createBrowserHistory()
 
 const App: React.FC = () => {
   return (
@@ -28,9 +29,12 @@ const App: React.FC = () => {
         <Menu>
             <Switch>
               <Route path="/" exact>
-                  <Shop />
-              </Route>          
-              <Route component={Shop}/>
+                  <Home />
+              </Route>     
+              <Route path="/register" exact>
+                  <Register />
+              </Route>         
+              <Route component={Home}/>
             </Switch>
         </Menu>
       </IsOpenProvider>

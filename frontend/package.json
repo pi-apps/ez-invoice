@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@phamphu19498/pibridge_uikit": "^1.0.2",
     "@lottiefiles/react-lottie-player": "^3.4.2",
+    "@phamphu19498/pibridge_uikit": "^1.0.2",
     "@reduxjs/toolkit": "^1.5.0",
     "@types/multicodec": "^1.0.0",
     "@types/node": "^13.13.5",
@@ -22,6 +22,8 @@
     "date-fns": "^2.21.3",
     "draft-js": "^0.11.7",
     "easymde": "^2.15.0",
+    "framer-motion": "^8.5.4",
+    "history": "4.10.1",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.21",
     "multicodec": "^2.0.0",
@@ -84,20 +86,23 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.191",
-    "@types/react-transition-group": "^4.4.1",
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
+    "@hookform/resolvers": "^2.9.10",
     "@pancakeswap/eslint-config-pancake": "^1.1.0",
     "@types/jest": "^26.0.23",
+    "@types/lodash": "^4.14.191",
     "@types/react-datepicker": "^3.1.8",
     "@types/react-redux": "^7.1.16",
+    "@types/react-transition-group": "^4.4.1",
     "@types/simplemde": "^1.11.7",
     "eslint": "^7.26.0",
     "husky": "4.3.5",
     "prettier": "^2.3.0",
+    "react-hook-form": "^7.38.0",
     "source-map-explorer": "^2.5.2",
-    "ts-node": "^9.1.1"
+    "ts-node": "^9.1.1",
+    "yup": "^0.32.9"
   },
   "resolutions": {
     "@types/react": "17.0.2",

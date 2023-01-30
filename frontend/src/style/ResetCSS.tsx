@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 const ResetCSS = createGlobalStyle`
   /* prettier-ignore */
-  html, body, div, span, applet, object, iframe,
+  html, body, div, span, applet, object,
   h1, h2, h3, h4, h5, h6, p, blockquote, pre,
   a, abbr, acronym, address, big, cite, code,
   del, dfn, em, img, ins, kbd, q, s, samp,
@@ -35,10 +35,8 @@ const ResetCSS = createGlobalStyle`
   body {
     line-height: 1;
     font-size: 16px;
-    background-color: #FFF8E7 !important;
+    background-color: #FFFFFF !important;
     box-sizing: border-box;
-  
-    /* background: linear-gradient(180deg, rgba(217, 217, 217, 0) 0%, #D9D9D9 51.56%, rgba(217, 217, 217, 0) 100%) !important; */
   }
   ol,
   ul {
@@ -73,7 +71,7 @@ const ResetCSS = createGlobalStyle`
     box-sizing: border-box;
   }
   * {
-    font-family: 'Poppins', serif;
+    font-family: 'Manrope', serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -89,18 +87,6 @@ const ResetCSS = createGlobalStyle`
     box-shadow: inset 0 0 5px ${({ theme }) => theme.colors.input}; 
     border-radius: 10px;
   }
-
-  /* input:focus {
-    outline: none !important;
-    box-shadow: none!important;
-  }
-
-  input:focus-visible {
-    box-shadow: none!important;
-    outline: none !important;
-  } */
-
-  
   #toast-container > .toast-success {
     background-image: none;
     background-color: #e9e9e9;  
@@ -109,7 +95,6 @@ const ResetCSS = createGlobalStyle`
   #toast-container > .toast-error {
     background-image: none;
     background-color: #e9e9e9;
-    color: red !important;
   }
 `;
 
