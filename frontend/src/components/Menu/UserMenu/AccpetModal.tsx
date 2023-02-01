@@ -1,19 +1,17 @@
 
 import { Button, Flex, Modal, Text } from '@phamphu19498/pibridge_uikit';
 import { AccpetIcon, ClockedIcon, UserIcon } from 'components/Svg';
-import { useHistory } from 'react-router-dom';
 
 interface Props {
     onDismiss?: () => void
 }
 
 const AccpetModal: React.FC<Props> = ({ onDismiss }) => {
-    const history = useHistory();
     function declineClick(){
         onDismiss()
     }
     function accpetClick(){
-        history.push("/register")
+        window.location.href = '/register';
         onDismiss()
     }
   return (
@@ -38,7 +36,7 @@ const AccpetModal: React.FC<Props> = ({ onDismiss }) => {
                     Decline
                 </Button>
                 <Button width="48%" onClick={accpetClick}>
-                    Allow
+                        Allow
                 </Button>
             </Flex>
         </Flex>

@@ -2,7 +2,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { save, load } from 'redux-localstorage-simple'
 import { useDispatch } from 'react-redux'
 import updateVersion from './global/actions'
-
+import invoice from "./invoice/reducer"
 
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
@@ -10,7 +10,7 @@ const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
   reducer: {
-   
+    invoice
   },
   middleware: [...getDefaultMiddleware({ thunk: true }), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS }),

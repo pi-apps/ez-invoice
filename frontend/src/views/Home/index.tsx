@@ -1,7 +1,8 @@
 import { Button, Flex } from "@phamphu19498/pibridge_uikit"
 import PageFullWidth from "components/Layout/PageFullWidth"
 import styled from "styled-components"
-import AlertLoginModal from "./components/ModalAlertLogin"
+import ReactPlayer from 'react-player';
+import { Link } from "react-router-dom";
 
 const Home = () => {
    
@@ -9,13 +10,24 @@ const Home = () => {
         <PageFullWidth>
             <CsContainer>
                 <CsCardVideo>
-                    <img src="/images/ImgPi/demo_videos.png" alt="images" style={{width:"100%", height:"100%"}}/>
+                    <ContainerPlayVideo>
+                        <ReactPlayer
+                            url='https://www.youtube.com/watch?v=oUFJJNQGwhk'
+                            width="100%"
+                            height="100%"
+                            playing={true}
+                            controls={false}
+                        />
+                    </ContainerPlayVideo>
                 </CsCardVideo>
-                <Button mt="1.5rem" width="100%">
-                    Start now
-                </Button>
+                <Flex width="100%">
+                    <Link to="invoice" style={{width:"100%"}}>
+                        <Button mt="1.5rem" width="100%">
+                            Start now
+                        </Button>
+                    </Link>
+                </Flex>
             </CsContainer>
-            {/* <AlertLoginModal isAuthencation={!false}/> */}
         </PageFullWidth>
     )
 }
@@ -48,4 +60,10 @@ const CsCardVideo = styled(Flex)`
     > img {
         border-radius:12px;
     }
+`
+const ContainerPlayVideo = styled(Flex)`
+    height: 250px;
+    width: 100%;
+    border-radius:8px;
+    overflow:hidden;
 `
