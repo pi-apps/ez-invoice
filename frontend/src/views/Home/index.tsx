@@ -16,7 +16,7 @@ const Home = () => {
                             width="100%"
                             height="100%"
                             playing={true}
-                            controls={false}
+                            controls={true}
                         />
                     </ContainerPlayVideo>
                 </CsCardVideo>
@@ -43,7 +43,7 @@ const CsContainer = styled(Flex)`
     align-items: center;
     padding: 0px 30px;
     @media only screen and (max-width: 600px) {
-        padding: 0px 10px;
+        padding: 0px 24px;
         min-height: 80vh;
     }
     @media only screen and (min-width: 768px) {

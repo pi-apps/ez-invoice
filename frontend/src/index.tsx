@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import ResetCSS from './style/ResetCSS'
 import GlobalStyle from './style/Global'
 import Menu, { IsOpenProvider } from './components/Menu'
+import Header from './components/Header';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -14,11 +15,8 @@ ReactDOM.render(
             <ResetCSS />
             <GlobalStyle />
             <IsOpenProvider>
-              <Menu>
-                <App />
-              </Menu>
+              <App />
             </IsOpenProvider>
-            
           </BrowserRouter>
       </Providers>
   </React.StrictMode>,

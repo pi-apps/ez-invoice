@@ -1,6 +1,8 @@
 import { Menu as UikitMenu } from '@phamphu19498/pibridge_uikit'
 import { createContext, useContext, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import styled from 'styled-components'
+import Header from '../Header'
 import config from './config'
 import UserMenu from './UserMenu'
 import { getActiveMenuItem, getActiveSubMenuItem } from './utils'
@@ -26,7 +28,9 @@ const Menu = (props:any) => {
   const activeSubMenuItem = getActiveSubMenuItem({ menuItem: activeMenuItem, pathname })  
   return (
     <>
-        <UikitMenu
+        <Header/>
+          
+        {/* <HeaderCustom
             userMenu={<UserMenu/>}
             isDark={false}
             currentLang="en"
@@ -43,10 +47,15 @@ const Menu = (props:any) => {
             }}
             {...props}
             bgColorMenu="#FFF8E7"
-        />
+        /> */}
     </>
 
   )
 }
+
+const HeaderCustom = styled(UikitMenu)`
+  height: 200px !important;   
+ 
+`
 
 export default Menu

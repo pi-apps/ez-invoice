@@ -15,7 +15,7 @@ const PageMeta = () => {
 
 const PageFullWidth: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, ...props }) => {
   return (
-        <Wrapper className='Test'>
+        <Wrapper>
             <PageMeta />
             {children}
         </Wrapper>
@@ -30,5 +30,4 @@ const Wrapper = styled.div`
     justify-content:center;
     align-items:center;
     flex-direction: column;
-    margin-top: 90px;
 `

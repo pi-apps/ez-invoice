@@ -44,7 +44,7 @@ const UserMenu = () => {
   // chưa đăng ký gọi modal accpet để đăng ký
   return (
     <CsButton onClick={onPresentAccpetModal}>
-      Sign in
+      Login
     </CsButton>
   )
 }
@@ -52,5 +52,10 @@ const UserMenu = () => {
 export default UserMenu
 
 const CsButton = styled(Button)`
-    height: 42px;
+  width: 53px;
+  height: 28px;
+  background: #6B39F4;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0px;
 `
