@@ -12,7 +12,7 @@ const Home = () => {
                 <CsCardVideo>
                     <ContainerPlayVideo>
                         <ReactPlayer
-                            url='https://www.youtube.com/watch?v=oUFJJNQGwhk'
+                            url='https://youtu.be/OvpOC6bsv2U'
                             width="100%"
                             height="100%"
                             playing={true}
