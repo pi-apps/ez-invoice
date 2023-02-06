@@ -2,7 +2,7 @@
 ## BUILDER CONTAINER
 ##
 
-FROM node:12.20.0 as builder
+FROM node:18.14.0 as builder
 
 RUN mkdir /app
 
@@ -11,7 +11,7 @@ COPY ./yarn.lock /app/yarn.lock
 
 WORKDIR /app
 
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 # Copy the resources needed to build the app
 # We could copy ./ but it weigh more and bust cache more often
