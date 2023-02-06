@@ -2,7 +2,7 @@ name: Remote SSH command
 on:
   push:
     branches:
-      - test
+      - dev
 jobs:
   build:
     name: Build
