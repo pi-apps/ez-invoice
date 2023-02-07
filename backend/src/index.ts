@@ -18,15 +18,7 @@ import mongoose from 'mongoose';
 // https://stackoverflow.com/questions/65108033/property-user-does-not-exist-on-type-session-partialsessiondata#comment125163548_65381085
 import "./types/session";
 
-const dbName = env.mongo_db_name;
-const mongoUri = `mongodb://${env.mongo_host}/${dbName}`;
-const mongoClientOptions = {
-  authSource: "admin",
-  auth: {
-    username: env.mongo_user,
-    password: env.mongo_password,
-  },
-}
+const mongoUri = env.mongoUri;
 
 
 //
@@ -60,13 +52,7 @@ app.use(cookieParser());
 app.use(session({
   secret: env.session_secret,
   resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: mongoUri,
-    mongoOptions: mongoClientOptions,
-    dbName: dbName,
-    collectionName: 'user_sessions'
-  }),
+  saveUninitialized: false
 }));
 
 
@@ -99,10 +85,9 @@ app.get('/', async (_, res) => {
 
 app.listen(8000, async () => {
   try {
-    mongoose.connect(
-      mongoUri,
-      mongoClientOptions
-  );
+    mongoose.set('strictQuery', false);
+    const db = await mongoose.connect(mongoUri);
+
     // const client = await MongoClient.connect(mongoUri, mongoClientOptions)
     // const db = client.db(dbName);
     // app.locals.orderCollection = db.collection('orders');

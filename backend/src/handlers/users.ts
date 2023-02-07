@@ -10,7 +10,6 @@ export default function mountUserEndpoints(router: Router) {
     try {
       // Verify the user's access token with the /me endpoint:
       const me = await platformAPIClient.get(`/v2/me`, { headers: { 'Authorization': `Bearer ${auth.accessToken}` } });
-      console.log(me);
     } catch (err) {
       console.log(err);
       return res.status(401).json({error: "Invalid access token"}) 
