@@ -15,4 +15,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
+          pwd
+          cd
+          pwd
           sudo bash ~/ez-invoice/deploy/dev.sh
