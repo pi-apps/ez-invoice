@@ -52,7 +52,11 @@ app.use(cookieParser());
 app.use(session({
   secret: env.session_secret,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: mongoUri,
+    collectionName: 'user_sessions'
+  })
 }));
 
 
