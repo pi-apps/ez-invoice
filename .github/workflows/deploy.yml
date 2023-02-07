@@ -15,5 +15,11 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd ez-invoice/deploy
-          bash dev.sh
+          cd ez-invoice
+
+          git restore .
+          git checkout dev
+          git pull
+
+          sudo docker-compose build
+          sudo docker-compose up -d
