@@ -10,6 +10,8 @@ import { MongoClient } from 'mongodb';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payments';
 import mountUserEndpoints from './handlers/users';
+import mountInvoiceEndpoints from './handlers/invoices';
+import mongoose from 'mongoose';
 
 // We must import typedefs for ts-node-dev to pick them up when they change (even though tsc would supposedly
 // have no problem here)
@@ -45,10 +47,11 @@ app.use(logger('common', {
 app.use(express.json())
 
 // Handle CORS:
-app.use(cors({
-  origin: env.frontend_url,
-  credentials: true
-}));
+// app.use(cors({
+//   origin: env.frontend_url,
+//   credentials: true
+// }));
+app.use(cors());
 
 // Handle cookies 🍪
 app.use(cookieParser());
@@ -81,6 +84,11 @@ const userRouter = express.Router();
 mountUserEndpoints(userRouter);
 app.use('/user', userRouter);
 
+// Invoice endpoints under /invoice:
+const userInvoice = express.Router();
+mountInvoiceEndpoints(userRouter);
+app.use('/invoice', userRouter);
+
 // Hello World page to check everything works:
 app.get('/', async (_, res) => {
   res.status(200).send({ message: "Hello, World!" });
@@ -91,10 +99,15 @@ app.get('/', async (_, res) => {
 
 app.listen(8000, async () => {
   try {
-    const client = await MongoClient.connect(mongoUri, mongoClientOptions)
-    const db = client.db(dbName);
-    app.locals.orderCollection = db.collection('orders');
-    app.locals.userCollection = db.collection('users');
+    mongoose.connect(
+      mongoUri,
+      mongoClientOptions
+  );
+    // const client = await MongoClient.connect(mongoUri, mongoClientOptions)
+    // const db = client.db(dbName);
+    // app.locals.orderCollection = db.collection('orders');
+    // app.locals.userCollection = db.collection('users');
+    // app.locals.invoiceCollection = db.collection('invoices');
     console.log('Connected to MongoDB on: ', mongoUri)
   } catch (err) {
     console.error('Connection to MongoDB failed: ', err)

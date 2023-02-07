@@ -22,6 +22,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "mongodb": "^4.0.0",
+    "mongoose": "^6.9.0",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
