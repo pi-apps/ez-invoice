@@ -7,6 +7,7 @@ import ResetCSS from './style/ResetCSS'
 import GlobalStyle from './style/Global'
 import Menu, { IsOpenProvider } from './components/Menu'
 import Header from './components/Header';
+import './i18n';
 
 ReactDOM.render(
   <React.StrictMode>

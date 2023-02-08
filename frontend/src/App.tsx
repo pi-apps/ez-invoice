@@ -19,13 +19,14 @@ BigNumber.config({
 const App: React.FC = () => {
   return (
     <Fragment>
-      <Routes>
-          <Route path="/" element={ <MainLayout><Home/></MainLayout> } />
-          <Route path="register" element={ <Register/> } />
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<Home/>} />
+            <Route path="register" element={ <Register/> } />
+          </Route>
           <Route path="invoice" element={ <Invoices/> } />
-      </Routes>
+        </Routes>
     </Fragment>
-    
   )
 }
 

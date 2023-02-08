@@ -1,8 +1,14 @@
+import { useModal } from '@phamphu19498/pibridge_uikit';
+import { useState } from 'react';
 import Nav from 'react-bootstrap/Nav';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { getUser } from '../../state/user';
+import LoginModal from '../LoginModal';
 import AccountIcon from '../Svg/Icons/AccountIcon';
 import HomeIcon from '../Svg/Icons/Home';
 import InvoiceIcon from '../Svg/Icons/Invoice';
+import { useNavigate } from "react-router-dom";
 
 const styles = {
     main: {
@@ -29,7 +35,25 @@ const NavCustom = styled(Nav)`
 `
 
 const Footer = () => {
+    const navigate = useNavigate();
+    const { t } = useTranslation();
+    const [openLoginModal] = useModal(<LoginModal />)
+    const userData = getUser();
 
+    const handleMenu = (action) => {
+      switch (action) {
+        case "invoice":
+          navigate("/invoice");
+          break;
+        case "account":
+          navigate("/register");
+          break;      
+        default:
+          navigate("/");
+          break;
+      }
+    }
+    
   return (
     <NavCustom
 
@@ -39,17 +63,17 @@ const Footer = () => {
     >
       <Nav.Item style={styles.navItem}>
         <Nav.Link className='d-flex flex-column align-items-center' style={styles.link} href="/">
-            <HomeIcon style={styles.icon} />Home
+            <HomeIcon style={styles.icon} />{t('home')}
         </Nav.Link>
       </Nav.Item>
       <Nav.Item style={styles.navItem}>
-        <Nav.Link className='d-flex flex-column align-items-center' style={styles.link} disabled>
-            <InvoiceIcon style={styles.icon}/>Invoice
+        <Nav.Link className='d-flex flex-column align-items-center' style={styles.link} onClick={!userData ? openLoginModal : () => handleMenu('invoice')}>
+            <InvoiceIcon style={styles.icon}/>{t('invoice')}
         </Nav.Link>
       </Nav.Item>
       <Nav.Item style={styles.navItem}>
-        <Nav.Link className='d-flex flex-column align-items-center' style={styles.link} disabled>
-            <AccountIcon style={styles.icon}/>Account
+        <Nav.Link className='d-flex flex-column align-items-center' style={styles.link} onClick={!userData ? openLoginModal : () => handleMenu('account')}>
+            <AccountIcon style={styles.icon}/>{t('account')}
         </Nav.Link>
       </Nav.Item>
     </NavCustom>
