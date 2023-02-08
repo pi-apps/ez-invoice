@@ -1,16 +1,33 @@
 import { Router } from "express";
-
+import multer from 'multer';
 import platformAPIClient from "../services/platformAPIClient";
 import InvoicesModel from "../models/invoices";
+import utils from "../services/utils";
+
+const upload = multer({ dest: "uploads/"});
 
 export default function mountInvoiceEndpoints(router: Router) {
     // Create an invoice
-    router.post('/create', async (req, res) => {
+    router.post('/create', upload.single("logo"), async (req, res) => {
         if (!req.session.currentUser) {
             return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
         }
         const currentUser = req.session.currentUser;
         const numOfInvoices = await InvoicesModel.countDocuments({ uid: currentUser.uid });
+        const file = req.file;
+        const logoUrl = await utils.uploadToIpfs(file);
+        
+        const items = JSON.parse(req.body.items);
+        let subTotal = 0;
+        for (let i = 0; i < items.length; i++) {
+            subTotal += items[i].price * items[i].quantity;
+        }
+        const tax = req.body.tax;
+        const discount = req.body.discount;
+        const shipping = req.body.shipping;
+        const total = subTotal + subTotal * Number(tax) / 100 - Number(discount) + Number(shipping);
+        const amountPaid = req.body.amountPaid;
+        const amountDue = total - Number(amountPaid);
         const invoice = {
             invoiceId: `EZ_${Date.now()}`,
             invoiceNumber: numOfInvoices + 1,
@@ -22,18 +39,19 @@ export default function mountInvoiceEndpoints(router: Router) {
             dueDate: req.body.dueDate,
             paymentTerms: req.body.paymentTerms,
             poNumber: req.body.poNumber,
-            items: req.body.items,
+            items: items,
             notes: req.body.notes,
             terms: req.body.terms,
-            subTotal: req.body.subTotal,
-            tax: req.body.tax,
-            discount: req.body.discount,
-            shipping: req.body.shipping,
-            total: req.body.total,
-            amountPaid: req.body.amountPaid,
-            amountDue: req.body.amountDue,
+            subTotal: subTotal,
+            tax: tax,
+            discount: discount,
+            shipping: shipping,
+            total: total,
+            amountPaid: amountPaid,
+            amountDue: amountDue,
             status: "unpaid",
-            paid: false
+            paid: false,
+            logoUrl: logoUrl,
         };
 
         const newInvoice = new InvoicesModel(invoice);

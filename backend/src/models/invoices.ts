@@ -27,6 +27,8 @@ const schema = new Schema({
     status: { type: String, default: "draft" },
     paid: { type: Boolean, default: false },
     downloadUrl: { type: String, default: "" },
+    logoUrl: { type: String, default: "" },
+    pi_payment_id: { type: String, default: "" },
 }, schemaOptions);
 
 schema.set('toJSON', { virtuals: true });
