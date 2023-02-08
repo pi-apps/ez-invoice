@@ -3,28 +3,41 @@ import {
 } from '@phamphu19498/pibridge_uikit';
 import { axiosClient } from 'config/htttp';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { AppDispatch } from '../../../state';
+import { getUser } from '../../../state/user';
+import { setUser } from '../../../state/user/actions';
 import AccpetModal from './AccpetModal';
 import LogoutModal from './LogoutModal';
 import { AuthResult, PaymentDTO, User } from './type';
 
 const UserMenu = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [onPresentAccpetModal] = useModal(<AccpetModal />)
-  const [onPresentLogoutModal] = useModal(<LogoutModal />)
+  const dispatch = useDispatch<AppDispatch>();
+  const userData = getUser();
+  const { t } = useTranslation();
   
   const signIn = async () => {
     const scopes = ['username', 'payments'];
+    // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
     const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
-    signInUser(authResult);
-    setUser(authResult.user);
+    const loginUser = await signInUser(authResult);
+    // setUserData(authResult.user);
+    if(loginUser){
+      const userInfor = await axiosClient.get('user/info');
+      if(userInfor){
+        dispatch(setUser(userInfor.data));
+      }
+    }
   } 
   const signOut = () => {
-    setUser(null);
+    dispatch(setUser(null));
     signOutUser();
+    onDismis();
   }
-  const signInUser = (authResult: AuthResult) => {
-    axiosClient.post('/user/signin', {authResult});
+  const signInUser = async (authResult: AuthResult) => {
+    return await axiosClient.post('/user/signin', {authResult});
   }
   const onIncompletePaymentFound = (payment: PaymentDTO) => {
     console.log("onIncompletePaymentFound", payment);
@@ -32,20 +45,24 @@ const UserMenu = () => {
   }
 
   const signOutUser = () => {
-      return axiosClient.get('/user/signout');
+      return axiosClient.post('/user/signout');
   }
-  if ( user ) {
-    return (
-      <CsButton onClick={onPresentLogoutModal}> Sign out </CsButton>
-    )
-  }
+
+  const [onPresentLogoutModal, onDismis] = useModal(<LogoutModal onSubmit={signOut} />);
+
+  // if (user) {
+  //   return (
+  //     <CsButton onClick={onPresentLogoutModal}> Sign out </CsButton>
+  //   )
+  // }
   // check điều kiện
   // đã đăng ký gọi hàm login
   // chưa đăng ký gọi modal accpet để đăng ký
   return (
-    <CsButton onClick={onPresentAccpetModal}>
-      Login
-    </CsButton>
+    userData ?
+      <CsButton onClick={onPresentLogoutModal}>{t('logout')}</CsButton>
+    :
+      <CsButton onClick={signIn}>{t('login')}</CsButton>
   )
 }
 

@@ -1,0 +1,22 @@
+{
+    "start_now": "Start now",
+    "login": "Login",
+    "logout": "Logout",
+    "home": "Home",
+    "invoice": "Invoice",
+    "account": "Account",
+    "first_login_popup": {
+        "header": "Share information with EzInvoice?",
+        "quote": "EzInvoice is requesting the following data or permissions",
+        "auth": "Auth: Authenticate you on this app with your Pi account",
+        "username": "Username: Your Pi username",
+        "button_decline": "Decline",
+        "button_allow": "Allow"
+    },
+    "require_login_popup": {
+        "header": "Please login first",
+        "content": "You need to login to start using EzInvoice.",
+        "button_login": "Login",
+        "button_cancel": "Cancel"
+    }
+}

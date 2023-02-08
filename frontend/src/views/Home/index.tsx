@@ -1,11 +1,22 @@
-import { Button, Flex } from "@phamphu19498/pibridge_uikit"
+import { Button, Flex, useModal } from "@phamphu19498/pibridge_uikit"
 import PageFullWidth from "components/Layout/PageFullWidth"
 import styled from "styled-components"
 import ReactPlayer from 'react-player';
 import { Link } from "react-router-dom";
+import LoginModal from "../../components/LoginModal";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import TranslateButton from "../../components/TranslateButton";
+import { getUser } from "../../state/user";
+import { AuthResult } from "../../components/Menu/UserMenu/type";
+import { setUser } from "../../state/user/actions";
+import { axiosClient } from "../../config/htttp";
 
-const Home = () => {
-   
+const Home = () => {    
+    const { t } = useTranslation();
+    const [openLoginModal] = useModal(<LoginModal />)
+    const userData = getUser();
+
     return (
         <PageFullWidth>
             <CsContainer>
@@ -15,18 +26,19 @@ const Home = () => {
                             url='https://youtu.be/OvpOC6bsv2U'
                             width="100%"
                             height="100%"
+                            light="/images/ImgPi/demo_videos.png"
                             playing={true}
                             controls={true}
                         />
                     </ContainerPlayVideo>
                 </CsCardVideo>
+                {/* <TranslateButton /> */}
                 <Flex width="100%">
-                    <Link to="invoice" style={{width:"100%"}}>
-                        <Button mt="1.5rem" width="100%">
-                            Start now
-                        </Button>
-                    </Link>
+                    <Button mt="1.5rem" width="100%" onClick={!userData ? openLoginModal : undefined}>
+                        {t('start_now')}
+                    </Button>
                 </Flex>
+               
             </CsContainer>
         </PageFullWidth>
     )
@@ -67,3 +79,7 @@ const ContainerPlayVideo = styled(Flex)`
     border-radius:8px;
     overflow:hidden;
 `
+
+function dispatch(arg0: any) {
+    throw new Error("Function not implemented.");
+}
