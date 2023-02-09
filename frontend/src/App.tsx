@@ -7,6 +7,7 @@ import Register from 'views/Register'
 import Invoices from 'views/Invoices'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MainLayout from './components/Layout/mainLayout'
+import CreateInvoices from 'views/CreateInvoices'
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -25,6 +26,7 @@ const App: React.FC = () => {
             <Route path="register" element={ <Register/> } />
           </Route>
           <Route path="invoice" element={ <Invoices/> } />
+          <Route path="newInvoice" element={ <CreateInvoices/> } /> 
         </Routes>
     </Fragment>
   )
