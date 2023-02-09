@@ -7,6 +7,9 @@ import { AppDispatch } from '../../state';
 import { useEffect } from 'react';
 import { axiosClient } from '../../config/htttp';
 import { setUser } from '../../state/user/actions';
+import { useNavigate } from 'react-router-dom';
+import { getUser } from '../../state/user';
+import { Text } from "@phamphu19498/pibridge_uikit"
 
 const styles = {
     navbar: {
@@ -27,7 +30,8 @@ const styles = {
 
 const Header = () => {
     const dispatch = useDispatch<AppDispatch>();
-
+    const userData = getUser();
+    
     useEffect(()=> {
         const fetchUser = async () => {
             const user = await axiosClient.get('user/info');
@@ -51,6 +55,7 @@ const Header = () => {
                     />
                 </Navbar.Brand>
                 <Nav className="justify-content-end">
+                    {userData.firstName && <Text padding='0 10px'>{userData.firstName}</Text>}
                     <UserMenu />
                 </Nav>
             </Container>
