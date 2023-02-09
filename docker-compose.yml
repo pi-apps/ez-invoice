@@ -22,6 +22,7 @@ services:
     build: ./frontend
     environment:
       BACKEND_URL: ${BACKEND_URL}
+      SANDBOX_SDK: "false"
 
   backend:
     build: ./backend
