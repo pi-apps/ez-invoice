@@ -2,9 +2,11 @@ import {
   Button, useModal
 } from '@phamphu19498/pibridge_uikit';
 import { axiosClient } from 'config/htttp';
-import { useState } from 'react';
+import _ from 'lodash';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AppDispatch } from '../../../state';
 import { getUser } from '../../../state/user';
@@ -14,23 +16,33 @@ import LogoutModal from './LogoutModal';
 import { AuthResult, PaymentDTO, User } from './type';
 
 const UserMenu = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
   const { t } = useTranslation();
   
   const signIn = async () => {
     const scopes = ['username', 'payments'];
-    // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
     const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
     const loginUser = await signInUser(authResult);
-    // setUserData(authResult.user);
     if(loginUser){
       const userInfor = await axiosClient.get('user/info');
       if(userInfor){
         dispatch(setUser(userInfor.data));
       }
     }
-  } 
+  }
+
+  useEffect(()=> {
+    if(userData && !_.isEmpty(userData) ){
+      console.log(userData);
+      const firstName = userData.firstName;
+      if(!firstName){
+        navigate('/register')
+      }
+    }
+  }, [userData])
+
   const signOut = () => {
     dispatch(setUser(null));
     signOutUser();
@@ -50,14 +62,6 @@ const UserMenu = () => {
 
   const [onPresentLogoutModal, onDismis] = useModal(<LogoutModal onSubmit={signOut} />);
 
-  // if (user) {
-  //   return (
-  //     <CsButton onClick={onPresentLogoutModal}> Sign out </CsButton>
-  //   )
-  // }
-  // check điều kiện
-  // đã đăng ký gọi hàm login
-  // chưa đăng ký gọi modal accpet để đăng ký
   return (
     userData ?
       <CsButton onClick={onPresentLogoutModal}>{t('logout')}</CsButton>

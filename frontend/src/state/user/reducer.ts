@@ -3,16 +3,16 @@ import { setUser } from "./actions"
 import { UserType } from "./types"
 
 interface globalStateUser {
-    user: UserType
+    userInfor: UserType | null
 }
 
 export const initialState: globalStateUser = {
-    user: null
+    userInfor: null
 }
 
 export default createReducer(initialState, (builder) => 
    builder
     .addCase(setUser, (state, action) => {
-      state.user = action.payload
+      state.userInfor = action.payload
     })
 )    

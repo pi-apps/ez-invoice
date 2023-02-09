@@ -7,6 +7,7 @@ import Register from 'views/Register'
 import Invoices from 'views/Invoices'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MainLayout from './components/Layout/mainLayout'
+import { ToastListener } from './contexts/ToastsContext'
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -23,9 +24,11 @@ const App: React.FC = () => {
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home/>} />
             <Route path="register" element={ <Register/> } />
+            <Route path="account" element={ <Register/> } />
           </Route>
           <Route path="invoice" element={ <Invoices/> } />
         </Routes>
+        <ToastListener/>
     </Fragment>
   )
 }
