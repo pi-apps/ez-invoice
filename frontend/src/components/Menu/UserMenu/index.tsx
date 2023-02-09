@@ -24,7 +24,10 @@ const UserMenu = () => {
   const signIn = async () => {
     const scopes = ['username', 'payments'];
     const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
+    console.log("authResult", authResult);
+    console.log("userData", userData);
     const loginUser = await signInUser(authResult);
+    console.log("loginUser", loginUser);
     if(loginUser){
       const userInfor = await axiosClient.get('user/info');
       if(userInfor){
