@@ -19,13 +19,16 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
+    "ejs": "^3.1.8",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "mongodb": "^4.0.0",
     "mongoose": "^6.9.0",
     "moralis": "^2.13.0",
     "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "pdf-creator-node": "^2.3.5",
+    "puppeteer": "^19.6.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.11",

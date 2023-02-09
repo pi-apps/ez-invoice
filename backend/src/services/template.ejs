@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #F8F9FD;
+        padding: 80px;
+    }
+    table, td, th {  
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        padding: 15px;
+    }
+  </style>
+  <body>
+    <div style="display: flex; flex-direction: row;">
+      <div style="flex: 1;">
+        <img src="<%= logoUrl %>" alt="logo" height="80px" width="80px" />
+      </div>
+      <div style="flex: 1; text-align: right;">
+        <h1 style="text-align: right;">INVOICE</h1>
+        <h3 style="text-align: right;">#<%= invoiceNumber %></h3>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: row;">
+      <div style="flex: 1;">
+        <div style="display: flex; flex-direction: row;">
+          <div style="flex: 1;">
+            <p>Bill From:</p>
+            <p style="font-weight: bold"><%= billFrom %></p>
+            <p>Bill To</p>
+            <p style="font-weight: bold"><%= billTo %></p>
+          </div>
+          <div style="flex: 1; text-align: right;"></div>
+        </div>
+      </div>
+      <div style="flex: 1;">
+        <div style="display: flex; flex-direction: row;">
+          <div style="flex: 1; text-align: right;">
+            <p>Issue Date:</p>
+            <p>Due Date:</p>
+            <% if (paymentTerms) { %>
+              <p>Payment Terms:</p>
+            <% } %>
+            <% if (poNumber) { %>
+              <p>PO Number:</p>
+            <% } %>
+            <p style="font-weight: bold">Balance Due</p>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <p><%= issueDate %></p>
+            <p><%= dueDate %></p>
+            <p><%= paymentTerms %></p>
+            <p><%= poNumber %></p>
+            <p style="font-weight: bold"><%= amountDue.toFixed(2) %> Pi</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table>
+      <tr style="text-align: left;">
+        <th>ITEM</th>
+        <th>QUANTITY</th>
+        <th>PRICE</th>
+        <th>TOTAL</th>
+      </tr>
+      <% for (let i = 0; i < items.length; i++) { %>
+        <tr>
+          <td><%= items[i].name %></td>
+          <td style="text-align: right;"><%= items[i].quantity %></td>
+          <td style="text-align: right;"><%= items[i].price.toFixed(2) %> Pi</td>
+          <td style="text-align: right;"><%= items[i].total.toFixed(2) %> Pi</td>
+        </tr>
+      <% } %>
+    </table>
+    <div style="display: flex; flex-direction: row;">
+      <div style="flex: 1;">
+        </div>
+      <div style="flex: 1; text-align: right;">
+        <div style="display: flex; flex-direction: row;">
+          <div style="flex: 1; text-align: right;">
+            <p>Subtotal:</p>
+            <p>Tax (<%= tax %>%):</p>
+            <p>Discount:</p>
+            <p>Shipping:</p>
+            <p>Total:</p>
+            <p>Amount Paid:</p>
+            <p>Amount Due:</p>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <p><%= subTotal.toFixed(2) %> Pi</p>
+            <p><%= (subTotal * tax / 100).toFixed(2) %> Pi</p>
+            <p><%= discount.toFixed(2) %> Pi</p>
+            <p><%= shipping.toFixed(2) %> Pi</p>
+            <p><%= total.toFixed(2) %> Pi</p>
+            <p><%= amountPaid.toFixed(2) %> Pi</p>
+            <p><%= amountDue.toFixed(2) %> Pi</p>
+          </div>
+        </div>
+        </div>
+    </div>
+  </body>
+</html>

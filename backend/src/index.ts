@@ -1,3 +1,5 @@
+require("dotenv").config();
+const Moralis = require("moralis").default;
 import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
@@ -98,6 +100,11 @@ app.listen(8000, async () => {
     // app.locals.userCollection = db.collection('users');
     // app.locals.invoiceCollection = db.collection('invoices');
     console.log('Connected to MongoDB on: ', mongoUri)
+
+    const MORALIS_API_KEY = process.env.MORALIS_API_KEY;
+    await Moralis.start({
+      apiKey: MORALIS_API_KEY,
+    });
   } catch (err) {
     console.error('Connection to MongoDB failed: ', err)
   }
