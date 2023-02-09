@@ -1,13 +1,12 @@
-require("dotenv").config();
 const Moralis = require("moralis").default;
+const pdf = require("pdf-creator-node");
+const puppeteer = require('puppeteer');
+const ejs = require('ejs');
 import fs from "fs";
 
-const MORALIS_API_KEY = process.env.MORALIS_API_KEY;
+const template = fs.readFileSync("./src/services/template.ejs", "utf8");
 
 async function uploadToIpfs(file: any) {
-  await Moralis.start({
-      apiKey: MORALIS_API_KEY,
-  });
   const uploadArray = [
       {
           path: file.filename,
@@ -17,8 +16,50 @@ async function uploadToIpfs(file: any) {
   const response = await Moralis.EvmApi.ipfs.uploadFolder({
       abi: uploadArray,
   });
-  
+  // delete file after upload
+  fs.unlinkSync(file.path);
   return response.result[0].path;
 }
 
-export default { uploadToIpfs };
+async function generatePdf(invoice: any) {
+  let items = invoice.items;
+  for (let i = 0; i < items.length; i++) {
+    items[i].total = Number(items[i].price) * Number(items[i].quantity);
+  }
+  const data = {
+    invoiceNumber: invoice.invoiceNumber,
+    logoUrl: invoice.logoUrl,
+    billFrom: invoice.billFrom,
+    billTo: invoice.billTo,
+    shipTo: invoice.shipTo,
+    issueDate: new Date(invoice.issueDate).toLocaleDateString("en-US"),
+    dueDate: new Date(invoice.dueDate).toLocaleDateString("en-US"),
+    paymentTerms: invoice.paymentTerms,
+    poNumber: invoice.poNumber,
+    items: items,
+    notes: invoice.notes,
+    terms: invoice.terms,
+    subTotal: invoice.subTotal,
+    tax: invoice.tax,
+    discount: invoice.discount,
+    shipping: invoice.shipping,
+    total: invoice.total,
+    amountPaid: invoice.amountPaid,
+    amountDue: invoice.amountDue,
+  }
+  const html = ejs.render(template, data);
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setContent(html);
+  const buffer = await page.pdf({ format: 'A4' });
+  await browser.close();
+  fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, buffer);
+  const download = {
+    filename: `${invoice.invoiceId}.pdf`,
+    path: `./downloads/${invoice.invoiceId}.pdf`,
+  }
+  const downloadUrl = uploadToIpfs(download);
+  return downloadUrl;
+}
+
+export default { uploadToIpfs, generatePdf };
