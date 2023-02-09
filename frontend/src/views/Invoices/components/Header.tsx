@@ -1,5 +1,6 @@
 import React from "react";
 import PageFullWidth from "components/Layout/PageFullWidth";
+import Navbar from 'react-bootstrap/Navbar';
 import styled from "styled-components";
 import Container from "components/Layout/Container";
 import { Flex, Text, Button } from "@phamphu19498/pibridge_uikit";
@@ -8,9 +9,11 @@ const Header = () => {
     return (
         <ContainerHeader>
             <Text fontSize="20px" bold>Invoices</Text>
-            <Button>
-                New invoice
-            </Button>
+            <Navbar.Brand href="/newInvoice">
+                <Button>
+                    New invoice
+                </Button>
+            </Navbar.Brand>
         </ContainerHeader>
     )
 }
