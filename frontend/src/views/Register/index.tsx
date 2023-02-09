@@ -12,13 +12,17 @@ import { axiosClient } from '../../config/htttp'
 import { getUser } from '../../state/user'
 import { ContainerInput, CsInput, FormSubmit, WrapInput } from "./components/styles"
 import useToast from '../../hooks/useToast'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../../state/user/actions'
 
 const Register = () => {
     // form validation rules 
     const { toastSuccess, toastError } = useToast()
     const userInfor = getUser();
     const navigate = useNavigate();
+    const location = useLocation();
+    const dispatch = useDispatch();
     const validationSchema = Yup.object().shape({
         email: Yup.string().required('Email is required').min(4, 'Emails are between 4 and 160 characters in length').max(160, 'Emails are between 4 and 160 characters in length'),
         firstName: Yup.string().required('First name is required').max(100, 'First name max 100 characters in length'),
@@ -37,7 +41,8 @@ const Register = () => {
         const submitReq = await axiosClient.post('user/update', data);
         if(submitReq.status == 200 || submitReq.status == 201){
             toastSuccess('update successful');
-            if(!userInfor){
+            dispatch(setUser(submitReq.data));
+            if(location && location.pathname == "/register"){
                 navigate("/");
             }
         }else {

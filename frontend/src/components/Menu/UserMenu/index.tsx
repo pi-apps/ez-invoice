@@ -23,17 +23,23 @@ const UserMenu = () => {
   
   const signIn = async () => {
     const scopes = ['username', 'payments'];
-    const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
-    console.log("authResult", authResult);
-    console.log("userData", userData);
-    const loginUser = await signInUser(authResult);
-    console.log("loginUser", loginUser);
-    if(loginUser){
-      const userInfor = await axiosClient.get('user/info');
-      if(userInfor){
-        dispatch(setUser(userInfor.data));
+    window.Pi.authenticate(scopes, onIncompletePaymentFound).then(async function(auth) {
+      console.log("authResult", auth);
+      console.log("userData", userData);
+      const loginUser = await signInUser(auth);
+      console.log("loginUser", loginUser);
+      if(loginUser){
+        const userInfor = await axiosClient.get('user/info');
+        if(userInfor){
+          dispatch(setUser(userInfor.data));
+        }
       }
-    }
+      console.log(`Hi there! You're ready to make payments!`);
+    }).catch(function(error) {
+      console.error(error);
+    });
+    // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
+    
   }
 
   useEffect(()=> {
