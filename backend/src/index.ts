@@ -41,11 +41,11 @@ app.use(logger('common', {
 app.use(express.json())
 
 // Handle CORS:
-// app.use(cors({
-//   origin: env.frontend_url,
-//   credentials: true
-// }));
-app.use(cors());
+app.use(cors({
+  origin: env.frontend_url,
+  credentials: true
+}));
+// app.use(cors());
 
 // Handle cookies 🍪
 app.use(cookieParser());
