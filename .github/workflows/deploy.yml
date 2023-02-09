@@ -15,6 +15,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
+          eval "$(ssh-agent -s)"
           ssh-add .ssh/github-deploy-key
           cd ez-invoice
 
