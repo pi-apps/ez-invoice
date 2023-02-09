@@ -26,10 +26,10 @@ const Register = () => {
         language: Yup.string().required('Language is required')
     });
     const InitValues = {
-        firstName: userInfor.firstName, 
-        lastName: userInfor.lastName, 
-        email: userInfor.email,
-        language: userInfor.language
+        firstName: userInfor?.firstName || "", 
+        lastName: userInfor?.lastName || "", 
+        email: userInfor?.email || "",
+        language: userInfor?.language || "en"
     }
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
     const { handleSubmit, formState: { errors } , control, getValues, setValue } = useForm(formOptions);

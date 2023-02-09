@@ -35,7 +35,6 @@ const UserMenu = () => {
 
   useEffect(()=> {
     if(userData && !_.isEmpty(userData) ){
-      console.log(userData);
       const firstName = userData.firstName;
       if(!firstName){
         navigate('/register')
