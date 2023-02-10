@@ -101,4 +101,18 @@ export default function mountInvoiceEndpoints(router: Router) {
         await InvoicesModel.updateOne({ uid: currentUser.uid, invoiceId: req.params.invoiceId }, { downloadUrl: downloadUrl });
         return res.status(200).json(downloadUrl);
     });
+
+    // send email an invoice
+    router.post('/send', async (req, res) => {
+        if (!req.session.currentUser) {
+            return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+        }
+        const currentUser = req.session.currentUser
+        const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: req.body.invoiceId });
+        if (!invoice) {
+            return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
+        }
+        await utils.sendEmail(invoice, req.body.email);
+        return res.status(200).json({ message: "Email sent" });
+    });
 }

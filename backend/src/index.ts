@@ -13,6 +13,7 @@ import env from './environments';
 import mountPaymentsEndpoints from './handlers/payments';
 import mountUserEndpoints from './handlers/users';
 import mountInvoiceEndpoints from './handlers/invoices';
+import sesService from "./services/aws-ses-service";
 import mongoose from 'mongoose';
 
 // We must import typedefs for ts-node-dev to pick them up when they change (even though tsc would supposedly
@@ -41,11 +42,11 @@ app.use(logger('common', {
 app.use(express.json())
 
 // Handle CORS:
-app.use(cors({
-  origin: env.frontend_url,
-  credentials: true
-}));
-// app.use(cors());
+// app.use(cors({
+//   origin: env.frontend_url,
+//   credentials: true
+// }));
+app.use(cors());
 
 // Handle cookies 🍪
 app.use(cookieParser());
@@ -105,6 +106,7 @@ app.listen(8000, async () => {
     await Moralis.start({
       apiKey: MORALIS_API_KEY,
     });
+    sesService.init();
   } catch (err) {
     console.error('Connection to MongoDB failed: ', err)
   }

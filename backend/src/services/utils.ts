@@ -1,10 +1,12 @@
+require('dotenv').config()
 const Moralis = require("moralis").default;
 const pdf = require("pdf-creator-node");
 const puppeteer = require('puppeteer');
 const ejs = require('ejs');
 import fs from "fs";
+import sesService from "./aws-ses-service";
 
-const template = fs.readFileSync("./src/services/template.ejs", "utf8");
+const template = fs.readFileSync("./src/services/templatePDF.ejs", "utf8");
 
 async function uploadToIpfs(file: any) {
   const uploadArray = [
@@ -16,8 +18,6 @@ async function uploadToIpfs(file: any) {
   const response = await Moralis.EvmApi.ipfs.uploadFolder({
       abi: uploadArray,
   });
-  // delete file after upload
-  fs.unlinkSync(file.path);
   return response.result[0].path;
 }
 
@@ -62,4 +62,16 @@ async function generatePdf(invoice: any) {
   return downloadUrl;
 }
 
-export default { uploadToIpfs, generatePdf };
+async function sendEmail(invoice: any, email: string) {
+  const templatePath = "send-invoice.html";
+  const params = {
+      "title": `[PiBridge] Invoice #${invoice.invoiceNumber}`,
+      "invoiceId": invoice.invoiceId,
+      "invoiceNumber": invoice.invoiceNumber,
+      "amountDue": invoice.amountDue,
+      "paymentUrl": `${process.env.PAYMENT_GATEWAY_URL}/${invoice.invoiceId}`,   
+  }
+  // Send otp via email
+  await sesService.sendEmailByTemplate([email], templatePath, params);
+}
+export default { uploadToIpfs, generatePdf, sendEmail };
