@@ -25,18 +25,18 @@ const Register = () => {
     const dispatch = useDispatch();
     const validationSchema = Yup.object().shape({
         email: Yup.string().required('Email is required').min(4, 'Emails are between 4 and 160 characters in length').max(160, 'Emails are between 4 and 160 characters in length'),
-        firstName: Yup.string().required('First name is required').max(100, 'First name max 100 characters in length'),
-        lastName: Yup.string().required('Lastname is required').max(100, 'Lastname max 100 characters in length'),
+        firstName: Yup.string().required('First name is required').matches(/^(\S+$)/g, 'Please input alphabet').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').max(50, 'First name max 50 characters in length'),
+        lastName: Yup.string().required('Last name is required').matches(/^(\S+$)/g, 'Please input alphabet').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').max(50, 'Last name max 50 characters in length'),
         language: Yup.string().required('Language is required')
     });
     const InitValues = {
         firstName: userInfor?.firstName || "", 
-        lastName: userInfor?.lastName || "", 
+        lastName: userInfor?.lastName || "",  
         email: userInfor?.email || "",
         language: userInfor?.language || "en"
     }
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
-    const { handleSubmit, formState: { errors } , control, getValues, setValue } = useForm(formOptions);
+    const { handleSubmit, formState: { errors, isValid }, control, getValues, setValue } = useForm(formOptions);
     const onSubmit = async data => {
         const submitReq = await axiosClient.post('user/update', data);
         if(submitReq.status == 200 || submitReq.status == 201){
@@ -153,7 +153,7 @@ const Register = () => {
                             <CustomMessageError>{getMessageError}</CustomMessageError> 
                         } */}
                         <Flex width="100%" mt="1rem">
-                            <Button
+                            <Button disabled={!isValid}
                                 width="100%"
                                 type="submit"
                                 value="Submit"
