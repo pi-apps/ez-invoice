@@ -3,13 +3,14 @@ import { createBrowserHistory } from 'history'
 import React, { Fragment } from 'react'
 import { Route, Routes } from "react-router-dom"
 import Home from 'views/Home'
-import Register from 'views/Register'
-import Invoices from 'views/Invoices'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MainLayout from './components/Layout/mainLayout'
 import CreateInvoices from 'views/CreateInvoices'
 import DetailSent from 'views/Invoices/SentTabContent/DetailSent'
 import DetailReceived from 'views/Invoices/ReceiveContent/DetailReceived'
+import { ToastListener } from './contexts/ToastsContext'
+import Register from 'views/Register'
+import Invoices from 'views/Invoices'
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -26,12 +27,14 @@ const App: React.FC = () => {
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home/>} />
             <Route path="register" element={ <Register/> } />
+            <Route path="account" element={ <Register/> } />
           </Route>
           <Route path="invoice" element={ <Invoices/> } />
           <Route path="newInvoice" element={ <CreateInvoices/> } /> 
           <Route path="detailSent/:slug" element={ <DetailSent /> } /> 
           <Route path="detailReceived/:slug" element={ <DetailReceived /> } /> 
         </Routes>
+        <ToastListener/>
     </Fragment>
   )
 }

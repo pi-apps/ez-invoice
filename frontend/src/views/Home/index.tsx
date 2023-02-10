@@ -2,7 +2,7 @@ import { Button, Flex, useModal } from "@phamphu19498/pibridge_uikit"
 import PageFullWidth from "components/Layout/PageFullWidth"
 import styled from "styled-components"
 import ReactPlayer from 'react-player';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoginModal from "../../components/LoginModal";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,7 @@ import { setUser } from "../../state/user/actions";
 import { axiosClient } from "../../config/htttp";
 
 const Home = () => {    
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const [openLoginModal] = useModal(<LoginModal />)
     const userData = getUser();
@@ -34,7 +35,7 @@ const Home = () => {
                 </CsCardVideo>
                 {/* <TranslateButton /> */}
                 <Flex width="100%">
-                    <Button mt="1.5rem" width="100%" onClick={!userData ? openLoginModal : undefined}>
+                    <Button mt="1.5rem" width="100%" onClick={!userData ? openLoginModal : () => navigate("/invoice")}>
                         {t('start_now')}
                     </Button>
                 </Flex>

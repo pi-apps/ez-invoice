@@ -30,4 +30,5 @@ const Wrapper = styled.div`
     justify-content:center;
     align-items:center;
     flex-direction: column;
+    margin-bottom: 100px;
 `

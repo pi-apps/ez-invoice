@@ -80,6 +80,7 @@ export default function mountUserEndpoints(router: Router) {
           "firstName": data.firstName,
           "lastName": data.lastName,
           "email": data.email,
+          "language": data.language
         } },
         { new: true },
       )
