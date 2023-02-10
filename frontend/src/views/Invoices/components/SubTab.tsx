@@ -25,12 +25,12 @@ export default SubTab
 
 const ContainerSubTab = styled(Flex)`
     width:100%;
-    height:70px;
+    height:48px;
     flex-direction:row;
     justify-content:space-between;
     align-items:center;
     padding:0px 12px;
-    margin-top:1rem;
+    margin-top:13px;
 `
 const TabButton = styled(Flex)<{isActive:boolean}>`
     width: 50%;

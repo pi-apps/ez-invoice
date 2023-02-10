@@ -16,7 +16,8 @@ const styles = {
         bottom: 0,
         width: '100%',
         padding: '10px 0px',
-        boxShadow: 'rgb(32 28 28 / 27%) 0px -5px 5px -5px'
+        boxShadow: 'rgb(32 28 28 / 27%) 0px -5px 5px -5px',
+        background: '#fff',
     },
     navItem: {
        

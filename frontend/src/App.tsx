@@ -8,6 +8,8 @@ import Invoices from 'views/Invoices'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MainLayout from './components/Layout/mainLayout'
 import CreateInvoices from 'views/CreateInvoices'
+import DetailSent from 'views/Invoices/SentTabContent/DetailSent'
+import DetailReceived from 'views/Invoices/ReceiveContent/DetailReceived'
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -27,6 +29,8 @@ const App: React.FC = () => {
           </Route>
           <Route path="invoice" element={ <Invoices/> } />
           <Route path="newInvoice" element={ <CreateInvoices/> } /> 
+          <Route path="detailSent/:slug" element={ <DetailSent /> } /> 
+          <Route path="detailReceived/:slug" element={ <DetailReceived /> } /> 
         </Routes>
     </Fragment>
   )

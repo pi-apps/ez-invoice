@@ -75,6 +75,7 @@ const ContainerSubTab = styled(Flex)`
     align-items:center;
     padding:0px 12px;
     margin-top:1rem;
+    margin-bottom:1rem;
 `
 const CsTab = styled(Flex)`
     width: fit-content;

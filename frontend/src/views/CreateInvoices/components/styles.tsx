@@ -39,19 +39,24 @@ export const ContainerInput = styled(Flex)`
   width: 100%;
   background-color:#F8F9FD;
   border-radius:8px;
-  margin-bottom:1rem;
+  /* margin-bottom:1rem; */
 `
 export const ContainerInputFile = styled(Flex)`
   flex-direction: column;
   width: 100%;
   background-color: transparent;
   border-radius:8px;
-  margin-bottom:1rem;
 `
 
 export const CsInputFile = styled(Input)`
-
+  background: transparent;
+  height: fit-content;
 `
+// export const CsInput = styled(Input)`
+//   background: transparent;
+//   border: none;
+//   width: 100%;
+// `
 export const CsTextArea = styled.textarea`
   background: none;
   border: none;
@@ -81,7 +86,8 @@ export const CsInput = styled(Input)`
   border-radius: 0px;
   width: 100%;
   box-shadow: none;
-  font-size:16px;
+  font-size:14px;
+  height: 56px;
   &::placeholder{
     color: #94A3B8;
     font-weight: 400;
@@ -112,10 +118,28 @@ export const CsInputVerify = styled(Input)`
     /* width: 310px; */
   }
 `
+export const CsWrapperDateInput = styled.div`
+  margin-top: 16px;
+
+`
+export const CsRow = styled(Flex)`
+  align-items: center;
+  justify-content: space-between;
+  gap: 10;
+`
+export const CsCol = styled.div`
+  width: 50%;
+`
 
 export const WrapInput = styled(Flex)`
   position: relative;
+  background-color:#F8F9FD;
+  border-radius: 10px;
   width: 100%;
+  /* height: 56px; */
+  input{
+    padding: 10px;
+  }
 `
 
 export const WrapInputVerifyForgot = styled(Flex)`

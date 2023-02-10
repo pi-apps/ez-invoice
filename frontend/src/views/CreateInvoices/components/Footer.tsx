@@ -9,11 +9,14 @@ import Navbar from 'react-bootstrap/Navbar';
 const styles = {
     main: {
         overflow: 'hidden',
+        left:0,
+        right: 0,
         bottom: 0,
         width: '100%',
-        padding: '14px 0px 46px',
+        padding: '14px 0px 30px',
         position: 'fixed',
         background: '#fff'
+
     },
     navItem: {
     },
