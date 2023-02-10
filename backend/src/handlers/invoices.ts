@@ -12,6 +12,9 @@ export default function mountInvoiceEndpoints(router: Router) {
         if (!req.session.currentUser) {
             return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
         }
+        if (req.session.currentUser.isActive == false) {
+            return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
+        }
         const currentUser = req.session.currentUser;
         const numOfInvoices = await InvoicesModel.countDocuments({ uid: currentUser.uid });
         const file = req.file;
@@ -67,6 +70,9 @@ export default function mountInvoiceEndpoints(router: Router) {
         if (!req.session.currentUser) {
             return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
         }
+        if (req.session.currentUser.isActive == false) {
+            return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
+        }
         const currentUser = req.session.currentUser
         const invoices = await InvoicesModel.find({ uid: currentUser.uid });
         return res.status(200).json(invoices);
@@ -76,6 +82,9 @@ export default function mountInvoiceEndpoints(router: Router) {
     router.get('/detail/:invoiceId', async (req, res) => {
         if (!req.session.currentUser) {
             return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+        }
+        if (req.session.currentUser.isActive == false) {
+            return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
         }
         const currentUser = req.session.currentUser
         const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: req.params.invoiceId });
@@ -89,6 +98,9 @@ export default function mountInvoiceEndpoints(router: Router) {
     router.get('/download/:invoiceId', async (req, res) => {
         if (!req.session.currentUser) {
             return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+        }
+        if (req.session.currentUser.isActive == false) {
+            return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
         }
         const currentUser = req.session.currentUser
         const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: req.params.invoiceId });
@@ -108,6 +120,9 @@ export default function mountInvoiceEndpoints(router: Router) {
     router.post('/send', async (req, res) => {
         if (!req.session.currentUser) {
             return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+        }
+        if (req.session.currentUser.isActive == false) {
+            return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
         }
         const currentUser = req.session.currentUser
         const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: req.body.invoiceId });

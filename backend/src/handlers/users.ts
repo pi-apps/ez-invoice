@@ -70,20 +70,23 @@ export default function mountUserEndpoints(router: Router) {
       if (!req.session.currentUser) {
         return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
       }
-  
       const user = req.session.currentUser;
       const data = req.body;
-      
+      if (data.firstName === undefined || data.lastName === undefined || data.email === undefined || data.language === undefined) {
+        return res.status(400).json({ error: 'bad_request', message: "Bad request" });
+      }
       const result = await UsersModel.findOneAndUpdate(
         { _id: user._id },
         { $set: {
           "firstName": data.firstName,
           "lastName": data.lastName,
           "email": data.email,
-          "language": data.language
+          "language": data.language,
+          "isActive": true
         } },
         { new: true },
       )
+      req.session.currentUser = result;
       return res.status(200).json(result);
     } catch (error) {
       console.log(error);

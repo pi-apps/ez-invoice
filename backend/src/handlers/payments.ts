@@ -7,6 +7,12 @@ import InvoicesModel from "../models/invoices";
 export default function mountPaymentsEndpoints(router: Router) {
   // handle the incomplete payment
   router.post('/incomplete', async (req, res) => {
+    if (!req.session.currentUser) {
+      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    }
+    if (req.session.currentUser.isActive == false) {
+      return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
+    }
     const payment = req.body.payment;
     const paymentId = payment.identifier;
     const txid = payment.transaction && payment.transaction.txid;
@@ -49,6 +55,9 @@ export default function mountPaymentsEndpoints(router: Router) {
     if (!req.session.currentUser) {
       return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
     }
+    if (req.session.currentUser.isActive == false) {
+      return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
+    }
     const paymentId = req.body.paymentId;
     // update receiverId
     await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { receiverId: req.session.currentUser.uid } })
@@ -59,6 +68,12 @@ export default function mountPaymentsEndpoints(router: Router) {
 
   // complete the current payment
   router.post('/complete', async (req, res) => {
+    if (!req.session.currentUser) {
+      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    }
+    if (req.session.currentUser.isActive == false) {
+      return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
+    }
     const paymentId = req.body.paymentId;
     const txid = req.body.txid;
     await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true } });
@@ -69,12 +84,24 @@ export default function mountPaymentsEndpoints(router: Router) {
 
   // handle the cancelled payment
   router.post('/cancelled_payment', async (req, res) => {
+    if (!req.session.currentUser) {
+      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    }
+    if (req.session.currentUser.isActive == false) {
+      return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
+    }
     const paymentId = req.body.paymentId;
     await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { cancelled: true } });
     return res.status(200).json({ message: `Cancelled the payment ${paymentId}` });
   })
   // get detail a payment
   router.get('/detail/:paymentId', async (req, res) => {
+    if (!req.session.currentUser) {
+      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    }
+    if (req.session.currentUser.isActive == false) {
+      return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
+    }
     const paymentId = req.params.paymentId;
     // Check exist in database
     const invoice = await InvoicesModel.findOne({ pi_payment_id: paymentId });
