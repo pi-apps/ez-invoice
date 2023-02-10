@@ -7,6 +7,7 @@ const schema = new Schema({
     invoiceId: { type: String, required: true },
     invoiceNumber: { type: Number, required: true },
     uid: { type: String, required: true },
+    receiverId: { type: String, default: "" },
     billFrom: { type: Object, required: true },
     billTo: { type: Object, required: true },
     shipTo: { type: Object, default: "" },
@@ -19,6 +20,7 @@ const schema = new Schema({
     terms: { type: String, default: "" },
     subTotal: { type: Number, required: true },
     tax: { type: Number, required: true },
+    taxType: { type: Number, default: 1 }, // 0: no tax, 1: percentage, 2: fixed
     discount: { type: Number, default: 0 },
     shipping: { type: Number, default: 0 },
     total: { type: Number, required: true },

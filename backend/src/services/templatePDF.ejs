@@ -12,13 +12,14 @@
     table, td, th {  
         border: 1px solid #ddd;
         text-align: left;
+        font-size: 12px;
     }
     table {
         border-collapse: collapse;
         width: 100%;
     }
     th, td {
-        padding: 15px;
+        padding: 10px;
     }
   </style>
   <body>
@@ -37,7 +38,7 @@
           <div style="flex: 1;">
             <p>Bill From:</p>
             <p style="font-weight: bold"><%= billFrom %></p>
-            <p>Bill To</p>
+            <p>Bill To:</p>
             <p style="font-weight: bold"><%= billTo %></p>
           </div>
           <div style="flex: 1; text-align: right;"></div>
@@ -89,20 +90,24 @@
         <div style="display: flex; flex-direction: row;">
           <div style="flex: 1; text-align: right;">
             <p>Subtotal:</p>
-            <p>Tax (<%= tax %>%):</p>
-            <p>Discount:</p>
-            <p>Shipping:</p>
+            <% if (taxType == 1) { %>
+              <p>Tax (<%= tax %>%):</p>
+            <% } else if (taxType == 2) { %>
+              <p>Tax:</p>
+            <% } %>
+            <% if (discount != 0) {%><p>Discount:</p><% } %>
+            <% if (shipping != 0) {%><p>Shipping:</p><% } %>
             <p>Total:</p>
-            <p>Amount Paid:</p>
+            <% if (amountPaid != 0) {%><p>Amount Paid:</p><% } %>
             <p>Amount Due:</p>
           </div>
           <div style="flex: 1; text-align: right;">
             <p><%= subTotal.toFixed(2) %> Pi</p>
-            <p><%= (subTotal * tax / 100).toFixed(2) %> Pi</p>
-            <p><%= discount.toFixed(2) %> Pi</p>
-            <p><%= shipping.toFixed(2) %> Pi</p>
+            <% if (taxType != 0) {%><p><%= taxType == 1 ? (subTotal * tax / 100).toFixed(2) : tax.toFixed(2) %> Pi</p><% } %>
+            <% if (discount != 0) {%><p><%= discount.toFixed(2) %> Pi</p><% } %>
+            <% if (shipping != 0) {%><p><%= shipping.toFixed(2) %> Pi</p><% } %>
             <p><%= total.toFixed(2) %> Pi</p>
-            <p><%= amountPaid.toFixed(2) %> Pi</p>
+            <% if (amountPaid != 0) {%><p><%= amountPaid.toFixed(2) %> Pi</p><% } %>
             <p><%= amountDue.toFixed(2) %> Pi</p>
           </div>
         </div>

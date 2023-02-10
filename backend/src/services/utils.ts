@@ -41,6 +41,7 @@ async function generatePdf(invoice: any) {
     terms: invoice.terms,
     subTotal: invoice.subTotal,
     tax: invoice.tax,
+    taxType: invoice.taxType,
     discount: invoice.discount,
     shipping: invoice.shipping,
     total: invoice.total,
@@ -65,7 +66,8 @@ async function generatePdf(invoice: any) {
 async function sendEmail(invoice: any, email: string) {
   const templatePath = "send-invoice.html";
   const params = {
-      "title": `[PiBridge] Invoice #${invoice.invoiceNumber}`,
+      "title": `[${invoice.billFrom}] Invoice #${invoice.invoiceNumber}`,
+      "billFrom": invoice.billFrom,
       "invoiceId": invoice.invoiceId,
       "invoiceNumber": invoice.invoiceNumber,
       "amountDue": invoice.amountDue,

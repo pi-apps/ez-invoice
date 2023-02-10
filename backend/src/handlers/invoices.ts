@@ -23,9 +23,10 @@ export default function mountInvoiceEndpoints(router: Router) {
             subTotal += items[i].price * items[i].quantity;
         }
         const tax = req.body.tax;
+        const taxType = req.body.taxType;
         const discount = req.body.discount;
         const shipping = req.body.shipping;
-        const total = subTotal + subTotal * Number(tax) / 100 - Number(discount) + Number(shipping);
+        const total = taxType == 1 ? subTotal + subTotal * Number(tax) / 100 - Number(discount) + Number(shipping) : subTotal + Number(tax) - Number(discount) + Number(shipping);
         const amountPaid = req.body.amountPaid;
         const amountDue = total - Number(amountPaid);
         const invoice = {
@@ -44,6 +45,7 @@ export default function mountInvoiceEndpoints(router: Router) {
             terms: req.body.terms,
             subTotal: subTotal,
             tax: tax,
+            taxType: taxType,
             discount: discount,
             shipping: shipping,
             total: total,

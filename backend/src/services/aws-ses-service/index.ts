@@ -10,7 +10,6 @@ const sesConfig = {
   apiVersion: '2023-01-01', // version của api
 }
 
-const senderEmail = 'PiBridge <ezinvoice@email.pibridge.org>';
 
 let sesAws: any;
 
@@ -18,9 +17,10 @@ async function init() {
   sesAws = new AWS.SES(sesConfig);
 }
 
-async function sendEmailByTemplate(receivers: any, templatePath: string, params: { title: any; invoiceId: any; invoiceNumber: any; amountDue: any; paymentUrl: any;}) {
+async function sendEmailByTemplate(receivers: any, templatePath: string, params: { title: any; billFrom: any, invoiceId: any; invoiceNumber: any; amountDue: any; paymentUrl: any;}) {
   const fullTemplatePath = path.join(__dirname, './templates/' + templatePath);
   const content = await getContent(fullTemplatePath, params);
+  const senderEmail = `${params.billFrom} <ezinvoice@email.pibridge.org>`;
   
   const mail = mailcomposer({
     from: senderEmail,
