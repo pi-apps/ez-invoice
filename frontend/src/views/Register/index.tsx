@@ -24,9 +24,9 @@ const Register = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const validationSchema = Yup.object().shape({
-        email: Yup.string().required('Email is required').min(4, 'Emails are between 4 and 160 characters in length').max(160, 'Emails are between 4 and 160 characters in length'),
-        firstName: Yup.string().required('First name is required').matches(/^(\S+$)/g, 'Please input alphabet').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').max(50, 'First name max 50 characters in length'),
-        lastName: Yup.string().required('Last name is required').matches(/^(\S+$)/g, 'Please input alphabet').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').max(50, 'Last name max 50 characters in length'),
+        email: Yup.string().required('Email is required').matches(/^(\S+$)/g, 'Please input alphabet').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').min(4, 'Email are between 4 and 50 characters in length').max(50, 'Max length is 50 characters').email('Invalid email'),
+        firstName: Yup.string().required('First name is required').matches(/^(\S+$)/g, 'Please input alphabet').max(50, 'First name max 50 characters in length').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
+        lastName: Yup.string().required('Last name is required').matches(/^(\S+$)/g, 'Please input alphabet').max(50, 'Last name max 50 characters in length').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         language: Yup.string().required('Language is required')
     });
     const InitValues = {
@@ -36,7 +36,8 @@ const Register = () => {
         language: userInfor?.language || "en"
     }
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
-    const { handleSubmit, formState: { errors, isValid }, control, getValues, setValue } = useForm(formOptions);
+    const { handleSubmit, formState: { errors, isValid, isDirty },setError, control, getValues, setValue } = useForm(formOptions);
+    
     const onSubmit = async data => {
         const submitReq = await axiosClient.post('user/update', data);
         if(submitReq.status == 200 || submitReq.status == 201){
@@ -68,15 +69,17 @@ const Register = () => {
                                     control={control}
                                     name="firstName"
                                     rules={rules.fistname}
-                                    render={({ field }) => (
-                                    <CsInput
-                                        name="firstName"
-                                        type="text"
-                                        placeholder="First name"
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                    />
-                                    )}
+                                    render={({ field: {onBlur, value, onChange}  }) => {
+                                        return(
+                                            <CsInput
+                                                name="firstName"
+                                                type="text"
+                                                onBlur={onBlur}
+                                                placeholder="First name"
+                                                value={value}
+                                                onChange={onChange}
+                                            />
+                                    )}}
                                 />
                             </WrapInput>
                             <ErrorMessages errors={errors} name="firstName" />
@@ -99,7 +102,7 @@ const Register = () => {
                                     )}
                                 />
                             </WrapInput>
-                            <ErrorMessages errors={errors} name="lastName" />
+                            <ErrorMessages errors={ errors} name="lastName" />
                         </ContainerInput>
                         <ContainerInput>
                             <WrapInput>
@@ -153,7 +156,7 @@ const Register = () => {
                             <CustomMessageError>{getMessageError}</CustomMessageError> 
                         } */}
                         <Flex width="100%" mt="1rem">
-                            <Button disabled={!isValid}
+                            <Button 
                                 width="100%"
                                 type="submit"
                                 value="Submit"
@@ -194,4 +197,11 @@ const CustomMessageError = styled.div`
   letter-spacing: 0.1;
   margin-top: 5px;
   margin-left: 35px;
+`
+const ErrorMess = styled.div`
+color: #FF592C;
+font-size:12px;
+font-weight:400;
+letter-spacing: 0.1;
+margin-top: 6px;
 `
