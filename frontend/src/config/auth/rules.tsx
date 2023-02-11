@@ -14,11 +14,11 @@ export const rules = {
         },
         minLength:{
             value:4,
-            message:'Emails are between 4 and 160 characters in length'
+            message:'Emails are between 4 and 50 characters in length'
         },
         maxLength:{
             value:160,
-            message:'Emails are between 4 and 160 characters in length'
+            message:'Emails are between 4 and 50 characters in length'
         },
         validate:{
             email: val=>isEmail(val) || "Please enter correct Email format"   

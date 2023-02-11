@@ -25,7 +25,7 @@ const UserMenu = () => {
     const scopes = ['username', 'payments'];
     window.Pi.authenticate(scopes, onIncompletePaymentFound).then(async function(auth) {
       console.log("authResult", auth);
-      console.log("userData", userData);
+      console.log("userData", userData === null);
       const loginUser = await signInUser(auth);
       console.log("loginUser", loginUser);
       if(loginUser){
@@ -71,10 +71,10 @@ const UserMenu = () => {
   const [onPresentLogoutModal, onDismis] = useModal(<LogoutModal onSubmit={signOut} />);
 
   return (
-    userData ?
-      <CsButton onClick={onPresentLogoutModal}>{t('logout')}</CsButton>
+    userData === null ?
+    <CsButton onClick={signIn}>{t('login')}</CsButton>
     :
-      <CsButton onClick={signIn}>{t('login')}</CsButton>
+    <CsButton onClick={onPresentLogoutModal}>{t('logout')}</CsButton>
   )
 }
 

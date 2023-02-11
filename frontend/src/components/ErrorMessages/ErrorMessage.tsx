@@ -18,6 +18,7 @@ color: #FF592C;
 font-size:12px;
 font-weight:400;
 letter-spacing: 0.1;
+margin-top: 6px;
 `
 export default ErrorMessages;
 

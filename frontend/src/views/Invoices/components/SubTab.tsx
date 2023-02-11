@@ -35,6 +35,7 @@ const ContainerSubTab = styled(Flex)`
 const TabButton = styled(Flex)<{isActive:boolean}>`
     width: 50%;
     height: 100%;
+    font-weight: ${({ isActive }) => isActive ? 700 : 400};
     cursor: pointer;
     justify-content:center;
     align-items:center;

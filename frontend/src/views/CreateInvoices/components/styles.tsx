@@ -37,8 +37,41 @@ export const TransferModal = styled(Button)`
 export const ContainerInput = styled(Flex)`
   flex-direction: column;
   width: 100%;
+  background-color:#F8F9FD;
   border-radius:8px;
   margin-bottom:1rem;
+`
+export const ContainerInputFile = styled(Flex)`
+  flex-direction: column;
+  width: 100%;
+  background-color: transparent;
+  border-radius:8px;
+  margin-bottom:1rem;
+`
+
+export const CsInputFile = styled(Input)`
+
+`
+export const CsTextArea = styled.textarea`
+  background: none;
+  border: none;
+  padding-left: 10px;
+  border-radius: 0px;
+  width: 327px;
+  height: 91px;
+  resize: unset;
+  padding: 10px;
+  width: 100%;
+  box-shadow: none;
+  font-size:16px;
+  &::placeholder{
+    color: #94A3B8;
+    font-weight: 400;
+    font-size: 12px;
+  }
+  :focus:not(:disabled){
+    box-shadow:none!important;
+  }
 `
 
 export const CsInput = styled(Input)`
@@ -50,7 +83,9 @@ export const CsInput = styled(Input)`
   box-shadow: none;
   font-size:16px;
   &::placeholder{
-    color: ${({ theme }) => theme.colors.textSubtle};
+    color: #94A3B8;
+    font-weight: 400;
+    font-size: 12px;
   }
   :focus:not(:disabled){
     box-shadow:none!important;
@@ -80,7 +115,6 @@ export const CsInputVerify = styled(Input)`
 
 export const WrapInput = styled(Flex)`
   position: relative;
-  background-color:#F8F9FD;
   width: 100%;
 `
 
