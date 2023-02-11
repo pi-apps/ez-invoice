@@ -63,11 +63,11 @@ async function generatePdf(invoice: any) {
   return downloadUrl;
 }
 
-async function sendEmail(invoice: any, email: string) {
+async function sendEmail(invoice: any, email: string, username: string) {
   const templatePath = "send-invoice.html";
   const params = {
       "title": `[${invoice.billFrom}] Invoice #${invoice.invoiceNumber}`,
-      "billFrom": invoice.billFrom,
+      "username": username,
       "invoiceId": invoice.invoiceId,
       "invoiceNumber": invoice.invoiceNumber,
       "amountDue": invoice.amountDue,

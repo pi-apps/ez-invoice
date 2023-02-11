@@ -5,25 +5,42 @@ import "../types/session";
 import InvoicesModel from "../models/invoices";
 
 export default function mountPaymentsEndpoints(router: Router) {
+  // payment deep link in email
+  router.get('/deep-payment/:invoiceId', async (req, res) => {
+    const invoiceId = req.params.invoiceId;
+    const url = `${process.env.PAYMENT_URL}/${invoiceId}`;
+    res.redirect(url);
+  });
+
+  // update receiver id
+  router.post('/update-receiver', async (req, res) => {
+    if (!req.session.currentUser) {
+      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    }
+    const currentUser = req.session.currentUser
+    const receiverId = currentUser.uid;
+    const invoiceId = req.body.invoiceId;
+    const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: invoiceId });
+    if (!invoice) {
+      return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
+    }
+    if (invoice.paid == true) {
+      return res.status(400).json({ error: 'bad_request', message: "Invoice already paid" });
+    }
+    // update the invoice with the receiver id
+    await InvoicesModel.updateOne({ uid: currentUser.uid, invoiceId: invoiceId }, { receiverId: receiverId });
+    return res.status(200).json({ message: "Receiver id updated" });
+  });
+
   // handle the incomplete payment
   router.post('/incomplete', async (req, res) => {
     if (!req.session.currentUser) {
       return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
     }
-    if (req.session.currentUser.isActive == false) {
-      return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
-    }
     const payment = req.body.payment;
     const paymentId = payment.identifier;
     const txid = payment.transaction && payment.transaction.txid;
     const txURL = payment.transaction && payment.transaction._link;
-
-    /* 
-      implement your logic here
-      e.g. verifying the payment, delivering the item to the user, etc...
-
-      below is a naive example
-    */
 
     // find the incomplete order
     const order = await InvoicesModel.findOne({ pi_payment_id: paymentId });
@@ -55,9 +72,6 @@ export default function mountPaymentsEndpoints(router: Router) {
     if (!req.session.currentUser) {
       return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
     }
-    if (req.session.currentUser.isActive == false) {
-      return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
-    }
     const paymentId = req.body.paymentId;
     // update receiverId
     await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { receiverId: req.session.currentUser.uid } })
@@ -70,9 +84,6 @@ export default function mountPaymentsEndpoints(router: Router) {
   router.post('/complete', async (req, res) => {
     if (!req.session.currentUser) {
       return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
-    }
-    if (req.session.currentUser.isActive == false) {
-      return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
     }
     const paymentId = req.body.paymentId;
     const txid = req.body.txid;
@@ -87,20 +98,15 @@ export default function mountPaymentsEndpoints(router: Router) {
     if (!req.session.currentUser) {
       return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
     }
-    if (req.session.currentUser.isActive == false) {
-      return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
-    }
     const paymentId = req.body.paymentId;
     await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { cancelled: true } });
     return res.status(200).json({ message: `Cancelled the payment ${paymentId}` });
   })
+
   // get detail a payment
   router.get('/detail/:paymentId', async (req, res) => {
     if (!req.session.currentUser) {
       return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
-    }
-    if (req.session.currentUser.isActive == false) {
-      return res.status(401).json({ error: 'unauthorized', message: "User is not active" });
     }
     const paymentId = req.params.paymentId;
     // Check exist in database
@@ -110,11 +116,5 @@ export default function mountPaymentsEndpoints(router: Router) {
     }
     const payment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
     return res.status(200).json({ payment });
-  });
-  // payment link
-  router.get('/deep-payment/:invoiceId', async (req, res) => {
-    const invoiceId = req.params.invoiceId;
-    const url = `${process.env.PAYMENT_URL}/${invoiceId}`;
-    res.redirect(url);
   });
 }

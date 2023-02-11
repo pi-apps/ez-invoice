@@ -17,10 +17,10 @@ async function init() {
   sesAws = new AWS.SES(sesConfig);
 }
 
-async function sendEmailByTemplate(receivers: any, templatePath: string, params: { title: any; billFrom: any, invoiceId: any; invoiceNumber: any; amountDue: any; paymentUrl: any;}) {
+async function sendEmailByTemplate(receivers: any, templatePath: string, params: { title: any; username: any, invoiceId: any; invoiceNumber: any; amountDue: any; paymentUrl: any;}) {
   const fullTemplatePath = path.join(__dirname, './templates/' + templatePath);
   const content = await getContent(fullTemplatePath, params);
-  const senderEmail = `${params.billFrom} <ezinvoice@email.pibridge.org>`;
+  const senderEmail = `${params.username} <ezinvoice@email.pibridge.org>`;
   
   const mail = mailcomposer({
     from: senderEmail,

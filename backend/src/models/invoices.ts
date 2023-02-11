@@ -8,6 +8,7 @@ const schema = new Schema({
     invoiceNumber: { type: Number, required: true },
     uid: { type: String, required: true },
     receiverId: { type: String, default: "" },
+    senderEmail: { type: String, required: true },
     billFrom: { type: Object, required: true },
     billTo: { type: Object, required: true },
     shipTo: { type: Object, default: "" },
