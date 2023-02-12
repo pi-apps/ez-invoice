@@ -18,6 +18,10 @@ async function uploadToIpfs(file: any) {
   const response = await Moralis.EvmApi.ipfs.uploadFolder({
       abi: uploadArray,
   });
+  if (!file.filename.includes(".pdf")) {
+    // delete file after upload
+    fs.unlinkSync(file.path);
+  }
   return response.result[0].path;
 }
 
@@ -66,7 +70,7 @@ async function generatePdf(invoice: any) {
 async function sendEmail(invoice: any, email: string, username: string) {
   const templatePath = "send-invoice.html";
   const params = {
-      "title": `[${invoice.billFrom}] Invoice #${invoice.invoiceNumber}`,
+      "title": `[${username}] Invoice #${invoice.invoiceNumber}`,
       "username": username,
       "invoiceId": invoice.invoiceId,
       "invoiceNumber": invoice.invoiceNumber,

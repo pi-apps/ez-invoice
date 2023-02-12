@@ -33,6 +33,7 @@ export default function mountInvoiceEndpoints(router: Router) {
             invoiceId: `EZ_${Date.now()}`,
             invoiceNumber: numOfInvoices + 1,
             uid: currentUser.uid,
+            senderEmail: req.body.senderEmail,
             billFrom: req.body.billFrom,
             billTo: req.body.billTo,
             shipTo: req.body.shipTo,
