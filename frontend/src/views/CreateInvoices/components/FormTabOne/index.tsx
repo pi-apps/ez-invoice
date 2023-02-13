@@ -18,16 +18,33 @@ import Row from 'react-bootstrap/Row';
 import { useDispatch } from 'react-redux'
 import { AddIcon } from 'components/Svg'
 
-const FormTabOne = ({formState:{errors}, control}) => {
+const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
   const dispatch = useDispatch()
   const [avatar, setAvatar] = useState('')
   const [checkError, setCheckError] = useState(false)
-  const [getMessageError, setMessageError] = useState('')
+  const [getMessageError, setMessageError] = useState()
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
 
-  const [value, setValue] = React.useState<null>(
-  );
+//   const InitValues = {
+//     senderEmail: '',
+//     billFrom:'',
+//     billTo:'',
+//     shipTo: '',
+//     issueDate: new Date(),
+//     dueDate: new Date(),
+//     paymentTerms:'',
+//     poNumber:'',
+//     items:'',
+//     notes:'',
+//     terms:'',
+//     tax:'',
+//     taxType:'',
+//     discount:'',
+//     shipping:'',
+//     amountPaid:'',
+//     logo:'',
+// }
 
   const handleChange = (newValue: null) => {
     setValue(newValue);
@@ -41,7 +58,7 @@ const FormTabOne = ({formState:{errors}, control}) => {
     <CsContainer >
             <CsFlex>
                 {/* Invoice number */}
-                <Flex width='100%'>
+                {/* <Flex width='100%'>
                     <CsLabel mt="1rem" color="#64748B">Invoice number</CsLabel>
                 </Flex>
                 <ContainerInput>
@@ -61,10 +78,10 @@ const FormTabOne = ({formState:{errors}, control}) => {
                         />
                     </WrapInput>
                     <ErrorMessages errors={errors} name="invoicenumber" />
-                </ContainerInput>
+                </ContainerInput> */}
 
                 {/* Add your logo */}
-                <ContainerInputFile mt="1rem">
+                {/* <ContainerInputFile mt="1rem">
                     <WrapInput style={{background: 'transparent', marginTop: '1rem'}}>
                         <Controller
                             control={control}
@@ -81,7 +98,7 @@ const FormTabOne = ({formState:{errors}, control}) => {
                         />
                     </WrapInput>
                     <ErrorMessages errors={errors} name="invoicenumber" />
-                </ContainerInputFile>
+                </ContainerInputFile> */}
 
                 {/* Sender Email */}
                 <Flex width='100%'>
@@ -91,22 +108,25 @@ const FormTabOne = ({formState:{errors}, control}) => {
                     <WrapInput>
                         <Controller
                             control={control}
-                            name="sender"
-                            // rules={rules.sender}
+                            name="senderEmail"
+                            // rules={rules.senderEmail}
                             render={({ field }) => (
                             <CsInput
-                                name="sender"
-                                // type="text"
+                                value={getValues('senderEmail')}
+                                name="senderEmail"
+                                type="text"
+                                // value={field.value}
+                                
                                 placeholder="Sender email"
-                                onChange={field.onChange}
+                                onChange={(event) => setValue("senderEmail", event.target.value)}
                             />
                             )}
                         />
                     </WrapInput>
-                    <ErrorMessages errors={errors} name="sender" />
+                    <ErrorMessages errors={errors} name="senderEmail" />
                 </ContainerInput>
 
-                {/* Bill To */}
+                {/* Bill From */}
                 <Flex width='100%'>
                     <CsLabel mt="1rem" color="#64748B">Bill From</CsLabel>
                   </Flex>
@@ -114,11 +134,11 @@ const FormTabOne = ({formState:{errors}, control}) => {
                     <WrapInput>
                         <Controller
                             control={control}
-                            name="sender"
+                            name="billFrom"
                             // rules={rules.sender}
                             render={({ field }) => (
                             <CsTextArea
-                                name="sender"
+                                name="billFrom"
                                 // type="text"
                                 placeholder="Who is this invoice from? (required)"
                                 onChange={field.onChange}
@@ -126,7 +146,7 @@ const FormTabOne = ({formState:{errors}, control}) => {
                             )}
                         />
                     </WrapInput>
-                    <ErrorMessages errors={errors} name="sender" />
+                    <ErrorMessages errors={errors} name="billFrom" />
                 </ContainerInput>
 
                 {/* Bill To */}
@@ -137,11 +157,11 @@ const FormTabOne = ({formState:{errors}, control}) => {
                     <WrapInput>
                         <Controller
                             control={control}
-                            name="billto"
+                            name="billTo"
                             // rules={rules.billto}
                             render={({ field }) => (
                             <CsTextArea
-                                name="billto"
+                                name="billTo"
                                 // type="text"
                                 placeholder="Who is this invoice from? (required)"
                                 onChange={field.onChange}
@@ -149,7 +169,7 @@ const FormTabOne = ({formState:{errors}, control}) => {
                             )}
                         />
                     </WrapInput>
-                    <ErrorMessages errors={errors} name="billto" />
+                    <ErrorMessages errors={errors} name="billTo" />
                 </ContainerInput>
 
                     {/* Ship To */}
@@ -160,11 +180,11 @@ const FormTabOne = ({formState:{errors}, control}) => {
                     <WrapInput>
                         <Controller
                             control={control}
-                            name="shipto"
+                            name="shipTo"
                             render={({ field }) => (
                             <CsTextArea
-                                name="shipto"
-                                // value={getValues('email')}
+                                name="shipTo"
+                                // value={getValues('shipTo')}
                                 // type="text"
                                 placeholder="(Optional)"
                                 onChange={field.onChange}
@@ -172,7 +192,7 @@ const FormTabOne = ({formState:{errors}, control}) => {
                             )}
                         />
                     </WrapInput>
-                    <ErrorMessages errors={errors} name="shipto" />
+                    <ErrorMessages errors={errors} name="shipTo" />
                 </ContainerInput>
 
                 <Row className="mb-1 mt-1">
@@ -183,7 +203,7 @@ const FormTabOne = ({formState:{errors}, control}) => {
                         <WrapInput>
                             <Controller 
                                 control={control}
-                                name="date"
+                                name="issueDate"
                                 // type="text"
                                 render={({ field }) => (
                                     <>
@@ -204,11 +224,11 @@ const FormTabOne = ({formState:{errors}, control}) => {
                         <WrapInput>
                             <Controller
                                 control={control}
-                                name="payment"
+                                name="paymentTerms"
                                 render={({ field }) => (
                                 <CsInput
-                                    name="payment"
-                                    // value={getValues('payment')}
+                                    name="paymentTerms"
+                                    value={getValues('paymentTerms')}
                                     // type="text"
                                     placeholder="Payment"
                                     onChange={field.onChange}
@@ -227,7 +247,7 @@ const FormTabOne = ({formState:{errors}, control}) => {
                         <WrapInput>
                             <Controller 
                                 control={control}
-                                name="duedate"
+                                name="dueDate"
                                 // type="text"
                                 render={({ field }) => (
                                     <>
@@ -247,11 +267,11 @@ const FormTabOne = ({formState:{errors}, control}) => {
                         <WrapInput>
                             <Controller
                                 control={control}
-                                name="ponumber"
+                                name="poNumber"
                                 render={({ field }) => (
                                 <CsInput
-                                    name="ponumber"
-                                    // value={getValues('ponumber')}
+                                    name="poNumber"
+                                    value={getValues('poNumber')}
                                     // type="text"
                                     placeholder="PO Number"
                                     onChange={field.onChange}
@@ -262,7 +282,7 @@ const FormTabOne = ({formState:{errors}, control}) => {
                     </Form.Group>
                 </Row>
 
-                <ErrorMessages errors={errors} name="payment" />
+                <ErrorMessages errors={errors} name="poNumber" />
 
                 { checkError === true && 
                     <CustomMessageError>{getMessageError}</CustomMessageError> 

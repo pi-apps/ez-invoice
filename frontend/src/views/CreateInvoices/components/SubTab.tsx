@@ -10,46 +10,77 @@ import * as Yup from 'yup'
 import FormTabOne from "./FormTabOne";
 import FormTabTwo from "./FormTabTwo";
 import FormTabThree from "./FormTabThree";
+import { axiosClient } from "config/htttp";
+import useToast from "hooks/useToast";
 
 interface PropsSubTab{
     isActive:number
 }
 
 const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
+    const { toastSuccess, toastError } = useToast()
  
     const dispatch = useDispatch<AppDispatch>()
 
     const InitValues = {
-        invoicenumber: '',
-        avatar:'',
-        file: '',
-        sender: '',
-        billto:'',
-        shipto: '',
-        date: new Date(),
-        duedate: new Date(),
-        payment:'',
-        ponumber:'',
+        senderEmail: '',
+        billFrom:'',
+        billTo:'',
+        shipTo: '',
+        issueDate: new Date(),
+        dueDate: new Date(),
+        paymentTerms:'',
+        poNumber:'',
+        items:'',
+        notes:'',
+        terms:'',
+        tax:'',
+        taxType:'',
+        discount:'',
+        shipping:'',
+        amountPaid:'',
+        logo:'',
     }
     
     const validationSchema = Yup.object().shape({
-        invoicenumber: Yup.string().required('invoicenumber is required').min(4, 'invoicenumber are between 4 and 160 characters in length').max(160, 'Emails are between 4 and 160 characters in length'),
-        avatar: Yup.string().required('invoicenumber is required'),
-        file: Yup.string().required('file is required').max(100, 'file max 100 characters in length'),
-        sender: Yup.string().required('sender is required').max(100, 'sender max 100 characters in length'),
-        billfrom: Yup.string().required('billto is required'),
-        billto: Yup.string().required('billto is required'),
-        shipto: Yup.string().required('shipto is required'),
-        date: Yup.string().required('date is required'),
-        duedate: Yup.string().required('date is required'),
-        payment: Yup.string().required('payment is required'),
-        ponumber: Yup.string().required('payment is required'),
+        senderEmail: Yup.string().required('invoicenumber is required'),
+        billFrom: Yup.string().required('billto is required'),
+        billTo: Yup.string().required('billto is required'),
+        shipTo: Yup.string().required('shipto is required'),
+        issueDate: Yup.string().required('date is required'),
+        dueDate: Yup.string().required('date is required'),
+        paymentTerms: Yup.string().required('payment is required'),
+        poNumber: Yup.string().required('payment is required'),
+        terms: Yup.string().required('payment is required'),
+        tax: Yup.string().required('payment is required'),
+        taxType: Yup.string().required('payment is required'),
+        discount: Yup.string().required('payment is required'),
+        shipping: Yup.string().required('payment is required'),
+        amountPaid: Yup.string().required('payment is required'),
+        logo: Yup.string().required('payment is required'),
     });
-  
-    const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
+
+
+    // const formOptions = { resolver: yupResolver(validationSchema) };
     //   const formOptions = { resolver: yupResolver(validationSchema) };
-    const { handleSubmit, formState, control, getValues } = useForm(formOptions);
-    const { errors } = formState;
+    const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
+
+    const { handleSubmit, formState, control, getValues, setValue } = useForm(formOptions);
+    const { errors , touchedFields, isDirty, isLoading } = formState;
+    console.log('setValue', setValue)
+    
+    const onSubmit = async data => {
+        const submitReq = await axiosClient.post('create', data);
+        if(submitReq.status == 200 || submitReq.status == 201){
+            toastSuccess('create invoice successful');
+            // dispatch(setUser(submitReq.data));
+            // if(location && location.pathname == "/register"){
+            //     navigate("/");
+            // }
+        }else {
+            toastError('error', 'system error!!!')
+        }
+    }
 
     const handleMinusTabActive = () => {
         if(isActive > 1 && isActive <= 3){
@@ -65,7 +96,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
 
     const renderScreens = ( isActive) => {
         if(isActive === 1){
-            return <FormTabOne formState={formState} control={control} />
+            return <FormTabOne formState={formState} getValues={getValues} setValue={setValue} control={control} />
         }
         if(isActive === 2){
             return <FormTabTwo formState={formState} control={control} />
@@ -97,11 +128,17 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                 &gt;
             </CsButton>
         </ContainerSubTab>
-        <Flex>{renderScreens(isActive)}</Flex>
+        <FormSubmit onSubmit={handleSubmit(onSubmit)}>
+            {renderScreens(isActive)}
+        </FormSubmit>
         </>
     )
 }
 export default SubTab
+
+const FormSubmit = styled.form`
+  width: 100%;
+`
 
 const ContainerSubTab = styled(Flex)`
     width:100%;
