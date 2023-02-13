@@ -6,9 +6,14 @@ import InvoicesModel from "../models/invoices";
 
 export default function mountPaymentsEndpoints(router: Router) {
   // payment deep link in email
-  router.get('/deep-payment/:invoiceId', async (req, res) => {
-    const invoiceId = req.params.invoiceId;
-    const url = `${process.env.PAYMENT_URL}/${invoiceId}`;
+  router.get('/deep-payment/:signature', async (req, res) => {
+    const signature = req.params.signature;
+    // Check if the signature is valid in database
+    const invoice = await InvoicesModel.findOne({ signature: signature });
+    if (!invoice) {
+      return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
+    }
+    const url = `${process.env.PAYMENT_URL}/${signature}`;
     res.redirect(url);
   });
 
@@ -20,7 +25,8 @@ export default function mountPaymentsEndpoints(router: Router) {
     const currentUser = req.session.currentUser
     const receiverId = currentUser.uid;
     const invoiceId = req.body.invoiceId;
-    const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: invoiceId });
+    const signature = req.body.signature;
+    const invoice = await InvoicesModel.findOne({ invoiceId: invoiceId, signature: signature });
     if (!invoice) {
       return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
     }
@@ -28,7 +34,7 @@ export default function mountPaymentsEndpoints(router: Router) {
       return res.status(400).json({ error: 'bad_request', message: "Invoice already paid" });
     }
     // update the invoice with the receiver id
-    await InvoicesModel.updateOne({ uid: currentUser.uid, invoiceId: invoiceId }, { receiverId: receiverId });
+    await InvoicesModel.updateOne({ invoiceId: invoiceId, signature: signature }, { receiverId: receiverId });
     return res.status(200).json({ message: "Receiver id updated" });
   });
 
@@ -72,9 +78,10 @@ export default function mountPaymentsEndpoints(router: Router) {
     if (!req.session.currentUser) {
       return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
     }
+    const invoiceId = req.body.invoiceId;
     const paymentId = req.body.paymentId;
-    // update receiverId
-    await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { receiverId: req.session.currentUser.uid } })
+    // update paymentId
+    await InvoicesModel.updateOne({ invoiceId: invoiceId }, { $set: { paymentId: paymentId } })
     // let Pi Servers know that you're ready
     await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
     return res.status(200).json({ message: `Approved the payment ${paymentId}` });

@@ -27,13 +27,13 @@
     <div class="salutation-padding"
         style="text-align: center;background:#FFFFFF;padding: 32px 40px 48px 40px;max-width: 680px; margin-right: auto; margin-left: auto;box-sizing: border-box;">
         <p style="text-align:center;font-size:22px;color: #334155;font-weight: 700;margin-top:0;margin-bottom: 19px;line-height: 25px;">
-            EzInvoice
+            Ez Invoice
         </p>
-        <p style="text-align:center;margin-top:0;margin-bottom:14px;font-size:14px;font-weight:400;color:#64748B;">New Invoice</p>
-        <p style="text-align:center;margin-top:0;margin-bottom:14px;font-size:14px;font-weight:400;color:#64748B;">${params.username} has sent you a new invoice</p>
+        <p style="text-align:center;margin-top:0;margin-bottom:14px;font-size:14px;font-weight:400;color:#64748B;">${params.text_new_invoice}</p>
+        <p style="text-align:center;margin-top:0;margin-bottom:14px;font-size:14px;font-weight:400;color:#64748B;">${params.username} ${params.text_sent_invoice}</p>
         <div style="display:flex;flex:wrap;padding: 0 30px 0 30px;">
-            <p style="width:100%;font-size:14px;font-weight:400;color:#64748B;">Invoice #${params.invoiceNumber}</p>
-            <p style="width:100%;font-size:14px;font-weight:400;color:#64748B;">Total: ${params.amountDue} Pi</p>
+            <p style="width:100%;font-size:14px;font-weight:400;color:#64748B;">${params.text_invoice_no} #${params.invoiceNumber}</p>
+            <p style="width:100%;font-size:14px;font-weight:400;color:#64748B;">${params.text_invoice_total}: ${params.amountDue} Pi</p>
         </div>
         <a href=${params.paymentUrl} target="_blank">
             <button style="
@@ -48,7 +48,7 @@
                 height: 56px;
                 font-size: 16px;
                 border-width: 0px;
-            ">Pay Now</button>
+            ">${params.text_pay}</button>
         </a>
     </div>
 </div>

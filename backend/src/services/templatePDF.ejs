@@ -28,7 +28,7 @@
         <img src="<%= logoUrl %>" alt="logo" height="80px" width="80px" />
       </div>
       <div style="flex: 1; text-align: right;">
-        <h1 style="text-align: right;">INVOICE</h1>
+        <h1 style="text-align: right;"><%= text_title %></h1>
         <h3 style="text-align: right;">#<%= invoiceNumber %></h3>
       </div>
     </div>
@@ -36,9 +36,9 @@
       <div style="flex: 1;">
         <div style="display: flex; flex-direction: row;">
           <div style="flex: 1;">
-            <p>Bill From:</p>
+            <p><%= text_bill_from %>:</p>
             <p style="font-weight: bold"><%= billFrom %></p>
-            <p>Bill To:</p>
+            <p><%= text_bill_to %>:</p>
             <p style="font-weight: bold"><%= billTo %></p>
           </div>
           <div style="flex: 1; text-align: right;"></div>
@@ -47,15 +47,15 @@
       <div style="flex: 1;">
         <div style="display: flex; flex-direction: row;">
           <div style="flex: 1; text-align: right;">
-            <p>Issue Date:</p>
-            <p>Due Date:</p>
+            <p><%= text_issue_date %>:</p>
+            <p><%= text_due_date %>:</p>
             <% if (paymentTerms) { %>
-              <p>Payment Terms:</p>
+              <p><%= text_payment_terms %>:</p>
             <% } %>
             <% if (poNumber) { %>
-              <p>PO Number:</p>
+              <p><%= text_po_number %>:</p>
             <% } %>
-            <p style="font-weight: bold">Balance Due</p>
+            <p style="font-weight: bold"><%= text_balance_due %></p>
           </div>
           <div style="flex: 1; text-align: right;">
             <p><%= issueDate %></p>
@@ -69,10 +69,10 @@
     </div>
     <table>
       <tr style="text-align: left;">
-        <th>ITEM</th>
-        <th>QUANTITY</th>
-        <th>PRICE</th>
-        <th>TOTAL</th>
+        <th><%= text_item %></th>
+        <th><%= text_quantity %></th>
+        <th><%= text_price %></th>
+        <th><%= text_total %></th>
       </tr>
       <% for (let i = 0; i < items.length; i++) { %>
         <tr>
@@ -89,17 +89,17 @@
       <div style="flex: 1; text-align: right;">
         <div style="display: flex; flex-direction: row;">
           <div style="flex: 1; text-align: right;">
-            <p>Subtotal:</p>
+            <p><%= text_subtotal %>:</p>
             <% if (taxType == 1) { %>
-              <p>Tax (<%= tax %>%):</p>
+              <p><%= text_tax %> (<%= tax %>%):</p>
             <% } else if (taxType == 2) { %>
-              <p>Tax:</p>
+              <p><%= text_tax %>:</p>
             <% } %>
-            <% if (discount != 0) {%><p>Discount:</p><% } %>
-            <% if (shipping != 0) {%><p>Shipping:</p><% } %>
+            <% if (discount != 0) {%><p><%= text_discount %>:</p><% } %>
+            <% if (shipping != 0) {%><p><%= text_shipping %>:</p><% } %>
             <p>Total:</p>
-            <% if (amountPaid != 0) {%><p>Amount Paid:</p><% } %>
-            <p>Amount Due:</p>
+            <% if (amountPaid != 0) {%><p><%= text_amount_paid %>:</p><% } %>
+            <p><%= text_amount_due %>:</p>
           </div>
           <div style="flex: 1; text-align: right;">
             <p><%= subTotal.toFixed(2) %> Pi</p>

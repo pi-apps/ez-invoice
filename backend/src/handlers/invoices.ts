@@ -87,21 +87,22 @@ export default function mountInvoiceEndpoints(router: Router) {
     });
 
     // Download an invoice
-    router.get('/download/:invoiceId', async (req, res) => {
+    router.get('/download', async (req, res) => {
         if (!req.session.currentUser) {
             return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
         }
         const currentUser = req.session.currentUser
-        const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: req.params.invoiceId });
+        const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: req.query.invoiceId });
         if (!invoice) {
             return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
         }
-        if (invoice.downloadUrl) {
-            return res.status(200).json(invoice.downloadUrl);
-        }
-        const downloadUrl = await utils.generatePdf(invoice);
+        // if (invoice.downloadUrl) {
+        //     return res.status(200).json(invoice.downloadUrl);
+        // }
+        const language = req.query.language || "en";
+        const downloadUrl = await utils.generatePdf(invoice, language);
         // update the invoice with the download url
-        await InvoicesModel.updateOne({ uid: currentUser.uid, invoiceId: req.params.invoiceId }, { downloadUrl: downloadUrl });
+        await InvoicesModel.updateOne({ uid: currentUser.uid, invoiceId: req.query.invoiceId }, { downloadUrl: downloadUrl });
         return res.status(200).json(downloadUrl);
     });
 
@@ -111,16 +112,22 @@ export default function mountInvoiceEndpoints(router: Router) {
             return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
         }
         const currentUser = req.session.currentUser
+        const language = req.body.language || "en";
         const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: req.body.invoiceId });
         if (!invoice) {
             return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
         }
         if (!invoice.downloadUrl) {
-            const downloadUrl = await utils.generatePdf(invoice);
+            const downloadUrl = await utils.generatePdf(invoice, language);
             // update the invoice with the download url
             await InvoicesModel.updateOne({ uid: currentUser.uid, invoiceId: req.body.invoiceId }, { downloadUrl: downloadUrl });
         }
-        await utils.sendEmail(invoice, req.body.email, currentUser.username);
+        // generate signature
+        const signature = utils.generateRandomString(64);
+        // update the invoice with the signature
+        await InvoicesModel.updateOne({ uid: currentUser.uid, invoiceId: req.body.invoiceId }, { signature: signature });
+        // send email
+        await utils.sendEmail(invoice, req.body.email, currentUser.username, signature, language);
         return res.status(200).json({ message: "Email sent" });
     });
 }

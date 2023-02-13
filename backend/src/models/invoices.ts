@@ -32,6 +32,7 @@ const schema = new Schema({
     downloadUrl: { type: String, default: "" },
     logoUrl: { type: String, default: "" },
     pi_payment_id: { type: String, default: "" },
+    signature: { type: String, default: "" },
 }, schemaOptions);
 
 schema.set('toJSON', { virtuals: true });
