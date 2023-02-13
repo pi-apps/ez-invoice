@@ -153,7 +153,8 @@ const Register = () => {
                             <CustomMessageError>{getMessageError}</CustomMessageError> 
                         } */}
                         <Flex width="100%" mt="1rem">
-                            <Button disabled={!isValid}
+                            <Button 
+                            // disabled={!isValid}
                                 width="100%"
                                 type="submit"
                                 value="Submit"

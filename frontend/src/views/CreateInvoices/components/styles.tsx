@@ -153,9 +153,9 @@ export const ButtonSubmit = styled(Button)`
   box-shadow: none;
 `
 
-export const FormSubmit = styled.form`
-  width: 100%;
-`
+  export const FormSubmit = styled.form`
+    width: 100%;
+  `
 
 export const ContainerIcon = styled.label`
   position: absolute;

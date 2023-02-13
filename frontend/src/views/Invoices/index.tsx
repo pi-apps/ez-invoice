@@ -10,6 +10,7 @@ import { Flex } from "@phamphu19498/pibridge_uikit";
 import SentTab from "./SentTabContent/SentTab";
 import Footer from "components/Footer";
 import ReceiveTab from "./ReceiveContent/ReceiveTab";
+
 const Invoices = () => {
     const [ dataInvoice ] = GetDataInvoice()
     const isSent = dataInvoice?.isSent
@@ -35,6 +36,7 @@ const Invoices = () => {
         </PageFullWidth>
     )
 }
+
 export default Invoices
 
 const CsContainer = styled(Container)`

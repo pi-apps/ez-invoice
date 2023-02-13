@@ -11,6 +11,7 @@ import DetailReceived from 'views/Invoices/ReceiveContent/DetailReceived'
 import { ToastListener } from './contexts/ToastsContext'
 import Register from 'views/Register'
 import Invoices from 'views/Invoices'
+import CreateDetail from 'views/CreateInvoices/components/CreateDetail'
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -33,6 +34,7 @@ const App: React.FC = () => {
           <Route path="newInvoice" element={ <CreateInvoices/> } /> 
           <Route path="detailSent/:slug" element={ <DetailSent /> } /> 
           <Route path="detailReceived/:slug" element={ <DetailReceived /> } /> 
+          <Route path="createDetail/:slug" element={ <CreateDetail /> } /> 
         </Routes>
         <ToastListener/>
     </Fragment>

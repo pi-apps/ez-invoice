@@ -47,7 +47,8 @@ const DropDownContainer = styled.div<{ isOpen: boolean; width: number; height: n
   width: ${({ width }) => width}px;
   position: relative;
   width: 220px;
-  height: 48px;
+  height: 52px;
+  border-radius: 10px;
   box-sizing: border-box;
   @media only screen and (max-width: 600px) {
     width: 160px;
@@ -85,7 +86,7 @@ const DropDownContainer = styled.div<{ isOpen: boolean; width: number; height: n
   }
   @media only screen and (max-width: 600px) {
     width: 100%;
-    margin-top:1rem;
+    /* margin-top:1rem; */
   }
 `
 

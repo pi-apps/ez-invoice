@@ -7,12 +7,13 @@ import Navbar from 'react-bootstrap/Navbar';
 import styled from 'styled-components';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import { Button, Flex, Image, Text } from '@phamphu19498/pibridge_uikit';
+import { Button, Flex, Image, Text, useModal } from '@phamphu19498/pibridge_uikit';
 import Row from 'components/Layout/Row';
+import DownloadModal from 'components/DownloadModal';
 
 const DetailSent = () => {
     let { slug } = useParams()
-
+    const [openLoginModal] = useModal(<DownloadModal />)
     const data = [
         {
             name: 'createToken1',
@@ -41,15 +42,15 @@ const DetailSent = () => {
                         <WContent>
                             <CsContentInfo>
                                 <Row>
-                                    <Image width={59} height={57} src='/images/imgPi/DeltaLab_logo.png' alt='' />
+                                    <Image width={59} height={57} src='/images/imgPi/LogoPib.png' alt='' />
                                 </Row>
                                 <Row mt="30px" style={{justifyContent: "space-between"}}>
                                     <CsTextLeft>Bill From</CsTextLeft>
-                                    <CsTextRight bold>Delta Labs</CsTextRight>
+                                    <CsTextRight bold>PiBridge</CsTextRight>
                                 </Row>
                                 <Row mt="16px" style={{justifyContent: "space-between"}}>
                                     <CsTextLeft>Bill To</CsTextLeft>
-                                    <CsTextRight bold>PiBridge</CsTextRight>
+                                    <CsTextRight bold>Delta Labs</CsTextRight>
                                 </Row>
                                 <Row mt="16px" style={{justifyContent: "space-between"}}>
                                     <CsTextLeft>Issue Date</CsTextLeft>
@@ -116,7 +117,7 @@ const DetailSent = () => {
                                 </CsNavItem>
 
                                 <CsNavItem>
-                                    <Navbar.Brand href="/download">
+                                    <Navbar.Brand onClick={openLoginModal}>
                                         <CsButton >
                                             Download
                                         </CsButton>

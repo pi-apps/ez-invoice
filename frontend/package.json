@@ -15,6 +15,8 @@
     "@types/react-window": "^1.8.3",
     "@types/styled-components": "^5.1.7",
     "ajv": "^6.12.3",
+    "antd": "^4.16.1",
+    "antd-img-crop": "^4.6.0",
     "axios": "^0.24.0",
     "bignumber.js": "^9.0.0",
     "bootstrap": "^5.2.3",

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
@@ -9,43 +9,22 @@ import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import styled from "styled-components"
 import * as Yup from 'yup'
-import { ContainerInput, CsInput, CsTextArea, FormSubmit, WrapInput, CsInputFile, ContainerInputFile } from "../components/styles"
+import { ContainerInput, CsInput, CsTextArea, FormSubmit, WrapInput, CsInputFile, ContainerInputFile } from "../styles"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import { useDispatch } from 'react-redux'
+import { AddIcon } from 'components/Svg'
 
-const FormTabOne = () => {
+const FormTabOne = ({formState:{errors}, control}) => {
+  const dispatch = useDispatch()
+  const [avatar, setAvatar] = useState('')
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState('')
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
-  console.log('startDate', startDate.getTime())
-  // form validation rules 
-  const validationSchema = Yup.object().shape({
-      invoicenumber: Yup.string().required('invoicenumber is required').min(4, 'invoicenumber are between 4 and 160 characters in length').max(160, 'Emails are between 4 and 160 characters in length'),
-      file: Yup.string().required('file is required').max(100, 'file max 100 characters in length'),
-      sender: Yup.string().required('sender is required').max(100, 'sender max 100 characters in length'),
-      billto: Yup.string().required('billto is required'),
-      shipto: Yup.string().required('shipto is required'),
-      date: Yup.string().required('date is required'),
-      duedate: Yup.string().required('date is required'),
-      payment: Yup.string().required('payment is required'),
-  });
-  const formOptions = { resolver: yupResolver(validationSchema) };
-  const { handleSubmit, formState, control, getValues } = useForm({ 
-        defaultValues: {
-            invoicenumber: '',
-            file: '',
-            sender: '',
-            billto:'',
-            shipto: '',
-            date: new Date(),
-            duedate: new Date(),
-            payment:'',
-        }});
-  const { errors } = formState;
 
   const [value, setValue] = React.useState<null>(
   );
@@ -53,10 +32,13 @@ const FormTabOne = () => {
   const handleChange = (newValue: null) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    setAvatar(`/images/ImgPi/logo.png`)
+  }, [])
+
   return (
-    <PageFullWidth>
     <CsContainer >
-        <FormSubmit>
             <CsFlex>
                 {/* Invoice number */}
                 <Flex width='100%'>
@@ -82,25 +64,53 @@ const FormTabOne = () => {
                 </ContainerInput>
 
                 {/* Add your logo */}
-                <ContainerInputFile mt="2rem">
-                    <Controller
-                        control={control}
-                        name="file"
-                        // rules={rules.file}
-                        render={({ field }) => (
-                                <CsInputFile
-                                    name="file"
-                                    id="upload-photo"
-                                    type="file"
-                                    placeholder="Add your logo"
-                                    // onChange={field.onChange}
-                                />
-                        )}
-                    />
-                    <ErrorMessages errors={errors} name="file" />
+                <ContainerInputFile mt="1rem">
+                    <WrapInput style={{background: 'transparent', marginTop: '1rem'}}>
+                        <Controller
+                            control={control}
+                            name="invoicenumber"
+                            // rules={rules.invoicenumber}
+                            render={({ field }) => (
+                            <CsInputFile style={{padding: '0'}}
+                                name="invoicenumber"
+                                type="file"
+                                placeholder=""
+                                onChange={field.onChange}
+                            />
+                            )}
+                        />
+                    </WrapInput>
+                    <ErrorMessages errors={errors} name="invoicenumber" />
                 </ContainerInputFile>
 
-                <ContainerInput mt="2rem">
+                {/* Sender Email */}
+                <Flex width='100%'>
+                    <CsLabel mt="1rem" color="#64748B">Sender email</CsLabel>
+                </Flex>
+                <ContainerInput>
+                    <WrapInput>
+                        <Controller
+                            control={control}
+                            name="sender"
+                            // rules={rules.sender}
+                            render={({ field }) => (
+                            <CsInput
+                                name="sender"
+                                // type="text"
+                                placeholder="Sender email"
+                                onChange={field.onChange}
+                            />
+                            )}
+                        />
+                    </WrapInput>
+                    <ErrorMessages errors={errors} name="sender" />
+                </ContainerInput>
+
+                {/* Bill To */}
+                <Flex width='100%'>
+                    <CsLabel mt="1rem" color="#64748B">Bill From</CsLabel>
+                  </Flex>
+                <ContainerInput>
                     <WrapInput>
                         <Controller
                             control={control}
@@ -142,7 +152,7 @@ const FormTabOne = () => {
                     <ErrorMessages errors={errors} name="billto" />
                 </ContainerInput>
 
-                    {/* Bill To */}
+                    {/* Ship To */}
                   <Flex width='100%'>
                     <CsLabel mt="1rem" color="#64748B">Ship To</CsLabel>
                   </Flex>
@@ -165,53 +175,6 @@ const FormTabOne = () => {
                     <ErrorMessages errors={errors} name="shipto" />
                 </ContainerInput>
 
-                {/* <WrapperDate>
-                    <Flex width='100%'>
-                        <CsLabel mt="1rem" color="#64748B">Date</CsLabel>
-                    </Flex>
-                    <CsRow>
-                        <CsCol>
-                            <WrapInput>
-                                <Controller 
-                                    control={control}
-                                    name="date"
-                                    // type="text"
-                                    render={({ field }) => (
-                                        <CsDatePicker
-                                        selected={startDate} onChange={(date:any) => setStartDate(date)} />
-                                    )}
-                                />
-                            </WrapInput>
-                        </CsCol>
-                    </CsRow>
-                </WrapperDate>
-                <WrapperPayment>
-                    <CsRow>
-                        <CsCol>
-                            <Flex width='100%'>
-                                <CsLabel mt="1rem" color="#64748B">Payment</CsLabel>
-                            </Flex>
-                            <ContainerInput>
-                                <WrapInput>
-                                <Controller
-                                    control={control}
-                                    name="payment"
-                                    render={({ field }) => (
-                                    <CsInput
-                                        name="payment"
-                                        value={getValues('payment')}
-                                        // type="text"
-                                        placeholder="123"
-                                        onChange={field.onChange}
-                                    />
-                                    )}
-                                />
-                            </WrapInput>
-                            </ContainerInput>
-                        </CsCol>
-                    </CsRow>
-                </WrapperPayment> */}
-
                 <Row className="mb-1 mt-1">
                     <Form.Group as={Col} controlId="formGridEmail">
                         <Flex width='100%'>
@@ -223,8 +186,12 @@ const FormTabOne = () => {
                                 name="date"
                                 // type="text"
                                 render={({ field }) => (
-                                    <CsDatePicker
-                                    selected={startDate} onChange={(date:any) => setStartDate(date)} />
+                                    <>
+                                        <CsDatePicker
+                                        selected={startDate} onChange={(date:any) => setStartDate(date)} />
+                                        <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" />
+                                    </>
+
                                 )}
                             />
                         </WrapInput>
@@ -241,9 +208,9 @@ const FormTabOne = () => {
                                 render={({ field }) => (
                                 <CsInput
                                     name="payment"
-                                    value={getValues('payment')}
+                                    // value={getValues('payment')}
                                     // type="text"
-                                    placeholder="123"
+                                    placeholder="Payment"
                                     onChange={field.onChange}
                                 />
                                 )}
@@ -263,11 +230,13 @@ const FormTabOne = () => {
                                 name="duedate"
                                 // type="text"
                                 render={({ field }) => (
-                                    <CsDatePicker
-                                    selected={startDueDate} onChange={(date:any) => setStartDueDate(date)} />
+                                    <>
+                                        <CsDatePicker
+                                        selected={startDueDate} onChange={(date:any) => setStartDueDate(date)} />
+                                        <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" />
+                                    </>
                                 )}
                             />
-                        <CsImageDatePicker src="/images/imgPi/Group.png" alt="" />
                         </WrapInput>
                     </Form.Group>
 
@@ -278,13 +247,13 @@ const FormTabOne = () => {
                         <WrapInput>
                             <Controller
                                 control={control}
-                                name="payment"
+                                name="ponumber"
                                 render={({ field }) => (
                                 <CsInput
-                                    name="payment"
-                                    value={getValues('payment')}
+                                    name="ponumber"
+                                    // value={getValues('ponumber')}
                                     // type="text"
-                                    placeholder="123"
+                                    placeholder="PO Number"
                                     onChange={field.onChange}
                                 />
                                 )}
@@ -299,30 +268,18 @@ const FormTabOne = () => {
                     <CustomMessageError>{getMessageError}</CustomMessageError> 
                 }
             </CsFlex>
-        </FormSubmit>
     </CsContainer>
-</PageFullWidth>
   )
 }
-const CsRow = styled(Flex)`
-    align-items: center;
-    gap: 10px;
-`
-const CsCol = styled(Flex)`
-    width: 50%;
-`
-const  WrapperDate = styled.div`
-    margin-top: 14px;
-`
-const  WrapperPayment = styled.div`
-    margin-top: 14px;
-`
+
 const CsDatePicker = styled(DatePicker)`
     background: #F8F9FD;
     border-radius: 10px;
     border: none;
     height: 56px;
     width: 100%;
+    font-size: 12px;
+    /* color: #94A3B8; */
 `
 const CsContainer = styled(Flex)`
     width: 100%;
@@ -332,9 +289,6 @@ const CsContainer = styled(Flex)`
     padding: 0px 30px;
     @media only screen and (max-width: 600px) {
         padding: 0px 10px;
-    }
-    @media only screen and (min-width: 768px) {
-        max-width: 600px;
     }
 `
 const CustomMessageError = styled.div`
@@ -358,11 +312,25 @@ const CsFlex = styled(Flex)`
     width: 100%;
 `
 const CsImageDatePicker = styled.img`
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
     position: absolute;
     right: 20px;
     top: 17px;
 `
-
+const CsButtonAdd = styled(Button)`
+  width: fit-content;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #E2E8F0;
+`
+const CsAddIcon = styled(AddIcon)`
+  margin-right: 10px;
+`
+const CsText = styled(Text)`
+  font-size: 12px;
+  color: #FFFFFF;
+  font-weight: 700;
+  margin-left: 10px;
+`
 export default FormTabOne

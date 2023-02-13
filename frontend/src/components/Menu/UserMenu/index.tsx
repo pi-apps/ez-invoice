@@ -71,10 +71,10 @@ const UserMenu = () => {
   const [onPresentLogoutModal, onDismis] = useModal(<LogoutModal onSubmit={signOut} />);
 
   return (
-    userData ?
-      <CsButton onClick={onPresentLogoutModal}>{t('logout')}</CsButton>
-    :
+    userData === null || userData === undefined ?
       <CsButton onClick={signIn}>{t('login')}</CsButton>
+    :
+      <CsButton onClick={onPresentLogoutModal}>{t('logout')}</CsButton>
   )
 }
 

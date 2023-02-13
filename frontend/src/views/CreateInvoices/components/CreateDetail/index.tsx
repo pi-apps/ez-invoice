@@ -6,11 +6,14 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import styled from 'styled-components';
 import Header from 'components/Header';
-import Footer from 'components/Footer';
 import { Button, Flex, Image, Text } from '@phamphu19498/pibridge_uikit';
 import Row from 'components/Layout/Row';
+import Footer from '../Footer';
+import { GetTabInvoice } from 'state/invoice';
 
-const DetailReceived = () => {
+const CreateDetail = () => {
+    const [ dataTabActive ] = GetTabInvoice()
+    // const isActive = dataTabActive?.isActive
     let { slug } = useParams()
 
     const data = [
@@ -108,34 +111,24 @@ const DetailReceived = () => {
                         </WContent>
                         <WAction>
                                 <CsNavItem>
-                                    <Navbar.Brand href="/invoice">
-                                        <CsButton style={{background: '#F8F5FF', color: "#6B39F4"}} >
+                                    <Navbar.Brand href="/newInvoice">
+                                        <CsButton>
                                             Back
-                                        </CsButton>
-                                    </Navbar.Brand>
-                                </CsNavItem>
-
-                                <CsNavItem>
-                                    <Navbar.Brand href="/download">
-                                        <CsButton >
-                                            Pay now
                                         </CsButton>
                                     </Navbar.Brand>
                                 </CsNavItem>
                         </WAction>
                     </Flex>
+                    <Footer isActive="" />
                 </CsWrapContainer>
-            <Footer />
         </CsContainer>
     </PageFullWidth>
   )
 }
 
 const CsNavItem = styled(Nav.Item)`
-  @media only screen and (max-width: 369px) {
     width: 100%;
     margin-bottom: 14px;
-    }
 `
 const WAction = styled(Flex)`
     width: 100%;
@@ -234,7 +227,7 @@ const WContent = styled.div`
 const NavCustom = styled(Nav)`
 `
 const CsButton = styled(Button)<{isActive:boolean}>`
-  width: 156px;
+  width: 100%;
   height: 56px;
   color: #fff;
   @media only screen and (max-width: 370px) {
@@ -242,4 +235,4 @@ const CsButton = styled(Button)<{isActive:boolean}>`
     max-width: 100%;
     }
 `
-export default DetailReceived
+export default CreateDetail

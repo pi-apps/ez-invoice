@@ -99,7 +99,6 @@ const Footer = () => {
           }else {
             openLoginModal();
           }
-          
           break;
         case "account":
           if(userData && !_.isEmpty(userData)){
@@ -131,11 +130,11 @@ const Footer = () => {
             <InvoiceIcon style={styles.icon} actived={activeTab.invoice}/>{t('invoice')}
         </Nav.Link>
       </Nav.Item>
-      <Nav.Item style={styles.navItem}>
+      {/* <Nav.Item style={styles.navItem}>
         <Nav.Link className='d-flex flex-column align-items-center' style={activeTab.account ? {...styles.link, ...styles.activeColor} :styles.link} eventKey="account">
             <AccountIcon  style={styles.icon} actived={activeTab.account}/>{t('account')}
         </Nav.Link>
-      </Nav.Item>
+      </Nav.Item> */}
     </NavCustom>
   );
 }

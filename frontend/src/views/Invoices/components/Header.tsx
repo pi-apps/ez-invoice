@@ -8,7 +8,7 @@ import { Flex, Text, Button } from "@phamphu19498/pibridge_uikit";
 const Header = () => {
     return (
         <ContainerHeader>
-            <Text fontSize="20px" bold>Invoices</Text>
+            <Text fontSize="24px" bold>Invoices</Text>
             <Navbar.Brand href="/newInvoice">
                 <Button>
                     New invoice

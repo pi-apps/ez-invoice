@@ -1,9 +1,12 @@
 import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit";
 import { useDispatch } from "react-redux";
+import { yupResolver } from '@hookform/resolvers/yup'
 import styled from "styled-components";
+import { Controller, useForm } from "react-hook-form"
 import { AppDispatch } from 'state'
 import { tabActiveNewInvoice } from "state/invoice/actions";
 import { useState } from "react";
+import * as Yup from 'yup'
 import FormTabOne from "./FormTabOne";
 import FormTabTwo from "./FormTabTwo";
 import FormTabThree from "./FormTabThree";
@@ -15,6 +18,38 @@ interface PropsSubTab{
 const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
  
     const dispatch = useDispatch<AppDispatch>()
+
+    const InitValues = {
+        invoicenumber: '',
+        avatar:'',
+        file: '',
+        sender: '',
+        billto:'',
+        shipto: '',
+        date: new Date(),
+        duedate: new Date(),
+        payment:'',
+        ponumber:'',
+    }
+    
+    const validationSchema = Yup.object().shape({
+        invoicenumber: Yup.string().required('invoicenumber is required').min(4, 'invoicenumber are between 4 and 160 characters in length').max(160, 'Emails are between 4 and 160 characters in length'),
+        avatar: Yup.string().required('invoicenumber is required'),
+        file: Yup.string().required('file is required').max(100, 'file max 100 characters in length'),
+        sender: Yup.string().required('sender is required').max(100, 'sender max 100 characters in length'),
+        billfrom: Yup.string().required('billto is required'),
+        billto: Yup.string().required('billto is required'),
+        shipto: Yup.string().required('shipto is required'),
+        date: Yup.string().required('date is required'),
+        duedate: Yup.string().required('date is required'),
+        payment: Yup.string().required('payment is required'),
+        ponumber: Yup.string().required('payment is required'),
+    });
+  
+    const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
+    //   const formOptions = { resolver: yupResolver(validationSchema) };
+    const { handleSubmit, formState, control, getValues } = useForm(formOptions);
+    const { errors } = formState;
 
     const handleMinusTabActive = () => {
         if(isActive > 1 && isActive <= 3){
@@ -30,13 +65,13 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
 
     const renderScreens = ( isActive) => {
         if(isActive === 1){
-            return <FormTabOne/>
+            return <FormTabOne formState={formState} control={control} />
         }
         if(isActive === 2){
-            return <FormTabTwo/>
+            return <FormTabTwo formState={formState} control={control} />
         }
         if(isActive === 3){
-            return <FormTabThree/>
+            return <FormTabThree formState={formState} control={control}/>
         }
     }
 
