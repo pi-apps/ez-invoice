@@ -44,7 +44,7 @@ const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-  const [openLoginModal] = useModal(<LoginModal />);
+  const [openLoginModal] = useModal(<LoginModal/>);
   const userData = getUser();
   const [activeTab, setActiveTab] = useState({
     home: true,
@@ -101,13 +101,6 @@ const Footer = () => {
       case "invoice":
         if (userData && !_.isEmpty(userData)) {
           navigate("/invoice");
-        } else {
-          openLoginModal();
-        }
-        break;
-      case "account":
-        if (userData && !_.isEmpty(userData)) {
-          navigate("/account");
         } else {
           openLoginModal();
         }

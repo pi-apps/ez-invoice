@@ -119,7 +119,7 @@ const FormTabThree = ({formState:{errors}, control, setValue }) => {
       </CsContainer>
 
       <CsSubTotal>
-        <Navbar.Brand href="/createDetail/1">
+        <Navbar.Brand href="/createDetail/EZ_1676358432642">
             <CsButtonAdd>
                 <CsText>Preview</CsText>
             </CsButtonAdd>

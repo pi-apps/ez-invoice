@@ -91,6 +91,7 @@ async function generatePdf(invoice: any, language: any) {
     tax: invoice.tax,
     taxType: invoice.taxType,
     discount: invoice.discount,
+    discountType: invoice.discountType,
     shipping: invoice.shipping,
     total: invoice.total,
     amountPaid: invoice.amountPaid,
