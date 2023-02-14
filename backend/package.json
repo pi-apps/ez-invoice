@@ -29,7 +29,6 @@
     "moralis": "^2.13.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "pdf-creator-node": "^2.3.5",
     "puppeteer": "^19.6.3"
   },
   "devDependencies": {

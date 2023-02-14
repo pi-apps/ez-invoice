@@ -17,22 +17,22 @@ async function init() {
   sesAws = new AWS.SES(sesConfig);
 }
 
-async function sendEmailByTemplate(receivers: any, templatePath: string, params: { title: any; username: any, invoiceId: any; invoiceNumber: any; amountDue: any; paymentUrl: any;}) {
+async function sendEmailByTemplate(type: number, receivers: any, templatePath: string, params: { title: any; username: any, invoiceId: any; invoiceNumber: any; amountDue: any; paymentUrl: any;}) {
   const fullTemplatePath = path.join(__dirname, './templates/' + templatePath);
   const content = await getContent(fullTemplatePath, params);
   const senderEmail = `${params.username} <ezinvoice@email.pibridge.org>`;
-  
+  const attachments = type === 1 ? [
+    {
+      filename: `Invoice #${params.invoiceNumber}.pdf`,
+      path: `./downloads/${params.invoiceId}.pdf`,
+    },
+  ] : [];
   const mail = mailcomposer({
     from: senderEmail,
     to: receivers,
     subject: params.title,
     html: content,
-    attachments: [
-      {
-        filename: `Invoice #${params.invoiceNumber}.pdf`,
-        path: `./downloads/${params.invoiceId}.pdf`,
-      },
-    ],
+    attachments: attachments,
   });
   mail.build((err: any, message: any) => {
     if (err) {

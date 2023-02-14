@@ -96,9 +96,9 @@ export default function mountInvoiceEndpoints(router: Router) {
         if (!invoice) {
             return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
         }
-        // if (invoice.downloadUrl) {
-        //     return res.status(200).json(invoice.downloadUrl);
-        // }
+        if (invoice.downloadUrl) {
+            return res.status(200).json(invoice.downloadUrl);
+        }
         const language = req.query.language || "en";
         const downloadUrl = await utils.generatePdf(invoice, language);
         // update the invoice with the download url

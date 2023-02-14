@@ -3,6 +3,7 @@ import { Router } from "express";
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
 import InvoicesModel from "../models/invoices";
+import utils from "../services/utils";
 
 export default function mountPaymentsEndpoints(router: Router) {
   // payment deep link in email
@@ -44,9 +45,9 @@ export default function mountPaymentsEndpoints(router: Router) {
       return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
     }
     const payment = req.body.payment;
-    const paymentId = payment.identifier;
-    const txid = payment.transaction && payment.transaction.txid;
-    const txURL = payment.transaction && payment.transaction._link;
+    const paymentId = payment?.identifier;
+    const txid = payment?.transaction && payment?.transaction.txid;
+    const txURL = payment?.transaction && payment?.transaction._link;
 
     // find the incomplete order
     const order = await InvoicesModel.findOne({ pi_payment_id: paymentId });
@@ -92,11 +93,18 @@ export default function mountPaymentsEndpoints(router: Router) {
     if (!req.session.currentUser) {
       return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
     }
+    const language = req.body.language;
     const paymentId = req.body.paymentId;
     const txid = req.body.txid;
-    await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true } });
+    const invoice = await InvoicesModel.findOneAndUpdate({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true } });
+    if (!invoice) {
+      return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
+    }
     // let Pi server know that the payment is completed
     await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
+    // send mail if the payment is completed
+    const senderEmail = invoice.senderEmail;
+    await utils.sendEmailPaymentSuccess(invoice, senderEmail, req.session.currentUser.username, language);
     return res.status(200).json({ message: `Completed the payment ${paymentId}` });
   });
 

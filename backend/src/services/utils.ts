@@ -1,6 +1,5 @@
 require('dotenv').config()
 const Moralis = require("moralis").default;
-const pdf = require("pdf-creator-node");
 const puppeteer = require('puppeteer');
 const ejs = require('ejs');
 const axios = require('axios');
@@ -8,6 +7,7 @@ import fs from "fs";
 import sesService from "./aws-ses-service";
 const lang_pdf = require('./languages/lang_pdf.json');
 const lang_email = require('./languages/lang_email.json');
+const lang_email_success = require('./languages/lang_email_success.json');
 
 const GOOGLE_API_KEY = 'AIzaSyC0aGU19DRSo0LjOoA9cGuQeBaRlMRCBYo';
 
@@ -107,11 +107,11 @@ async function generatePdf(invoice: any, language: any) {
     filename: `${invoice.invoiceId}.pdf`,
     path: `./downloads/${invoice.invoiceId}.pdf`,
   }
-  // const downloadUrl = uploadToIpfs(download);
-  return download.path;
+  const downloadUrl = uploadToIpfs(download);
+  return downloadUrl;
 }
 
-async function sendEmail(invoice: any, email: string, username: string, signature: string, language: any) {
+async function sendEmail(invoice: any, email: string, username: string, signature: string, language: string) {
   let lang = "";
   for (const key in lang_email) {
     lang += lang_email[key] + ":";
@@ -128,7 +128,7 @@ async function sendEmail(invoice: any, email: string, username: string, signatur
       "text_invoice_no": langArr[2] || lang_email["text_invoice_no"],
       "text_invoice_total": langArr[3] || lang_email["text_invoice_total"],
       "text_pay": langArr[4] || lang_email["text_pay"],
-      "title": `[${username}] Invoice #${invoice.invoiceNumber}`,
+      "title": `[EZ Invoice] Invoice #${invoice.invoiceNumber}`,
       "username": username,
       "invoiceId": invoice.invoiceId,
       "invoiceNumber": invoice.invoiceNumber,
@@ -136,7 +136,35 @@ async function sendEmail(invoice: any, email: string, username: string, signatur
       "paymentUrl": `${process.env.PAYMENT_GATEWAY_URL}/${signature}`,   
   }
   // Send otp via email
-  await sesService.sendEmailByTemplate([email], templatePath, params);
+  await sesService.sendEmailByTemplate(1, [email], templatePath, params);
+}
+
+async function sendEmailPaymentSuccess(invoice: any, email: string, username: string, language: string) {
+  let lang = "";
+  for (const key in lang_email_success) {
+    lang += lang_email_success[key] + ":";
+  }
+  lang = lang.slice(0, -1);
+  if (language !== "en") {
+    lang  = await translateText(lang, "en", language);
+  }
+  const langArr = lang.split(":");
+  const templatePath = "send-invoice.html";
+  const params = {
+      "text_new_invoice": langArr[0] || lang_email_success["text_new_invoice"],
+      "text_sent_invoice": langArr[1] || lang_email_success["text_sent_invoice"],
+      "text_invoice_no": langArr[2] || lang_email_success["text_invoice_no"],
+      "text_invoice_total": langArr[3] || lang_email_success["text_invoice_total"],
+      "text_pay": langArr[4] || lang_email_success["text_pay"],
+      "title": `[EZ Invoice] Invoice #${invoice.invoiceNumber}`,
+      "username": username,
+      "invoiceId": invoice.invoiceId,
+      "invoiceNumber": invoice.invoiceNumber,
+      "amountDue": invoice.amountDue,
+      "paymentUrl": `${process.env.PAYMENT_GATEWAY_URL}`,   
+  }
+  // Send otp via email
+  await sesService.sendEmailByTemplate(2, [email], templatePath, params);
 }
 
 function generateRandomString(length: number) {
@@ -149,4 +177,4 @@ function generateRandomString(length: number) {
   return result;
 }
 
-export default { uploadToIpfs, generatePdf, sendEmail, generateRandomString };
+export default { uploadToIpfs, generatePdf, sendEmail, sendEmailPaymentSuccess, generateRandomString };
