@@ -1,15 +1,28 @@
-import React, { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 
-// create a context
-export const LanguageContext = createContext({});
+type LanguageType = {
+  name?: string;
+  code?: string;
+};
 
-// a component that will act as the context provider
-export default function LanguageContextProvider({ children }) {
-  const [nameLanguage, setNameLanguage] = useState("");
+export type LangaugesType = {
+  language: any;
+  setLanguage: any;
+};
 
+type LangaugesContextProviderType = {
+  children: React.ReactNode;
+};
+
+export const LanguagesContext = createContext({} as LangaugesType);
+
+export const LanguagesContextProvider = ({
+  children,
+}: LangaugesContextProviderType) => {
+  const [language, setLanguage] = useState<any>(null);
   return (
-    <LanguageContext.Provider value={{ nameLanguage }}>
+    <LanguagesContext.Provider value={{ language, setLanguage }}>
       {children}
-    </LanguageContext.Provider>
+    </LanguagesContext.Provider>
   );
-}
+};
