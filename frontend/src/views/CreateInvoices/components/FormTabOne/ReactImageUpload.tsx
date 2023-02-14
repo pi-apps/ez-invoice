@@ -1,26 +1,23 @@
 import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit";
+import { useState } from "react";
 import { AddIcon } from "components/Svg";
-import React from "react";
-import ReactDOM from "react-dom";
 import ImageUploading from "react-images-uploading";
 import styled from "styled-components";
 
-function ReactImageUpload({images , setImages }) {
-  const maxNumber = 69;
+function ReactImageUpload({images , setValue }) {
+  const [ logoImg, setLogoImages] = useState([]);
   const onChange = (imageList, addUpdateIndex) => {
-    // console.log(imageList, addUpdateIndex);
-    console.log('imageList',imageList);
-    setImages(imageList);
+    setValue("logo",imageList[0]);
+    setLogoImages(imageList)
   };
-
+  
   return (
     <div>
       <ImageUploading
         value={images}
         onChange={onChange}
-        maxNumber={maxNumber}
         dataURLKey="data_url"
-        acceptType={["jpg"]}
+        acceptType={['jpg','png']}
       >
         {({
           imageList,
@@ -32,9 +29,8 @@ function ReactImageUpload({images , setImages }) {
         }) => (
           <div>
             {
-                images.length === 0 && (
-                    <CsButtonAdd onClick={onImageUpload}
-                        {...dragProps}>
+                logoImg.length === 0 && (
+                    <CsButtonAdd onClick={onImageUpload}>
                         <CsAddIcon />
                         <CsText>Add your logo</CsText>
                     </CsButtonAdd>
@@ -42,14 +38,14 @@ function ReactImageUpload({images , setImages }) {
             }
 
 
-            {imageList.map((image, index) => {
-                const imageName = image?.file?.name
+            {logoImg.map((image, index) => {
+                const imageName = logoImg[0].file?.name
                 return(
               <Flex mt='1rem' key={index} alignItems="center">
-                <CsAvatar src={image.data_url} alt={imageName} />
+                <CsAvatar src={logoImg[0].data_url} alt={imageName} />
                 <div className="image-item__btn-wrapper">
-                  <CsButtonUpdate onClick={() => onImageUpdate(index)}>Update</CsButtonUpdate>
-                  <CsButtonRemove onClick={() => onImageRemove(index)}>Remove</CsButtonRemove>
+                  <CsButtonUpdate >Update</CsButtonUpdate>
+                  <CsButtonRemove >Remove</CsButtonRemove>
                 </div>
               </Flex>
             )})}
@@ -67,23 +63,31 @@ const CsAvatar = styled.img`
     border-radius: 50%;
     margin-right: 10px;
 `
-const CsButtonUpdate = styled(Button)`
+const CsButtonUpdate = styled.div`
   margin-top: 12px;
   margin-bottom: 12px;
   border-bottom: 1px solid #E2E8F0;
   margin-right: 10px;
 
 `
-const CsButtonRemove = styled(Button)`
+const CsButtonRemove = styled.div`
   margin-top: 12px;
   margin-bottom: 12px;
   border-bottom: 1px solid #E2E8F0;
 `
 
-const CsButtonAdd = styled(Button)`
+const CsButtonAdd = styled.div`
   margin-top: 1rem;
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  cursor: pointer;
+  height: 45px;
+  background: #6B39F4;
+  border-radius: 6px;
   margin-bottom: 12px;
-  border-bottom: 1px solid #E2E8F0;
 `
 
 const CsAddIcon = styled(AddIcon)`

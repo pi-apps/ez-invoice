@@ -10,7 +10,7 @@ import * as Yup from 'yup'
 import FormTabOne from "./FormTabOne";
 import FormTabTwo from "./FormTabTwo";
 import FormTabThree from "./FormTabThree";
-import { axiosClient } from "config/htttp";
+import { backendURL, Csconfig, axiosClient } from "config/htttp";
 import useToast from "hooks/useToast";
 import axios from "axios";
 
@@ -26,7 +26,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     myHeaders.append("Cookie", "connect.sid=s%3ATcDzOEc7V94RgIixbDBrgXtGI_-_-SqE.9dwiOTiwXNmX7xWPjffPRlX6cWorfPczW6D9mUArNrU");
     
     const InitValues = {
-        senderEmail: '',
+        senderEmail: 'khanghy3004@gmail.com',
         billFrom:'',
         billTo:'',
         shipTo: '',
@@ -42,7 +42,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         discount:'',
         shipping:'',
         amountPaid:'',
-        logo: null,
+        logo: "",
     }
     
     const validationSchema = Yup.object().shape({
@@ -67,10 +67,9 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
 
     const { handleSubmit, formState, control, getValues, setValue } = useForm(formOptions);
     const { errors , touchedFields, isDirty, isLoading } = formState;
-console.log('images', images?.[0]?.file.name)
-    const onSubmit = async data => {
-        console.log('data', data)
 
+    const onSubmit = async data => {
+        
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
             formData.append("billFrom", `${data.billFrom}`);
@@ -79,7 +78,7 @@ console.log('images', images?.[0]?.file.name)
             formData.append("dueDate", `${data.dueDate}`);
             formData.append("paymentTerms", `${data.paymentTerms}`);
             formData.append("poNumber", `${data.poNumber}`);
-            formData.append("items", "[ { \"name\": \"Create token\", \"quantity\": 2, \"price\": 5 } ]");
+            formData.append("items", `${data.items}`);
             formData.append("notes", `${data.notes}`);
             formData.append("terms", `${data.terms}`);
             formData.append("tax", `${data.tax}`);
@@ -87,25 +86,22 @@ console.log('images', images?.[0]?.file.name)
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
-            formData.append("logo", images?.[0]?.file.name);
+            formData.append("logo", `${data.logo}`);
 
-        try {
-            const submitReq = await axiosClient.post('invoice/create', formData);
-            console.log('submitReq', submitReq)
-        } catch (error) {
-            console.log("errorSubmit", error);
+        console.log("formData", formData)
+        const submitReq = await axiosClient.post('/invoice/create', formData, 
+            {
+                headers: {
+                    'Content-Type': `multipart/form-data; boundary=<calculated when request is sent>`,
+                    'Accept': '*'
+                }
+            }
+        );
+        if(submitReq.status == 200){
+            toastSuccess('update successful');
+        }else {
+            toastError('error', 'system error!!!')
         }
-        
-        // if(submitReq.status == 200 || submitReq.status == 201){
-        //     toastSuccess('update successful');
-        //     // dispatch(CreateInvoice(submitReq.data));
-        //     // if(location && location.pathname == "/register"){
-        //     //     navigate("/");
-        //     // }
-        // }else {
-        //     toastError('error', 'system error!!!')
-        // }
-
     }
 
     const handleMinusTabActive = () => {
@@ -122,7 +118,7 @@ console.log('images', images?.[0]?.file.name)
 
     const renderScreens = ( isActive) => {
         if(isActive === 1){
-            return <FormTabOne images={images} setImages={setImages} formState={formState} setValue={setValue} control={control} />
+            return <FormTabOne images={getValues("logo")} formState={formState} setValue={setValue} control={control} />
         }
         if(isActive === 2){
             return <FormTabTwo formState={formState} setValue={setValue} control={control} />
