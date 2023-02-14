@@ -80,6 +80,10 @@ export interface ListSent {
     listSent: ListSentItems[]
 }
 
+export interface ListReceived {
+    listReceived: ListSentItems[]
+}
+
 export interface DetailsInvoice {
     details: ItemsDetails
 }

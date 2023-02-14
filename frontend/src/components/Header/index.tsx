@@ -56,8 +56,8 @@ const Header = () => {
             />
           </Navbar.Brand>
           <Nav className="justify-content-end">
-            {userData?.firstName && (
-              <Text padding="0 10px">{userData?.firstName}</Text>
+            {userData?.username && (
+              <Text padding="0 10px">{userData?.username}</Text>
             )}
             {
               loading && (

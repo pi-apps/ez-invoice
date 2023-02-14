@@ -14,13 +14,10 @@ import ReceiveTab from "./ReceiveContent/ReceiveTab";
 const Invoices = () => {
     const [ dataInvoice ] = GetDataInvoice()
     const isSent = dataInvoice?.isSent
-
-    UseGetAllInvoiceSentCore()
-    const items = GetAnInvoice()
     
     const renderContent = (isSent) => {
         if(isSent){
-            return <SentTab dataInvoice={items?.listSent}/>
+            return <SentTab/>
         }
         if(!isSent){
             return <ReceiveTab />
