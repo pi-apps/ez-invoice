@@ -42,9 +42,6 @@ const Footer = ({ isActive }) => {
       case "invoice":
         navigate("/invoice");
         break;
-      case "account":
-        navigate("/register");
-        break;
       default:
         navigate("/");
         break;

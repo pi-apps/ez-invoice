@@ -13,10 +13,6 @@ const AccpetModal: React.FC<Props> = ({ onDismiss }) => {
     function declineClick(){
         onDismiss()
     }
-    function accpetClick(){
-        window.location.href = '/register';
-        onDismiss()
-    }
   return (
     <Modal title="" onDismiss={onDismiss} maxWidth="550px" margin='0 24px' modalIcon={<AccpetIcon/>}>
         <Flex flexDirection="column" width="100%">
@@ -38,7 +34,7 @@ const AccpetModal: React.FC<Props> = ({ onDismiss }) => {
                 <Button width="48%" variant='secondary' onClick={declineClick}>
                     {t('first_login_popup.button_decline')}
                 </Button>
-                <Button width="48%" onClick={accpetClick}>
+                <Button width="48%">
                     {t('first_login_popup.button_allow')}
                 </Button>
             </Flex>
