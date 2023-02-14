@@ -12,6 +12,7 @@ const schema = new Schema({
     roles: { type: Array, default: ['USER'] },
     language: { type: String, default: "en" },
     accessToken: { type: String, required: true },
+    isActive: { type: Boolean, default: false },
 }, schemaOptions);
 
 schema.set('toJSON', { virtuals: true });

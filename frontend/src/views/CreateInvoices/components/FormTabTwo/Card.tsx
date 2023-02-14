@@ -6,18 +6,17 @@ import Row from 'react-bootstrap/esm/Row'
 import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
 
-const Card = ( ) => {
-  const [ amount, setAmount] = useState(1)
-  const [ price, setPrice] = useState(0.00)
-  const amountTotal = amount * price
-  function handleChangeAmount(event) {
-    setAmount(event.target.value)
-    // console.log(event.target.value);
-  }
-  function handleChangePrice(event) {
-    setPrice(event.target.value)
-    // console.log(event.target.value);
-  }
+const Card = ({formState, setValue, control, index } ) => {
+
+  // const amountTotal = amount * price
+  // function handleChangeAmount(event) {
+  //   setAmount(event.target.value)
+  //   // console.log(event.target.value);
+  // }
+  // function handleChangePrice(event) {
+  //   setPrice(event.target.value)
+  //   // console.log(event.target.value);
+  // }
   
   return (
     <CsWrapperCard>
@@ -30,15 +29,60 @@ const Card = ( ) => {
             </CsFlexHeading>
         </CsHeading>
         <CsContent>
-            <CsTextArea placeholder='Description of service or product' />
+            {/* <CsTextArea placeholder='Description of service or product' /> */}
+            <ContainerInput>
+                    <WrapInput>
+                        <Controller
+                            control={control}
+                            name="name"
+                            // rules={rules.sender}
+                            render={({ field }) => (
+                            <CsTextArea
+                                name="name"
+                                value={field.value}
+                                placeholder="Description of service or product"
+                                onChange={(event) => setValue("name", event.target.value)}
+                            />
+                            )}
+                        />
+                    </WrapInput>
+              </ContainerInput>
+
             <CsRowINput>
-                <CsInput placeholder='1' onChange={handleChangeAmount} />
-                <CsInput placeholder='0.00 Pi' onChange={handleChangePrice}/>
+                <WrapInput>
+                    <Controller
+                        control={control}
+                        name="quantity"
+                        // rules={rules.sender}
+                        render={({ field }) => (
+                        <CsInput
+                            name="quantity"
+                            value={field.value}
+                            placeholder="1"
+                            onChange={(event) => setValue("quantity", event.target.value)}
+                        />
+                        )}
+                    />
+                </WrapInput>
+                <WrapInput>
+                    <Controller
+                        control={control}
+                        name="price"
+                        render={({ field }) => (
+                        <CsInput
+                            name="price"
+                            value={field.value}
+                            placeholder="0.00 Pi"
+                            onChange={(event) => setValue("price", event.target.value)}
+                        />
+                        )}
+                    />
+                </WrapInput>
             </CsRowINput>
         </CsContent>
         <Flex mt="24px">
             <Cstitle>Amount: </Cstitle>
-            <CsAmount> {amountTotal} Pi</CsAmount>
+            <CsAmount>  Pi</CsAmount>
             
         </Flex>
   </CsWrapperCard>
@@ -127,7 +171,7 @@ const CsRowINput = styled(Flex)`
 const CsInput = styled.input`
   gap: 8px;
   height: 56px;
-  width: 50%;
+  width: 100%;
   padding: 8px 16px;
   background: #F8F9FD;
   border-radius: 12px;

@@ -11,7 +11,7 @@ import ChooseMethod from './ChooseMethod';
 import { AddIcon2 } from 'components/Svg';
 import { useState } from 'react';
 
-const FormTabThree = ({formState:{errors}, control }) => {
+const FormTabThree = ({formState:{errors}, control, setValue }) => {
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)

@@ -1,0 +1,20 @@
+{
+    "text_title": "INVOICE",
+    "text_bill_from": "Bill From",
+    "text_bill_to": "Bill To",
+    "text_issue_date": "Issue Date",
+    "text_due_date": "Due Date",
+    "text_payment_terms": "Payment Terms",
+    "text_po_number": "PO Number",
+    "text_balance_due": "Balance Due",
+    "text_item": "ITEM",
+    "text_quantity": "QUANTITY",
+    "text_price": "PRICE",
+    "text_total": "TOTAL",
+    "text_subtotal": "Subtotal",
+    "text_tax": "Tax",
+    "text_discount": "Discount",
+    "text_shipping": "Shipping",
+    "text_amount_paid": "Amount Paid",
+    "text_amount_due": "Amount Due"
+}

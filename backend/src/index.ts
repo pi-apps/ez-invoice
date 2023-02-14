@@ -1,3 +1,5 @@
+require("dotenv").config();
+const Moralis = require("moralis").default;
 import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
@@ -11,6 +13,7 @@ import env from './environments';
 import mountPaymentsEndpoints from './handlers/payments';
 import mountUserEndpoints from './handlers/users';
 import mountInvoiceEndpoints from './handlers/invoices';
+import sesService from "./services/aws-ses-service";
 import mongoose from 'mongoose';
 
 // We must import typedefs for ts-node-dev to pick them up when they change (even though tsc would supposedly
@@ -98,6 +101,12 @@ app.listen(8000, async () => {
     // app.locals.userCollection = db.collection('users');
     // app.locals.invoiceCollection = db.collection('invoices');
     console.log('Connected to MongoDB on: ', mongoUri)
+
+    const MORALIS_API_KEY = process.env.MORALIS_API_KEY;
+    await Moralis.start({
+      apiKey: MORALIS_API_KEY,
+    });
+    sesService.init();
   } catch (err) {
     console.error('Connection to MongoDB failed: ', err)
   }

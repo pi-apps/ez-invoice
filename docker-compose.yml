@@ -22,6 +22,7 @@ services:
     build: ./frontend
     environment:
       BACKEND_URL: ${BACKEND_URL}
+      SANDBOX_SDK: "false"
 
   backend:
     build: ./backend
@@ -30,18 +31,15 @@ services:
       SESSION_SECRET: ${SESSION_SECRET}
       PI_API_KEY: ${PI_API_KEY}
       PLATFORM_API_URL: ${PLATFORM_API_URL}
-      MONGO_HOST: mongo
-      MONGODB_DATABASE_NAME: ${MONGODB_DATABASE_NAME}
-      MONGODB_USERNAME: ${MONGODB_USERNAME}
-      MONGODB_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_URI: ${MONGO_URI}
       FRONTEND_URL: ${FRONTEND_URL}
 
-  mongo:
-    image: mongo:5.0
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
-    ports:
-      - 27027:27017
-    volumes:
-      - ${DATA_DIRECTORY}/mongo/data:/data/db
+  # mongo:
+  #   image: mongo:5.0
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+  #     MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+  #   ports:
+  #     - 27027:27017
+  #   volumes:
+  #     - ${DATA_DIRECTORY}/mongo/data:/data/db

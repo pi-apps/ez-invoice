@@ -24,10 +24,7 @@ const UserMenu = () => {
     const scopes = ["username", "payments"];
     window.Pi.authenticate(scopes, onIncompletePaymentFound)
       .then(async function (auth) {
-        console.log("authResult", auth);
-        console.log("userData", userData);
         const loginUser = await signInUser(auth);
-        console.log("loginUser", loginUser);
         if (loginUser) {
           const userInfor = await axiosClient.get("user/info");
           if (userInfor) {
@@ -41,7 +38,7 @@ const UserMenu = () => {
       });
     // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
   };
-
+  
   useEffect(() => {
     if (userData && !_.isEmpty(userData)) {
       const firstName = userData.firstName;
