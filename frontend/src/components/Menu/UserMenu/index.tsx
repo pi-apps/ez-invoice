@@ -38,24 +38,6 @@ const UserMenu = () => {
       });
     // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
   };
-
-  useEffect(() => {
-    const scopes = ["username", "payments"];
-    window.Pi.authenticate(scopes, onIncompletePaymentFound)
-      .then(async function (auth) {
-        const loginUser = await signInUser(auth);
-        if (loginUser) {
-          const userInfor = await axiosClient.get("user/info");
-          if (userInfor) {
-            dispatch(setUser(userInfor.data));
-          }
-        }
-        console.log(`Hi there! You're ready to make payments!`);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-  }, [])
   
   useEffect(() => {
     if (userData && !_.isEmpty(userData)) {
