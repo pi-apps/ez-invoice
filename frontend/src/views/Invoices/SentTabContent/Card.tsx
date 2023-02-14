@@ -5,14 +5,38 @@ import Navbar from "react-bootstrap/Navbar";
 import { useParams } from "react-router-dom";
 import { Translate } from "react-auto-translate";
 
-const Card = ({ index }) => {
-  let { slug } = useParams();
-  const status = ["Unpaid", "Paid"];
-  const randomElement = status[Math.floor(Math.random() * status.length)];
-  const isUnpaid = randomElement;
+interface Props {
+  images:string
+  id:string
+  create:string
+  billTo:string
+  amountDue:string
+  paid:boolean
+}
 
+const Card: React.FC<Props> = ({ 
+  images,
+  id,
+  create,
+  billTo,
+  amountDue,
+  paid,
+ }) => {
+
+  function convertDate(date: any) {
+    if (date) {
+      const today = new Date(date)
+      const dd = String(today.getDate()).padStart(2, '0')
+      const mm = String(today.getMonth() + 1).padStart(2, '0')
+      const yyyy = today.getFullYear()
+      return (
+        <CsText >{dd}/{mm}/{yyyy}</CsText>
+      )
+    }
+    return null
+  }
   return (
-    <Navbar.Brand href={`/detailSent/${index}`}>
+    <Navbar.Brand href={`/detailSent/${id}`}>
       <CsContainer>
         <CsRow>
           <CsCol>
@@ -20,23 +44,23 @@ const Card = ({ index }) => {
               <Image
                 width={16}
                 height={16}
-                src="/images/imgPi/sentIcon.png"
-                alt=""
+                src={images}
+                alt="logo"
               />
             </CsButton>
           </CsCol>
-          <CsCol>
+          <Flex flexDirection="column">
             <CsText bold>
-              <Translate>Invoice</Translate> #1
+              <Translate>Invoice</Translate> #{id}
             </CsText>
-            <CsText>01/12/23</CsText>
+            {convertDate(create)}
+          </Flex>
+          <CsCol>
+            <CsText bold>{billTo}</CsText>
+            <CsText>{amountDue} Pi</CsText>
           </CsCol>
           <CsCol>
-            <CsText bold>Hesman</CsText>
-            <CsText>100.00 Pi</CsText>
-          </CsCol>
-          <CsCol>
-            {isUnpaid === "Unpaid" ? (
+            { !paid  ? (
               <CsStaTusUnpaid>
                 <Translate>Unpaid</Translate>
               </CsStaTusUnpaid>

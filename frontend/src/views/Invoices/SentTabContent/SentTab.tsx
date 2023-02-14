@@ -1,25 +1,43 @@
 import { Flex, Text } from "@phamphu19498/pibridge_uikit";
-import React from "react";
-import styled from "styled-components";
 import { Translate } from "react-auto-translate";
+import styled from "styled-components";
 import Card from "./Card";
 
 const SentTab = ({ dataInvoice }) => {
-  console.log("dataInvoice", dataInvoice);
   return (
     <CsWrapContainer>
-      {[1, 2, 3].map(() => {
-        return (
-          <CsContent>
-            <CsText>
-              <Translate>20 October 2022</Translate>
-            </CsText>
-            {[1, 2, 3].map((_, index) => {
-              return <Card index={index + 1} />;
+      { dataInvoice?.length ?
+        <>
+            {dataInvoice.map((items) => {
+              return (
+                <CsContent>
+                  <CsText>
+                    <Translate>{items?.date}</Translate>
+                  </CsText>
+                  {items?.listItems.map((data, index) => {
+                    return (
+                      <Card
+                        images={data?.logoUrl}
+                        id={data?.invoiceId}
+                        create={data?.createAt}
+                        billTo={data?.billTo}
+                        amountDue={data?.amountDue}
+                        paid={data?.paid}
+                      />
+                    )
+                    
+                  })}
+                </CsContent>
+              );
             })}
-          </CsContent>
-        );
-      })}
+        </>
+      :
+        <Flex width='100%' justifyContent="center" mt="2rem">
+            <Text>No Data</Text>
+        </Flex>
+      }
+      
+      
     </CsWrapContainer>
   );
 };

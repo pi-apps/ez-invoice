@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit"
-import { allInvoice, tabActive, tabActiveNewInvoice, getAnInvoice, fetchLoading, fetchFailure } from "./actions"
-import { ItemsDetails } from "./types"
+import { allInvoice, tabActive, tabActiveNewInvoice, getAnInvoice, fetchLoading, fetchFailure, getAllInvoiceSent } from "./actions"
+import { ItemsDetails, ListSent, ListSentItems } from "./types"
 
 interface globalStateInvoice {
     isSent:boolean
@@ -8,7 +8,8 @@ interface globalStateInvoice {
     invoice_all:{},
     details:ItemsDetails,
     isLoading:boolean,
-    isFailure:boolean
+    isFailure:boolean,
+    listSent: ListSentItems[]
 }
 
 export const initialState: globalStateInvoice = {
@@ -35,7 +36,8 @@ export const initialState: globalStateInvoice = {
     },
     details: null,
     isLoading:false,
-    isFailure:false
+    isFailure:false,
+    listSent: null
 }
 
 export default createReducer(initialState, (builder) =>
@@ -58,5 +60,7 @@ export default createReducer(initialState, (builder) =>
     .addCase(fetchFailure, (state, action) => {
         state.isFailure = action.payload.isFailure
     })
-    
+    .addCase(getAllInvoiceSent, (state, action) => {
+        state.listSent = action.payload.listSent
+    })
 )

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "state";
-import { fetchAnInvoice } from "./fetchData";
-import { getAnInvoice, fetchLoading, fetchFailure } from "./actions";
+import { fetchAnInvoice, fetchAllInvoiceSent } from "./fetchData";
+import { getAnInvoice, fetchLoading, fetchFailure, getAllInvoiceSent } from "./actions";
 
 export const GetDataInvoice = () => {
     const dataInvoice = useSelector<AppState, AppState['invoice']>((state) => state.invoice)
@@ -40,6 +40,24 @@ export const UseGetAnInvoiceCore = (invoiceId:string) => {
             dispatch(fetchFailure({isFailure:true}))
         }
     }, [dispatch, invoiceId])
+}
+
+export const UseGetAllInvoiceSentCore = () => {
+    const dispatch = useDispatch<AppDispatch>()
+    useEffect(() => {
+        const getDataAllInvoiceSent = async () => {
+            try {
+                dispatch(fetchLoading({isLoading:true}))
+                const resultInvoiceDetail = await fetchAllInvoiceSent()
+                
+                dispatch(getAllInvoiceSent(resultInvoiceDetail))
+                dispatch(fetchLoading({isLoading:false}))
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        getDataAllInvoiceSent()
+    }, [dispatch])
 }
 
 export const GetAnInvoice = () => {

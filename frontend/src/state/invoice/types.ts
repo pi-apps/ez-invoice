@@ -72,8 +72,12 @@ export interface ItemsDetails {
     id: string
 }
 
-export interface ListInvoice {
-    listInvoice: ItemsDetails[]
+export interface ListSentItems {
+    date: string,
+    listItems: ItemsDetails[]
+}
+export interface ListSent {
+    listSent: ListSentItems[]
 }
 
 export interface DetailsInvoice {
