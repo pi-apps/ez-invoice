@@ -6,20 +6,24 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Card from './Card'
 
-const FormTabTwo = ({formState, control }) => {
-  const arraydata = [1,2]
+const FormTabTwo = ({formState, control, setValue }) => {
+  const [indexes, setIndexes] = React.useState([]);
+  const [ price, setPrice] = useState(0.00)
+
+  const arraydata = [ { name: '', quantity: 0, price: 0 } ]
   const [array, setArray] = useState(arraydata)
 
   const handleAddItem = () => {
-    setArray([...array, 1])
+    setArray([...array, { name: '', quantity: 0, price: 0 }])
   }
+
   console.log('array', array)
   return (
     <CsWrapperForm>
       <CsContainer>
         {
           array.map((_, index) => (
-            <Card />
+            <Card index={index} formState={formState} setValue={setValue} control={control} />
           ))
         }
       </CsContainer>

@@ -48,6 +48,7 @@
     "react-helmet": "^6.1.0",
     "react-helmet-async": "^1.0.9",
     "react-i18next": "^12.1.5",
+    "react-images-uploading": "^3.1.7",
     "react-markdown": "^6.0.2",
     "react-meta-tags": "^1.0.1",
     "react-number-format": "^4.9.1",

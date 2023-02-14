@@ -38,7 +38,7 @@ const Register = () => {
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
     const { handleSubmit, formState: { errors, isValid }, control, getValues, setValue } = useForm(formOptions);
     const onSubmit = async data => {
-        const submitReq = await axiosClient.post('user/update', data);
+        const submitReq = await axiosClient.post('/user/update', data);
         if(submitReq.status == 200 || submitReq.status == 201){
             toastSuccess('update successful');
             dispatch(setUser(submitReq.data));

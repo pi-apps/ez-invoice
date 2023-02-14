@@ -5,13 +5,14 @@ import styled from "styled-components";
 import { Controller, useForm } from "react-hook-form"
 import { AppDispatch } from 'state'
 import { tabActiveNewInvoice } from "state/invoice/actions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from 'yup'
 import FormTabOne from "./FormTabOne";
 import FormTabTwo from "./FormTabTwo";
 import FormTabThree from "./FormTabThree";
 import { axiosClient } from "config/htttp";
 import useToast from "hooks/useToast";
+import axios from "axios";
 
 interface PropsSubTab{
     isActive:number
@@ -19,9 +20,11 @@ interface PropsSubTab{
 
 const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     const { toastSuccess, toastError } = useToast()
- 
+    const [images, setImages] = useState([]);
     const dispatch = useDispatch<AppDispatch>()
-
+    var myHeaders = new Headers();
+    myHeaders.append("Cookie", "connect.sid=s%3ATcDzOEc7V94RgIixbDBrgXtGI_-_-SqE.9dwiOTiwXNmX7xWPjffPRlX6cWorfPczW6D9mUArNrU");
+    
     const InitValues = {
         senderEmail: '',
         billFrom:'',
@@ -31,7 +34,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         dueDate: new Date(),
         paymentTerms:'',
         poNumber:'',
-        items:'',
+        items: JSON.stringify([{name: "",quantity:0,price:0}]),
         notes:'',
         terms:'',
         tax:'',
@@ -39,7 +42,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         discount:'',
         shipping:'',
         amountPaid:'',
-        logo:'',
+        logo: null,
     }
     
     const validationSchema = Yup.object().shape({
@@ -60,26 +63,49 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         logo: Yup.string().required('payment is required'),
     });
 
-
-    // const formOptions = { resolver: yupResolver(validationSchema) };
-    //   const formOptions = { resolver: yupResolver(validationSchema) };
-    const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
+    const formOptions = { defaultValues: InitValues };
 
     const { handleSubmit, formState, control, getValues, setValue } = useForm(formOptions);
     const { errors , touchedFields, isDirty, isLoading } = formState;
-    console.log('setValue', setValue)
-    
+console.log('images', images?.[0]?.file.name)
     const onSubmit = async data => {
-        const submitReq = await axiosClient.post('create', data);
-        if(submitReq.status == 200 || submitReq.status == 201){
-            toastSuccess('create invoice successful');
-            // dispatch(setUser(submitReq.data));
-            // if(location && location.pathname == "/register"){
-            //     navigate("/");
-            // }
-        }else {
-            toastError('error', 'system error!!!')
+        console.log('data', data)
+
+        const formData = new FormData();
+            formData.append("senderEmail", `${data.senderEmail}`);
+            formData.append("billFrom", `${data.billFrom}`);
+            formData.append("billTo", `${data.billTo}`);
+            formData.append("shipTo", `${data.shipTo}`);
+            formData.append("dueDate", `${data.dueDate}`);
+            formData.append("paymentTerms", `${data.paymentTerms}`);
+            formData.append("poNumber", `${data.poNumber}`);
+            formData.append("items", "[ { \"name\": \"Create token\", \"quantity\": 2, \"price\": 5 } ]");
+            formData.append("notes", `${data.notes}`);
+            formData.append("terms", `${data.terms}`);
+            formData.append("tax", `${data.tax}`);
+            formData.append("taxType", `${data.taxType}`);
+            formData.append("discount", `${data.discount}`);
+            formData.append("shipping", `${data.shipping}`);
+            formData.append("amountPaid", `${data.amountPaid}`);
+            formData.append("logo", images?.[0]?.file.name);
+
+        try {
+            const submitReq = await axiosClient.post('invoice/create', formData);
+            console.log('submitReq', submitReq)
+        } catch (error) {
+            console.log("errorSubmit", error);
         }
+        
+        // if(submitReq.status == 200 || submitReq.status == 201){
+        //     toastSuccess('update successful');
+        //     // dispatch(CreateInvoice(submitReq.data));
+        //     // if(location && location.pathname == "/register"){
+        //     //     navigate("/");
+        //     // }
+        // }else {
+        //     toastError('error', 'system error!!!')
+        // }
+
     }
 
     const handleMinusTabActive = () => {
@@ -96,15 +122,16 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
 
     const renderScreens = ( isActive) => {
         if(isActive === 1){
-            return <FormTabOne formState={formState} getValues={getValues} setValue={setValue} control={control} />
+            return <FormTabOne images={images} setImages={setImages} formState={formState} setValue={setValue} control={control} />
         }
         if(isActive === 2){
-            return <FormTabTwo formState={formState} control={control} />
+            return <FormTabTwo formState={formState} setValue={setValue} control={control} />
         }
         if(isActive === 3){
-            return <FormTabThree formState={formState} control={control}/>
+            return <FormTabThree formState={formState} setValue={setValue} control={control}/>
         }
     }
+
 
     return (
         <>

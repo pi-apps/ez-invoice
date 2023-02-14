@@ -17,8 +17,10 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useDispatch } from 'react-redux'
 import { AddIcon } from 'components/Svg'
+import ReactImageUpload from './ReactImageUpload'
+import { GetAllInvoice } from 'state/invoice'
 
-const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
+const FormTabOne = ({formState:{errors}, control, setValue, images, setImages}) => {
   const dispatch = useDispatch()
   const [avatar, setAvatar] = useState('')
   const [checkError, setCheckError] = useState(false)
@@ -26,6 +28,8 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
 
+const allInvoice = GetAllInvoice()
+console.log('allInvoice', allInvoice)
 //   const InitValues = {
 //     senderEmail: '',
 //     billFrom:'',
@@ -58,7 +62,7 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
     <CsContainer >
             <CsFlex>
                 {/* Invoice number */}
-                {/* <Flex width='100%'>
+                <Flex width='100%'>
                     <CsLabel mt="1rem" color="#64748B">Invoice number</CsLabel>
                 </Flex>
                 <ContainerInput>
@@ -78,28 +82,11 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
                         />
                     </WrapInput>
                     <ErrorMessages errors={errors} name="invoicenumber" />
-                </ContainerInput> */}
+                </ContainerInput>
 
                 {/* Add your logo */}
-                {/* <ContainerInputFile mt="1rem">
-                    <WrapInput style={{background: 'transparent', marginTop: '1rem'}}>
-                        <Controller
-                            control={control}
-                            name="invoicenumber"
-                            // rules={rules.invoicenumber}
-                            render={({ field }) => (
-                            <CsInputFile style={{padding: '0'}}
-                                name="invoicenumber"
-                                type="file"
-                                placeholder=""
-                                onChange={field.onChange}
-                            />
-                            )}
-                        />
-                    </WrapInput>
-                    <ErrorMessages errors={errors} name="invoicenumber" />
-                </ContainerInputFile> */}
-
+                <ReactImageUpload images={images} setImages={setImages}/>
+                
                 {/* Sender Email */}
                 <Flex width='100%'>
                     <CsLabel mt="1rem" color="#64748B">Sender email</CsLabel>
@@ -112,11 +99,9 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
                             // rules={rules.senderEmail}
                             render={({ field }) => (
                             <CsInput
-                                value={getValues('senderEmail')}
                                 name="senderEmail"
                                 type="text"
-                                // value={field.value}
-                                
+                                value={field.value}
                                 placeholder="Sender email"
                                 onChange={(event) => setValue("senderEmail", event.target.value)}
                             />
@@ -139,9 +124,9 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
                             render={({ field }) => (
                             <CsTextArea
                                 name="billFrom"
-                                // type="text"
+                                value={field.value}
                                 placeholder="Who is this invoice from? (required)"
-                                onChange={field.onChange}
+                                onChange={(event) => setValue("billFrom", event.target.value)}
                             />
                             )}
                         />
@@ -162,9 +147,9 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
                             render={({ field }) => (
                             <CsTextArea
                                 name="billTo"
-                                // type="text"
+                                value={field.value}
                                 placeholder="Who is this invoice from? (required)"
-                                onChange={field.onChange}
+                                onChange={(event) => setValue("billTo", event.target.value)}
                             />
                             )}
                         />
@@ -184,10 +169,9 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
                             render={({ field }) => (
                             <CsTextArea
                                 name="shipTo"
-                                // value={getValues('shipTo')}
-                                // type="text"
+                                value={field.value}
                                 placeholder="(Optional)"
-                                onChange={field.onChange}
+                                onChange={(event) => setValue("shipTo", event.target.value)}
                             />
                             )}
                         />
@@ -209,7 +193,7 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
                                     <>
                                         <CsDatePicker
                                         selected={startDate} onChange={(date:any) => setStartDate(date)} />
-                                        <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" />
+                                        {/* <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" /> */}
                                     </>
 
                                 )}
@@ -228,7 +212,7 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
                                 render={({ field }) => (
                                 <CsInput
                                     name="paymentTerms"
-                                    value={getValues('paymentTerms')}
+                                    value={field.value}
                                     // type="text"
                                     placeholder="Payment"
                                     onChange={field.onChange}
@@ -253,7 +237,7 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
                                     <>
                                         <CsDatePicker
                                         selected={startDueDate} onChange={(date:any) => setStartDueDate(date)} />
-                                        <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" />
+                                        {/* <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" /> */}
                                     </>
                                 )}
                             />
@@ -271,7 +255,7 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
                                 render={({ field }) => (
                                 <CsInput
                                     name="poNumber"
-                                    value={getValues('poNumber')}
+                                    value={field.value}
                                     // type="text"
                                     placeholder="PO Number"
                                     onChange={field.onChange}
@@ -280,6 +264,16 @@ const FormTabOne = ({formState:{errors},getValues, control, setValue}) => {
                             />
                             </WrapInput>
                     </Form.Group>
+                    <Flex width="100%" mt="1rem">
+                            <Button 
+                            // disabled={!isValid}
+                                width="100%"
+                                type="submit"
+                                value="Submit"
+                            >
+                                Confirm
+                            </Button>
+                        </Flex>
                 </Row>
 
                 <ErrorMessages errors={errors} name="poNumber" />
