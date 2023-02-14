@@ -43,9 +43,6 @@ const Register = () => {
         if(submitReq.status == 200 || submitReq.status == 201){
             toastSuccess('update successful');
             dispatch(setUser(submitReq.data));
-            if(location && location.pathname == "/register"){
-                navigate("/");
-            }
         }else {
             toastError('error', 'system error!!!')
         }

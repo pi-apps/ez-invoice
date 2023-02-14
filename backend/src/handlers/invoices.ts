@@ -36,7 +36,7 @@ export default function mountInvoiceEndpoints(router: Router) {
             const total = subTotal + amountTax - amountDiscount + Number(shipping);
             const amountPaid = req.body.amountPaid;
             const amountDue = total - Number(amountPaid);
-            const invoice = {
+            const invoice: any = {
                 invoiceId: `EZ_${Date.now()}`,
                 invoiceNumber: numOfInvoices + 1,
                 uid: currentUser.uid,
@@ -55,6 +55,7 @@ export default function mountInvoiceEndpoints(router: Router) {
                 tax: tax,
                 taxType: taxType,
                 discount: discount,
+                discountType: discountType,
                 shipping: shipping,
                 total: total,
                 amountPaid: amountPaid,
@@ -73,14 +74,28 @@ export default function mountInvoiceEndpoints(router: Router) {
         }
     });
 
-    // Get all invoices
-    router.get('/all', async (req, res) => {
+    // Get all invoices sent
+    router.get('/all-sent', async (req, res) => {
         try {
             if (!req.session.currentUser) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
             const currentUser = req.session.currentUser
             const invoices = await InvoicesModel.find({ uid: currentUser.uid });
+            return res.status(200).json(invoices);
+        } catch (error: any) {
+            return res.status(500).json({ error: 'internal_server_error', message: error.message });
+        }
+    });
+
+    // Get all invoices received
+    router.get('/all-received', async (req, res) => {
+        try {
+            if (!req.session.currentUser) {
+                return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+            }
+            const currentUser = req.session.currentUser
+            const invoices = await InvoicesModel.find({ receiverId: currentUser.uid });
             return res.status(200).json(invoices);
         } catch (error: any) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });

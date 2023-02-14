@@ -42,15 +42,6 @@ const UserMenu = ({setLoading}) => {
     // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
   };
   
-  useEffect(() => {
-    if (userData && !_.isEmpty(userData)) {
-      const firstName = userData.firstName;
-      if (!firstName) {
-        navigate("/register");
-      }
-    }
-  }, [userData]);
-
   const signOut = () => {
     dispatch(setUser(null));
     signOutUser();
