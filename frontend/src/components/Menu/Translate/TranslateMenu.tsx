@@ -1,39 +1,44 @@
-import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Text, useModal } from "@phamphu19498/pibridge_uikit";
 import { log } from "console";
-import { LanguageContext } from "contexts/Translate";
+import { LanguagesContext } from "contexts/Translate";
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
+import Languages from "./Languages.json";
+import ModalLanguages from "./ModalLanguages";
 
 const TranslateMenu = () => {
-  const [isShowMenu, setIsShowMenu] = useState(true);
-  const nameLanguage = useContext(LanguageContext);
+  const [isShowMenu, setIsShowMenu] = useState(false);
+  const { language, setLanguage } = useContext(LanguagesContext);
 
-  console.log("nameLanguage", nameLanguage);
+  console.log("language", language);
+
+  const [openModalLanguages] = useModal(
+    <ModalLanguages
+      Languages={Languages}
+      language={language}
+      setLanguage={setLanguage}
+    />
+  );
 
   return (
     <Flex position="relative">
-      <ImageContainer onClick={() => setIsShowMenu(!isShowMenu)}>
+      <ImageContainer onClick={openModalLanguages}>
         <Image
           src="https://upload.wikimedia.org/wikipedia/commons/d/db/Google_Translate_Icon.png"
           alt="translate"
         />
       </ImageContainer>
-      {isShowMenu && (
+      {/* {isShowMenu && (
         <ListTranslate>
-          <Flex>
-            <ButtonChooseLg onClick={() => nameLanguage === "en"}>
-              English
-            </ButtonChooseLg>
-          </Flex>
-          <Flex>
-            <Text>
-              <ButtonChooseLg onClick={() => nameLanguage === "vi"}>
-                VietNamese
+          {Languages.map((item: any, index) => (
+            <Flex key={item?.index}>
+              <ButtonChooseLg onClick={() => nameLanguage === "en"}>
+                {item.name}
               </ButtonChooseLg>
-            </Text>
-          </Flex>
+            </Flex>
+          ))}
         </ListTranslate>
-      )}
+      )} */}
     </Flex>
   );
 };
