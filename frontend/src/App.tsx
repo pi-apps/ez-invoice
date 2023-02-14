@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { createBrowserHistory } from "history";
-import React, { Fragment } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "views/Home";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -14,7 +14,9 @@ import Invoices from "views/Invoices";
 import CreateDetail from "views/CreateInvoices/components/CreateDetail";
 import { Translator } from "react-auto-translate";
 import { getUser } from "./state/user";
-import LanguageContextProvider from "contexts/Translate";
+import SendInvoice from "views/SendInvoice";
+import { LanguageContext } from "contexts/Localization";
+import { LanguagesContext } from "contexts/Translate";
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -26,31 +28,36 @@ BigNumber.config({
 
 const App: React.FC = () => {
   const DataAb = getUser();
-  console.log("language", DataAb?.language);
+  const { language, setLanguage } = useContext(LanguagesContext);
 
   return (
     <Fragment>
-      <LanguageContextProvider>
-        <Translator
-          from="en"
-          to={DataAb?.language ? DataAb?.language : "en"}
-          googleApiKey="AIzaSyC0aGU19DRSo0LjOoA9cGuQeBaRlMRCBYo"
-        >
-          <Routes>
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<Home />} />
-              {/* <Route path="register" element={<Register />} /> */}
-              {/* <Route path="account" element={<Register />} /> */}
-            </Route>
-            <Route path="invoice" element={<Invoices />} />
-            <Route path="newInvoice" element={<CreateInvoices />} />
-            <Route path="detailSent/:slug" element={<DetailSent />} />
-            <Route path="detailReceived/:slug" element={<DetailReceived />} />
-            <Route path="createDetail/:slug" element={<CreateDetail />} />
-          </Routes>
-          <ToastListener />
-        </Translator>
-      </LanguageContextProvider>
+      <Translator
+        from="en"
+        to={
+          language !== null
+            ? language
+            : DataAb?.language
+            ? DataAb?.language
+            : "en"
+        }
+        googleApiKey="AIzaSyC0aGU19DRSo0LjOoA9cGuQeBaRlMRCBYo"
+      >
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<Home />} />
+            {/* <Route path="register" element={<Register />} /> */}
+            {/* <Route path="account" element={<Register />} /> */}
+          </Route>
+          <Route path="invoice" element={<Invoices />} />
+          <Route path="newInvoice" element={<CreateInvoices />} />
+          <Route path="detailSent/:slug" element={<DetailSent />} />
+          <Route path="detailReceived/:slug" element={<DetailReceived />} />
+          <Route path="createDetail/:slug" element={<CreateDetail />} />
+          <Route path="newInvoice/send" element={<SendInvoice />} />
+        </Routes>
+        <ToastListener />
+      </Translator>
     </Fragment>
   );
 };

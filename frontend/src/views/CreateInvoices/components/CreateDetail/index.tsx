@@ -1,129 +1,182 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
-import PageFullWidth from "components/Layout/PageFullWidth";
+import { Button, Flex, Image, Skeleton, Text } from '@phamphu19498/pibridge_uikit';
+import Header from 'components/Header';
 import Container from 'components/Layout/Container';
+import PageFullWidth from "components/Layout/PageFullWidth";
+import Row from 'components/Layout/Row';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { useParams } from 'react-router-dom';
+import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
-import Header from 'components/Header';
-import { Button, Flex, Image, Text } from '@phamphu19498/pibridge_uikit';
-import Row from 'components/Layout/Row';
 import Footer from '../Footer';
-import { GetTabInvoice } from 'state/invoice';
 
 const CreateDetail = () => {
-    const [ dataTabActive ] = GetTabInvoice()
-    // const isActive = dataTabActive?.isActive
+
     let { slug } = useParams()
-
-    const data = [
-        {
-            name: 'createToken1',
-            quantity: 1,
-            unitPrice: 45000,
-        },
-        {
-            name: 'Burn token',
-            quantity: 2,
-            unitPrice: 45000,
-        },
-        {
-            name: 'createToken3',
-            quantity: 3,
-            unitPrice: 45000,
+    UseGetAnInvoiceCore(slug)
+    const items = GetAnInvoice()
+    const details = items?.details
+    function convertDate(date: any) {
+        if (date) {
+          const today = new Date(date)
+          const dd = String(today.getDate()).padStart(2, '0')
+          const mm = String(today.getMonth() + 1).padStart(2, '0')
+          const yyyy = today.getFullYear()
+          return (
+            <CsTextRight bold>{dd}/{mm}/{yyyy}</CsTextRight>
+          )
         }
-    ]
+        return <Skeleton width={60} />
+    }
     
-  return (
-    <PageFullWidth>
-        <CsContainer>
-            <Header />
-                <CsWrapContainer>
-                    <Flex width="100%" flexDirection="column" mb="30px">
-                        <CsHeading>Invoice #{slug}</CsHeading>
-                        <WContent>
-                            <CsContentInfo>
-                                <Row>
-                                    <Image width={59} height={57} src='/images/imgPi/LogoPib.png' alt='' />
-                                </Row>
-                                <Row mt="30px" style={{justifyContent: "space-between"}}>
-                                    <CsTextLeft>Bill From</CsTextLeft>
-                                    <CsTextRight bold>PiBridge</CsTextRight>
-                                </Row>
-                                <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                    <CsTextLeft>Bill To</CsTextLeft>
-                                    <CsTextRight bold>Delta Labs</CsTextRight>
-                                </Row>
-                                <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                    <CsTextLeft>Issue Date</CsTextLeft>
-                                    <CsTextRight bold>01/12/2033</CsTextRight>
-                                </Row>
-                                <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                    <CsTextLeft>Due Date</CsTextLeft>
-                                    <CsTextRight bold>02/12/2033</CsTextRight>
-                                </Row>
-                                <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                    <CsTextLeft>Payment Terms</CsTextLeft>
-                                    <CsTextRight bold>Net 30</CsTextRight>
-                                </Row>
-                                <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                    <CsTextLeft>PO Number</CsTextLeft>
-                                    <CsTextRight bold>DTLPI-02</CsTextRight>
-                                </Row>
-                            </CsContentInfo>
-                            <CsContentBill>
-                                <CsRowth>
-                                    <ColFirstth width="20%">item</ColFirstth>
-                                    <Colth width="20%">quantity</Colth>
-                                    <Colth width="20%">unit price</Colth>
-                                    <Colth width="20%">total</Colth>
-                                </CsRowth>
-                                {data?.map((item) => {
-                                    return(
-                                        <CsRow>
-                                        <ColFirst width="20%">{item?.name}</ColFirst>
-                                        <Col width="20%">{item?.quantity}</Col>
-                                        <Col width="20%">{item?.unitPrice}Pi</Col>
-                                        <Col width="20%">{(item?.quantity)*(item?.unitPrice)}</Col>
-                                    </CsRow>
-                                    )
-                                })}
+    return (
+        <PageFullWidth>
+            <CsContainer>
+                <Header />
+                    <CsWrapContainer>
+                        <Flex width="100%" flexDirection="column" mb="30px">
+                            <CsHeading>Invoice #{slug}</CsHeading>
+                            <WContent>
+                                <CsContentInfo>
+                                    <Row>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                        }
+                                    </Row>
+                                    <Row mt="30px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Bill From</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.billFrom}</CsTextRight>
+                                        }
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Bill To</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.billTo}</CsTextRight>
+                                        }
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Issue Date</CsTextLeft>
+                                        {convertDate(details?.issueDate)}
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Due Date</CsTextLeft>
+                                        {/* {convertDate(items?.details.dueDate)} */}
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Payment Terms</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.paymentTerms}</CsTextRight>
+                                        }
+                                        
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>PO Number</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.poNumber}</CsTextRight>
+                                        }
+                                        
+                                    </Row>
+                                </CsContentInfo>
+                                <CsContentBill>
+                                    <CsRowth>
+                                        <ColFirstth width="20%">item</ColFirstth>
+                                        <Colth width="20%">quantity</Colth>
+                                        <Colth width="20%">unit price</Colth>
+                                        <Colth width="20%">total</Colth>
+                                    </CsRowth>
+                                    {details?.items.map((item) => {
+                                        return(
+                                            <CsRow>
+                                            <ColFirst width="20%">{item?.name}</ColFirst>
+                                            <Col width="20%">{item?.quantity}</Col>
+                                            <Col width="20%">{item?.price}Pi</Col>
+                                            <Col width="20%">{(item?.quantity)*(item?.price)}</Col>
+                                        </CsRow>
+                                        )
+                                    })}
 
-                            </CsContentBill>
-                            <CsContentInfo>
-                                <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                    <CsTextLeft>Subtotal</CsTextLeft>
-                                    <CsTextRight bold>105.00 Pi</CsTextRight>
-                                </Row>
-                                <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                    <CsTextLeft>Allowances</CsTextLeft>
-                                    <CsTextRight bold>-5.00 Pi</CsTextRight>
-                                </Row>
-                                <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                    <CsTextLeft>Total</CsTextLeft>
-                                    <CsTextRight bold>100.00 Pi</CsTextRight>
-                                </Row>
-                                <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                    <CsTextLeft>Amount Due</CsTextLeft>
-                                    <CsTextRight bold>100.00 Pi</CsTextRight>
-                                </Row>
-                            </CsContentInfo>
-                        </WContent>
-                        <WAction>
-                                <CsNavItem>
-                                    <Navbar.Brand href="/newInvoice">
-                                        <CsButton>
-                                            Back
-                                        </CsButton>
-                                    </Navbar.Brand>
-                                </CsNavItem>
-                        </WAction>
-                    </Flex>
-                    <Footer isActive="" />
-                </CsWrapContainer>
-        </CsContainer>
-    </PageFullWidth>
-  )
+                                </CsContentBill>
+                                <CsContentInfo>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Subtotal</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.subTotal} Pi</CsTextRight>
+                                        }
+                                        
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Allowances</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>-{details?.amountPaid} Pi</CsTextRight>
+                                        }
+                                        
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Total</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.total} Pi</CsTextRight>
+                                        }
+                                    </Row>
+                                    { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft>Tax: ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.tax/100 : details?.subTotal-details?.tax} {details?.taxType === 1 ? "%" : "Pi"}</CsTextRight>
+                                        </Row>
+                                    }
+                                    { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft>Shipping</CsTextLeft>
+                                            <CsTextRight bold>{details?.shipping} Pi</CsTextRight>
+                                        </Row>
+                                    }
+                                    { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft>Discount: ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.tax} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
+                                        </Row>
+                                    }
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Amount Due</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.amountDue} Pi</CsTextRight>
+                                        }
+                                    </Row>
+                                </CsContentInfo>
+                            </WContent>
+                            <WAction>
+                                    <CsNavItem>
+                                        <Navbar.Brand href="/newInvoice">
+                                            <CsButton>
+                                                Back
+                                            </CsButton>
+                                        </Navbar.Brand>
+                                    </CsNavItem>
+                            </WAction>
+                        </Flex>
+                        <Footer isActive="" />
+                    </CsWrapContainer>
+            </CsContainer>
+        </PageFullWidth>
+    )
 }
 
 const CsNavItem = styled(Nav.Item)`
