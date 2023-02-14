@@ -1,14 +1,19 @@
 import { Flex, Text } from "@phamphu19498/pibridge_uikit";
 import { Translate } from "react-auto-translate";
+import { GetAnInvoice, UseGetAllInvoiceSentCore } from "state/invoice";
 import styled from "styled-components";
 import Card from "./Card";
 
-const SentTab = ({ dataInvoice }) => {
+const SentTab = () => {
+
+  UseGetAllInvoiceSentCore()
+  const items = GetAnInvoice()
+  
   return (
     <CsWrapContainer>
-      { dataInvoice?.length ?
+      { ( items?.listSent?.length && items?.isLoading === false ) ?
         <>
-            {dataInvoice.map((items) => {
+            {items?.listSent.map((items) => {
               return (
                 <CsContent>
                   <CsText>
@@ -21,7 +26,7 @@ const SentTab = ({ dataInvoice }) => {
                         id={data?.invoiceId}
                         create={data?.createAt}
                         billTo={data?.billTo}
-                        amountDue={data?.amountDue}
+                        amountDue={data?.amountDue.toString()}
                         paid={data?.paid}
                       />
                     )
@@ -36,8 +41,6 @@ const SentTab = ({ dataInvoice }) => {
             <Text>No Data</Text>
         </Flex>
       }
-      
-      
     </CsWrapContainer>
   );
 };
