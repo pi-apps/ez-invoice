@@ -57,7 +57,7 @@ const LoginModal: React.FC<Props> = ({ onDismiss }) => {
     >
       <Flex flexDirection="column" width="100%">
         <Text bold fontSize="18px" width="100%" textAlign="center">
-          <Translate>Download Invoice</Translate>
+          <Translate>Please login first</Translate>
         </Text>
         <Text width="100%" textAlign="center" color="textSubtle" mt="10px">
           <Translate>You need to login to start using EzInvoice.</Translate>

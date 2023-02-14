@@ -14,13 +14,14 @@ import AccpetModal from "./AccpetModal";
 import LogoutModal from "./LogoutModal";
 import { AuthResult, PaymentDTO, User } from "./type";
 
-const UserMenu = () => {
+const UserMenu = ({setLoading}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
   const { t } = useTranslation();
 
   const signIn = async () => {
+    setLoading(true)
     const scopes = ["username", "payments"];
     window.Pi.authenticate(scopes, onIncompletePaymentFound)
       .then(async function (auth) {
@@ -30,11 +31,13 @@ const UserMenu = () => {
           if (userInfor) {
             dispatch(setUser(userInfor.data));
           }
+          setLoading(false)
         }
         console.log(`Hi there! You're ready to make payments!`);
       })
       .catch(function (error) {
         console.error(error);
+        setLoading(false)
       });
     // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
   };
@@ -53,6 +56,7 @@ const UserMenu = () => {
     signOutUser();
     onDismis();
   };
+
   const signInUser = async (authResult: AuthResult) => {
     return await axiosClient.post("/user/signin", { authResult });
   };
@@ -83,10 +87,10 @@ const UserMenu = () => {
 export default UserMenu;
 
 const CsButton = styled(Button)`
-  width: 53px;
+  min-width: 53px;
   height: 28px;
   background: #6b39f4;
   font-size: 12px;
   font-weight: 700;
-  padding: 0px;
+  padding: 0px 4px;
 `;
