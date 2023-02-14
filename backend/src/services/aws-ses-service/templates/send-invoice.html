@@ -1,0 +1,54 @@
+<title>PiBridge</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link
+    href="https://fonts.googleapis.com/css2?family=Arima:wght@100;300;500;600&amp;family=Marcellus&amp;family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,900;1,500;1,700&amp;family=Qwitcher+Grypen:wght@400;700&amp;family=Roboto:wght@100;300;400;500;700&amp;family=Splash&amp;display=swap"
+    rel="stylesheet">
+<style>
+    @media screen and (max-width: 600px) {
+        .header-logo-padding {
+            padding: 15px 10px !important;
+        }
+
+        .body-padding {
+            padding: 0 10px 48px 10px !important;
+        }
+
+        .salutation-padding {
+            padding: 32px 10px 48px 10px !important;
+        }
+    }
+
+</style>
+<div
+    style="font-family: 'Manrope',sans-serif;font-size: 16px;line-height: 25px;color:#000000;margin: 0;box-sizing: border-box;background: #f2f2f2">
+    <div class="salutation-padding"
+        style="text-align: center;background:#FFFFFF;padding: 32px 40px 48px 40px;max-width: 680px; margin-right: auto; margin-left: auto;box-sizing: border-box;">
+        <p style="text-align:center;font-size:22px;color: #334155;font-weight: 700;margin-top:0;margin-bottom: 19px;line-height: 25px;">
+            Ez Invoice
+        </p>
+        <p style="text-align:center;margin-top:0;margin-bottom:14px;font-size:14px;font-weight:400;color:#64748B;">${params.text_new_invoice}</p>
+        <p style="text-align:center;margin-top:0;margin-bottom:14px;font-size:14px;font-weight:400;color:#64748B;">${params.username} ${params.text_sent_invoice}</p>
+        <div style="display:flex;flex:wrap;padding: 0 30px 0 30px;">
+            <p style="width:100%;font-size:14px;font-weight:400;color:#64748B;">${params.text_invoice_no} #${params.invoiceNumber}</p>
+            <p style="width:100%;font-size:14px;font-weight:400;color:#64748B;">${params.text_invoice_total}: ${params.amountDue} Pi</p>
+        </div>
+        <a href=${params.paymentUrl} target="_blank">
+            <button style="
+                background-color: #6B39F4;
+                border-radius: 12px;
+                color: white;
+                justify-content: center;
+                align-items: center;
+                padding: 8px 16px;
+                gap: 8px;
+                width: 400px;
+                height: 56px;
+                font-size: 16px;
+                border-width: 0px;
+            ">${params.text_pay}</button>
+        </a>
+    </div>
+</div>

@@ -7,6 +7,8 @@ const schema = new Schema({
     invoiceId: { type: String, required: true },
     invoiceNumber: { type: Number, required: true },
     uid: { type: String, required: true },
+    receiverId: { type: String, default: "" },
+    senderEmail: { type: String, required: true },
     billFrom: { type: Object, required: true },
     billTo: { type: Object, required: true },
     shipTo: { type: Object, default: "" },
@@ -19,6 +21,7 @@ const schema = new Schema({
     terms: { type: String, default: "" },
     subTotal: { type: Number, required: true },
     tax: { type: Number, required: true },
+    taxType: { type: Number, default: 1 }, // 0: no tax, 1: percentage, 2: fixed
     discount: { type: Number, default: 0 },
     shipping: { type: Number, default: 0 },
     total: { type: Number, required: true },
@@ -29,6 +32,7 @@ const schema = new Schema({
     downloadUrl: { type: String, default: "" },
     logoUrl: { type: String, default: "" },
     pi_payment_id: { type: String, default: "" },
+    signature: { type: String, default: "" },
 }, schemaOptions);
 
 schema.set('toJSON', { virtuals: true });

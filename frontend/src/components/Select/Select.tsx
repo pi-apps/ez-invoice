@@ -102,9 +102,10 @@ const ListItem = styled.li`
   padding: 8px 16px;
   border-radius:6px;
   &:hover {
-    background: #ff592c;
+    background: #F8F9FD;
     > div {
-      color: #fff !important;
+      color: #0F172A;
+      /* color: #fff !important; */
     }
   }
 `

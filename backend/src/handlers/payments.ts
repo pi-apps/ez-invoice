@@ -2,26 +2,54 @@ import axios from "axios";
 import { Router } from "express";
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
+import InvoicesModel from "../models/invoices";
 
 export default function mountPaymentsEndpoints(router: Router) {
+  // payment deep link in email
+  router.get('/deep-payment/:signature', async (req, res) => {
+    const signature = req.params.signature;
+    // Check if the signature is valid in database
+    const invoice = await InvoicesModel.findOne({ signature: signature });
+    if (!invoice) {
+      return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
+    }
+    const url = `${process.env.PAYMENT_URL}/${signature}`;
+    res.redirect(url);
+  });
+
+  // update receiver id
+  router.post('/update-receiver', async (req, res) => {
+    if (!req.session.currentUser) {
+      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    }
+    const currentUser = req.session.currentUser
+    const receiverId = currentUser.uid;
+    const invoiceId = req.body.invoiceId;
+    const signature = req.body.signature;
+    const invoice = await InvoicesModel.findOne({ invoiceId: invoiceId, signature: signature });
+    if (!invoice) {
+      return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
+    }
+    if (invoice.paid == true) {
+      return res.status(400).json({ error: 'bad_request', message: "Invoice already paid" });
+    }
+    // update the invoice with the receiver id
+    await InvoicesModel.updateOne({ invoiceId: invoiceId, signature: signature }, { receiverId: receiverId });
+    return res.status(200).json({ message: "Receiver id updated" });
+  });
+
   // handle the incomplete payment
   router.post('/incomplete', async (req, res) => {
+    if (!req.session.currentUser) {
+      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    }
     const payment = req.body.payment;
     const paymentId = payment.identifier;
     const txid = payment.transaction && payment.transaction.txid;
     const txURL = payment.transaction && payment.transaction._link;
 
-    /* 
-      implement your logic here
-      e.g. verifying the payment, delivering the item to the user, etc...
-
-      below is a naive example
-    */
-
     // find the incomplete order
-    const app = req.app;
-    const orderCollection = app.locals.orderCollection;
-    const order = await orderCollection.findOne({ pi_payment_id: paymentId });
+    const order = await InvoicesModel.findOne({ pi_payment_id: paymentId });
 
     // order doesn't exist 
     if (!order) {
@@ -38,7 +66,7 @@ export default function mountPaymentsEndpoints(router: Router) {
     }
 
     // mark the order as paid
-    await orderCollection.updateOne({ pi_payment_id: paymentId }, { $set: { txid, paid: true } });
+    await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { txid, paid: true } });
 
     // let Pi Servers know that the payment is completed
     await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
@@ -50,28 +78,10 @@ export default function mountPaymentsEndpoints(router: Router) {
     if (!req.session.currentUser) {
       return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
     }
-
-    const app = req.app;
-
+    const invoiceId = req.body.invoiceId;
     const paymentId = req.body.paymentId;
-    const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
-    const orderCollection = app.locals.orderCollection;
-
-    /* 
-      implement your logic here 
-      e.g. creating an order record, reserve an item if the quantity is limited, etc...
-    */
-
-    await orderCollection.insertOne({
-      pi_payment_id: paymentId,
-      product_id: currentPayment.data.metadata.productId,
-      user: req.session.currentUser.uid,
-      txid: null,
-      paid: false,
-      cancelled: false,
-      created_at: new Date()
-    });
-
+    // update paymentId
+    await InvoicesModel.updateOne({ invoiceId: invoiceId }, { $set: { paymentId: paymentId } })
     // let Pi Servers know that you're ready
     await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
     return res.status(200).json({ message: `Approved the payment ${paymentId}` });
@@ -79,19 +89,12 @@ export default function mountPaymentsEndpoints(router: Router) {
 
   // complete the current payment
   router.post('/complete', async (req, res) => {
-    const app = req.app;
-
+    if (!req.session.currentUser) {
+      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    }
     const paymentId = req.body.paymentId;
     const txid = req.body.txid;
-    const orderCollection = app.locals.orderCollection;
-
-    /* 
-      implement your logic here
-      e.g. verify the transaction, deliver the item to the user, etc...
-    */
-
-    await orderCollection.updateOne({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true } });
-
+    await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true } });
     // let Pi server know that the payment is completed
     await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
     return res.status(200).json({ message: `Completed the payment ${paymentId}` });
@@ -99,17 +102,26 @@ export default function mountPaymentsEndpoints(router: Router) {
 
   // handle the cancelled payment
   router.post('/cancelled_payment', async (req, res) => {
-    const app = req.app;
-
+    if (!req.session.currentUser) {
+      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    }
     const paymentId = req.body.paymentId;
-    const orderCollection = app.locals.orderCollection;
-
-    /*
-      implement your logic here
-      e.g. mark the order record to cancelled, etc...
-    */
-
-    await orderCollection.updateOne({ pi_payment_id: paymentId }, { $set: { cancelled: true } });
+    await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { cancelled: true } });
     return res.status(200).json({ message: `Cancelled the payment ${paymentId}` });
   })
+
+  // get detail a payment
+  router.get('/detail/:paymentId', async (req, res) => {
+    if (!req.session.currentUser) {
+      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+    }
+    const paymentId = req.params.paymentId;
+    // Check exist in database
+    const invoice = await InvoicesModel.findOne({ pi_payment_id: paymentId });
+    if (!invoice) {
+      return res.status(400).json({ message: "Invoice not found" });
+    }
+    const payment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
+    return res.status(200).json({ payment });
+  });
 }

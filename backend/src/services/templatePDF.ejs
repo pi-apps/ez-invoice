@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #F8F9FD;
+        padding: 80px;
+    }
+    table, td, th {  
+        border: 1px solid #ddd;
+        text-align: left;
+        font-size: 12px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        padding: 10px;
+    }
+  </style>
+  <body>
+    <div style="display: flex; flex-direction: row;">
+      <div style="flex: 1;">
+        <img src="<%= logoUrl %>" alt="logo" height="80px" width="80px" />
+      </div>
+      <div style="flex: 1; text-align: right;">
+        <h1 style="text-align: right;"><%= text_title %></h1>
+        <h3 style="text-align: right;">#<%= invoiceNumber %></h3>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: row;">
+      <div style="flex: 1;">
+        <div style="display: flex; flex-direction: row;">
+          <div style="flex: 1;">
+            <p><%= text_bill_from %>:</p>
+            <p style="font-weight: bold"><%= billFrom %></p>
+            <p><%= text_bill_to %>:</p>
+            <p style="font-weight: bold"><%= billTo %></p>
+          </div>
+          <div style="flex: 1; text-align: right;"></div>
+        </div>
+      </div>
+      <div style="flex: 1;">
+        <div style="display: flex; flex-direction: row;">
+          <div style="flex: 1; text-align: right;">
+            <p><%= text_issue_date %>:</p>
+            <p><%= text_due_date %>:</p>
+            <% if (paymentTerms) { %>
+              <p><%= text_payment_terms %>:</p>
+            <% } %>
+            <% if (poNumber) { %>
+              <p><%= text_po_number %>:</p>
+            <% } %>
+            <p style="font-weight: bold"><%= text_balance_due %></p>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <p><%= issueDate %></p>
+            <p><%= dueDate %></p>
+            <p><%= paymentTerms %></p>
+            <p><%= poNumber %></p>
+            <p style="font-weight: bold"><%= amountDue.toFixed(2) %> Pi</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table>
+      <tr style="text-align: left;">
+        <th><%= text_item %></th>
+        <th><%= text_quantity %></th>
+        <th><%= text_price %></th>
+        <th><%= text_total %></th>
+      </tr>
+      <% for (let i = 0; i < items.length; i++) { %>
+        <tr>
+          <td><%= items[i].name %></td>
+          <td style="text-align: right;"><%= items[i].quantity %></td>
+          <td style="text-align: right;"><%= items[i].price.toFixed(2) %> Pi</td>
+          <td style="text-align: right;"><%= items[i].total.toFixed(2) %> Pi</td>
+        </tr>
+      <% } %>
+    </table>
+    <div style="display: flex; flex-direction: row;">
+      <div style="flex: 1;">
+        </div>
+      <div style="flex: 1; text-align: right;">
+        <div style="display: flex; flex-direction: row;">
+          <div style="flex: 1; text-align: right;">
+            <p><%= text_subtotal %>:</p>
+            <% if (taxType == 1) { %>
+              <p><%= text_tax %> (<%= tax %>%):</p>
+            <% } else if (taxType == 2) { %>
+              <p><%= text_tax %>:</p>
+            <% } %>
+            <% if (discount != 0) {%><p><%= text_discount %>:</p><% } %>
+            <% if (shipping != 0) {%><p><%= text_shipping %>:</p><% } %>
+            <p>Total:</p>
+            <% if (amountPaid != 0) {%><p><%= text_amount_paid %>:</p><% } %>
+            <p><%= text_amount_due %>:</p>
+          </div>
+          <div style="flex: 1; text-align: right;">
+            <p><%= subTotal.toFixed(2) %> Pi</p>
+            <% if (taxType != 0) {%><p><%= taxType == 1 ? (subTotal * tax / 100).toFixed(2) : tax.toFixed(2) %> Pi</p><% } %>
+            <% if (discount != 0) {%><p><%= discount.toFixed(2) %> Pi</p><% } %>
+            <% if (shipping != 0) {%><p><%= shipping.toFixed(2) %> Pi</p><% } %>
+            <p><%= total.toFixed(2) %> Pi</p>
+            <% if (amountPaid != 0) {%><p><%= amountPaid.toFixed(2) %> Pi</p><% } %>
+            <p><%= amountDue.toFixed(2) %> Pi</p>
+          </div>
+        </div>
+        </div>
+    </div>
+  </body>
+</html>
