@@ -1,59 +1,24 @@
-import React, { useEffect } from 'react'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
-import PageFullWidth from "components/Layout/PageFullWidth"
-import Select from 'components/Select/Select'
-import { rules } from "config/auth/rules"
-import { useState } from "react"
-import { Controller, useForm } from "react-hook-form"
+import { useEffect, useState } from 'react'
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
+import { Controller } from "react-hook-form"
 import styled from "styled-components"
-import * as Yup from 'yup'
-import { ContainerInput, CsInput, CsTextArea, FormSubmit, WrapInput, CsInputFile, ContainerInputFile } from "../styles"
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import { useDispatch } from 'react-redux'
+import { ContainerInput, CsInput, CsTextArea, WrapInput } from "../styles"
+// import Form from 'react-bootstrap/Form';
 import { AddIcon } from 'components/Svg'
+import Row from 'react-bootstrap/Row'
+import { useDispatch } from 'react-redux'
 import ReactImageUpload from './ReactImageUpload'
-import { GetAllInvoice } from 'state/invoice'
 
-const FormTabOne = ({formState:{errors}, control, setValue, images, setImages}) => {
+const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
   const dispatch = useDispatch()
   const [avatar, setAvatar] = useState('')
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
-
-const allInvoice = GetAllInvoice()
-console.log('allInvoice', allInvoice)
-//   const InitValues = {
-//     senderEmail: '',
-//     billFrom:'',
-//     billTo:'',
-//     shipTo: '',
-//     issueDate: new Date(),
-//     dueDate: new Date(),
-//     paymentTerms:'',
-//     poNumber:'',
-//     items:'',
-//     notes:'',
-//     terms:'',
-//     tax:'',
-//     taxType:'',
-//     discount:'',
-//     shipping:'',
-//     amountPaid:'',
-//     logo:'',
-// }
-
-  const handleChange = (newValue: null) => {
-    setValue(newValue);
-  };
-
   useEffect(() => {
     setAvatar(`/images/ImgPi/logo.png`)
   }, [])
@@ -85,7 +50,7 @@ console.log('allInvoice', allInvoice)
                 </ContainerInput>
 
                 {/* Add your logo */}
-                <ReactImageUpload images={images} setImages={setImages}/>
+                <ReactImageUpload images={images} setValue={setValue}/>
                 
                 {/* Sender Email */}
                 <Flex width='100%'>
@@ -180,7 +145,6 @@ console.log('allInvoice', allInvoice)
                 </ContainerInput>
 
                 <Row className="mb-1 mt-1">
-                    <Form.Group as={Col} controlId="formGridEmail">
                         <Flex width='100%'>
                             <CsLabel mt="1rem" color="#64748B">Date</CsLabel>
                         </Flex>
@@ -199,9 +163,6 @@ console.log('allInvoice', allInvoice)
                                 )}
                             />
                         </WrapInput>
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridPassword">
                         <Flex width='100%'>
                             <CsLabel mt="1rem" color="#64748B">Payment</CsLabel>
                         </Flex>
@@ -220,11 +181,9 @@ console.log('allInvoice', allInvoice)
                                 )}
                             />
                             </WrapInput>
-                    </Form.Group>
                 </Row>
 
                 <Row className="mb-1 mt-1">
-                    <Form.Group as={Col} controlId="formGridEmail">
                         <Flex width='100%'>
                             <CsLabel mt="1rem" color="#64748B">Due Date</CsLabel>
                         </Flex>
@@ -242,9 +201,7 @@ console.log('allInvoice', allInvoice)
                                 )}
                             />
                         </WrapInput>
-                    </Form.Group>
 
-                    <Form.Group as={Col} controlId="formGridPassword">
                         <Flex width='100%'>
                             <CsLabel mt="1rem" color="#64748B">PO Number</CsLabel>
                         </Flex>
@@ -263,8 +220,7 @@ console.log('allInvoice', allInvoice)
                                 )}
                             />
                             </WrapInput>
-                    </Form.Group>
-                    <Flex width="100%" mt="1rem">
+                    {/* <Flex width="100%" mt="1rem">
                             <Button 
                             // disabled={!isValid}
                                 width="100%"
@@ -273,7 +229,7 @@ console.log('allInvoice', allInvoice)
                             >
                                 Confirm
                             </Button>
-                        </Flex>
+                        </Flex> */}
                 </Row>
 
                 <ErrorMessages errors={errors} name="poNumber" />
