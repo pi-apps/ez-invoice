@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import { Flex, Text } from "@phamphu19498/pibridge_uikit";
 import styled from "styled-components";
@@ -10,12 +10,18 @@ import FormSendInvoice from "./components/FormSendInvoice";
 import SentInvoiceSuccessfully from "./components/SentInvoiceSuccessfully";
 
 const SendInvoice = () => {
+  const [isSentSuccessfully, setIsSentSuccessfully] = useState(false);
   return (
     <PageFullWidth>
       <CsContainer>
         <HeaderMain />
-        <FormSendInvoice />
-        {/* <SentInvoiceSuccessfully /> */}
+        {isSentSuccessfully ? (
+          <SentInvoiceSuccessfully
+            setIsSentSuccessfully={setIsSentSuccessfully}
+          />
+        ) : (
+          <FormSendInvoice setIsSentSuccessfully={setIsSentSuccessfully} />
+        )}
         <Footer />
       </CsContainer>
     </PageFullWidth>

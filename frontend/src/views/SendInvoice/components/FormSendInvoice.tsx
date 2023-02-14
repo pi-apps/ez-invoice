@@ -6,9 +6,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import ErrorMessages from "./ErrorMessage";
 import { getUser } from "state/user";
+import { axiosClient } from "config/htttp";
+import { useState } from "react";
+// import { axiosClient } from "config/htttp";
 
-const FormSendInvoice = () => {
-  // form validation rules
+interface FormSendInvoiceTypes {
+  setIsSentSuccessfully: (e) => void;
+}
+
+const FormSendInvoice: React.FC<
+  React.PropsWithChildren<FormSendInvoiceTypes>
+> = ({ setIsSentSuccessfully }) => {
+  const [errorSentText, setErrorSentText] = useState("");
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required"),
   });
@@ -19,7 +29,28 @@ const FormSendInvoice = () => {
   const { errors } = formState;
 
   const handleLogin = async (data) => {
-    console.log("data", data);
+    const dataPost = {
+      invoiceId: "EZ_1676364850177",
+      email: data.email,
+      language: "vi",
+    };
+
+    try {
+      const response = await axiosClient.post("invoice/send", dataPost, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+      if (response.status === 200) {
+        setIsSentSuccessfully(true);
+      } else {
+        setIsSentSuccessfully(false);
+      }
+    } catch (error) {
+      setIsSentSuccessfully(false);
+      setErrorSentText("Invoice not found");
+    }
   };
 
   return (
@@ -51,11 +82,17 @@ const FormSendInvoice = () => {
                   value={getValues("email")}
                   type="email"
                   placeholder="Recipient email"
-                  onChange={field.onChange}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setErrorSentText("");
+                  }}
                 />
               )}
             />
             <ErrorMessages errors={errors} name="email" />
+            {errorSentText ? (
+              <ErrorMessagesSent>{errorSentText}</ErrorMessagesSent>
+            ) : null}
           </Flex>
           <Flex>
             <CsButton type="submit" value="Submit">
@@ -138,6 +175,14 @@ const CsButton = styled(Button)`
   align-items: center;
   letter-spacing: 0.4px;
   color: #ffffff;
+`;
+
+const ErrorMessagesSent = styled.div`
+  color: #ff592c;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.1;
+  font-family: "Marcellus", serif;
 `;
 
 export default FormSendInvoice;
