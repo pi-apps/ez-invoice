@@ -7,25 +7,12 @@ import styled from "styled-components";
 function ReactImageUpload({images , setValue }) {
   const [ logoImg, setLogoImages] = useState([]);
   const onChange = (imageList, addUpdateIndex) => {
-    setValue("logo",imageList[0]);
+    setValue("logo",imageList[0].file);
     setLogoImages(imageList)
   };
-  const onChangeImage = (e) => {
-    const file = e.target.files[0];
-    setValue("logo",file);
-  }
-  
+
   return (
     <div>
-      // upload file
-      <div>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={onChangeImage}
-        ></input>
-
-      </div>
       <ImageUploading
         value={images}
         onChange={onChange}
