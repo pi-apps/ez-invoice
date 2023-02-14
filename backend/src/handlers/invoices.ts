@@ -55,6 +55,7 @@ export default function mountInvoiceEndpoints(router: Router) {
                 tax: tax,
                 taxType: taxType,
                 discount: discount,
+                discountType: discountType,
                 shipping: shipping,
                 total: total,
                 amountPaid: amountPaid,
