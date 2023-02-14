@@ -26,7 +26,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     myHeaders.append("Cookie", "connect.sid=s%3ATcDzOEc7V94RgIixbDBrgXtGI_-_-SqE.9dwiOTiwXNmX7xWPjffPRlX6cWorfPczW6D9mUArNrU");
     
     const InitValues = {
-        senderEmail: 'khanghy3004@gmail.com',
+        senderEmail: '',
         billFrom:'',
         billTo:'',
         shipTo: '',
@@ -63,7 +63,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         logo: Yup.string().required('payment is required'),
     });
 
-    const formOptions = { defaultValues: InitValues };
+    const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
     const { handleSubmit, formState, control, getValues, setValue } = useForm(formOptions);
     const { errors , touchedFields, isDirty, isLoading } = formState;
