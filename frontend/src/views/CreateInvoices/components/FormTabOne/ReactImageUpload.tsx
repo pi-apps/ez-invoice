@@ -10,9 +10,22 @@ function ReactImageUpload({images , setValue }) {
     setValue("logo",imageList[0]);
     setLogoImages(imageList)
   };
+  const onChangeImage = (e) => {
+    const file = e.target.files[0];
+    setValue("logo",file);
+  }
   
   return (
     <div>
+      // upload file
+      <div>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={onChangeImage}
+        ></input>
+
+      </div>
       <ImageUploading
         value={images}
         onChange={onChange}

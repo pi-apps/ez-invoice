@@ -69,6 +69,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     const { errors , touchedFields, isDirty, isLoading } = formState;
 
     const onSubmit = async data => {
+        console.log("data", data.logo);
         
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
@@ -86,13 +87,13 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
-            formData.append("logo", `${data.logo}`);
+            formData.append("logo", data.logo);
 
         console.log("formData", formData)
         const submitReq = await axiosClient.post('/invoice/create', formData, 
             {
                 headers: {
-                    'Content-Type': `multipart/form-data; boundary=<calculated when request is sent>`,
+                    'Content-Type': `multipart/form-data`,
                     'Accept': '*'
                 }
             }
