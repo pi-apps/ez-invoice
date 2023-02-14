@@ -4,7 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import UserMenu from "../Menu/UserMenu";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../state";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { axiosClient } from "../../config/htttp";
 import { setUser } from "../../state/user/actions";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +31,7 @@ const styles = {
 const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
-
+  const [loading, setLoading] = useState(false)
   useEffect(() => {
     const fetchUser = async () => {
       const user = await axiosClient.get("user/info");
@@ -59,8 +59,13 @@ const Header = () => {
             {userData?.firstName && (
               <Text padding="0 10px">{userData?.firstName}</Text>
             )}
+            {
+              loading && (
+              <Text mt="6px" fontSize="12px" color="textSubtle">Loading..</Text>
+              )
+            }
             <TranslateMenu />
-            <UserMenu />
+            <UserMenu setLoading={setLoading} />
           </Nav>
         </Container>
       </Navbar>
