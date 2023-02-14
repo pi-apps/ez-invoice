@@ -39,7 +39,7 @@ const Register = () => {
     const { handleSubmit, formState: { errors, isValid, isDirty },setError, control, getValues, setValue } = useForm(formOptions);
     
     const onSubmit = async data => {
-        const submitReq = await axiosClient.post('user/update', data);
+        const submitReq = await axiosClient.post('/user/update', data);
         if(submitReq.status == 200 || submitReq.status == 201){
             toastSuccess('update successful');
             dispatch(setUser(submitReq.data));
@@ -157,6 +157,7 @@ const Register = () => {
                         } */}
                         <Flex width="100%" mt="1rem">
                             <Button 
+                            // disabled={!isValid}
                                 width="100%"
                                 type="submit"
                                 value="Submit"

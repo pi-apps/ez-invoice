@@ -18,5 +18,11 @@
         "content": "You need to login to start using EzInvoice.",
         "button_login": "Login",
         "button_cancel": "Cancel"
+    },
+    "download_popup": {
+        "header": "Download Invoice",
+        "content": "Please choose the location for file.",
+        "button_goolge_drive": "Google Drive",
+        "button_hard_disk": "Hard disk"
     }
 }

@@ -28,7 +28,7 @@ const translateText = async (text: string, sourceLanguage: string, targetLanguag
 async function uploadToIpfs(file: any) {
   const uploadArray = [
       {
-          path: file.filename,
+          path: file?.filename,
           content: fs.readFileSync(file.path, {encoding: 'base64'})
       }
   ];

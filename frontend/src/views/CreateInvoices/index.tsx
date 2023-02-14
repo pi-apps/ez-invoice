@@ -15,7 +15,7 @@ const CreateInvoices = () => {
             <CsContainer>
                 <HeaderCreateinVoice />
                 <SubTab isActive={isActive}/>
-                <Footer />
+                <Footer isActive={isActive}/>
             </CsContainer>
         </PageFullWidth>
     )

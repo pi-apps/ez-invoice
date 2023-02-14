@@ -6,22 +6,21 @@ import HeaderMain from "components/Header";
 import HeaderInvoice from "./components/Header";
 import SubTab from "./components/SubTab";
 import { GetDataInvoice } from "state/invoice";
-import ReceiveContent from "./components/contentInvoice/ReceiveContent";
-import SentContent from "./components/contentInvoice/SentContent";
 import { Flex } from "@phamphu19498/pibridge_uikit";
-import SentTab from "./components/SentTab";
-import ReceiveTab from "./components/ReceiveTab";
+import SentTab from "./SentTabContent/SentTab";
 import Footer from "components/Footer";
+import ReceiveTab from "./ReceiveContent/ReceiveTab";
+
 const Invoices = () => {
     const [ dataInvoice ] = GetDataInvoice()
     const isSent = dataInvoice?.isSent
 
-    const renderContent = ( isSent) => {
+    const renderContent = (isSent) => {
         if(isSent){
-            return <SentTab/>
+            return <SentTab dataInvoice={dataInvoice}/>
         }
         if(!isSent){
-            return <ReceiveTab/>
+            return <ReceiveTab />
         }
     }
 
@@ -37,6 +36,7 @@ const Invoices = () => {
         </PageFullWidth>
     )
 }
+
 export default Invoices
 
 const CsContainer = styled(Container)`
