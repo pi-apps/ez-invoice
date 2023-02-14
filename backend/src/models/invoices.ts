@@ -23,6 +23,7 @@ const schema = new Schema({
     tax: { type: Number, required: true },
     taxType: { type: Number, default: 1 }, // 0: no tax, 1: percentage, 2: fixed
     discount: { type: Number, default: 0 },
+    discountType: { type: Number, default: 1 }, // 0: no discount, 1: percentage, 2: fixed
     shipping: { type: Number, default: 0 },
     total: { type: Number, required: true },
     amountPaid: { type: Number, default: 0 },
