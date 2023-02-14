@@ -1,9 +1,14 @@
 import { createReducer } from "@reduxjs/toolkit"
-import { allInvoice, tabActive, tabActiveNewInvoice } from "./actions"
+import { allInvoice, tabActive, tabActiveNewInvoice, getAnInvoice, fetchLoading, fetchFailure } from "./actions"
+import { ItemsDetails } from "./types"
+
 interface globalStateInvoice {
     isSent:boolean
     isActive:number
-    invoice_all:{}
+    invoice_all:{},
+    details:ItemsDetails,
+    isLoading:boolean,
+    isFailure:boolean
 }
 
 export const initialState: globalStateInvoice = {
@@ -28,6 +33,9 @@ export const initialState: globalStateInvoice = {
         amountPaid:'',
         logo: null,
     },
+    details: null,
+    isLoading:false,
+    isFailure:false
 }
 
 export default createReducer(initialState, (builder) =>
@@ -41,4 +49,14 @@ export default createReducer(initialState, (builder) =>
     .addCase(allInvoice, (state, action) => {
         state.invoice_all = action.payload.invoice_all
     })
+    .addCase(getAnInvoice, (state, action) => {
+        state.details = action.payload.details
+    })  
+    .addCase(fetchLoading, (state, action) => {
+        state.isLoading = action.payload.isLoading
+    })
+    .addCase(fetchFailure, (state, action) => {
+        state.isFailure = action.payload.isFailure
+    })
+    
 )
