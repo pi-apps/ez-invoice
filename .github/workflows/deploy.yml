@@ -20,6 +20,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         command_timeout: "30m"
+        script_stop: true
         script: |
           eval "$(ssh-agent -s)"
           ssh-add .ssh/github-deploy-key
