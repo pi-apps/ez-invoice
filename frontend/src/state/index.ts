@@ -6,7 +6,7 @@ import invoice from "./invoice/reducer"
 import user from "./user/reducer"
 
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
+const PERSISTED_KEYS: string[] = ['invoice']
 
 const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
@@ -14,7 +14,7 @@ const store = configureStore({
     invoice,
     user
   },
-  middleware: [...getDefaultMiddleware({ thunk: true }), save({ states: PERSISTED_KEYS })],
+  middleware: [...getDefaultMiddleware({ thunk: true, serializableCheck: false}), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS }),
 })
 
