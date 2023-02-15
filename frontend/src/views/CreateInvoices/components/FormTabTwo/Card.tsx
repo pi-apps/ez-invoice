@@ -1,71 +1,39 @@
-import { Button, Flex, Skeleton, Text } from '@phamphu19498/pibridge_uikit'
+import { Flex, Text } from '@phamphu19498/pibridge_uikit'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
-import React, { useCallback, useState } from 'react'
+import { useMemo, useState } from 'react'
+import { Controller, useFieldArray } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
-import Col from 'react-bootstrap/esm/Col'
-import Row from 'react-bootstrap/esm/Row'
-import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
-import { debounce } from 'lodash'
 
-const Card = ({formState,getValues, item, setValue, control, index, register, fields , remove } ) => {
-  const totalPriceItem =  Number( fields[index].quantity ) * Number( fields[index].price )
-
-  const [price, setPrice] = useState(0)
-  const [quantity, setQuantity] = useState(0)
-
-  console.log('quantity', quantity)
-  console.log('price', price)
-
-  const handleCloseItem = () => {
-    if(fields?.length > 1){
-      remove(index)
+const Card = ({index, remove, fields, register, control} ) => {
+    const handleCloseItem = () => {
+      if(fields?.length > 1){
+        remove(index)
+      }
     }
-  }
-
-  const debouncePrice = useCallback(debounce((nextValue) => 
-    setValue(`items[${index}].quantity`, nextValue)
-  , 1000), [])
-
-  const debounceQuantity = useCallback(debounce((nextValue) => 
-  setValue(`items[${index}].price`, nextValue)
-, 1000), [])
-
-  function handleChangeQuantity(e) {
-    const { value } = e.target;
-    debouncePrice(value);
-  }
-
-  function handleChangePrice(e) {
-    const { value } = e.target;
-    debounceQuantity(value);
-  }
+  const total = useMemo(() => {
+    return Number(fields[index].price)*Number(fields[index].quantity)
+  },[fields]);
 
   return (
     <CsWrapperCard>
         <CsHeading>
             <CsFlexHeading>
-                <CsTextHeading>Item</CsTextHeading>
+                <CsTextHeading>Item # {index}</CsTextHeading>
                 <CsCloseIcon role="presentation" onClick={handleCloseItem}>
                   <CloseIcon />
                 </CsCloseIcon>
             </CsFlexHeading>
         </CsHeading>
+        {/* <input {...register(`items.${index}.price` as const)} />; */}
         <CsContent>
             <ContainerInput>
                 <WrapInput>
                   <Controller
                     control={control}
-                    name="name"
-                    // rules={rules.sender}
-                    render={({ field: {onBlur, value}}) => (
-                    <CsTextArea
-                        name="name"
-                        value={value}
-                        onBlur={onBlur}
-                        placeholder="Description of service or product"
-                        // onChange={(event) => setValue(`items[${index}].name`, event.target.value)}
-                    />
+                    name={`items[${index}].name`}
+                    render={() => (
+                        <textarea {...register(`items.${index}.name` as const)} />
                     )}
                     />
                 </WrapInput>
@@ -75,33 +43,19 @@ const Card = ({formState,getValues, item, setValue, control, index, register, fi
               <WrapInput>
                   <Controller
                     control={control}
-                    name="quantity"
+                    name={`items[${index}].quantity`}
                     // rules={rules.sender}
-                    render={({ field: {onBlur, value}}) => (
-                    <CsInput
-                        name="quantity"
-                        value={value}
-                        onBlur={onBlur}
-                        placeholder="1"
-                        // onChange={(event) => setValue(`items[${index}].quantity`, event.target.value)}
-                        onChange={(event) => handleChangeQuantity(event)}
-                    />
+                    render={() => (
+                      <input {...register(`items.${index}.quantity` as const)} />
                     )}
                   />
               </WrapInput>
                 <WrapInput>
                   <Controller
                       control={control}
-                      name="price"
-                      render={({ field: {onBlur, value}}) => (
-                        <CsInput
-                            name="price"
-                            value={value}
-                            onBlur={onBlur}
-                            placeholder="0.00 Pi"
-                            // onChange={(event) => setValue(`items[${index}].price`, event.target.value)}
-                          onChange={(event) => handleChangePrice(event)}
-                        />
+                      name={`items[${index}].price`}
+                      render={() => (
+                        <input {...register(`items.${index}.price` as const)} />
                       )}
                     />
                 </WrapInput>
@@ -110,7 +64,7 @@ const Card = ({formState,getValues, item, setValue, control, index, register, fi
 
         <Flex mt="24px">
             <Cstitle>Amount: </Cstitle>
-            <CsAmount> {totalPriceItem ? totalPriceItem : 0} Pi</CsAmount>
+            <CsAmount> {total} Pi</CsAmount>
         </Flex>
   </CsWrapperCard>
   )

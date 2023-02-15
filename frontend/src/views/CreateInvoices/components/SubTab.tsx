@@ -30,9 +30,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
   const invoicelength = items?.[0]?.allInvoice?.length
 
     const dispatch = useDispatch<AppDispatch>()
-    var myHeaders = new Headers();
-    myHeaders.append("Cookie", "connect.sid=s%3ATcDzOEc7V94RgIixbDBrgXtGI_-_-SqE.9dwiOTiwXNmX7xWPjffPRlX6cWorfPczW6D9mUArNrU");
-    
     const InitValues = {
         senderEmail: '',
         billFrom:'',
@@ -75,15 +72,20 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     // const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
     const formOptions = { defaultValues: InitValues };
 
-    const {register, handleSubmit, formState, control, getValues, setValue } = useForm(formOptions);
+    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm(formOptions);
     const { errors , touchedFields, isDirty, isLoading } = formState;
-    const { fields, append, remove} = useFieldArray({
-          control,
-          name: "items"
-        }
-      );
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "items"
+    });
+    const watchFieldArray = watch("items");
+    const controlledFields = fields.map((field, index) => {
+        return {
+        ...field,
+        ...watchFieldArray[index]
+        };
+    });
     const onSubmit = async data => {
-        console.log("data", data)
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
             formData.append("billFrom", `${data.billFrom}`);
@@ -122,7 +124,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             return <FormTabOne invoicelength={invoicelength} images={getValues("logo")} formState={formState} setValue={setValue} control={control} />
         }
         if(isActive === 2){
-            return <FormTabTwo getValues={getValues} register={register} fields={fields} append={append} remove={remove} formState={formState} setValue={setValue} control={control} />
+            return <FormTabTwo controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
         }
         if(isActive === 3){
             return <FormTabThree activeDiscount={activeDiscount} setActiveDiscount={setActiveDiscount} activeTax={activeTax} setActiveTax={setActiveTax} formState={formState} setValue={setValue} control={control}/>

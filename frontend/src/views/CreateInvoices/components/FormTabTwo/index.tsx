@@ -1,12 +1,12 @@
 import { Flex, Text } from '@phamphu19498/pibridge_uikit'
 import Row from 'components/Layout/Row'
 import { AddIcon } from 'components/Svg'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import Card from './Card'
 
-const FormTabTwo = ({formState, control, setValue,getValues, register, fields, append , remove}) => {
-
+const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
+ 
   const totalPrice = (fields) => {
     return fields.reduce((sum, i) => {
       if(i.price === undefined || i.quantity === undefined){
@@ -16,13 +16,15 @@ const FormTabTwo = ({formState, control, setValue,getValues, register, fields, a
       }
     },0)
   }
-
+    const total = useMemo(() => {
+      return totalPrice(controlledFields)
+    },[controlledFields]);
   return (
     <CsWrapperForm>
       <CsContainer>
-      {fields.map((item, index) => {
+      {controlledFields.map((item, index) => {
           return (
-              <Card item={item} key={item.id} getValues={getValues} register={register} fields={fields} remove={remove} index={index} formState={formState} setValue={setValue} control={control} />
+              <Card index={index} remove={remove} fields={controlledFields} register={register} control={control} />
           );
         })}
       </CsContainer>
@@ -37,7 +39,7 @@ const FormTabTwo = ({formState, control, setValue,getValues, register, fields, a
         <hr style={{margin: '10px 0'}} />
         <Row mt="16px" style={{justifyContent: "space-between"}}>
             <CsTextLeft>Amount Due</CsTextLeft>
-            <CsTextRight bold>{totalPrice(fields)} Pi</CsTextRight>
+            <CsTextRight bold>{total} Pi</CsTextRight>
         </Row>
       </CsSubTotal>
       </CsWrapperForm>
