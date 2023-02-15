@@ -40,6 +40,7 @@ const UserMenu = ({setLoading}) => {
         console.log(`Hi there! You're ready to make payments!`);
       })
       .catch(function (error) {
+        toastError('error', JSON.stringify(error))
         console.error(error);
         setLoading(false)
       });
