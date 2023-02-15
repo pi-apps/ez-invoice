@@ -1,17 +1,10 @@
-import { Button, Flex, Text } from '@phamphu19498/pibridge_uikit'
-import PageFullWidth from 'components/Layout/PageFullWidth'
+import { Flex, Text } from '@phamphu19498/pibridge_uikit'
 import Row from 'components/Layout/Row'
-import { AddIcon, CloseIcon } from 'components/Svg'
-import React, { useState } from 'react'
-import { Controller } from 'react-hook-form'
+import { AddIcon } from 'components/Svg'
 import styled from 'styled-components'
-import { CsInput } from '../styles'
 import Card from './Card'
 
 const FormTabTwo = ({formState, control, setValue,getValues, register, fields, append , remove}) => {
-  const [indexes, setIndexes] = React.useState([]);
-  const [ price, setPrice] = useState(0.00)
-
   return (
     <CsWrapperForm>
       <CsContainer>

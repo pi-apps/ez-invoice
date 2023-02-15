@@ -83,8 +83,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         }
       );
     const onSubmit = async data => {
-        console.log("data",data);
-        
+        console.log("data", data)
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
             formData.append("billFrom", `${data.billFrom}`);
@@ -102,21 +101,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
             formData.append("logo", data.logo);
-
-        console.log("formData", formData)
-        // const submitReq = await axiosClient.post('/invoice/create', formData, 
-        //     {
-        //         headers: {
-        //             'Content-Type': `multipart/form-data`,
-        //             'Accept': '*'
-        //         }
-        //     }
-        // );
-        // if(submitReq.status == 200){
-        //     toastSuccess('update successful');
-        // }else {
-        //     toastError('error', 'system error!!!')
-        // }
     }
 
     const handleMinusTabActive = () => {

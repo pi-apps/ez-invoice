@@ -43,10 +43,10 @@ const Card = ({formState,getValues, setValue, control, index, register, fields ,
                     render={({ field }) => (
                     <CsTextArea
                         name="name"
-                        value={getValues("name")}
+                        value={getValues(`items[${index}].name`)}
                         // value={field.value}
                         placeholder="Description of service or product"
-                        onChange={(event) => setValue("name", event.target.value)}
+                        onChange={(event) => setValue(`items[${index}].name`, event.target.value)}
                     />
                     )}
                     />
