@@ -109,7 +109,8 @@ export default function mountInvoiceEndpoints(router: Router) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
             const currentUser = req.session.currentUser
-            const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: req.params.invoiceId });
+            // find by uid or receiverId
+            const invoice = await InvoicesModel.findOne({ $or: [{ uid: currentUser.uid }, { receiverId: currentUser.uid }], invoiceId: req.params.invoiceId });
             if (!invoice) {
                 return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
             }
