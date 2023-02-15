@@ -11,7 +11,7 @@ COPY ./yarn.lock /app/yarn.lock
 
 WORKDIR /app
 
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --network-timeout 100000
 
 # Copy the resources needed to build the app
 # We could copy ./ but it weigh more and bust cache more often
