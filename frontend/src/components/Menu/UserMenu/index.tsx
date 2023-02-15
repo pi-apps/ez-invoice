@@ -27,9 +27,7 @@ const UserMenu = ({setLoading}) => {
     const scopes = ["username", "payments"];
     window.Pi.authenticate(scopes, onIncompletePaymentFound)
       .then(async function (auth) {
-        toastError('auth', JSON.stringify(auth))
         const loginUser = await signInUser(auth);
-        toastError('loginUser', JSON.stringify(loginUser))
         if (loginUser) {
           const userInfor = await axiosClient.get("user/info");
           if (userInfor) {
