@@ -11,12 +11,11 @@ import { GetAllInvoice } from "state/invoice";
 
 const Header = () => {
   const dispatch = useDispatch()
+
   const handleClickNewInvoice = async () => {
-      const invoiceAll = await axiosClient.get('invoice/all');
-      if(invoiceAll){
-          dispatch(GetAllInvoice());
-      }
+    // dispatch(GetAllInvoice())
   }
+
   return (
     <ContainerHeader>
       <Text fontSize="24px" bold>

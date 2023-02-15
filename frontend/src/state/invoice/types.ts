@@ -5,28 +5,6 @@ export interface tabActiveType {
 export interface tabActiveNewInvoiceType {
     isActive:number
 }
-export interface allInvoiceType {
-    invoice_all:{
-        senderEmail: string,
-        billFrom:string,
-        billTo:string,
-        shipTo: string,
-        issueDate: string,
-        dueDate: string,
-        paymentTerms:string,
-        poNumber:string,
-        items: string,
-        notes:string,
-        terms:string,
-        tax:string,
-        taxType:string,
-        discount:string,
-        shipping:string,
-        amountPaid:string,
-        logo: any,
-    }
-}
-
 
 export interface Items {
     name: string,
@@ -78,6 +56,9 @@ export interface ListSentItems {
 }
 export interface ListSent {
     listSent: ListSentItems[]
+}
+export interface AllInvoice {
+    allInvoice:any
 }
 
 export interface ListReceived {

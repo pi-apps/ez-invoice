@@ -37,7 +37,7 @@ export const TransferModal = styled(Button)`
 export const ContainerInput = styled(Flex)`
   flex-direction: column;
   width: 100%;
-  background-color:#F8F9FD;
+  /* background-color:#F8F9FD; */
   border-radius:8px;
   /* margin-bottom:1rem; */
 `

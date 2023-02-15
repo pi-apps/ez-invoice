@@ -7,6 +7,7 @@ import { AppDispatch } from "../../state";
 import { setUser } from "../../state/user/actions";
 import { AuthResult, PaymentDTO } from "../Menu/UserMenu/type";
 import LoginIcon from "../Svg/Icons/LoginIcon";
+import { fetchLoading } from "state/invoice/actions";
 
 interface Props {
   onDismiss?: () => void;
@@ -17,6 +18,7 @@ const LoginModal: React.FC<Props> = ({ onDismiss }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const signIn = async () => {
+    dispatch(fetchLoading({isLoading:true}))
     const scopes = ["username", "payments"];
     // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
     const authResult: AuthResult = await window.Pi.authenticate(
@@ -28,6 +30,7 @@ const LoginModal: React.FC<Props> = ({ onDismiss }) => {
     if (loginUser) {
       const userInfor = await axiosClient.get("user/info");
       if (userInfor) {
+        dispatch(fetchLoading({isLoading:false}))
         dispatch(setUser(userInfor.data));
       }
     }

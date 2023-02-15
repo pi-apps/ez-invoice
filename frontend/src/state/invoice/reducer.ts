@@ -1,11 +1,11 @@
 import { createReducer } from "@reduxjs/toolkit"
-import { allInvoice, tabActive, tabActiveNewInvoice, getAnInvoice, fetchLoading, fetchFailure, getAllInvoiceSent, getAllInvoiceReceived } from "./actions"
+import { tabActive, tabActiveNewInvoice, getAnInvoice, fetchLoading, fetchFailure, getAllInvoiceSent, getAllInvoiceReceived, getAllInvoiceAll } from "./actions"
 import { ItemsDetails, ListSent, ListSentItems } from "./types"
 
 interface globalStateInvoice {
     isSent:boolean
     isActive:number
-    invoice_all:{},
+    allInvoice:any,
     details:ItemsDetails,
     isLoading:boolean,
     isFailure:boolean,
@@ -16,25 +16,7 @@ interface globalStateInvoice {
 export const initialState: globalStateInvoice = {
     isSent:true,
     isActive: 1,
-    invoice_all: {
-        senderEmail: '',
-        billFrom:'',
-        billTo:'',
-        shipTo: '',
-        issueDate: '',
-        dueDate: '',
-        paymentTerms:'',
-        poNumber:'',
-        items: '',
-        notes:'',
-        terms:'',
-        tax:'',
-        taxType:'',
-        discount:'',
-        shipping:'',
-        amountPaid:'',
-        logo: null,
-    },
+    allInvoice: null,
     details: null,
     isLoading:false,
     isFailure:false,
@@ -50,9 +32,6 @@ export default createReducer(initialState, (builder) =>
     .addCase(tabActiveNewInvoice, (state, action) => {
         state.isActive = action.payload.isActive
     })
-    .addCase(allInvoice, (state, action) => {
-        state.invoice_all = action.payload.invoice_all
-    })
     .addCase(getAnInvoice, (state, action) => {
         state.details = action.payload.details
     })  
@@ -67,5 +46,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(getAllInvoiceReceived, (state, action) => {
         state.listReceived = action.payload.listReceived
+    })
+    .addCase(getAllInvoiceAll, (state, action) => {
+        state.allInvoice = action.payload.allInvoice
     })
 )

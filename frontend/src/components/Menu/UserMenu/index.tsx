@@ -13,15 +13,16 @@ import { setUser } from "../../../state/user/actions";
 import AccpetModal from "./AccpetModal";
 import LogoutModal from "./LogoutModal";
 import { AuthResult, PaymentDTO, User } from "./type";
+import { fetchLoading } from "state/invoice/actions";
 
-const UserMenu = ({setLoading}) => {
+const UserMenu = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
   const { t } = useTranslation();
 
   const signIn = async () => {
-    setLoading(true)
+    dispatch(fetchLoading({isLoading:true}))
     const scopes = ["username", "payments"];
     window.Pi.authenticate(scopes, onIncompletePaymentFound)
       .then(async function (auth) {
@@ -31,21 +32,22 @@ const UserMenu = ({setLoading}) => {
           if (userInfor) {
             dispatch(setUser(userInfor.data));
           }
-          setLoading(false)
+          dispatch(fetchLoading({isLoading:false}))
         }
         console.log(`Hi there! You're ready to make payments!`);
       })
       .catch(function (error) {
         console.error(error);
-        setLoading(false)
+        dispatch(fetchLoading({isLoading:false}))
       });
     // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
   };
   
-  const signOut = () => {
-    dispatch(setUser(null));
-    signOutUser();
-    onDismis();
+  const signOut = async () => {
+    await dispatch(setUser(null));
+    await signOutUser();
+    await onDismis();
+    navigate("/");
   };
 
   const signInUser = async (authResult: AuthResult) => {
