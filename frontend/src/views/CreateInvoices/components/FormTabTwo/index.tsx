@@ -30,7 +30,7 @@ const FormTabTwo = ({formState, control, setValue,getValues, register, fields, a
 
       <CsSubTotal>
         <CsButtonAdd onClick={() => {
-          append({ name: getValues("name"), quantity: getValues("quantity"), price: getValues("price") });
+          append({ name: "", quantity: "", price: "" });
         }}>
           <CsAddIcon />
           <CsText>Line item</CsText>

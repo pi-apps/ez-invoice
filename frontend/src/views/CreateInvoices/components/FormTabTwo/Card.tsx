@@ -8,15 +8,9 @@ import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
 
 const Card = ({formState,getValues, item, setValue, control, index, register, fields , remove } ) => {
+
+  const totalPriceItem = Number( fields[index].quantity ) * Number( fields[index].price )
   
-  const totalPriceItem = item.quantity * item.price
-
-  const totalprice = function(fields) {
-    return fields.reduce((sum, i) => {
-      return sum + (i.price * i.quantity)
-    }, 0)
-  };
-
   const handleCloseItem = () => {
     if(fields?.length > 1){
       remove(index)
@@ -40,11 +34,11 @@ const Card = ({formState,getValues, item, setValue, control, index, register, fi
                     control={control}
                     name="name"
                     // rules={rules.sender}
-                    render={({ field }) => (
+                    render={({ field: {onBlur, value}}) => (
                     <CsTextArea
                         name="name"
-                        value={getValues("name")}
-                        // value={field.value}
+                        value={value}
+                        onBlur={onBlur}
                         placeholder="Description of service or product"
                         onChange={(event) => setValue(`items[${index}].name`, event.target.value)}
                     />
@@ -59,11 +53,11 @@ const Card = ({formState,getValues, item, setValue, control, index, register, fi
                     control={control}
                     name="quantity"
                     // rules={rules.sender}
-                    render={({ field }) => (
+                    render={({ field: {onBlur, value}}) => (
                     <CsInput
                         name="quantity"
-                        // value={field.value}
-                        value={getValues("quantity")}
+                        value={value}
+                        onBlur={onBlur}
                         placeholder="1"
                         onChange={(event) => setValue(`items[${index}].quantity`, event.target.value)}
                     />
@@ -74,11 +68,11 @@ const Card = ({formState,getValues, item, setValue, control, index, register, fi
                   <Controller
                       control={control}
                       name="price"
-                      render={({ field }) => (
+                      render={({ field: {onBlur, value}}) => (
                         <CsInput
                             name="price"
-                            // value={field.value}
-                            value={getValues("price")}
+                            value={value}
+                            onBlur={onBlur}
                             placeholder="0.00 Pi"
                             onChange={(event) => setValue(`items[${index}].price`, event.target.value)}
                         />
