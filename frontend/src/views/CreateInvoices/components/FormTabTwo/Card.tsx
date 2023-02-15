@@ -1,20 +1,44 @@
 import { Button, Flex, Skeleton, Text } from '@phamphu19498/pibridge_uikit'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import NumberFormat from 'react-number-format'
 import Col from 'react-bootstrap/esm/Col'
 import Row from 'react-bootstrap/esm/Row'
 import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
+import { debounce } from 'lodash'
 
 const Card = ({formState,getValues, item, setValue, control, index, register, fields , remove } ) => {
+  const totalPriceItem =  Number( fields[index].quantity ) * Number( fields[index].price )
 
-  const totalPriceItem = Number( fields[index].quantity ) * Number( fields[index].price )
-  
+  const [price, setPrice] = useState(0)
+  const [quantity, setQuantity] = useState(0)
+
+  console.log('quantity', quantity)
+  console.log('price', price)
+
   const handleCloseItem = () => {
     if(fields?.length > 1){
       remove(index)
     }
+  }
+
+  const debouncePrice = useCallback(debounce((nextValue) => 
+    setValue(`items[${index}].quantity`, nextValue)
+  , 1000), [])
+
+  const debounceQuantity = useCallback(debounce((nextValue) => 
+  setValue(`items[${index}].price`, nextValue)
+, 1000), [])
+
+  function handleChangeQuantity(e) {
+    const { value } = e.target;
+    debouncePrice(value);
+  }
+
+  function handleChangePrice(e) {
+    const { value } = e.target;
+    debounceQuantity(value);
   }
 
   return (
@@ -40,7 +64,7 @@ const Card = ({formState,getValues, item, setValue, control, index, register, fi
                         value={value}
                         onBlur={onBlur}
                         placeholder="Description of service or product"
-                        onChange={(event) => setValue(`items[${index}].name`, event.target.value)}
+                        // onChange={(event) => setValue(`items[${index}].name`, event.target.value)}
                     />
                     )}
                     />
@@ -59,7 +83,8 @@ const Card = ({formState,getValues, item, setValue, control, index, register, fi
                         value={value}
                         onBlur={onBlur}
                         placeholder="1"
-                        onChange={(event) => setValue(`items[${index}].quantity`, event.target.value)}
+                        // onChange={(event) => setValue(`items[${index}].quantity`, event.target.value)}
+                        onChange={(event) => handleChangeQuantity(event)}
                     />
                     )}
                   />
@@ -74,7 +99,8 @@ const Card = ({formState,getValues, item, setValue, control, index, register, fi
                             value={value}
                             onBlur={onBlur}
                             placeholder="0.00 Pi"
-                            onChange={(event) => setValue(`items[${index}].price`, event.target.value)}
+                            // onChange={(event) => setValue(`items[${index}].price`, event.target.value)}
+                          onChange={(event) => handleChangePrice(event)}
                         />
                       )}
                     />

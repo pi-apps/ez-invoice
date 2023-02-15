@@ -101,6 +101,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
             formData.append("logo", data.logo);
+            
+            console.log("formData", formData)
     }
 
     const handleMinusTabActive = () => {

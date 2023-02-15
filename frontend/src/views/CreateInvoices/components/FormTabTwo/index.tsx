@@ -1,15 +1,14 @@
 import { Flex, Text } from '@phamphu19498/pibridge_uikit'
 import Row from 'components/Layout/Row'
 import { AddIcon } from 'components/Svg'
+import { useState } from 'react'
 import styled from 'styled-components'
 import Card from './Card'
 
 const FormTabTwo = ({formState, control, setValue,getValues, register, fields, append , remove}) => {
-  console.log('fields', fields)
 
   const totalPrice = (fields) => {
     return fields.reduce((sum, i) => {
-      console.log('i', i)
       if(i.price === undefined || i.quantity === undefined){
         return 0
       } else{
