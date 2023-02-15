@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AddIcon } from "components/Svg";
 import ImageUploading from "react-images-uploading";
 import styled from "styled-components";
+import { Translate } from "react-auto-translate";
 
 function ReactImageUpload({images , setValue }) {
   const [ logoImg, setLogoImages] = useState([]);
@@ -32,7 +33,7 @@ function ReactImageUpload({images , setValue }) {
                 logoImg.length === 0 && (
                     <CsButtonAdd onClick={onImageUpload}>
                         <CsAddIcon />
-                        <CsText>Add your logo</CsText>
+                        <CsText ml="10px">Add your logo</CsText>
                     </CsButtonAdd>
                 )
             }
@@ -41,13 +42,12 @@ function ReactImageUpload({images , setValue }) {
             {logoImg.map((image, index) => {
                 const imageName = logoImg[0].file?.name
                 return(
-              <Flex mt='1rem' key={index} alignItems="center">
-                <CsAvatar src={logoImg[0].data_url} alt={imageName} />
-                <div className="image-item__btn-wrapper">
-                  <CsButtonUpdate >Update</CsButtonUpdate>
-                  <CsButtonRemove >Remove</CsButtonRemove>
-                </div>
-              </Flex>
+                  <Flex mt='1rem' key={index} alignItems="center">
+                    <CsAvatar src={logoImg[0].data_url} alt={imageName} />
+                    <div className="image-item__btn-wrapper">
+                      <CsButtonAdd onClick={() => onImageUpdate(index)}><CsText><Translate>Update</Translate></CsText></CsButtonAdd>
+                    </div>
+                  </Flex>
             )})}
           </div>
         )}
@@ -82,12 +82,13 @@ const CsButtonAdd = styled.div`
   flex-direction:row;
   align-items: center;
   justify-content: center;
-  width: 160px;
+  width: fit-content;
   cursor: pointer;
   height: 45px;
   background: #6B39F4;
   border-radius: 6px;
   margin-bottom: 12px;
+  padding: 0 20px;
 `
 
 const CsAddIcon = styled(AddIcon)`
@@ -97,6 +98,6 @@ const CsText = styled(Text)`
   font-size: 12px;
   color: #FFFFFF;
   font-weight: 700;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 `
 export default ReactImageUpload

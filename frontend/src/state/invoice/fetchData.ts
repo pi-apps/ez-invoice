@@ -1,5 +1,5 @@
 
-import { DetailsInvoice, ListReceived, ListSent } from "./types"
+import { DetailsInvoice, ListReceived, ListSent, AllInvoice} from "./types"
 import { axiosClient } from "config/htttp"
 import _ from 'lodash'
 
@@ -37,9 +37,9 @@ export const fetchAllInvoiceSent = async (): Promise<ListSent> => {
             };
           });
           const data = _.sortBy(groupArrays, 'date')
-          console.log('data', data)
+
         return {
-            listSent: data
+            listSent: data,
         } 
     } catch (e) {
         console.log(e)
@@ -47,6 +47,21 @@ export const fetchAllInvoiceSent = async (): Promise<ListSent> => {
             listSent: null
         } 
     }
+}
+
+export const fetchAllInvoice = async (): Promise<AllInvoice> => {
+  try {
+      const submitReq = await axiosClient.get(`invoice/all-sent`);
+        const dataAllIvoice = submitReq?.data
+      return {
+        allInvoice: dataAllIvoice,
+      } 
+  } catch (e) {
+      console.log(e)
+      return {
+        allInvoice: null
+      } 
+  }
 }
 
 export const fetchAllInvoiceReceived = async (): Promise<ListReceived> => {

@@ -3,40 +3,36 @@ import PageFullWidth from 'components/Layout/PageFullWidth'
 import Row from 'components/Layout/Row'
 import { AddIcon, CloseIcon } from 'components/Svg'
 import React, { useState } from 'react'
+import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
+import { CsInput } from '../styles'
 import Card from './Card'
 
-const FormTabTwo = ({formState, control, setValue }) => {
+const FormTabTwo = ({formState, control, setValue,getValues, register, fields, append , remove}) => {
   const [indexes, setIndexes] = React.useState([]);
   const [ price, setPrice] = useState(0.00)
 
-  const arraydata = [ { name: '', quantity: 0, price: 0 } ]
-  const [array, setArray] = useState(arraydata)
-
-  const handleAddItem = () => {
-    setArray([...array, { name: '', quantity: 0, price: 0 }])
-  }
-
-  console.log('array', array)
   return (
     <CsWrapperForm>
       <CsContainer>
-        {
-          array.map((_, index) => (
-            <Card index={index} formState={formState} setValue={setValue} control={control} />
-          ))
-        }
+      {fields.map((item, index) => {
+          return (
+              <Card key={item.id} getValues={getValues} register={register} fields={fields} remove={remove} index={index} formState={formState} setValue={setValue} control={control} />
+          );
+        })}
       </CsContainer>
 
       <CsSubTotal>
-        <CsButtonAdd onClick={handleAddItem}>
+        <CsButtonAdd onClick={() => {
+          append({ name: getValues("name"), quantity: getValues("quantity"), price: getValues("price") });
+        }}>
           <CsAddIcon />
           <CsText>Line item</CsText>
         </CsButtonAdd>
         <hr style={{margin: '10px 0'}} />
         <Row mt="16px" style={{justifyContent: "space-between"}}>
             <CsTextLeft>Amount Due</CsTextLeft>
-            <CsTextRight bold>100.00 Pi</CsTextRight>
+            <CsTextRight bold>10000 Pi</CsTextRight>
         </Row>
       </CsSubTotal>
       </CsWrapperForm>
@@ -66,13 +62,20 @@ const CsText = styled(Text)`
   margin-left: 10px;
 `
 
-const CsButtonAdd = styled(Button)`
+const CsButtonAdd = styled.div`
   margin-top: 12px;
   margin-bottom: 12px;
   border-bottom: 1px solid #E2E8F0;
+  background: #6B39F4;
+  border-radius: 6px;
+  width: fit-content;
+  align-items: center;
+  width: 95px;
+  height: 35px;
+  padding: 0 10px;
+  display: flex;
+  cursor: pointer;
 `
-
-
 
 const CsSubTotal = styled.div`
   padding: 0 24px;

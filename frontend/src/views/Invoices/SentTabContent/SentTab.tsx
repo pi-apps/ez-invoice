@@ -8,7 +8,7 @@ const SentTab = () => {
 
   UseGetAllInvoiceSentCore()
   const items = GetAnInvoice()
-  
+
   return (
     <CsWrapContainer>
       { ( items?.listSent?.length && items?.isLoading === false ) ?

@@ -1,89 +1,96 @@
-import { Button, Flex, Text } from '@phamphu19498/pibridge_uikit'
+import { Button, Flex, Skeleton, Text } from '@phamphu19498/pibridge_uikit'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
 import React, { useState } from 'react'
+import NumberFormat from 'react-number-format'
 import Col from 'react-bootstrap/esm/Col'
 import Row from 'react-bootstrap/esm/Row'
 import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
 
-const Card = ({formState, setValue, control, index } ) => {
-
-  // const amountTotal = amount * price
-  // function handleChangeAmount(event) {
-  //   setAmount(event.target.value)
-  //   // console.log(event.target.value);
-  // }
-  // function handleChangePrice(event) {
-  //   setPrice(event.target.value)
-  //   // console.log(event.target.value);
-  // }
+const Card = ({formState,getValues, setValue, control, index, register, fields , remove } ) => {
   
+  const totalPriceItem = Number(getValues("quantity")) * Number(getValues("price"))
+  console.log('fields', fields)
+
+  // const totalprice = function(fields) {
+  //   return fields.reduce((sum, i) => {
+  //     return sum + (i.price * i.quantity)
+  //   }, 0)
+  // };
+
+  const handleCloseItem = () => {
+    if(fields?.length > 1){
+      remove(index)
+    }
+  }
   return (
     <CsWrapperCard>
         <CsHeading>
             <CsFlexHeading>
                 <CsTextHeading>Item</CsTextHeading>
-                <CsCloseIcon>
+                <CsCloseIcon role="presentation" onClick={handleCloseItem}>
                   <CloseIcon />
                 </CsCloseIcon>
             </CsFlexHeading>
         </CsHeading>
         <CsContent>
-            {/* <CsTextArea placeholder='Description of service or product' /> */}
             <ContainerInput>
-                    <WrapInput>
-                        <Controller
-                            control={control}
-                            name="name"
-                            // rules={rules.sender}
-                            render={({ field }) => (
-                            <CsTextArea
-                                name="name"
-                                value={field.value}
-                                placeholder="Description of service or product"
-                                onChange={(event) => setValue("name", event.target.value)}
-                            />
-                            )}
-                        />
-                    </WrapInput>
-              </ContainerInput>
-
-            <CsRowINput>
                 <WrapInput>
-                    <Controller
-                        control={control}
-                        name="quantity"
-                        // rules={rules.sender}
-                        render={({ field }) => (
-                        <CsInput
-                            name="quantity"
-                            value={field.value}
-                            placeholder="1"
-                            onChange={(event) => setValue("quantity", event.target.value)}
-                        />
-                        )}
+                  <Controller
+                    control={control}
+                    name="name"
+                    // rules={rules.sender}
+                    render={({ field }) => (
+                    <CsTextArea
+                        name="name"
+                        value={getValues("name")}
+                        // value={field.value}
+                        placeholder="Description of service or product"
+                        onChange={(event) => setValue("name", event.target.value)}
+                    />
+                    )}
                     />
                 </WrapInput>
+            </ContainerInput>
+
+            <CsRowINput>
+              <WrapInput>
+                  <Controller
+                    control={control}
+                    name="quantity"
+                    // rules={rules.sender}
+                    render={({ field }) => (
+                    <CsInput
+                        name="quantity"
+                        // value={field.value}
+                        value={getValues("quantity")}
+                        placeholder="1"
+                        onChange={(event) => setValue("quantity", event.target.value)}
+                    />
+                    )}
+                  />
+              </WrapInput>
                 <WrapInput>
-                    <Controller
-                        control={control}
-                        name="price"
-                        render={({ field }) => (
+                  <Controller
+                      control={control}
+                      name="price"
+                      render={({ field }) => (
                         <CsInput
                             name="price"
-                            value={field.value}
+                            // value={field.value}
+                            value={getValues("price")}
                             placeholder="0.00 Pi"
                             onChange={(event) => setValue("price", event.target.value)}
                         />
-                        )}
+                      )}
                     />
                 </WrapInput>
             </CsRowINput>
         </CsContent>
+
         <Flex mt="24px">
             <Cstitle>Amount: </Cstitle>
-            <CsAmount>  Pi</CsAmount>
-            
+            <CsAmount> {totalPriceItem ? totalPriceItem : 0} Pi</CsAmount>
         </Flex>
   </CsWrapperCard>
   )
@@ -99,6 +106,7 @@ const Cstitle = styled(Text)`
 `
 const CsAmount = styled(Text)`
     color: #0F172A;
+    margin-left: 4px;
 `
 
 const CsTextHeading = styled(Text)`
@@ -183,5 +191,14 @@ const CsInput = styled.input`
     font-size: 12px;
     font-weight: 600;
   }
+`
+const CsNumericFormat = styled(NumberFormat)`
+    &:focus-visible {
+        outline: none;
+    }
+    ::placeholder { 
+        color:${({ theme }) => theme.colors.text};
+        opacity: 1; 
+    }
 `
 export default Card

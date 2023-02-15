@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { getUser } from "../../state/user";
 import { Text } from "@phamphu19498/pibridge_uikit";
 import TranslateMenu from "components/Menu/Translate/TranslateMenu";
+import { GetAnInvoice, UseGetAllInvoice, UseGetAnInvoiceCore } from "state/invoice";
 
 const styles = {
   navbar: {
@@ -31,7 +32,10 @@ const styles = {
 const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
-  const [loading, setLoading] = useState(false)
+
+  UseGetAllInvoice()
+  const items = GetAnInvoice()
+
   useEffect(() => {
     const fetchUser = async () => {
       const user = await axiosClient.get("user/info");
@@ -57,15 +61,15 @@ const Header = () => {
           </Navbar.Brand>
           <Nav className="justify-content-end">
             {userData?.username && (
-              <Text padding="0 10px">{userData?.username}</Text>
+              <Text fontWeight="600" lineHeight='2' fontSize="14px" padding="0 4px">{userData?.username}</Text>
             )}
             {
-              loading && (
+              (!userData?.username && items?.isLoading === true ) && (
               <Text mt="6px" fontSize="12px" color="textSubtle">Loading..</Text>
               )
             }
             <TranslateMenu />
-            <UserMenu setLoading={setLoading} />
+            <UserMenu />
           </Nav>
         </Container>
       </Navbar>

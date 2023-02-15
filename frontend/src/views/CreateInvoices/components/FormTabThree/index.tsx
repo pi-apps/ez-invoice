@@ -11,7 +11,7 @@ import ChooseMethod from './ChooseMethod';
 import { AddIcon2 } from 'components/Svg';
 import { useState } from 'react';
 
-const FormTabThree = ({formState:{errors}, control, setValue }) => {
+const FormTabThree = ({formState:{errors}, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount }) => {
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)
@@ -30,19 +30,20 @@ const FormTabThree = ({formState:{errors}, control, setValue }) => {
                     <WrapInput>
                         <Controller
                             control={control}
-                            name="note"
+                            name="notes"
                             // rules={rules.invoicenumber}
                             render={({ field }) => (
                             <CsTextArea
-                                name="note"
+                                name="notes"
                                 // type="text"
-                                placeholder="Terms and conditions - late fees, payment methods, delivery schedule"
-                                onChange={field.onChange}
+                                placeholder="Description of service or product"
+                                value={field.value}
+                                onChange={(event) => setValue("notes", event.target.value)}
                             />
                             )}
                         />
                     </WrapInput>
-                    <ErrorMessages errors={errors} name="note" />
+                    <ErrorMessages errors={errors} name="notes" />
                 </ContainerInput>
                 
                   {/* Terms */}
@@ -53,19 +54,19 @@ const FormTabThree = ({formState:{errors}, control, setValue }) => {
                     <WrapInput>
                         <Controller
                             control={control}
-                            name="term"
+                            name="terms"
                             // rules={rules.invoicenumber}
                             render={({ field }) => (
                             <CsTextArea
-                                name="term"
-                                // type="text"
-                                placeholder="Terms and conditions - late fees, payment methods, delivery schedule"
-                                onChange={field.onChange}
+                                name="terms"
+                                placeholder="1"
+                                value={field.value}
+                                onChange={(event) => setValue("terms", event.target.value)}
                             />
                             )}
                         />
                     </WrapInput>
-                    <ErrorMessages errors={errors} name="term" />
+                    <ErrorMessages errors={errors} name="terms" />
                 </ContainerInput>
 
                 <hr style={{marginTop: '2rem'}}/>
@@ -76,7 +77,7 @@ const FormTabThree = ({formState:{errors}, control, setValue }) => {
                         <CsTextRight bold>0.00 Pi</CsTextRight>
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <ChooseMethod typeTax={typeTax} typeDiscount={typeDiscount} setTypeTax={setTypeTax} setTypeDiscount={setTypeDiscount} typeShipping={typeShipping} setTypeShipping={setTypeShipping}/>
+                        <ChooseMethod setActiveDiscount={setActiveDiscount} activeDiscount={activeDiscount} activeTax={activeTax} setActiveTax={setActiveTax} control={control} setValue={setValue} typeTax={typeTax} typeDiscount={typeDiscount} setTypeTax={setTypeTax} setTypeDiscount={setTypeDiscount} typeShipping={typeShipping} setTypeShipping={setTypeShipping}/>
                     </Row>
 
                     <Row mt="1rem" style={{justifyContent: "flex-end"}}>
@@ -108,7 +109,22 @@ const FormTabThree = ({formState:{errors}, control, setValue }) => {
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft mr="2rem">Amount paid</CsTextLeft>
-                        <CsAmountPaid>0.00 Pi</CsAmountPaid>
+                          <CsAmountPaid>
+                              <Controller
+                                  control={control}
+                                  name="amountPaid"
+                                  // rules={rules.invoicenumber}
+                                  render={({ field }) => (
+                                  <CsInput  style={{textAlign: 'right', width: '100%'}}
+                                      name="amountPaid"
+                                      placeholder="0.00 Pi"
+                                      value={field.value}
+                                      onChange={(event) => setValue("amountPaid", event.target.value)}
+                                  />
+                                  )}
+                              />
+                          <ErrorMessages errors={errors} name="amountPaid" />
+                          </CsAmountPaid>
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft>Balance Due</CsTextLeft>
@@ -160,12 +176,13 @@ const CsRowTaxLeft = styled(Flex)`
 const CsRowTaxRight = styled(Flex)`
     align-items: center;
 `
-const CsAmountPaid = styled(Text)`
+const CsAmountPaid = styled(Flex)`
     background: #F8F9FD;
+    height: fit-content;
     border-radius: 12px;
     font-size: 12px;
     max-width: 220px;
-    padding: 20px 16px;
+    padding: 0px 16px;
     text-align: right;
     gap: 8px;
     flex: 1;
@@ -224,7 +241,7 @@ const CsLabel = styled(Text)`
 const ContainerInput = styled(Flex)`
   flex-direction: column;
   width: 100%;
-  background-color:#F8F9FD;
+  /* background-color:#F8F9FD; */
   border-radius:8px;
   /* margin-bottom:1rem; */
 `

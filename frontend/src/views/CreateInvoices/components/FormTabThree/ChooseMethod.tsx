@@ -1,13 +1,12 @@
-import { Button, Flex, Text } from '@phamphu19498/pibridge_uikit'
+import { Button, Flex, Input, Text } from '@phamphu19498/pibridge_uikit'
 import { AddIcon2, CloseIcon } from 'components/Svg'
 import React, { useState } from 'react'
+import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
 
-const ChooseMethod = ({typeTax, typeDiscount, setTypeTax, setTypeDiscount, typeShipping, setTypeShipping }) => {
-    console.log('typeTax', typeTax)
-  const [activeTax, setActiveTax ] = useState<number>(0)
-  const [activeShipping, setActiveShipping ] = useState<number>(0)
-  const [activeDiscount, setActiveDiscount ] = useState<number>(0)
+const ChooseMethod = ({activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount,activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
+//   const [activeTax, setActiveTax ] = useState<number>(0)
+// const [activeDiscount, setActiveDiscount ] = useState<number>(1)
   return (
     <Flex flexDirection="column" width="100%">
     {typeTax && (
@@ -15,17 +14,45 @@ const ChooseMethod = ({typeTax, typeDiscount, setTypeTax, setTypeDiscount, typeS
             <CsTextLeft>Tax</CsTextLeft>
             <CsRowTax>
                 <CsRowTaxLeft>
-                    <CsButton isActive={activeTax === 0 ? !false : false } onClick={() => setActiveTax(0)}>%</CsButton>
-                    <CsButton isActive={activeTax  === 1 ? !false : false} onClick={() => setActiveTax(1)}>Pi</CsButton>
+                    <CsButton isActive={activeTax === 1 ? !false : false } onClick={() => setActiveTax(1)}>%</CsButton>
+                    <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => setActiveTax(2)}>Pi</CsButton>
                 </CsRowTaxLeft>
                 <CsRowTaxRight>
-                    {activeTax === 0 ? (
-                        <CsText>0 %</CsText>
+                    {activeTax === 1 ? (
+                        <WrapInput>
+                            <Controller
+                                control={control}
+                                name="tax"
+                                // rules={rules.invoicenumber}
+                                render={({ field }) => (
+                                <CsInput
+                                    name="tax"
+                                    placeholder="0%"
+                                    value={field.value}
+                                    onChange={(event) => setValue("tax", event.target.value)}
+                                />
+                                )}
+                            />
+                        </WrapInput>
                     ) : (
-                        <CsText>0.00 Pi</CsText>
+                        <WrapInput>
+                        <Controller
+                            control={control}
+                            name="tax"
+                            // rules={rules.invoicenumber}
+                            render={({ field }) => (
+                            <CsInput
+                                name="tax"
+                                placeholder="0.00 Pi"
+                                value={field.value}
+                                onChange={(event) => setValue("tax", event.target.value)}
+                            />
+                            )}
+                        />
+                    </WrapInput>
                     )}
                     <CsCloseIcon onClick={() => setTypeTax(false)}>
-                    <CloseIcon />
+                        <CloseIcon />
                     </CsCloseIcon>
                 </CsRowTaxRight>
             </CsRowTax>
@@ -36,14 +63,42 @@ const ChooseMethod = ({typeTax, typeDiscount, setTypeTax, setTypeDiscount, typeS
             <CsTextLeft>Discount</CsTextLeft>
             <CsRowTax>
                 <CsRowTaxLeft>
-                    <CsButton isActive={activeShipping === 0 ? !false : false } onClick={() => setActiveShipping(0)}>%</CsButton>
-                    <CsButton isActive={activeShipping  === 1 ? !false : false} onClick={() => setActiveShipping(1)}>Pi</CsButton>
+                    <CsButton isActive={activeDiscount === 0 ? !false : false } onClick={() => setActiveDiscount(0)}>%</CsButton>
+                    <CsButton isActive={activeDiscount  === 1 ? !false : false} onClick={() => setActiveDiscount(1)}>Pi</CsButton>
                 </CsRowTaxLeft>
                 <CsRowTaxRight>
-                    {activeShipping === 0 ? (
-                        <CsText>0 %</CsText>
+                    {activeDiscount === 1 ? (
+                         <WrapInput>
+                            <Controller
+                                control={control}
+                                name="discount"
+                                // rules={rules.invoicenumber}
+                                render={({ field }) => (
+                                <CsInput
+                                    name="discount"
+                                    placeholder="0%"
+                                    value={field.value}
+                                    onChange={(event) => setValue("discount", event.target.value)}
+                                />
+                                )}
+                            />
+                        </WrapInput>
                     ) : (
-                        <CsText>0.00 Pi</CsText>
+                        <WrapInput>
+                            <Controller
+                                control={control}
+                                name="discount"
+                                // rules={rules.invoicenumber}
+                                render={({ field }) => (
+                                <CsInput
+                                    name="discount"
+                                    placeholder="0.00 Pi"
+                                    value={field.value}
+                                    onChange={(event) => setValue("discount", event.target.value)}
+                                />
+                                )}
+                            />
+                        </WrapInput>
                     )}
                     <CsCloseIcon onClick={() => setTypeDiscount(false)}>
                     <CloseIcon />
@@ -57,20 +112,21 @@ const ChooseMethod = ({typeTax, typeDiscount, setTypeTax, setTypeDiscount, typeS
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
             <CsTextLeft>Shipping</CsTextLeft>
             <CsRowTax>
-                <CsRowTaxLeft>
-                    <CsButton isActive={activeDiscount === 0 ? !false : false } onClick={() => setActiveDiscount(0)}>%</CsButton>
-                    <CsButton isActive={activeDiscount  === 1 ? !false : false} onClick={() => setActiveDiscount(1)}>Pi</CsButton>
-                </CsRowTaxLeft>
-                <CsRowTaxRight>
-                    {activeDiscount === 0 ? (
-                        <CsText>0 %</CsText>
-                    ) : (
-                        <CsText>0.00 Pi</CsText>
-                    )}
-                    <CsCloseIcon onClick={() => setTypeShipping(false)}>
-                    <CloseIcon />
-                    </CsCloseIcon>
-                </CsRowTaxRight>
+                <WrapInput>
+                    <Controller
+                        control={control}
+                        name="shipping"
+                        // rules={rules.invoicenumber}
+                        render={({ field }) => (
+                        <CsInput
+                            name="shipping"
+                            placeholder="0.00 Pi"
+                            value={field.value}
+                            onChange={(event) => setValue("shipping", event.target.value)}
+                        />
+                        )}
+                    />
+                </WrapInput>
             </CsRowTax>
         </Flex>
     )}
@@ -100,10 +156,15 @@ const CsCloseIcon = styled(Button)`
     padding: 0;
     width: 20px;
     height: 20px;
-    margin-left: 10px;
+    /* margin-left: 10px; */
 `
-const CsButton = styled(Button)<{isActive:boolean}>`
-    padding:0;
+const CsButton = styled.div<{isActive:boolean}>`
+    padding:9px;
+    cursor: pointer;
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    border-radius: 10px;
     font-weight: 700;
     width: 31px;
     height: 28px;
@@ -137,4 +198,35 @@ const CsRowTax = styled(Flex)`
     background: #F8F9FD;
     border-radius: 12px;
 `
+const WrapInput = styled(Flex)`
+  position: relative;
+  background-color:#F8F9FD;
+  border-radius: 10px;
+  width: 100%;
+  /* height: 56px; */
+  input{
+    padding: 10px;
+  }
+`
+
+const CsInput = styled(Input)`
+  background: none;
+  text-align: right;
+  border: none;
+  padding-left: 10px;
+  border-radius: 0px;
+  width: 100%;
+  box-shadow: none;
+  font-size:14px;
+  height: 56px;
+  &::placeholder{
+    color: #94A3B8;
+    font-weight: 400;
+    font-size: 12px;
+  }
+  :focus:not(:disabled){
+    box-shadow:none!important;
+  }
+`
+
 export default ChooseMethod
