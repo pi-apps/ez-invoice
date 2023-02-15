@@ -5,13 +5,13 @@ import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
 import Footer from 'components/Footer';
 
 const DetailSent = () => {
-
+    const navigate = useNavigate();
     let { slug } = useParams()
     UseGetAnInvoiceCore(slug)
     const items = GetAnInvoice()
@@ -163,13 +163,11 @@ const DetailSent = () => {
                                 </CsContentInfo>
                             </WContent>
                             <WAction>
-                                    <CsNavItem>
-                                        <Navbar.Brand href="/invoice">
-                                            <CsButton>
-                                                Back
-                                            </CsButton>
-                                        </Navbar.Brand>
-                                    </CsNavItem>
+                                <CsNavItem>
+                                    <CsButton onClick={()=> navigate("/invoice")}>
+                                        Back
+                                    </CsButton>
+                                </CsNavItem>
                             </WAction>
                         </Flex>
                         <Footer/>
