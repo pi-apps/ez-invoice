@@ -5,12 +5,25 @@ import styled from 'styled-components'
 import Card from './Card'
 
 const FormTabTwo = ({formState, control, setValue,getValues, register, fields, append , remove}) => {
+  console.log('fields', fields)
+
+  const totalPrice = (fields) => {
+    return fields.reduce((sum, i) => {
+      console.log('i', i)
+      if(i.price === undefined || i.quantity === undefined){
+        return 0
+      } else{
+        return sum + i.price * i.quantity
+      }
+    },0)
+  }
+
   return (
     <CsWrapperForm>
       <CsContainer>
       {fields.map((item, index) => {
           return (
-              <Card key={item.id} getValues={getValues} register={register} fields={fields} remove={remove} index={index} formState={formState} setValue={setValue} control={control} />
+              <Card item={item} key={item.id} getValues={getValues} register={register} fields={fields} remove={remove} index={index} formState={formState} setValue={setValue} control={control} />
           );
         })}
       </CsContainer>
@@ -25,7 +38,7 @@ const FormTabTwo = ({formState, control, setValue,getValues, register, fields, a
         <hr style={{margin: '10px 0'}} />
         <Row mt="16px" style={{justifyContent: "space-between"}}>
             <CsTextLeft>Amount Due</CsTextLeft>
-            <CsTextRight bold>10000 Pi</CsTextRight>
+            <CsTextRight bold>{totalPrice(fields)} Pi</CsTextRight>
         </Row>
       </CsSubTotal>
       </CsWrapperForm>

@@ -7,22 +7,22 @@ import Row from 'react-bootstrap/esm/Row'
 import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
 
-const Card = ({formState,getValues, setValue, control, index, register, fields , remove } ) => {
+const Card = ({formState,getValues, item, setValue, control, index, register, fields , remove } ) => {
   
-  const totalPriceItem = Number(getValues("quantity")) * Number(getValues("price"))
-  console.log('fields', fields)
+  const totalPriceItem = item.quantity * item.price
 
-  // const totalprice = function(fields) {
-  //   return fields.reduce((sum, i) => {
-  //     return sum + (i.price * i.quantity)
-  //   }, 0)
-  // };
+  const totalprice = function(fields) {
+    return fields.reduce((sum, i) => {
+      return sum + (i.price * i.quantity)
+    }, 0)
+  };
 
   const handleCloseItem = () => {
     if(fields?.length > 1){
       remove(index)
     }
   }
+
   return (
     <CsWrapperCard>
         <CsHeading>
@@ -43,7 +43,7 @@ const Card = ({formState,getValues, setValue, control, index, register, fields ,
                     render={({ field }) => (
                     <CsTextArea
                         name="name"
-                        value={getValues(`items[${index}].name`)}
+                        value={getValues("name")}
                         // value={field.value}
                         placeholder="Description of service or product"
                         onChange={(event) => setValue(`items[${index}].name`, event.target.value)}
@@ -65,7 +65,7 @@ const Card = ({formState,getValues, setValue, control, index, register, fields ,
                         // value={field.value}
                         value={getValues("quantity")}
                         placeholder="1"
-                        onChange={(event) => setValue("quantity", event.target.value)}
+                        onChange={(event) => setValue(`items[${index}].quantity`, event.target.value)}
                     />
                     )}
                   />
@@ -80,7 +80,7 @@ const Card = ({formState,getValues, setValue, control, index, register, fields ,
                             // value={field.value}
                             value={getValues("price")}
                             placeholder="0.00 Pi"
-                            onChange={(event) => setValue("price", event.target.value)}
+                            onChange={(event) => setValue(`items[${index}].price`, event.target.value)}
                         />
                       )}
                     />
@@ -95,11 +95,12 @@ const Card = ({formState,getValues, setValue, control, index, register, fields ,
   </CsWrapperCard>
   )
 }
-const CsCloseIcon = styled(Button)`
+const CsCloseIcon = styled.div`
     background: transparent;
     padding: 0;
     width: 20px;
     height: 20px;
+    cursor: pointer;
 `
 const Cstitle = styled(Text)`
     color: #94A3B8;
