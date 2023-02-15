@@ -36,8 +36,7 @@ export const fetchAllInvoiceSent = async (): Promise<ListSent> => {
               listItems: groups[date]
             };
           });
-          const data = _.sortBy(groupArrays, 'date')
-          console.log('data', data)
+          const data = _.sortBy(groupArrays, 'date').reverse()
         return {
             listSent: data
         } 
@@ -68,7 +67,7 @@ export const fetchAllInvoiceReceived = async (): Promise<ListReceived> => {
               listItems: groups[date]
             };
           });
-          const data = _.sortBy(groupArrays, 'date')
+          const data = _.sortBy(groupArrays, 'date').reverse()
         return {
             listReceived: data
         } 

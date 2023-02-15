@@ -7,20 +7,22 @@ import { Translate } from "react-auto-translate";
 
 interface Props {
   images:string
-  id:string
+  invoiceId:string
   create:string
   billTo:string
   amountDue:string
-  paid:boolean
+  paid:boolean,
+  invoiceNumber:number
 }
 
 const Card: React.FC<Props> = ({ 
   images,
-  id,
+  invoiceId,
   create,
   billTo,
   amountDue,
   paid,
+  invoiceNumber
  }) => {
 
   function convertDate(date: any) {
@@ -36,7 +38,7 @@ const Card: React.FC<Props> = ({
     return null
   }
   return (
-    <Navbar.Brand href={`/detailSent/${id}`}>
+    <Navbar.Brand href={`/detailSent/${invoiceId}`}>
       <CsContainer>
         <CsRow>
           <CsCol>
@@ -51,7 +53,7 @@ const Card: React.FC<Props> = ({
           </CsCol>
           <Flex flexDirection="column">
             <CsText bold>
-              <Translate>Invoice</Translate> #{id}
+              <Translate>Invoice</Translate> #{invoiceNumber}
             </CsText>
             {convertDate(create)}
           </Flex>

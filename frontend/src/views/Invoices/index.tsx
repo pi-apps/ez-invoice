@@ -14,7 +14,7 @@ import ReceiveTab from "./ReceiveContent/ReceiveTab";
 const Invoices = () => {
     const [ dataInvoice ] = GetDataInvoice()
     const isSent = dataInvoice?.isSent
-    
+    console.log("isSent", isSent)
     const renderContent = (isSent) => {
         if(isSent){
             return <SentTab/>
