@@ -5,11 +5,11 @@ const ejs = require('ejs');
 const axios = require('axios');
 import fs from "fs";
 import sesService from "./aws-ses-service";
-const lang_pdf = require('./languages/lang_pdf.json');
-const lang_email = require('./languages/lang_email.json');
-const lang_email_success = require('./languages/lang_email_success.json');
+import { lang_pdf} from "./languages/lang_pdf";
+import { lang_email} from "./languages/lang_email";
+import { lang_email_success } from "./languages/lang_email_success";
 
-const GOOGLE_API_KEY = 'AIzaSyC0aGU19DRSo0LjOoA9cGuQeBaRlMRCBYo';
+const GOOGLE_API_KEY = 'AIzaSyCGDBWmaZXELZ0joy8LPE5UuXjV4doLXOs';
 
 const template = fs.readFileSync("./src/services/templatePDF.ejs", "utf8");
 

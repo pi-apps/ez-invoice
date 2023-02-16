@@ -54,9 +54,8 @@ export default function mountUserEndpoints(router: Router) {
       if (!req.session.currentUser) {
         return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
       }
-  
-      const userId = req.session.currentUser._id;
-      const user = await UsersModel.findOne({ _id: userId });
+      const userId = req.session.currentUser.uid;
+      const user = await UsersModel.findOne({ uid: userId });
       return res.status(200).json(user);
     } catch (error) {
       console.log(error);

@@ -1,4 +1,4 @@
-{
+export const lang_pdf:any = {
     "text_title": "INVOICE",
     "text_bill_from": "Bill From",
     "text_bill_to": "Bill To",
