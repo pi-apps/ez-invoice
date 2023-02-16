@@ -68,7 +68,7 @@ export const CsTextArea = styled.textarea`
   padding: 10px;
   width: 100%;
   box-shadow: none;
-  font-size:16px;
+  font-size:14px;
   &::placeholder{
     color: #94A3B8;
     font-weight: 400;

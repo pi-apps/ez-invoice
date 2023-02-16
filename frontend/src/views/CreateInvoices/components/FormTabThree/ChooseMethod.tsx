@@ -4,102 +4,73 @@ import React, { useState } from 'react'
 import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
 
-const ChooseMethod = ({activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount,activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
+const ChooseMethod = ({isPercent, setIsPercent, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
+
 //   const [activeTax, setActiveTax ] = useState<number>(0)
 // const [activeDiscount, setActiveDiscount ] = useState<number>(1)
+
   return (
     <Flex flexDirection="column" width="100%">
-    {typeTax && (
-        <Flex width="100%" alignItems="center" justifyContent="space-between">
-            <CsTextLeft>Tax</CsTextLeft>
-            <CsRowTax>
-                <CsRowTaxLeft>
-                    <CsButton isActive={activeTax === 1 ? !false : false } onClick={() => setActiveTax(1)}>%</CsButton>
-                    <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => setActiveTax(2)}>Pi</CsButton>
-                </CsRowTaxLeft>
-                <CsRowTaxRight>
-                    {activeTax === 1 ? (
+        {typeTax === true && (
+            <Flex width="100%" alignItems="center" justifyContent="space-between">
+                <CsTextLeft>Tax</CsTextLeft>
+                <CsRowTax>
+                    <CsRowTaxLeft>
+                        <CsButton isActive={activeTax === 1 ? !false : false } onClick={() => setActiveTax(1)}>%</CsButton>
+                        <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => setActiveTax(2)}>Pi</CsButton>
+                    </CsRowTaxLeft>
+                    <CsRowTaxRight>
                         <WrapInput>
                             <Controller
                                 control={control}
                                 name="tax"
                                 // rules={rules.invoicenumber}
                                 render={({ field }) => (
-                                <CsInput
-                                    name="tax"
-                                    placeholder="0%"
-                                    value={field.value}
-                                    onChange={(event) => setValue("tax", event.target.value)}
-                                />
+                                    <>
+                                        <CsInput
+                                            name="tax"
+                                            placeholder={`0.00 ${(activeTax === 1) ? '%' : 'Pi'} `}
+                                            value={field.value}
+                                            onChange={(event) => setValue("tax", event.target.value)}
+                                        />
+                                    </>
                                 )}
                             />
                         </WrapInput>
-                    ) : (
-                        <WrapInput>
-                        <Controller
-                            control={control}
-                            name="tax"
-                            // rules={rules.invoicenumber}
-                            render={({ field }) => (
-                            <CsInput
-                                name="tax"
-                                placeholder="0.00 Pi"
-                                value={field.value}
-                                onChange={(event) => setValue("tax", event.target.value)}
-                            />
-                            )}
-                        />
-                    </WrapInput>
-                    )}
-                    <CsCloseIcon onClick={() => setTypeTax(false)}>
-                        <CloseIcon />
-                    </CsCloseIcon>
-                </CsRowTaxRight>
-            </CsRowTax>
-        </Flex>
-    )}
-        {typeDiscount && (
+                        <CsCloseIcon role="presentation" onClick={() => setTypeTax(false)}>
+                            <CloseIcon />
+                        </CsCloseIcon>
+                    </CsRowTaxRight>
+                </CsRowTax>
+            </Flex>
+        )}  
+
+        {typeDiscount === true && (
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
             <CsTextLeft>Discount</CsTextLeft>
             <CsRowTax>
                 <CsRowTaxLeft>
-                    <CsButton isActive={activeDiscount === 0 ? !false : false } onClick={() => setActiveDiscount(0)}>%</CsButton>
-                    <CsButton isActive={activeDiscount  === 1 ? !false : false} onClick={() => setActiveDiscount(1)}>Pi</CsButton>
+                    <CsButton isActive={isPercent === true ? !false : false } onClick={() => setIsPercent(true)}>%</CsButton>
+                    <CsButton isActive={isPercent  === false ? !false : false} onClick={() => setIsPercent(false)}>Pi</CsButton>
                 </CsRowTaxLeft>
                 <CsRowTaxRight>
-                    {activeDiscount === 1 ? (
-                         <WrapInput>
-                            <Controller
-                                control={control}
-                                name="discount"
-                                // rules={rules.invoicenumber}
-                                render={({ field }) => (
-                                <CsInput
-                                    name="discount"
-                                    placeholder="0%"
-                                    value={field.value}
-                                    onChange={(event) => setValue("discount", event.target.value)}
-                                />
-                                )}
-                            />
-                        </WrapInput>
-                    ) : (
-                        <WrapInput>
-                            <Controller
-                                control={control}
-                                name="discount"
-                                // rules={rules.invoicenumber}
-                                render={({ field }) => (
-                                <CsInput
-                                    name="discount"
-                                    placeholder="0.00 Pi"
-                                    value={field.value}
-                                    onChange={(event) => setValue("discount", event.target.value)}
-                                />
-                                )}
-                            />
-                        </WrapInput>
-                    )}
+                    <WrapInput>
+                        <Controller
+                            control={control}
+                            name="discount"
+                            // rules={rules.invoicenumber}
+                            render={({ field }) => (
+                                <>
+                                    <CsInput
+                                        name="discount"
+                                        placeholder={`0.00 ${(isPercent  === true) ? '%' : 'Pi'} `}
+                                        value={field.value}
+                                        onChange={(event) => setValue("discount", event.target.value)}
+                                    />
+                                </>
+                            )}
+                        />
+                    </WrapInput>
                     <CsCloseIcon onClick={() => setTypeDiscount(false)}>
                     <CloseIcon />
                     </CsCloseIcon>
@@ -108,7 +79,7 @@ const ChooseMethod = ({activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax
         </Flex>
     )}
 
-    {typeShipping && (
+    {typeShipping === true && (
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
             <CsTextLeft>Shipping</CsTextLeft>
             <CsRowTax>
@@ -123,6 +94,7 @@ const ChooseMethod = ({activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax
                             placeholder="0.00 Pi"
                             value={field.value}
                             onChange={(event) => setValue("shipping", event.target.value)}
+                            // onChange={field.onChange}
                         />
                         )}
                     />
@@ -130,7 +102,6 @@ const ChooseMethod = ({activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax
             </CsRowTax>
         </Flex>
     )}
-    
     </Flex>
   )
 }
@@ -151,11 +122,12 @@ const CsText = styled(Text)`
   font-weight: 700;
   margin-left: 10px;
 `
-const CsCloseIcon = styled(Button)`
+const CsCloseIcon = styled.div`
     background: transparent;
     padding: 0;
     width: 20px;
     height: 20px;
+    cursor: pointer;
     /* margin-left: 10px; */
 `
 const CsButton = styled.div<{isActive:boolean}>`
@@ -203,7 +175,6 @@ const WrapInput = styled(Flex)`
   background-color:#F8F9FD;
   border-radius: 10px;
   width: 100%;
-  /* height: 56px; */
   input{
     padding: 10px;
   }
@@ -228,5 +199,9 @@ const CsInput = styled(Input)`
     box-shadow:none!important;
   }
 `
-
+const Csunit = styled(Text)`
+    font-size: 14px;
+    margin-right: 10px;
+    transform: translateY(32%);
+`
 export default ChooseMethod

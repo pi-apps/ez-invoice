@@ -47,7 +47,7 @@ const Footer = ({ isActive }) => {
         break;
     }
   };
-
+  const isInvoiceIdStorage = localStorage.getItem('invoiceIdStorage')
   return (
     <NavCustom
       activeKey="/"
@@ -62,7 +62,7 @@ const Footer = ({ isActive }) => {
 
       <Nav.Item style={styles.navItem}>
         <Navbar.Brand onClick={openLoginModal}>
-          <CsButtonDownload disabled={isActive === 1 || isActive === 2}>
+          <CsButtonDownload disabled={(isActive === 1 || isActive === 2) || !isInvoiceIdStorage}>
             Download
           </CsButtonDownload>
         </Navbar.Brand>
@@ -70,7 +70,7 @@ const Footer = ({ isActive }) => {
 
       <Nav.Item style={styles.navItem}>
         <Navbar.Brand href="newInvoice/send">
-          <CsButton disabled={isActive === 1 || isActive === 2}>Send</CsButton>
+          <CsButton disabled={(isActive === 1 || isActive === 2) || !isInvoiceIdStorage}>Send</CsButton>
         </Navbar.Brand>
       </Nav.Item>
     </NavCustom>

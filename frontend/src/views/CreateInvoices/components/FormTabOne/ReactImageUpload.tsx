@@ -37,8 +37,6 @@ function ReactImageUpload({images , setValue }) {
                     </CsButtonAdd>
                 )
             }
-
-
             {logoImg.map((image, index) => {
                 const imageName = logoImg[0].file?.name
                 return(

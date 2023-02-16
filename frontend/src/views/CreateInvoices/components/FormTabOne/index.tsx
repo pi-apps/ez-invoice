@@ -19,7 +19,6 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
   const [getMessageError, setMessageError] = useState()
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
-  
   return (
     <CsContainer >
             <CsFlex>
@@ -157,12 +156,14 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                                         <>
                                             <CsDatePicker 
                                             id="date"
+                                            value={field.value}
                                             selected={startDate} onChange={(date:any) => setStartDate(date)} />
                                             <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" onClick={() => {document.getElementById('date')?.focus() }}/>
                                         </>
                                     )}
                                 />
                             </WrapInput>
+                            <ErrorMessages errors={errors} name="issueDate" />
                         </ContainerInput>
                     </Flex>
                     <Flex width="50%" flexDirection="column">
@@ -185,6 +186,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                                     )}
                                 />
                             </WrapInput>
+                            <ErrorMessages errors={errors} name="paymentTerms" />
                         </ContainerInput>
                     </Flex>
                 </Row>
@@ -203,12 +205,14 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                                     <>
                                         <CsDatePicker
                                         id="dueDate"
+                                        value={field.value}
                                         selected={startDueDate} onChange={(date:any) => setStartDueDate(date)} />
                                         <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" onClick={() => {document.getElementById('dueDate')?.focus() }}/>
                                     </>
                                 )}
                             />
                         </WrapInput>
+                        <ErrorMessages errors={errors} name="dueDate" />
                     </Flex>
                     <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
@@ -229,9 +233,9 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                                 )}
                             />
                         </WrapInput>
+                    <ErrorMessages errors={errors} name="poNumber" />
                     </Flex>
                 </Row>
-                <ErrorMessages errors={errors} name="poNumber" />
 
                 { checkError === true && 
                     <CustomMessageError>{getMessageError}</CustomMessageError> 

@@ -6,11 +6,13 @@ import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
 
 const Card = ({index, remove, fields, register, control} ) => {
+
     const handleCloseItem = () => {
       if(fields?.length > 1){
         remove(index)
       }
     }
+    
   const total = useMemo(() => {
     return Number(fields[index].price)*Number(fields[index].quantity)
   },[fields]);
@@ -19,7 +21,7 @@ const Card = ({index, remove, fields, register, control} ) => {
     <CsWrapperCard>
         <CsHeading>
             <CsFlexHeading>
-                <CsTextHeading>Item # {index}</CsTextHeading>
+                <CsTextHeading>Item # {index + 1}</CsTextHeading>
                 <CsCloseIcon role="presentation" onClick={handleCloseItem}>
                   <CloseIcon />
                 </CsCloseIcon>
@@ -33,7 +35,7 @@ const Card = ({index, remove, fields, register, control} ) => {
                     control={control}
                     name={`items[${index}].name`}
                     render={() => (
-                        <textarea {...register(`items.${index}.name` as const)} />
+                        <CsTextArea placeholder='Description of service or product' {...register(`items.${index}.name` as const)} />
                     )}
                     />
                 </WrapInput>
@@ -44,21 +46,23 @@ const Card = ({index, remove, fields, register, control} ) => {
                   <Controller
                     control={control}
                     name={`items[${index}].quantity`}
-                    // rules={rules.sender}
-                    render={() => (
-                      <input {...register(`items.${index}.quantity` as const)} />
+                    render={({field}) => (
+                      <CsInput type="number"
+                      placeholder='1' {...register(`items.${index}.quantity` as const, 
+                      { pattern: "/^0|[1-9]\d*$/" }
+                      )} />
                     )}
                   />
               </WrapInput>
-                <WrapInput>
-                  <Controller
-                      control={control}
-                      name={`items[${index}].price`}
-                      render={() => (
-                        <input {...register(`items.${index}.price` as const)} />
-                      )}
-                    />
-                </WrapInput>
+              <WrapInput>
+                <Controller
+                    control={control}
+                    name={`items[${index}].price`}
+                    render={() => (
+                      <CsInput placeholder='0.00 Pi' {...register(`items.${index}.price` as const)} />
+                    )}
+                  />
+              </WrapInput>
             </CsRowINput>
         </CsContent>
 
