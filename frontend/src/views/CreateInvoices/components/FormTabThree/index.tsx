@@ -15,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 
 const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
     const { t } = useTranslation()
-    const navigate = useNavigate();
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)
@@ -126,7 +125,9 @@ const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, s
                 <CsContentInfo>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft>{t('Subtotal')}</CsTextLeft>
-                        <CsTextRight fontSize='14px' bold>{!total ? 0 : total} Pi</CsTextRight>
+                        <CsTextRight fontSize='14px' bold>{!total ? 0 : <>
+                          {total && typeof total === 'number'  ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`: '0 Pi'}
+                        </>}</CsTextRight>
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <ChooseMethod 
@@ -144,6 +145,7 @@ const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, s
                             setTypeShipping={setTypeShipping}
                             isPercent={isPercent}
                             setIsPercent={setIsPercent}
+                            errors={errors}
                         />
                     </Row>
 
@@ -172,7 +174,9 @@ const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, s
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft>Total</CsTextLeft>
-                        <CsTextRight bold>{!totalFinaly ? 0 : totalFinaly } Pi</CsTextRight>
+                        <CsTextRight bold>{!totalFinaly ? 0 : <>
+                          {`${totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
+                        </> }</CsTextRight>
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft >Amount paid</CsTextLeft>
@@ -183,14 +187,14 @@ const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, s
                                   name="amountPaid"
                                   // rules={rules.invoicenumber}
                                   render={({ field }) => (
-                                  <CsInput  style={{textAlign: 'right', width: '100%', padding: 0}}
-                                      name="amountPaid"
-                                      placeholder="0.00 Pi"
-                                      value={field.value}
-                                      onChange={(event) => setValue("amountPaid", event.target.value)}
-                                      // onChange={field.onChange}
-                                  />
-                                  )}
+                                    <CsInput  style={{textAlign: 'right', width: '100%', padding: 0}}
+                                        name="amountPaid"
+                                        placeholder="0.00 Pi"
+                                        value={field.value}
+                                        onChange={(event) => setValue("amountPaid", event.target.value)}
+                                        // onChange={field.onChange}
+                                    />
+                                    )}
                               />
                             </WrapInputAmountPaid>
                           <ErrorMessages errors={errors} name="amountPaid" />
@@ -198,13 +202,16 @@ const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, s
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft>Balance Due</CsTextLeft>
-                        <Text fontSize='14px'>{!balanceDue ? 0 : balanceDue } Pi</Text>
+                        <Text fontSize='14px'>{!balanceDue ? 0 : <>
+                          {`${balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
+                        </> }</Text>
+                        
                     </Row>
                 </CsContentInfo>
             </CsFlex>
       </CsContainer>
       <CsSubTotal>
-      <Navbar.Brand href={`/createDetail/${isInvoiceIdStorage}`}>
+      <Navbar.Brand>
           <CsButtonAdd>
               <CsText>Preview</CsText>
           </CsButtonAdd>

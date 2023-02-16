@@ -47,9 +47,12 @@ const Card = ({index, remove, fields, register, control} ) => {
                     control={control}
                     name={`items[${index}].quantity`}
                     render={({field}) => (
-                      <CsInput type="number"
+                      <CsInput
                       placeholder='1' {...register(`items.${index}.quantity` as const, 
-                      { pattern: "/^0|[1-9]\d*$/" }
+                      { pattern: "/^0|[1-9]\d*$/" },
+                      {
+                        required: true // JS only: <p>error message</p> TS only support string
+                      }
                       )} />
                     )}
                   />
@@ -59,7 +62,7 @@ const Card = ({index, remove, fields, register, control} ) => {
                     control={control}
                     name={`items[${index}].price`}
                     render={() => (
-                      <CsInput placeholder='0.00 Pi' {...register(`items.${index}.price` as const)} />
+                      <CsInput placeholder='0.00 Pi' {...register(`items.${index}.price` as const, { required: true })} />
                     )}
                   />
               </WrapInput>
@@ -68,7 +71,9 @@ const Card = ({index, remove, fields, register, control} ) => {
 
         <Flex mt="24px">
             <Cstitle>Amount: </Cstitle>
-            <CsAmount> {total} Pi</CsAmount>
+            <CsAmount>
+              {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}  
+            </CsAmount>
         </Flex>
   </CsWrapperCard>
   )

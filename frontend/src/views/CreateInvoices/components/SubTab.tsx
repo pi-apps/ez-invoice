@@ -14,12 +14,14 @@ import { backendURL, Csconfig, axiosClient } from "config/htttp";
 import useToast from "hooks/useToast";
 import axios from "axios";
 import { GetAllInvoice, UseGetAllInvoice } from "state/invoice";
+import { useNavigate } from "react-router-dom";
 
 interface PropsSubTab{
     isActive:number
 }
 
 const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
+  const navigate = useNavigate();
   const { toastSuccess, toastError } = useToast()
   const [images, setImages] = useState([]);
   const [activeTax, setActiveTax ] = useState<number>(1)
@@ -63,11 +65,11 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
         terms: Yup.string().required('Terms is required').max(500, 'Max length is 500 characters').matches(/^(\S+$)/g, 'Please input number'),
         notes: Yup.string().required('Notes is required').max(500, 'Max length is 500 characters').matches(/^(\S+$)/g, 'Please input alphabet'),
-        tax: Yup.string().required('Tax is required'),
+        tax: Yup.string().required('Tax is required').matches(/^(\S+$)/g, 'Please input number'),
         // taxType: Yup.string().required('Tax type is required'),
-        discount: Yup.string().required('Discount is required'),
-        shipping: Yup.string().required('Shipping is required'),
-        amountPaid: Yup.string().required('Amount paid is required'),
+        discount: Yup.string().required('Discount is required').matches(/^(\S+$)/g, 'Please input number'),
+        shipping: Yup.string().required('Shipping is required').matches(/^(\S+$)/g, 'Please input number'),
+        amountPaid: Yup.string().required('Amount paid is required').matches(/^(\S+$)/g, 'Please input number'),
         // logo: Yup.string().required('Logo is required'),
     });
 
@@ -121,12 +123,13 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                 );
                 if(submitReq.status == 200){
                     toastSuccess('update successful');
+                    console.log('submitReq?.data?.invoiceId', submitReq?.data?.invoiceId)
                     setInvoiceid(submitReq?.data?.invoiceId)
+                    navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                 }else {
                     toastError('error', 'system error!!!')
             }
     }
-
 
     const handleMinusTabActive = () => {
         if(isActive > 1 && isActive <= 3){

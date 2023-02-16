@@ -16,6 +16,7 @@ const CreateDetail = () => {
     UseGetAnInvoiceCore(slug)
     const items = GetAnInvoice()
     const details = items?.details
+    console.log("items", items)
     function convertDate(date: any) {
         if (date) {
           const today = new Date(date)
@@ -67,7 +68,7 @@ const CreateDetail = () => {
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Due Date</CsTextLeft>
-                                        {/* {convertDate(items?.details.dueDate)} */}
+                                        {convertDate(details?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Payment Terms</CsTextLeft>

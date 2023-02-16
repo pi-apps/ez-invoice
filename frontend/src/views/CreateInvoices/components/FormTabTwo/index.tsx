@@ -40,7 +40,9 @@ const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
         <hr style={{margin: '10px 0'}} />
         <Row mt="16px" style={{justifyContent: "space-between"}}>
             <CsTextLeft>Amount Due</CsTextLeft>
-            <CsTextRight bold>{total} Pi</CsTextRight>
+            <CsTextRight bold>
+              {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}
+              </CsTextRight>
         </Row>
       </CsSubTotal>
       </CsWrapperForm>
