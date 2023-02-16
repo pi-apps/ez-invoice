@@ -54,8 +54,8 @@ app.use(cookieParser());
 // Use sessions:
 app.use(session({
   secret: env.session_secret,
-  resave: false,
-  saveUninitialized: false,
+  resave: true,
+  saveUninitialized: true,
   store: MongoStore.create({
     mongoUrl: mongoUri,
     collectionName: 'user_sessions'
@@ -78,9 +78,9 @@ mountUserEndpoints(userRouter);
 app.use('/user', userRouter);
 
 // Invoice endpoints under /invoice:
-const userInvoice = express.Router();
-mountInvoiceEndpoints(userRouter);
-app.use('/invoice', userRouter);
+const invoiceRouter = express.Router();
+mountInvoiceEndpoints(invoiceRouter);
+app.use('/invoice', invoiceRouter);
 
 // Hello World page to check everything works:
 app.get('/', async (_, res) => {
@@ -94,14 +94,7 @@ app.listen(8000, async () => {
   try {
     mongoose.set('strictQuery', false);
     const db = await mongoose.connect(mongoUri);
-
-    // const client = await MongoClient.connect(mongoUri, mongoClientOptions)
-    // const db = client.db(dbName);
-    // app.locals.orderCollection = db.collection('orders');
-    // app.locals.userCollection = db.collection('users');
-    // app.locals.invoiceCollection = db.collection('invoices');
     console.log('Connected to MongoDB on: ', mongoUri)
-
     const MORALIS_API_KEY = process.env.MORALIS_API_KEY;
     await Moralis.start({
       apiKey: MORALIS_API_KEY,
