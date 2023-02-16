@@ -1,5 +1,5 @@
 import React from 'react'
-import { ModalProvider , light , dark } from '@phamphu19498/pibridge_uikit'
+import { ModalProvider , light , dark } from '@devfedeltalabs/pibridge_uikit'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 import { ToastsProvider } from './contexts/ToastsContext'

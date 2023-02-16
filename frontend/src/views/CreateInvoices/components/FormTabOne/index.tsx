@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit"
+import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
 import { useEffect, useState } from 'react'
 import DatePicker from "react-datepicker"

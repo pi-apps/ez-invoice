@@ -1,4 +1,4 @@
-import { Button, Flex, Text, useModal } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Text, useModal } from "@devfedeltalabs/pibridge_uikit";
 import { log } from "console";
 import { LanguagesContext } from "contexts/Translate";
 import React, { useContext, useState } from "react";

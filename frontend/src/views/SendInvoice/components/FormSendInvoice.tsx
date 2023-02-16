@@ -1,4 +1,4 @@
-import { Button, Flex, Input, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Input, Text } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
 import { Controller, useForm } from "react-hook-form";
 import { Translate } from "react-auto-translate";

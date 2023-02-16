@@ -1,5 +1,5 @@
 import { ReactText } from 'react'
-import { Language } from '@phamphu19498/pibridge_uikit'
+import { Language } from '@devfedeltalabs/pibridge_uikit'
 
 
 

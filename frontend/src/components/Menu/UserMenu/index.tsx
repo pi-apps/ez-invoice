@@ -1,4 +1,4 @@
-import { Button, useModal } from "@phamphu19498/pibridge_uikit";
+import { Button, useModal } from "@devfedeltalabs/pibridge_uikit";
 import { axiosClient } from "config/htttp";
 import _ from "lodash";
 import { useEffect, useState } from "react";

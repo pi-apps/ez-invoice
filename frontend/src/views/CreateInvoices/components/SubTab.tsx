@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { useDispatch } from "react-redux";
 import { yupResolver } from '@hookform/resolvers/yup'
 import styled from "styled-components";

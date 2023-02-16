@@ -1,4 +1,4 @@
-import { Button, Flex, Input, Text } from '@phamphu19498/pibridge_uikit'
+import { Button, Flex, Input, Text } from '@devfedeltalabs/pibridge_uikit'
 import { AddIcon2, CloseIcon } from 'components/Svg'
 import React, { useState } from 'react'
 import { Controller } from 'react-hook-form'

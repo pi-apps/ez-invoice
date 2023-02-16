@@ -9,7 +9,7 @@ import { axiosClient } from "../../config/htttp";
 import { setUser } from "../../state/user/actions";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../../state/user";
-import { Text } from "@phamphu19498/pibridge_uikit";
+import { Text } from "@devfedeltalabs/pibridge_uikit";
 import TranslateMenu from "components/Menu/Translate/TranslateMenu";
 import { GetAnInvoice, UseGetAllInvoice, UseGetAnInvoiceCore } from "state/invoice";
 

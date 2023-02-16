@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { useState } from "react";
 import { AddIcon } from "components/Svg";
 import ImageUploading from "react-images-uploading";

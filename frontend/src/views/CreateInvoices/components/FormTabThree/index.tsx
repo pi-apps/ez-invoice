@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Input, Text } from '@phamphu19498/pibridge_uikit'
+import { Button, Flex, Image, Input, Text } from '@devfedeltalabs/pibridge_uikit'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Controller, useForm } from "react-hook-form"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"

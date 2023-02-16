@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Text } from '@phamphu19498/pibridge_uikit'
+import { Link, Text } from '@devfedeltalabs/pibridge_uikit'
 import { useTranslation } from 'contexts/Localization'
 import truncateHash from 'utils/truncateHash'
 

@@ -1,4 +1,4 @@
-import { Flex, Text } from '@phamphu19498/pibridge_uikit'
+import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
 import { useMemo, useState } from 'react'
 import { Controller, useFieldArray } from 'react-hook-form'

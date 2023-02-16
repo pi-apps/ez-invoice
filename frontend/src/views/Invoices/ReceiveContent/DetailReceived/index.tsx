@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Skeleton, Text } from '@phamphu19498/pibridge_uikit';
+import { Button, Flex, Image, Skeleton, Text } from '@devfedeltalabs/pibridge_uikit';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import Container from 'components/Layout/Container';

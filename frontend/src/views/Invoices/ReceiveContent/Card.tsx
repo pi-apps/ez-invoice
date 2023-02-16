@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Flex, Image, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Image, Text } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
 import Navbar from "react-bootstrap/Navbar";
 import { useParams } from "react-router-dom";

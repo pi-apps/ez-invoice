@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Input, ModalHeader, Text } from '@phamphu19498/pibridge_uikit'
+import { Box, Button, Flex, Input, ModalHeader, Text } from '@devfedeltalabs/pibridge_uikit'
 import styled from 'styled-components'
 
 export const ButtonSignIn = styled.button`

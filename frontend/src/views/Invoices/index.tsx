@@ -6,7 +6,7 @@ import HeaderMain from "components/Header";
 import HeaderInvoice from "./components/Header";
 import SubTab from "./components/SubTab";
 import { GetDataInvoice, UseGetAllInvoiceSentCore, GetAnInvoice } from "state/invoice";
-import { Flex } from "@phamphu19498/pibridge_uikit";
+import { Flex } from "@devfedeltalabs/pibridge_uikit";
 import SentTab from "./SentTabContent/SentTab";
 import Footer from "components/Footer";
 import ReceiveTab from "./ReceiveContent/ReceiveTab";

@@ -1,4 +1,4 @@
-import { Flex, Text } from "@phamphu19498/pibridge_uikit";
+import { Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { MONTHS } from "config";
 import { Translate } from "react-auto-translate";
 import { GetAnInvoice, UseGetAllInvoiceReceivedCore } from "state/invoice";

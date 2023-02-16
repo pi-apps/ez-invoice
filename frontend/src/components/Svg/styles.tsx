@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Colors } from "@phamphu19498/pibridge_uikit";
+import { Colors } from "@devfedeltalabs/pibridge_uikit";
 
 export const StyledIconContainer = styled.div<{ activeBackgroundColor?: keyof Colors }>`
   background: ${({ activeBackgroundColor, theme }) =>

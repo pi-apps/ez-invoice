@@ -1,4 +1,4 @@
-import { Flex, Text } from '@phamphu19498/pibridge_uikit'
+import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
 import Row from 'components/Layout/Row'
 import { AddIcon } from 'components/Svg'
 import { useMemo, useState } from 'react'
