@@ -19,6 +19,7 @@ const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
     const total = useMemo(() => {
       return totalPrice(controlledFields)
     },[controlledFields]);
+    
   return (
     <CsWrapperForm>
       <CsContainer>

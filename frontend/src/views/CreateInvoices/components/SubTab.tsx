@@ -20,10 +20,12 @@ interface PropsSubTab{
 }
 
 const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
-    const { toastSuccess, toastError } = useToast()
-    const [images, setImages] = useState([]);
+  const { toastSuccess, toastError } = useToast()
+  const [images, setImages] = useState([]);
   const [activeTax, setActiveTax ] = useState<number>(1)
   const [activeDiscount, setActiveDiscount ] = useState<number>(1)
+  const [invoiceId, setInvoiceid] = useState('')
+  localStorage.setItem('invoiceIdStorage', invoiceId)
 
   UseGetAllInvoice()
   const items = GetAllInvoice()
@@ -51,26 +53,25 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     }
     
     const validationSchema = Yup.object().shape({
-        senderEmail: Yup.string().required('Sender email is required').matches(/^(\S+$)/g, 'Please input alphabet').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
-        billFrom: Yup.string().required('Bill from is required').matches(/^(\S+$)/g, 'Please input alphabet').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
-        billTo: Yup.string().required('Bill to is required').matches(/^(\S+$)/g, 'Please input alphabet').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
-        shipTo: Yup.string().required('Ship to is required').matches(/^(\S+$)/g, 'Please input alphabet').max(200, 'Max length is 200 characters'),
-        issueDate: Yup.string().required('Issue date is required'),
-        dueDate: Yup.string().required('Due date is required'),
-        paymentTerms: Yup.string().required('Payment terms is required'),
+        senderEmail: Yup.string().required('Sender email is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
+        billFrom: Yup.string().required('Bill from is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
+        billTo: Yup.string().required('Bill to is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
+        shipTo: Yup.string().required('Ship to is required').max(200, 'Max length is 200 characters'),
+        // issueDate: Yup.string().required('Issue date is required'),
+        // dueDate: Yup.string().required('Due date is required'),
+        paymentTerms: Yup.string().required('Payment terms is required').max(50, 'Max length is 50 characters'),
         poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
-        terms: Yup.string().required('Terms is required').max(500, 'Max length is 500 characters'),
-        notes: Yup.string().required('Notes is required').max(500, 'Max length is 500 characters'),
-        tax: Yup.string().required('Tax is required').matches(/^(\S+$)/g, 'Please input number').matches(/[^0-9.]+/ , 'Please input number'),
-        taxType: Yup.string().required('Tax type is required'),
-        discount: Yup.string().required('Discount is required').matches(/^(\S+$)/g, 'Please input number').matches(/[^0-9.]+/ , 'Please input number'),
-        shipping: Yup.string().required('Shipping is required').matches(/^(\S+$)/g, 'Please input number').matches(/[^0-9.]+/ , 'Please input number'),
-        amountPaid: Yup.string().required('Amount paid is required').required('Shipping is required').matches(/^(\S+$)/g, 'Please input number').matches(/[^0-9.]+/ , 'Please input number'),
-        logo: Yup.string().required('Logo is required'),
+        terms: Yup.string().required('Terms is required').max(500, 'Max length is 500 characters').matches(/^(\S+$)/g, 'Please input number'),
+        notes: Yup.string().required('Notes is required').max(500, 'Max length is 500 characters').matches(/^(\S+$)/g, 'Please input alphabet'),
+        tax: Yup.string().required('Tax is required'),
+        // taxType: Yup.string().required('Tax type is required'),
+        discount: Yup.string().required('Discount is required'),
+        shipping: Yup.string().required('Shipping is required'),
+        amountPaid: Yup.string().required('Amount paid is required'),
+        // logo: Yup.string().required('Logo is required'),
     });
 
-    // const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
-    const formOptions = { defaultValues: InitValues };
+    const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
     const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm(formOptions);
     const { errors , touchedFields, isDirty, isLoading } = formState;
@@ -79,18 +80,23 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         name: "items"
     });
     const watchFieldArray = watch("items");
+
     const controlledFields = fields.map((field, index) => {
         return {
         ...field,
         ...watchFieldArray[index]
         };
     });
+
     const onSubmit = async data => {
+        console.log("data", data)
+
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
             formData.append("billFrom", `${data.billFrom}`);
             formData.append("billTo", `${data.billTo}`);
             formData.append("shipTo", `${data.shipTo}`);
+            formData.append("issueDate", `${data.issueDate?.getTime()}`);
             formData.append("dueDate", `${data.dueDate?.getTime()}`);
             formData.append("paymentTerms", `${data.paymentTerms}`);
             formData.append("poNumber", `${data.poNumber}`);
@@ -105,7 +111,22 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             formData.append("logo", data.logo);
             
             console.log("formData", formData)
+            const submitReq = await axiosClient.post('/invoice/create', formData, 
+                    {
+                        headers: {
+                            'Content-Type': `multipart/form-data`,
+                            'Accept': '*'
+                        }
+                    }
+                );
+                if(submitReq.status == 200){
+                    toastSuccess('update successful');
+                    setInvoiceid(submitReq?.data?.invoiceId)
+                }else {
+                    toastError('error', 'system error!!!')
+            }
     }
+
 
     const handleMinusTabActive = () => {
         if(isActive > 1 && isActive <= 3){
@@ -127,7 +148,17 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             return <FormTabTwo controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
         }
         if(isActive === 3){
-            return <FormTabThree activeDiscount={activeDiscount} setActiveDiscount={setActiveDiscount} activeTax={activeTax} setActiveTax={setActiveTax} formState={formState} setValue={setValue} control={control}/>
+            return <FormTabThree 
+                        controlledFields={controlledFields} 
+                        getValues={getValues} fields={fields} 
+                        activeDiscount={activeDiscount} 
+                        setActiveDiscount={setActiveDiscount} 
+                        activeTax={activeTax} 
+                        setActiveTax={setActiveTax} 
+                        formState={formState} 
+                        setValue={setValue} 
+                        control={control}
+                    />
         }
     }
 
@@ -136,7 +167,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         <>
         <HeadingTab>Create Invoice</HeadingTab>
         <ContainerSubTab>
-            <CsButton onClick={handleMinusTabActive}>
+            <CsButton role="presentation" onClick={handleMinusTabActive}>
                 &lt;
             </CsButton>
             <CsTab>
@@ -150,7 +181,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                     3
                 </TabButton>
             </CsTab>
-            <CsButton onClick={handlePlusTabActive}>
+            <CsButton role="presentation" onClick={handlePlusTabActive}>
                 &gt;
             </CsButton>
         </ContainerSubTab>
@@ -179,7 +210,8 @@ const CsTab = styled(Flex)`
     width: fit-content;
     align-items: center;
 `
-const CsButton = styled(Button)`
+const CsButton = styled.div`
+    cursor: pointer;
     background: transparent;
     border-radius: 50%;
     color: #94A3B8;
