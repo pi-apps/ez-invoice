@@ -8,6 +8,7 @@ import Footer from "components/Footer";
 import HeaderMain from "components/Header";
 import FormSendInvoice from "./components/FormSendInvoice";
 import SentInvoiceSuccessfully from "./components/SentInvoiceSuccessfully";
+import { Translate } from "react-auto-translate";
 
 const SendInvoice = () => {
   const [isSentSuccessfully, setIsSentSuccessfully] = useState(false);

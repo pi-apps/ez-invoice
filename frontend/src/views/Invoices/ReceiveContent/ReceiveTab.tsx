@@ -6,42 +6,42 @@ import Card from "./Card";
 import { GetAnInvoice, UseGetAllInvoiceReceivedCore } from "state/invoice";
 
 const ReceiveTab = () => {
-  
-  UseGetAllInvoiceReceivedCore()
-  const items = GetAnInvoice()
+  UseGetAllInvoiceReceivedCore();
+  const items = GetAnInvoice();
 
   return (
     <CsWrapContainer>
-      { ( items?.listReceived?.length && items?.isLoading === false ) ?
+      {items?.listReceived?.length && items?.isLoading === false ? (
         <>
-            {items?.listReceived.map((items) => {
-              return (
-                <CsContent>
-                  <CsText>
-                    <Translate>{items?.date}</Translate>
-                  </CsText>
-                  {items?.listItems.map((data, index) => {
-                    return (
-                      <Card
-                        images={data?.logoUrl}
-                        id={data?.invoiceId}
-                        create={data?.createAt}
-                        billTo={data?.billTo}
-                        amountDue={data?.amountDue.toString()}
-                        paid={data?.paid}
-                      />
-                    )
-                    
-                  })}
-                </CsContent>
-              );
-            })}
+          {items?.listReceived.map((items) => {
+            return (
+              <CsContent>
+                <CsText>
+                  <Translate>{items?.date}</Translate>
+                </CsText>
+                {items?.listItems.map((data, index) => {
+                  return (
+                    <Card
+                      images={data?.logoUrl}
+                      id={data?.invoiceId}
+                      create={data?.createAt}
+                      billTo={data?.billTo}
+                      amountDue={data?.amountDue.toString()}
+                      paid={data?.paid}
+                    />
+                  );
+                })}
+              </CsContent>
+            );
+          })}
         </>
-      :
-        <Flex width='100%' justifyContent="center" mt="2rem">
-            <Text>No Data</Text>
+      ) : (
+        <Flex width="100%" justifyContent="center" mt="2rem">
+          <Text>
+            <Translate>No Data</Translate>
+          </Text>
         </Flex>
-      }
+      )}
     </CsWrapContainer>
   );
 };

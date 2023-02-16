@@ -30,6 +30,7 @@ const ModalLanguages: React.FC<Props> = ({
               <ButtonChooseLg
                 onClick={() => {
                   setLanguage(item.code);
+                  sessionStorage.setItem("language", item.code);
                   onDismiss();
                 }}
               >

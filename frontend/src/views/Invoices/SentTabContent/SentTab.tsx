@@ -5,42 +5,42 @@ import styled from "styled-components";
 import Card from "./Card";
 
 const SentTab = () => {
+  UseGetAllInvoiceSentCore();
+  const items = GetAnInvoice();
 
-  UseGetAllInvoiceSentCore()
-  const items = GetAnInvoice()
-  
   return (
     <CsWrapContainer>
-      { ( items?.listSent?.length && items?.isLoading === false ) ?
+      {items?.listSent?.length && items?.isLoading === false ? (
         <>
-            {items?.listSent.map((items) => {
-              return (
-                <CsContent>
-                  <CsText>
-                    <Translate>{items?.date}</Translate>
-                  </CsText>
-                  {items?.listItems.map((data, index) => {
-                    return (
-                      <Card
-                        images={data?.logoUrl}
-                        id={data?.invoiceId}
-                        create={data?.createAt}
-                        billTo={data?.billTo}
-                        amountDue={data?.amountDue.toString()}
-                        paid={data?.paid}
-                      />
-                    )
-                    
-                  })}
-                </CsContent>
-              );
-            })}
+          {items?.listSent.map((items) => {
+            return (
+              <CsContent>
+                <CsText>
+                  <Translate>{items?.date}</Translate>
+                </CsText>
+                {items?.listItems.map((data, index) => {
+                  return (
+                    <Card
+                      images={data?.logoUrl}
+                      id={data?.invoiceId}
+                      create={data?.createAt}
+                      billTo={data?.billTo}
+                      amountDue={data?.amountDue.toString()}
+                      paid={data?.paid}
+                    />
+                  );
+                })}
+              </CsContent>
+            );
+          })}
         </>
-      :
-        <Flex width='100%' justifyContent="center" mt="2rem">
-            <Text>No Data</Text>
+      ) : (
+        <Flex width="100%" justifyContent="center" mt="2rem">
+          <Text>
+            <Translate>No Data</Translate>
+          </Text>
         </Flex>
-      }
+      )}
     </CsWrapContainer>
   );
 };

@@ -7,6 +7,7 @@ import { AppDispatch } from "../../state";
 import { setUser } from "../../state/user/actions";
 import { AuthResult, PaymentDTO } from "../Menu/UserMenu/type";
 import LoginIcon from "../Svg/Icons/LoginIcon";
+import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 
 interface Props {
   onDismiss?: () => void;
@@ -49,30 +50,32 @@ const LoginModal: React.FC<Props> = ({ onDismiss }) => {
     onDismiss();
   }
   return (
-    <Modal
-      title=""
-      onDismiss={onDismiss}
-      maxWidth="550px"
-      modalIcon={<LoginIcon />}
-    >
-      <Flex flexDirection="column" width="100%">
-        <Text bold fontSize="18px" width="100%" textAlign="center">
-          <Translate>Please login first</Translate>
-        </Text>
-        <Text width="100%" textAlign="center" color="textSubtle" mt="10px">
-          <Translate>You need to login to start using EzInvoice.</Translate>
-        </Text>
+    <TranSlatorModal>
+      <Modal
+        title=""
+        onDismiss={onDismiss}
+        maxWidth="550px"
+        modalIcon={<LoginIcon />}
+      >
+        <Flex flexDirection="column" width="100%">
+          <Text bold fontSize="18px" width="100%" textAlign="center">
+            <Translate>Please login first</Translate>
+          </Text>
+          <Text width="100%" textAlign="center" color="textSubtle" mt="10px">
+            <Translate>You need to login to start using EzInvoice.</Translate>
+          </Text>
 
-        <Flex mt="1rem" justifyContent="space-between">
-          <Button width="48%" variant="secondary" onClick={declineClick}>
-            <Translate>Cancel</Translate>
-          </Button>
-          <Button width="48%" onClick={accpetClick}>
-            <Translate>Login</Translate>
-          </Button>
+          <Flex mt="1rem" justifyContent="space-between">
+            <Button width="48%" variant="secondary" onClick={declineClick}>
+              <Translate>Cancel</Translate>
+            </Button>
+            <Button width="48%" onClick={accpetClick}>
+              <Translate>Login</Translate>
+            </Button>
+          </Flex>
         </Flex>
-      </Flex>
-    </Modal>
+      </Modal>
+    </TranSlatorModal>
   );
 };
 export default LoginModal;

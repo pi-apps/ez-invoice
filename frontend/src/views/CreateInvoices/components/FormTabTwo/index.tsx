@@ -1,99 +1,104 @@
-import { Button, Flex, Text } from '@phamphu19498/pibridge_uikit'
-import PageFullWidth from 'components/Layout/PageFullWidth'
-import Row from 'components/Layout/Row'
-import { AddIcon, CloseIcon } from 'components/Svg'
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import Card from './Card'
+import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit";
+import PageFullWidth from "components/Layout/PageFullWidth";
+import Row from "components/Layout/Row";
+import { AddIcon, CloseIcon } from "components/Svg";
+import React, { useContext, useEffect, useState } from "react";
+import styled from "styled-components";
+import Card from "./Card";
+import { Translate } from "react-auto-translate";
 
-const FormTabTwo = ({formState, control, setValue }) => {
+const FormTabTwo = ({ formState, control, setValue }) => {
   const [indexes, setIndexes] = React.useState([]);
-  const [ price, setPrice] = useState(0.00)
+  const [price, setPrice] = useState(0.0);
 
-  const arraydata = [ { name: '', quantity: 0, price: 0 } ]
-  const [array, setArray] = useState(arraydata)
+  const arraydata = [{ name: "", quantity: 0, price: 0 }];
+  const [array, setArray] = useState(arraydata);
 
   const handleAddItem = () => {
-    setArray([...array, { name: '', quantity: 0, price: 0 }])
-  }
+    setArray([...array, { name: "", quantity: 0, price: 0 }]);
+  };
 
-  console.log('array', array)
   return (
     <CsWrapperForm>
       <CsContainer>
-        {
-          array.map((_, index) => (
-            <Card index={index} formState={formState} setValue={setValue} control={control} />
-          ))
-        }
+        {array.map((_, index) => (
+          <Card
+            index={index}
+            formState={formState}
+            setValue={setValue}
+            control={control}
+          />
+        ))}
       </CsContainer>
 
       <CsSubTotal>
         <CsButtonAdd onClick={handleAddItem}>
           <CsAddIcon />
-          <CsText>Line item</CsText>
+          <CsText>
+            <Translate>Line item</Translate>
+          </CsText>
         </CsButtonAdd>
-        <hr style={{margin: '10px 0'}} />
-        <Row mt="16px" style={{justifyContent: "space-between"}}>
-            <CsTextLeft>Amount Due</CsTextLeft>
-            <CsTextRight bold>100.00 Pi</CsTextRight>
+        <hr style={{ margin: "10px 0" }} />
+        <Row mt="16px" style={{ justifyContent: "space-between" }}>
+          <CsTextLeft>
+            <Translate> Amount Due</Translate>
+          </CsTextLeft>
+          <CsTextRight bold>100.00 Pi</CsTextRight>
         </Row>
       </CsSubTotal>
-      </CsWrapperForm>
-  )
-}
+    </CsWrapperForm>
+  );
+};
 
 const CsTextLeft = styled(Text)`
   font-weight: 500;
   font-size: 12px;
-  color: #94A3B8;
+  color: #94a3b8;
   font-size: 16px;
-`
+`;
 const CsTextRight = styled(Text)`
   font-weight: 500;
   font-size: 16px;
-  color: #0F172A;
-`
+  color: #0f172a;
+`;
 
 const CsAddIcon = styled(AddIcon)`
   margin-right: 10px;
-`
+`;
 
 const CsText = styled(Text)`
   font-size: 12px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 700;
   margin-left: 10px;
-`
+`;
 
 const CsButtonAdd = styled(Button)`
   margin-top: 12px;
   margin-bottom: 12px;
-  border-bottom: 1px solid #E2E8F0;
-`
-
-
+  border-bottom: 1px solid #e2e8f0;
+`;
 
 const CsSubTotal = styled.div`
   padding: 0 24px;
   flex-direction: column;
-`
+`;
 
 const CsWrapperForm = styled.div`
-width: 100%;
-`
+  width: 100%;
+`;
 const CsWrapperContent = styled.div`
   padding: 0 24px;
-`
+`;
 
 const CsContainer = styled(Flex)`
-    height: calc(100vh - 400px);
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    overflow: scroll;
-    padding: 0 24px;
-    width: 100%;
-`
+  height: calc(100vh - 400px);
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  overflow: scroll;
+  padding: 0 24px;
+  width: 100%;
+`;
 
-export default FormTabTwo
+export default FormTabTwo;

@@ -1,13 +1,13 @@
 import { Button, Flex, Input, Text } from "@phamphu19498/pibridge_uikit";
 import styled from "styled-components";
 import { Controller, useForm } from "react-hook-form";
-import { Translate } from "react-auto-translate";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import ErrorMessages from "./ErrorMessage";
 import { getUser } from "state/user";
 import { axiosClient } from "config/htttp";
 import { useState } from "react";
+import { Translate } from "react-auto-translate";
 // import { axiosClient } from "config/htttp";
 
 interface FormSendInvoiceTypes {
@@ -18,6 +18,7 @@ const FormSendInvoice: React.FC<
   React.PropsWithChildren<FormSendInvoiceTypes>
 > = ({ setIsSentSuccessfully }) => {
   const [errorSentText, setErrorSentText] = useState("");
+  const DataAb = getUser();
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required"),
@@ -32,7 +33,7 @@ const FormSendInvoice: React.FC<
     const dataPost = {
       invoiceId: "EZ_1676364850177",
       email: data.email,
-      language: "vi",
+      language: DataAb?.language ? DataAb.language : "en",
     };
 
     try {

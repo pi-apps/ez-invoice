@@ -1,44 +1,48 @@
-import { Button, Flex, Text, useModal } from "@phamphu19498/pibridge_uikit";
-import { log } from "console";
+import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit";
 import { LanguagesContext } from "contexts/Translate";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Languages from "./Languages.json";
-import ModalLanguages from "./ModalLanguages";
+import { Translate } from "react-auto-translate";
 
 const TranslateMenu = () => {
   const [isShowMenu, setIsShowMenu] = useState(false);
   const { language, setLanguage } = useContext(LanguagesContext);
-
-  console.log("language", language);
-
-  const [openModalLanguages] = useModal(
-    <ModalLanguages
-      Languages={Languages}
-      language={language}
-      setLanguage={setLanguage}
-    />
-  );
+  const [nameCountryLanguage, setNameCountryLanguage] = useState(null);
 
   return (
     <Flex position="relative">
-      <ImageContainer onClick={openModalLanguages}>
-        <Image
-          src="https://upload.wikimedia.org/wikipedia/commons/d/db/Google_Translate_Icon.png"
-          alt="translate"
-        />
+      <ImageContainer onClick={() => setIsShowMenu(!isShowMenu)}>
+        {language ? (
+          <TextLanguage>
+            <Translate>
+              {nameCountryLanguage ? nameCountryLanguage : "language"}
+            </Translate>
+          </TextLanguage>
+        ) : (
+          <TextLanguage>English</TextLanguage>
+        )}
       </ImageContainer>
-      {/* {isShowMenu && (
+      {isShowMenu && (
         <ListTranslate>
-          {Languages.map((item: any, index) => (
-            <Flex key={item?.index}>
-              <ButtonChooseLg onClick={() => nameLanguage === "en"}>
-                {item.name}
-              </ButtonChooseLg>
-            </Flex>
-          ))}
+          <ContainerList>
+            {Languages.map((item: any, index) => (
+              <FlexButtonChooseLg key={item?.index}>
+                <ButtonChooseLg
+                  onClick={() => {
+                    setLanguage(item.code);
+                    sessionStorage.setItem("language", item.code);
+                    setNameCountryLanguage(item.name);
+                    setIsShowMenu(!isShowMenu);
+                  }}
+                >
+                  {item.name}
+                </ButtonChooseLg>
+              </FlexButtonChooseLg>
+            ))}
+          </ContainerList>
         </ListTranslate>
-      )} */}
+      )}
     </Flex>
   );
 };
@@ -50,21 +54,83 @@ const Image = styled.img`
 
 const ImageContainer = styled(Button)`
   padding: 0px 15px;
-  background-color: transparent;
+  width: 90px;
   height: 28px;
+  background: #f8f5ff;
+  border-radius: 6px;
+  margin-right: 10px;
+`;
+
+const TextLanguage = styled(Text)`
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 170%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.2px;
+  color: #6b39f4;
 `;
 
 const ListTranslate = styled(Flex)`
   position: absolute;
-  top: 35px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: absolute;
+  width: 220px;
+  gap: 5px;
+  height: 160px;
+  left: -95px;
+  top: 33px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background: #e6e6e6;
+  border-radius: 6px;
+`;
+
+const ContainerList = styled(Flex)`
+  position: absolute;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: absolute;
+  width: 220px;
+  gap: 5px;
+  height: 150px;
   left: 0;
-  background: white;
-  display: block;
+  top: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background: #e6e6e6;
+  border-radius: 6px;
+  padding: 10px 0px;
 `;
 
 const ButtonChooseLg = styled(Button)`
   background-color: transparent;
-  color: black;
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 170%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.2px;
+
+  color: #6b39f4;
+`;
+
+const FlexButtonChooseLg = styled(Flex)`
+  width: 90px;
+  height: 28px;
+  background: #f8f5ff;
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
 `;
 
 export default TranslateMenu;

@@ -13,6 +13,7 @@ import FormTabThree from "./FormTabThree";
 import { backendURL, Csconfig, axiosClient } from "config/htttp";
 import useToast from "hooks/useToast";
 import axios from "axios";
+import { Translate } from "react-auto-translate";
 
 interface PropsSubTab {
   isActive: number;
@@ -152,7 +153,9 @@ const SubTab: React.FC<PropsSubTab> = ({ isActive }) => {
 
   return (
     <>
-      <HeadingTab>Create Invoice</HeadingTab>
+      <HeadingTab>
+        <Translate>Create Invoice</Translate>
+      </HeadingTab>
       <ContainerSubTab>
         <CsButton onClick={handleMinusTabActive}>&lt;</CsButton>
         <CsTab>

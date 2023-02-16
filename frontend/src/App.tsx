@@ -15,7 +15,6 @@ import CreateDetail from "views/CreateInvoices/components/CreateDetail";
 import { Translator } from "react-auto-translate";
 import { getUser } from "./state/user";
 import SendInvoice from "views/SendInvoice";
-import { LanguageContext } from "contexts/Localization";
 import { LanguagesContext } from "contexts/Translate";
 
 // Route-based code splitting
@@ -41,7 +40,7 @@ const App: React.FC = () => {
             ? DataAb?.language
             : "en"
         }
-        googleApiKey="AIzaSyC0aGU19DRSo0LjOoA9cGuQeBaRlMRCBYo"
+        googleApiKey="AIzaSyCGDBWmaZXELZ0joy8LPE5UuXjV4doLXOs"
       >
         <Routes>
           <Route path="/" element={<MainLayout />}>

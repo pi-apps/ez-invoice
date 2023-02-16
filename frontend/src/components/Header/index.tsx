@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { getUser } from "../../state/user";
 import { Text } from "@phamphu19498/pibridge_uikit";
 import TranslateMenu from "components/Menu/Translate/TranslateMenu";
+import { Translate } from "react-auto-translate";
 
 const styles = {
   navbar: {
@@ -31,7 +32,7 @@ const styles = {
 const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchUser = async () => {
       const user = await axiosClient.get("user/info");
@@ -59,11 +60,11 @@ const Header = () => {
             {userData?.username && (
               <Text padding="0 10px">{userData?.username}</Text>
             )}
-            {
-              loading && (
-              <Text mt="6px" fontSize="12px" color="textSubtle">Loading..</Text>
-              )
-            }
+            {loading && (
+              <Text mt="6px" fontSize="12px" color="textSubtle">
+                <Translate>Loading..</Translate>
+              </Text>
+            )}
             <TranslateMenu />
             <UserMenu setLoading={setLoading} />
           </Nav>
