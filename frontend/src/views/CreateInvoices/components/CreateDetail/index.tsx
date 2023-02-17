@@ -16,7 +16,6 @@ const CreateDetail = () => {
     UseGetAnInvoiceCore(slug)
     const items = GetAnInvoice()
     const details = items?.details
-    console.log("items", items)
     function convertDate(date: any) {
         if (date) {
           const today = new Date(date)

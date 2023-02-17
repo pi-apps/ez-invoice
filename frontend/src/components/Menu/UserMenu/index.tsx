@@ -15,7 +15,6 @@ import LogoutModal from "./LogoutModal";
 import { AuthResult, PaymentDTO, User } from "./type";
 import useToast from "hooks/useToast";
 import { fetchLoading } from "state/invoice/actions";
-import { GetAllInvoice, UseGetAllInvoice } from "state/invoice";
 
 const UserMenu = ({isLoading}) => {
   const { toastSuccess, toastError } = useToast()
@@ -74,9 +73,9 @@ const UserMenu = ({isLoading}) => {
   );
 
   return userData === null || userData === undefined ? (
-    <CsButton onClick={signIn} endIcon={isLoading ? <AutoRenewIcon spin color="textDisabled"/> :  <Translate>Login</Translate>} />
+    <CsButton onClick={signIn} endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Login</Translate>} />
   ) : (
-    <CsButton onClick={onPresentLogoutModal} endIcon={isLoading ? <AutoRenewIcon spin color="textDisabled"/> :  <Translate>Logout</Translate>} />
+    <CsButton onClick={onPresentLogoutModal} endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Logout</Translate>} />
   );
 };
 
@@ -88,5 +87,5 @@ const CsButton = styled(Button)`
   background: #6b39f4;
   font-size: 12px;
   font-weight: 700;
-  padding: 0px 4px;
+  padding: 0px 8px;
 `;

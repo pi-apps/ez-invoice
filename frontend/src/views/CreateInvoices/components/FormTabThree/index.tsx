@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Input, Text } from '@devfedeltalabs/pibridge_uikit'
+import { AutoRenewIcon, Button, Flex, Image, Input, Text } from '@devfedeltalabs/pibridge_uikit'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Controller, useForm } from "react-hook-form"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
@@ -16,7 +16,7 @@ import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import { LanguagesContext } from 'contexts/Translate';
 import { Translate } from "react-auto-translate";
 
-const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
+const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
     const { t } = useTranslation()
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
@@ -186,7 +186,7 @@ const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, s
                             control={control} 
                             setValue={setValue} 
                             typeTax={typeTax}
-typeDiscount={typeDiscount} 
+                            typeDiscount={typeDiscount}
                             setTypeTax={setTypeTax} 
                             setTypeDiscount={setTypeDiscount} 
                             typeShipping={typeShipping} 
@@ -260,9 +260,7 @@ typeDiscount={typeDiscount}
       </CsContainer>
       <CsSubTotal>
       <Navbar.Brand>
-          <CsButtonAdd>
-              <CsText><Translate>Preview</Translate> </CsText>
-          </CsButtonAdd>
+          <CsButtonAdd  endIcon={loadingPreview ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText><Translate>Preview</Translate> </CsText>}></CsButtonAdd>
       </Navbar.Brand>
       </CsSubTotal>
       </CsWrapperForm>

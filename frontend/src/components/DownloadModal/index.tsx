@@ -26,8 +26,6 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const [urlDownload, setUrlDownload] = useState();
   const { toastSuccess, toastError } = useToast();
   const dataInvoiceId = localStorage.getItem("invoiceIdStorage");
-  console.log('urlDownload', urlDownload)
-
 
   // language
   const [language, setLanguage] = useState("en");

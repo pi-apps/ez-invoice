@@ -35,7 +35,12 @@ const Card = ({index, remove, fields, register, control} ) => {
                     control={control}
                     name={`items[${index}].name`}
                     render={() => (
-                        <CsTextArea placeholder='Description of service or product' {...register(`items.${index}.name` as const)} />
+                        <CsTextArea placeholder='Description of service or product' {...register(`items.${index}.name` as const,
+                        { 
+                          required: true,
+                          pattern: /^[0-9\b]+$/
+                        }
+                        )} />
                     )}
                     />
                 </WrapInput>

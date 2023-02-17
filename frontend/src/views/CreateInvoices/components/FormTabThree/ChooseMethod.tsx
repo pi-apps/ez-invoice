@@ -12,68 +12,75 @@ const ChooseMethod = ({isPercent, setIsPercent, errors, activeTax,setActiveTax, 
         {typeTax === true && (
             <Flex width="100%" alignItems="center" justifyContent="space-between">
                 <CsTextLeft>Tax</CsTextLeft>
-                <CsRowTax>
-                    <CsRowTaxLeft>
-                        <CsButton isActive={activeTax === 1 ? !false : false } onClick={() => setActiveTax(1)}>%</CsButton>
-                        <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => setActiveTax(2)}>Pi</CsButton>
-                    </CsRowTaxLeft>
-                    <CsRowTaxRight>
-                        <WrapInput>
-                            <Controller
-                                control={control}
-                                name="tax"
-                                // rules={rules.invoicenumber}
-                                render={({ field }) => (
-                                    <>
-                                        <CsInput
-                                            name="tax"
-                                            placeholder={`0.00 ${(activeTax === 1) ? '%' : 'Pi'} `}
-                                            value={field.value}
-                                            onChange={(event) => setValue("tax", event.target.value)}
-                                        />
-                                    </>
-                                )}
-                            />
-                        </WrapInput>
-                        <CsCloseIcon role="presentation" onClick={() => setTypeTax(false)}>
-                            <CloseIcon />
-                        </CsCloseIcon>
-                    </CsRowTaxRight>
-                </CsRowTax>
+                <ContainerInput>
+                    <CsRowTax>
+                        <CsRowTaxLeft>
+                            <CsButton isActive={activeTax === 1 ? !false : false } onClick={() => setActiveTax(1)}>%</CsButton>
+                            <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => setActiveTax(2)}>Pi</CsButton>
+                        </CsRowTaxLeft>
+                        <CsRowTaxRight>
+                            <WrapInput>
+                                <Controller
+                                    control={control}
+                                    name="tax"
+                                    // rules={rules.invoicenumber}
+                                    render={({ field }) => (
+                                        <>
+                                            <CsInput
+                                                name="tax"
+                                                placeholder={`0.00 ${(activeTax === 1) ? '%' : 'Pi'} `}
+                                                value={field.value}
+                                                onChange={(event) => setValue("tax", event.target.value)}
+                                            />
+                                        </>
+                                    )}
+                                />
+                            </WrapInput>
+                            <CsCloseIcon role="presentation" onClick={() => setTypeTax(false)}>
+                                <CloseIcon />
+                            </CsCloseIcon>
+                        </CsRowTaxRight>
+                    </CsRowTax>
+                    <ErrorMessages errors={errors} name="tax" />
+                </ContainerInput>
             </Flex>
         )}  
 
         {typeDiscount === true && (
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
             <CsTextLeft>Discount</CsTextLeft>
-            <CsRowTax>
-                <CsRowTaxLeft>
-                    <CsButton isActive={isPercent === true ? !false : false } onClick={() => setIsPercent(true)}>%</CsButton>
-                    <CsButton isActive={isPercent  === false ? !false : false} onClick={() => setIsPercent(false)}>Pi</CsButton>
-                </CsRowTaxLeft>
-                <CsRowTaxRight>
-                    <WrapInput>
-                        <Controller
-                            control={control}
-                            name="discount"
-                            // rules={rules.invoicenumber}
-                            render={({ field }) => (
-                                <>
-                                    <CsInput
-                                        name="discount"
-                                        placeholder={`0.00 ${(isPercent  === true) ? '%' : 'Pi'} `}
-                                        value={field.value}
-                                        onChange={(event) => setValue("discount", event.target.value)}
-                                    />
-                                </>
-                            )}
-                        />
-                    </WrapInput>
-                    <CsCloseIcon onClick={() => setTypeDiscount(false)}>
-                    <CloseIcon />
-                    </CsCloseIcon>
-                </CsRowTaxRight>
-            </CsRowTax>
+            <ContainerInput>
+                <CsRowTax>
+                    <CsRowTaxLeft>
+                        <CsButton isActive={isPercent === true ? !false : false } onClick={() => setIsPercent(true)}>%</CsButton>
+                        <CsButton isActive={isPercent  === false ? !false : false} onClick={() => setIsPercent(false)}>Pi</CsButton>
+                    </CsRowTaxLeft>
+                    <CsRowTaxRight>
+                        <WrapInput>
+                            <Controller
+                                control={control}
+                                name="discount"
+                                // rules={rules.invoicenumber}
+                                render={({ field }) => (
+                                    <>
+                                        <CsInput
+                                            name="discount"
+                                            placeholder={`0.00 ${(isPercent  === true) ? '%' : 'Pi'} `}
+                                            value={field.value}
+                                            onChange={(event) => setValue("discount", event.target.value)}
+                                        />
+                                    </>
+                                )}
+                            />
+                        </WrapInput>
+                        <CsCloseIcon onClick={() => setTypeDiscount(false)}>
+                        <CloseIcon />
+                        </CsCloseIcon>
+
+                    </CsRowTaxRight>
+                </CsRowTax>
+                <ErrorMessages errors={errors} name="discount" />
+            </ContainerInput>
         </Flex>
     )}
 

@@ -34,7 +34,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
   UseGetAllInvoice()
   const items = GetAllInvoice()
   const invoicelength = items?.[0]?.allInvoice?.length
-
+  const [loadingPreview, setLoadingPreview] = useState(false)
     const dispatch = useDispatch<AppDispatch>()
     const InitValues = {
         senderEmail: '',
@@ -61,10 +61,10 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         billFrom: Yup.string().required('Bill from is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         billTo: Yup.string().required('Bill to is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         shipTo: Yup.string().required('Ship to is required').max(200, 'Max length is 200 characters'),
-        // issueDate: Yup.string().required('Issue date is required'),
-        // dueDate: Yup.string().required('Due date is required'),
+        issueDate: Yup.string().required('Issue date is required'),
+        dueDate: Yup.string().required('Due date is required'),
         paymentTerms: Yup.string().required('Payment terms is required').max(50, 'Max length is 50 characters'),
-poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
+        poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
         terms: Yup.string().required('Terms is required').max(500, 'Max length is 500 characters').matches(/^(\S+$)/g, 'Please input number'),
         notes: Yup.string().required('Notes is required').max(500, 'Max length is 500 characters'),
         tax: Yup.string().required('Tax is required').matches(/^(\S+$)/g, 'Please input number'),
@@ -93,8 +93,8 @@ poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 
     });
 
     const onSubmit = async data => {
-        console.log("data", data)
-
+        // console.log("data", data)
+        setLoadingPreview(true)
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
             formData.append("billFrom", `${data.billFrom}`);
@@ -114,7 +114,7 @@ poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 
             formData.append("amountPaid", `${data.amountPaid}`);
             formData.append("logo", data.logo);
             
-            console.log("formData", formData)
+            // console.log("formData", formData)
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {
                         headers: {
@@ -123,13 +123,14 @@ poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 
                         }
                     }
                 );
-if(submitReq.status == 200){
-                    toastSuccess('update successful');
-                    console.log('submitReq?.data?.invoiceId', submitReq?.data?.invoiceId)
+    if(submitReq.status == 200){
+                    toastSuccess('Create invoice successfully');
                     setInvoiceid(submitReq?.data?.invoiceId)
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
+                    setLoadingPreview(false)
                 }else {
                     toastError('error', 'system error!!!')
+                    setLoadingPreview(false)
             }
     }
 
@@ -163,6 +164,7 @@ if(submitReq.status == 200){
                         formState={formState} 
                         setValue={setValue} 
                         control={control}
+                        loadingPreview={loadingPreview}
                     />
         }
     }

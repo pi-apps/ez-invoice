@@ -32,8 +32,6 @@ const styles = {
 const NavCustom = styled(Nav)``;
 
 const Footer = ({ isActive }) => {
-  console.log("isActive", isActive === 1 || isActive === 2);
-
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<DownloadModal />);
