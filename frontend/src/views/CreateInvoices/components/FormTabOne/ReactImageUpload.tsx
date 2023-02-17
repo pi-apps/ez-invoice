@@ -33,7 +33,7 @@ function ReactImageUpload({images , setValue }) {
                 logoImg.length === 0 && (
                     <CsButtonAdd onClick={onImageUpload}>
                         <CsAddIcon />
-                        <CsText ml="10px">Add your logo</CsText>
+                        <CsText ml="10px"><Translate>Add your logo</Translate></CsText>
                     </CsButtonAdd>
                 )
             }
