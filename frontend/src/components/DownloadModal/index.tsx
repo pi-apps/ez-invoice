@@ -1,4 +1,4 @@
-import { Button, Flex, Modal, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
 import DownLoadIcon from "components/Svg/Icons/DowloadIcon";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

@@ -7,6 +7,7 @@ import { AppDispatch } from "../../state";
 import { setUser } from "../../state/user/actions";
 import { AuthResult, PaymentDTO } from "../Menu/UserMenu/type";
 import LoginIcon from "../Svg/Icons/LoginIcon";
+import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 import { fetchLoading } from "state/invoice/actions";
 
 interface Props {

@@ -9,9 +9,6 @@ const SentTab = () => {
   UseGetAllInvoiceSentCore();
   const items = GetAnInvoice();
 
-  UseGetAllInvoiceSentCore();
-  const items = GetAnInvoice();
-
   function convertDate(date: any) {
     if (date) {
       const today = new Date(date);
