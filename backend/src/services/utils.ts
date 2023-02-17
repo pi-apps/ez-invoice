@@ -9,7 +9,7 @@ import { lang_pdf} from "./languages/lang_pdf";
 import { lang_email} from "./languages/lang_email";
 import { lang_email_success } from "./languages/lang_email_success";
 
-const GOOGLE_API_KEY = 'AIzaSyCGDBWmaZXELZ0joy8LPE5UuXjV4doLXOs';
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
 const template = fs.readFileSync("./src/services/templatePDF.ejs", "utf8");
 

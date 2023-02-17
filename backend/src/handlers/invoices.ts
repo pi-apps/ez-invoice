@@ -16,10 +16,10 @@ export default function mountInvoiceEndpoints(router: Router) {
             const currentUser = req.session.currentUser;
             const numOfInvoices = await InvoicesModel.countDocuments({ uid: currentUser.uid });
             const file = req.file;
-            console.log(req.file);
-            
-            const logoUrl = await utils.uploadToIpfs(file);
-            console.log(logoUrl);
+            let logoUrl = "";    
+            if (file) {
+                logoUrl = await utils.uploadToIpfs(file);
+            }
             
             const items = JSON.parse(req.body.items);
             let subTotal = 0;
@@ -44,7 +44,7 @@ export default function mountInvoiceEndpoints(router: Router) {
                 billFrom: req.body.billFrom,
                 billTo: req.body.billTo,
                 shipTo: req.body.shipTo,
-                issueDate: new Date(),
+                issueDate: req.body.issueDate ? req.body.issueDate : Date(),
                 dueDate: req.body.dueDate,
                 paymentTerms: req.body.paymentTerms,
                 poNumber: req.body.poNumber,
