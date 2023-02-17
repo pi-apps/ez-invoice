@@ -62,7 +62,7 @@ const Header = () => {
             />
           </Navbar.Brand>
           <Nav className="justify-content-end">
-            {userData?.username && (
+            {/* {userData?.username && (
               <Text
                 fontWeight="600"
                 lineHeight="2"
@@ -76,7 +76,7 @@ const Header = () => {
               <Text mt="6px" fontSize="12px" color="textSubtle">
                 <Translate>Loading..</Translate>
               </Text>
-            )}
+            )} */}
             <TranslateMenu />
             <UserMenu />
           </Nav>
