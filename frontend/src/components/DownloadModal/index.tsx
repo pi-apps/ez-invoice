@@ -27,7 +27,6 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const { toastSuccess, toastError } = useToast();
 
   const invoiceId = localStorage.getItem('invoiceIdStorage')
-  console.log('invoiceId', invoiceId)
 
   // language
   const [language, setLanguage] = useState("en");
@@ -110,8 +109,6 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   useEffect(() => {
     getUrlDownload()
   }, [invoiceId])
-
-  console.log('urlDownload', urlDownload)
 
   return (
     <TranSlatorModal>
