@@ -1,8 +1,8 @@
-import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { useDispatch } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import styled from "styled-components";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { AppDispatch } from "state";
 import { tabActiveNewInvoice } from "state/invoice/actions";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ import { backendURL, Csconfig, axiosClient } from "config/htttp";
 import useToast from "hooks/useToast";
 import axios from "axios";
 import { Translate } from "react-auto-translate";
+import { GetAllInvoice, UseGetAllInvoice } from "state/invoice";
 
 interface PropsSubTab {
   isActive: number;
@@ -22,15 +23,18 @@ interface PropsSubTab {
 const SubTab: React.FC<PropsSubTab> = ({ isActive }) => {
   const { toastSuccess, toastError } = useToast();
   const [images, setImages] = useState([]);
-  const dispatch = useDispatch<AppDispatch>();
-  var myHeaders = new Headers();
-  myHeaders.append(
-    "Cookie",
-    "connect.sid=s%3ATcDzOEc7V94RgIixbDBrgXtGI_-_-SqE.9dwiOTiwXNmX7xWPjffPRlX6cWorfPczW6D9mUArNrU"
-  );
+  const [activeTax, setActiveTax] = useState<number>(1);
+  const [activeDiscount, setActiveDiscount] = useState<number>(1);
+  const [invoiceId, setInvoiceid] = useState("");
+  localStorage.setItem("invoiceIdStorage", invoiceId);
 
+  UseGetAllInvoice();
+  const items = GetAllInvoice();
+  const invoicelength = items?.[0]?.allInvoice?.length;
+
+  const dispatch = useDispatch<AppDispatch>();
   const InitValues = {
-    senderEmail: "khanghy3004@gmail.com",
+    senderEmail: "",
     billFrom: "",
     billTo: "",
     shipTo: "",
@@ -38,7 +42,7 @@ const SubTab: React.FC<PropsSubTab> = ({ isActive }) => {
     dueDate: new Date(),
     paymentTerms: "",
     poNumber: "",
-    items: JSON.stringify([{ name: "", quantity: 0, price: 0 }]),
+    items: [{ name: "", quantity: 0, price: 0 }],
     notes: "",
     terms: "",
     tax: "",
@@ -50,45 +54,90 @@ const SubTab: React.FC<PropsSubTab> = ({ isActive }) => {
   };
 
   const validationSchema = Yup.object().shape({
-    senderEmail: Yup.string().required("invoicenumber is required"),
-    billFrom: Yup.string().required("billto is required"),
-    billTo: Yup.string().required("billto is required"),
-    shipTo: Yup.string().required("shipto is required"),
-    issueDate: Yup.string().required("date is required"),
-    dueDate: Yup.string().required("date is required"),
-    paymentTerms: Yup.string().required("payment is required"),
-    poNumber: Yup.string().required("payment is required"),
-    terms: Yup.string().required("payment is required"),
-    tax: Yup.string().required("payment is required"),
-    taxType: Yup.string().required("payment is required"),
-    discount: Yup.string().required("payment is required"),
-    shipping: Yup.string().required("payment is required"),
-    amountPaid: Yup.string().required("payment is required"),
-    logo: Yup.string().required("payment is required"),
+    senderEmail: Yup.string()
+      .required("Sender email is required")
+      .max(100, "Max length is 100 characters")
+      .matches(/[abcdefghijklmnopqrstuvwxyz]+/, "Please input alphabet"),
+    billFrom: Yup.string()
+      .required("Bill from is required")
+      .max(100, "Max length is 100 characters")
+      .matches(/[abcdefghijklmnopqrstuvwxyz]+/, "Please input alphabet"),
+    billTo: Yup.string()
+      .required("Bill to is required")
+      .max(100, "Max length is 100 characters")
+      .matches(/[abcdefghijklmnopqrstuvwxyz]+/, "Please input alphabet"),
+    shipTo: Yup.string()
+      .required("Ship to is required")
+      .max(200, "Max length is 200 characters"),
+    // issueDate: Yup.string().required('Issue date is required'),
+    // dueDate: Yup.string().required('Due date is required'),
+    paymentTerms: Yup.string()
+      .required("Payment terms is required")
+      .max(50, "Max length is 50 characters"),
+    poNumber: Yup.string()
+      .required("Po number is required")
+      .max(20, "Max length is 20 characters"),
+    terms: Yup.string()
+      .required("Terms is required")
+      .max(500, "Max length is 500 characters")
+      .matches(/^(\S+$)/g, "Please input number"),
+    notes: Yup.string()
+      .required("Notes is required")
+      .max(500, "Max length is 500 characters")
+      .matches(/^(\S+$)/g, "Please input alphabet"),
+    tax: Yup.string().required("Tax is required"),
+    // taxType: Yup.string().required('Tax type is required'),
+    discount: Yup.string().required("Discount is required"),
+    shipping: Yup.string().required("Shipping is required"),
+    amountPaid: Yup.string().required("Amount paid is required"),
+    // logo: Yup.string().required('Logo is required'),
   });
 
-  const formOptions = { defaultValues: InitValues };
+  const formOptions = {
+    resolver: yupResolver(validationSchema),
+    defaultValues: InitValues,
+  };
 
-  const { handleSubmit, formState, control, getValues, setValue } =
-    useForm(formOptions);
+  const {
+    register,
+    handleSubmit,
+    formState,
+    control,
+    getValues,
+    setValue,
+    watch,
+  } = useForm(formOptions);
   const { errors, touchedFields, isDirty, isLoading } = formState;
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "items",
+  });
+  const watchFieldArray = watch("items");
+
+  const controlledFields = fields.map((field, index) => {
+    return {
+      ...field,
+      ...watchFieldArray[index],
+    };
+  });
 
   const onSubmit = async (data) => {
-    console.log("data", data.logo);
+    console.log("data", data);
 
     const formData = new FormData();
     formData.append("senderEmail", `${data.senderEmail}`);
     formData.append("billFrom", `${data.billFrom}`);
     formData.append("billTo", `${data.billTo}`);
     formData.append("shipTo", `${data.shipTo}`);
-    formData.append("dueDate", `${data.dueDate}`);
+    formData.append("issueDate", `${data.issueDate?.getTime()}`);
+    formData.append("dueDate", `${data.dueDate?.getTime()}`);
     formData.append("paymentTerms", `${data.paymentTerms}`);
     formData.append("poNumber", `${data.poNumber}`);
-    formData.append("items", `${data.items}`);
+    formData.append("items", `${JSON.stringify(data.items)}`);
     formData.append("notes", `${data.notes}`);
     formData.append("terms", `${data.terms}`);
     formData.append("tax", `${data.tax}`);
-    formData.append("taxType", `${data.taxType}`);
+    formData.append("taxType", `${activeTax}`);
     formData.append("discount", `${data.discount}`);
     formData.append("shipping", `${data.shipping}`);
     formData.append("amountPaid", `${data.amountPaid}`);
@@ -103,6 +152,7 @@ const SubTab: React.FC<PropsSubTab> = ({ isActive }) => {
     });
     if (submitReq.status == 200) {
       toastSuccess("update successful");
+      setInvoiceid(submitReq?.data?.invoiceId);
     } else {
       toastError("error", "system error!!!");
     }
@@ -124,6 +174,7 @@ const SubTab: React.FC<PropsSubTab> = ({ isActive }) => {
     if (isActive === 1) {
       return (
         <FormTabOne
+          invoicelength={invoicelength}
           images={getValues("logo")}
           formState={formState}
           setValue={setValue}
@@ -134,8 +185,10 @@ const SubTab: React.FC<PropsSubTab> = ({ isActive }) => {
     if (isActive === 2) {
       return (
         <FormTabTwo
-          formState={formState}
-          setValue={setValue}
+          controlledFields={controlledFields}
+          append={append}
+          remove={remove}
+          register={register}
           control={control}
         />
       );
@@ -143,6 +196,13 @@ const SubTab: React.FC<PropsSubTab> = ({ isActive }) => {
     if (isActive === 3) {
       return (
         <FormTabThree
+          controlledFields={controlledFields}
+          getValues={getValues}
+          fields={fields}
+          activeDiscount={activeDiscount}
+          setActiveDiscount={setActiveDiscount}
+          activeTax={activeTax}
+          setActiveTax={setActiveTax}
           formState={formState}
           setValue={setValue}
           control={control}
@@ -153,11 +213,11 @@ const SubTab: React.FC<PropsSubTab> = ({ isActive }) => {
 
   return (
     <>
-      <HeadingTab>
-        <Translate>Create Invoice</Translate>
-      </HeadingTab>
+      <HeadingTab>Create Invoice</HeadingTab>
       <ContainerSubTab>
-        <CsButton onClick={handleMinusTabActive}>&lt;</CsButton>
+        <CsButton role="presentation" onClick={handleMinusTabActive}>
+          &lt;
+        </CsButton>
         <CsTab>
           <TabButton
             isActive={isActive === 1}
@@ -178,7 +238,9 @@ const SubTab: React.FC<PropsSubTab> = ({ isActive }) => {
             3
           </TabButton>
         </CsTab>
-        <CsButton onClick={handlePlusTabActive}>&gt;</CsButton>
+        <CsButton role="presentation" onClick={handlePlusTabActive}>
+          &gt;
+        </CsButton>
       </ContainerSubTab>
       <FormSubmit onSubmit={handleSubmit(onSubmit)}>
         {renderScreens(isActive)}
@@ -205,7 +267,8 @@ const CsTab = styled(Flex)`
   width: fit-content;
   align-items: center;
 `;
-const CsButton = styled(Button)`
+const CsButton = styled.div`
+  cursor: pointer;
   background: transparent;
   border-radius: 50%;
   color: #94a3b8;

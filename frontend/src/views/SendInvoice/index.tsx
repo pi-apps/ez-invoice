@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PageFullWidth from "components/Layout/PageFullWidth";
-import { Flex, Text } from "@phamphu19498/pibridge_uikit";
+import { Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
 import SubTab from "../CreateInvoices/components/SubTab";
 import Container from "components/Layout/Container";

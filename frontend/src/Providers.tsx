@@ -1,13 +1,10 @@
-import React, { useContext } from "react";
-import { ModalProvider, light, dark } from "@phamphu19498/pibridge_uikit";
-import { Translator } from "react-auto-translate";
+import React from "react";
+import { ModalProvider, light, dark } from "@devfedeltalabs/pibridge_uikit";
 import { Provider } from "react-redux";
 import { ThemeProvider } from "styled-components";
 import { ToastsProvider } from "./contexts/ToastsContext";
 import { RefreshContextProvider } from "./contexts/RefreshContext";
-import { LanguagesContext } from "contexts/Translate";
 import store from "./state";
-import { getUser } from "state/user";
 
 const Providers: React.FC = ({ children }) => {
   return (

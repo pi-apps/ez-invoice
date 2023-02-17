@@ -21,7 +21,7 @@ const store = configureStore({
     loginGoogle,
   },
   middleware: [
-    ...getDefaultMiddleware({ thunk: true }),
+    ...getDefaultMiddleware({ thunk: true, serializableCheck: false }),
     save({ states: PERSISTED_KEYS }),
   ],
   preloadedState: load({ states: PERSISTED_KEYS }),

@@ -1,4 +1,4 @@
-import { BoxProps, ChevronDownIcon, Text } from '@phamphu19498/pibridge_uikit'
+import { BoxProps, ChevronDownIcon, Text } from '@devfedeltalabs/pibridge_uikit'
 import { useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 

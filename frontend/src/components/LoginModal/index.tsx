@@ -1,4 +1,4 @@
-import { Button, Flex, Modal, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Translate } from "react-auto-translate";
@@ -7,7 +7,7 @@ import { AppDispatch } from "../../state";
 import { setUser } from "../../state/user/actions";
 import { AuthResult, PaymentDTO } from "../Menu/UserMenu/type";
 import LoginIcon from "../Svg/Icons/LoginIcon";
-import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
+import { fetchLoading } from "state/invoice/actions";
 
 interface Props {
   onDismiss?: () => void;
@@ -18,6 +18,7 @@ const LoginModal: React.FC<Props> = ({ onDismiss }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const signIn = async () => {
+    dispatch(fetchLoading({ isLoading: true }));
     const scopes = ["username", "payments"];
     // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
     const authResult: AuthResult = await window.Pi.authenticate(
@@ -29,6 +30,7 @@ const LoginModal: React.FC<Props> = ({ onDismiss }) => {
     if (loginUser) {
       const userInfor = await axiosClient.get("user/info");
       if (userInfor) {
+        dispatch(fetchLoading({ isLoading: false }));
         dispatch(setUser(userInfor.data));
       }
     }

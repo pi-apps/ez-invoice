@@ -5,6 +5,7 @@ import {
   fetchAnInvoice,
   fetchAllInvoiceSent,
   fetchAllInvoiceReceived,
+  fetchAllInvoice,
 } from "./fetchData";
 import {
   getAnInvoice,
@@ -12,6 +13,7 @@ import {
   fetchFailure,
   getAllInvoiceSent,
   getAllInvoiceReceived,
+  getAllInvoiceAll,
 } from "./actions";
 
 export const GetDataInvoice = () => {
@@ -33,8 +35,6 @@ export const GetAllInvoice = () => {
   );
   return [allInvoice];
 };
-
-// core details invoice
 
 export const UseGetAnInvoiceCore = (invoiceId: string) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -67,6 +67,24 @@ export const UseGetAllInvoiceSentCore = () => {
         const resultInvoiceDetail = await fetchAllInvoiceSent();
 
         dispatch(getAllInvoiceSent(resultInvoiceDetail));
+        dispatch(fetchLoading({ isLoading: false }));
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getDataAllInvoiceSent();
+  }, [dispatch]);
+};
+
+export const UseGetAllInvoice = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    const getDataAllInvoiceSent = async () => {
+      try {
+        dispatch(fetchLoading({ isLoading: true }));
+        const resultInvoice = await fetchAllInvoice();
+
+        dispatch(getAllInvoiceAll(resultInvoice));
         dispatch(fetchLoading({ isLoading: false }));
       } catch (e) {
         console.log(e);

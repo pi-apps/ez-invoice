@@ -128,6 +128,7 @@ const Cstitle = styled(Text)`
 `;
 const CsAmount = styled(Text)`
   color: #0f172a;
+  margin-left: 4px;
 `;
 
 const CsTextHeading = styled(Text)`
@@ -211,6 +212,15 @@ const CsInput = styled.input`
     color: #94a3b8;
     font-size: 12px;
     font-weight: 600;
+  }
+`;
+const CsNumericFormat = styled(NumberFormat)`
+  &:focus-visible {
+    outline: none;
+  }
+  ::placeholder {
+    color: ${({ theme }) => theme.colors.text};
+    opacity: 1;
   }
 `;
 export default Card;

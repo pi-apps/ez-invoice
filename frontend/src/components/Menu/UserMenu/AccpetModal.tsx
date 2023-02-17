@@ -1,5 +1,5 @@
 
-import { Button, Flex, Modal, Text } from '@phamphu19498/pibridge_uikit';
+import { Button, Flex, Modal, Text } from '@devfedeltalabs/pibridge_uikit';
 import { AccpetIcon, ClockedIcon, UserIcon } from 'components/Svg';
 import { useTranslation } from 'react-i18next';
 

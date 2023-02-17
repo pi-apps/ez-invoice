@@ -32,7 +32,11 @@ const FormTabTwo = ({ formState, control, setValue }) => {
       </CsContainer>
 
       <CsSubTotal>
-        <CsButtonAdd onClick={handleAddItem}>
+        <CsButtonAdd
+          onClick={() => {
+            append({ name: "", quantity: "", price: "" });
+          }}
+        >
           <CsAddIcon />
           <CsText>
             <Translate>Line item</Translate>
@@ -73,7 +77,7 @@ const CsText = styled(Text)`
   margin-left: 10px;
 `;
 
-const CsButtonAdd = styled(Button)`
+const CsButtonAdd = styled.div`
   margin-top: 12px;
   margin-bottom: 12px;
   border-bottom: 1px solid #e2e8f0;

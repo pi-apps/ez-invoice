@@ -1,4 +1,4 @@
-import { Language } from '@phamphu19498/pibridge_uikit'
+import { Language } from '@devfedeltalabs/pibridge_uikit'
 
 export const EN: Language = { locale: 'en-US', language: 'English', code: 'en' }
 export const VI: Language = { locale: 'vi-VN', language: 'Tiếng Việt', code: 'vi' }

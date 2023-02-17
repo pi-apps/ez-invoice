@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { ModalProps, IconButton, ArrowBackIcon, CloseIcon, Flex } from "@phamphu19498/pibridge_uikit";
+import { ModalProps, IconButton, ArrowBackIcon, CloseIcon, Flex } from "@devfedeltalabs/pibridge_uikit";
 import { MotionBox } from "components/Box/Box";
 
 export const ModalHeader = styled.div<{ background?: string }>`

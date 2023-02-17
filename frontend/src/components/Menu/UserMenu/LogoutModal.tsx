@@ -1,4 +1,4 @@
-import { Button, Flex, Modal, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
 import { LogoutIcon } from "components/Svg";
 import { Translate } from "react-auto-translate";
 import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";

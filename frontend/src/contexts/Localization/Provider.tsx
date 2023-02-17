@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react'
-import { Language } from '@phamphu19498/pibridge_uikit'
+import { Language } from '@devfedeltalabs/pibridge_uikit'
 import { EN, languages } from '../../config/localization/languages'
 import translations from '../../config/localization/translations.json'
 import { ContextApi, ContextData, ProviderState } from './types'

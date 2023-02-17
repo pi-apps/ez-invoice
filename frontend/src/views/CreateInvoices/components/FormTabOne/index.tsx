@@ -358,9 +358,13 @@ const CsFlex = styled(Flex)`
 const CsImageDatePicker = styled.img`
   width: 14px;
   height: 14px;
+  cursor: pointer;
   position: absolute;
   right: 20px;
-  top: 17px;
+  top: 20px;
+  &:hover {
+    transform: translateY(0.5px);
+  }
 `;
 const CsButtonAdd = styled(Button)`
   width: fit-content;

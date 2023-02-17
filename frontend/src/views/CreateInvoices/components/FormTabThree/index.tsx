@@ -176,9 +176,8 @@ const FormTabThree = ({ formState: { errors }, control, setValue }) => {
           </CsContentInfo>
         </CsFlex>
       </CsContainer>
-
       <CsSubTotal>
-        <Navbar.Brand href="/createDetail/EZ_1676358432642">
+        <Navbar.Brand href={`/createDetail/${isInvoiceIdStorage}`}>
           <CsButtonAdd>
             <CsText>Preview</CsText>
           </CsButtonAdd>
@@ -219,13 +218,14 @@ const CsRowTaxLeft = styled(Flex)`
 const CsRowTaxRight = styled(Flex)`
   align-items: center;
 `;
-const CsAmountPaid = styled(Text)`
-  background: #f8f9fd;
+const CsAmountPaid = styled(Flex)`
+  /* background: #F8F9FD; */
+  height: fit-content;
   border-radius: 12px;
   font-size: 12px;
   max-width: 220px;
-  padding: 20px 16px;
-  text-align: right;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
   flex: 1;
 `;
@@ -283,20 +283,32 @@ const CsLabel = styled(Text)`
 const ContainerInput = styled(Flex)`
   flex-direction: column;
   width: 100%;
-  background-color: #f8f9fd;
+  /* background-color:#F8F9FD; */
   border-radius: 8px;
   /* margin-bottom:1rem; */
+`;
+const WrapInputAmountPaid = styled(Flex)`
+  position: relative;
+  background-color: #f8f9fd;
+  border-radius: 10px;
+  width: 100%;
+  height: 56px;
+  padding: 0px 16px;
+
+  /* input{
+    padding: 10px;
+  } */
 `;
 const WrapInput = styled(Flex)`
   position: relative;
   background-color: #f8f9fd;
   border-radius: 10px;
   width: 100%;
-  /* height: 56px; */
   input {
     padding: 10px;
   }
 `;
+
 export const CsInput = styled(Input)`
   background: none;
   border: none;
