@@ -1,11 +1,59 @@
 import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
 import Row from 'components/Layout/Row'
 import { AddIcon } from 'components/Svg'
-import { useMemo, useState } from 'react'
+import { LanguagesContext } from 'contexts/Translate'
+import { GetTranslateHolder } from 'hooks/TranSlateHolder'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import Card from './Card'
+import { Translate } from "react-auto-translate";
 
 const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
+
+  const { language, setLanguage } = useContext(LanguagesContext);
+  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+    billFrom: "Who is this invoice from? (required)",
+    billTo: "Who is this invoice from? (required)",
+    payment: "Payment",
+    poNumber: "PO Number",
+  });
+
+  const listTextPlaceHolder = {
+    billFrom: "Who is this invoice from? (required)",
+    billTo: "Who is this invoice from? (required)",
+    payment: "Payment",
+    poNumber: "PO Number",
+  };
+
+  const changeTextPlaceHolderLg = async () => {
+    const resBillFrom = await GetTranslateHolder(
+      listTextPlaceHolder.billFrom,
+      language
+    );
+    const resBillTo = await GetTranslateHolder(
+      listTextPlaceHolder.billTo,
+      language
+    );
+    const resPayment = await GetTranslateHolder(
+      listTextPlaceHolder.payment,
+      language
+    );
+    const resPoNumber = await GetTranslateHolder(
+      listTextPlaceHolder.poNumber,
+      language
+    );
+
+    setStateTextPlaceholder({
+      billFrom: resBillFrom,
+      billTo: resBillTo,
+      payment: resPayment,
+      poNumber: resPoNumber,
+    });
+  };
+
+  useEffect(() => {
+    language ? changeTextPlaceHolderLg() : null;
+  }, [language]);
  
   const totalPrice = (fields) => {
     return fields.reduce((sum, i) => {
@@ -35,11 +83,11 @@ const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
           append({ name: "", quantity: "", price: "" });
         }}>
           <CsAddIcon />
-          <CsText>Line item</CsText>
+          <CsText><Translate>Line item</Translate></CsText>
         </CsButtonAdd>
         <hr style={{margin: '10px 0'}} />
         <Row mt="16px" style={{justifyContent: "space-between"}}>
-            <CsTextLeft>Amount Due</CsTextLeft>
+            <CsTextLeft><Translate>Amount Due</Translate></CsTextLeft>
             <CsTextRight bold>
               {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}
               </CsTextRight>

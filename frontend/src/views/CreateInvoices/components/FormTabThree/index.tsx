@@ -9,9 +9,12 @@ import Row from 'components/Layout/Row';
 import { useTranslation } from 'react-i18next';
 import ChooseMethod from './ChooseMethod';
 import { AddIcon2 } from 'components/Svg';
-import { useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { GetAllInvoice, UseGetAllInvoice } from 'state/invoice';
 import { useNavigate } from 'react-router-dom';
+import { GetTranslateHolder } from 'hooks/TranSlateHolder';
+import { LanguagesContext } from 'contexts/Translate';
+import { Translate } from "react-auto-translate";
 
 const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
     const { t } = useTranslation()
@@ -24,6 +27,51 @@ const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, s
     const shippingValue =  Number(getValues('shipping'))
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
+
+    const { language, setLanguage } = useContext(LanguagesContext);
+  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+    billFrom: "Who is this invoice from? (required)",
+    billTo: "Who is this invoice from? (required)",
+    payment: "Payment",
+    poNumber: "PO Number",
+  });
+
+  const listTextPlaceHolder = {
+    billFrom: "Who is this invoice from? (required)",
+    billTo: "Who is this invoice from? (required)",
+    payment: "Payment",
+    poNumber: "PO Number",
+  };
+
+  const changeTextPlaceHolderLg = async () => {
+    const resBillFrom = await GetTranslateHolder(
+      listTextPlaceHolder.billFrom,
+      language
+    );
+    const resBillTo = await GetTranslateHolder(
+      listTextPlaceHolder.billTo,
+      language
+    );
+    const resPayment = await GetTranslateHolder(
+      listTextPlaceHolder.payment,
+      language
+    );
+    const resPoNumber = await GetTranslateHolder(
+      listTextPlaceHolder.poNumber,
+      language
+    );
+
+    setStateTextPlaceholder({
+      billFrom: resBillFrom,
+      billTo: resBillTo,
+      payment: resPayment,
+      poNumber: resPoNumber,
+    });
+  };
+
+  useEffect(() => {
+    language ? changeTextPlaceHolderLg() : null;
+  }, [language]);
     
     const totalPrice = (fields) => {
       return fields?.reduce((sum, i) => {
@@ -72,7 +120,7 @@ const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, s
             <CsFlex>
                 {/* Notes */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Notes</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Notes</Translate></CsLabel>
                 </Flex>
                 <ContainerInput>
 <WrapInput>
@@ -97,7 +145,7 @@ const FormTabThree = ({ controlledFields, formState:{errors}, fields, control, s
                 
                   {/* Terms */}
                   <Flex width='100%'>
-                    <CsLabel mt="2rem" color="#64748B">Terms</CsLabel>
+                    <CsLabel mt="2rem" color="#64748B"><Translate>Terms</Translate></CsLabel>
                 </Flex>
 
                 <ContainerInput>
@@ -154,20 +202,20 @@ typeDiscount={typeDiscount}
                             typeDiscount === false && (
                                 <CsButtonAddTpye onClick={() => setTypeDiscount(true)}>
                                     <CsAddIcon/>
-                                    <CsTextType>Discount</CsTextType>
+                                    <CsTextType><Translate>Discount</Translate></CsTextType>
                                 </CsButtonAddTpye>
                             )
                         }
                         {typeShipping === false && (
                             <CsButtonAddTpye onClick={() => setTypeShipping(true)}>
                                 <CsAddIcon/>
-                                <CsTextType>Shipping</CsTextType>
+                                <CsTextType><Translate>Shipping</Translate></CsTextType>
                             </CsButtonAddTpye>
                         )}
                         {typeTax === false && (
                             <CsButtonAddTpye onClick={() => setTypeTax(true)}>
                                 <CsAddIcon/>
-                                <CsTextType>Tax</CsTextType>
+                                <CsTextType><Translate>Tax</Translate></CsTextType>
                             </CsButtonAddTpye>
                         )}
                     </Row>
@@ -179,7 +227,7 @@ typeDiscount={typeDiscount}
                         </> }</CsTextRight>
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft >Amount paid</CsTextLeft>
+                        <CsTextLeft ><Translate>Amount paid</Translate></CsTextLeft>
                           <CsAmountPaid>
                             <WrapInputAmountPaid>
                               <Controller
@@ -201,7 +249,7 @@ typeDiscount={typeDiscount}
                           </CsAmountPaid>
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>Balance Due</CsTextLeft>
+                        <CsTextLeft><Translate>Balance Due</Translate></CsTextLeft>
                         <Text fontSize='14px'>{!balanceDue ? 0 : <>
                           {`${balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                         </> }</Text>
@@ -213,7 +261,7 @@ typeDiscount={typeDiscount}
       <CsSubTotal>
       <Navbar.Brand>
           <CsButtonAdd>
-              <CsText>Preview</CsText>
+              <CsText><Translate>Preview</Translate> </CsText>
           </CsButtonAdd>
       </Navbar.Brand>
       </CsSubTotal>

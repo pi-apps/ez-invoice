@@ -1,6 +1,6 @@
 import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Controller } from "react-hook-form"
@@ -12,11 +12,66 @@ import Row from 'react-bootstrap/Row'
 import { useDispatch } from 'react-redux'
 import ReactImageUpload from './ReactImageUpload'
 import { GetAllInvoice, UseGetAllInvoice, UseGetAllInvoiceSentCore } from "state/invoice"
+import { LanguagesContext } from "contexts/Translate"
+import { GetTranslateHolder } from "hooks/TranSlateHolder"
+import { Translate } from "react-auto-translate";
 
 const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
   const dispatch = useDispatch()
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
+  const { language, setLanguage } = useContext(LanguagesContext);
+  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+    senderEmail: "Who is this invoice from? (required)",
+    billFrom: "Who is this invoice from? (required)",
+    billTo: "Who is this invoice to? (required)",
+    payment: "Payment",
+    poNumber: "PO Number",
+  });
+
+  const listTextPlaceHolder = {
+    senderEmail: "Who is this invoice from? (required)",
+    billFrom: "Who is this invoice from? (required)",
+    billTo: "Who is this invoice to? (required)",
+    payment: "Payment",
+    poNumber: "PO Number",
+  };
+
+  const changeTextPlaceHolderLg = async () => {
+    const resSenderEmail = await GetTranslateHolder(
+        listTextPlaceHolder.senderEmail,
+        language
+      );
+    const resBillFrom = await GetTranslateHolder(
+      listTextPlaceHolder.billFrom,
+      language
+    );
+    const resBillTo = await GetTranslateHolder(
+      listTextPlaceHolder.billTo,
+      language
+    );
+    const resPayment = await GetTranslateHolder(
+      listTextPlaceHolder.payment,
+      language
+    );
+    const resPoNumber = await GetTranslateHolder(
+      listTextPlaceHolder.poNumber,
+      language
+    );
+
+    setStateTextPlaceholder({
+        senderEmail: resSenderEmail,
+      billFrom: resBillFrom,
+      billTo: resBillTo,
+      payment: resPayment,
+      poNumber: resPoNumber,
+    });
+  };
+
+  useEffect(() => {
+    language ? changeTextPlaceHolderLg() : null;
+  }, [language]);
+
   return (
     <CsContainer >
             <CsFlex>
@@ -49,7 +104,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                 
                 {/* Sender Email */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Sender email</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Sender email</Translate></CsLabel>
                 </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -62,7 +117,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                                 name="senderEmail"
                                 type="text"
                                 value={field.value}
-placeholder="Who is this invoice from?(required)"
+                                placeholder={`${stateTextPlaceholder.senderEmail}`}
                                 onChange={(event) => setValue("senderEmail", event.target.value)}
                             />
                             )}
@@ -73,7 +128,7 @@ placeholder="Who is this invoice from?(required)"
 
                 {/* Bill From */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Bill From</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Bill From</Translate></CsLabel>
                   </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -85,7 +140,7 @@ placeholder="Who is this invoice from?(required)"
                             <CsTextArea
                                 name="billFrom"
                                 value={field.value}
-                                placeholder="Who is this invoice from? (required)"
+                                placeholder={`${stateTextPlaceholder.billFrom}`}
                                 onChange={(event) => setValue("billFrom", event.target.value)}
                             />
                             )}
@@ -96,7 +151,7 @@ placeholder="Who is this invoice from?(required)"
 
                 {/* Bill To */}
                   <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Bill To</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Bill To</Translate></CsLabel>
                   </Flex>
                   <ContainerInput>
                     <WrapInput>
@@ -108,7 +163,7 @@ placeholder="Who is this invoice from?(required)"
                             <CsTextArea
                                 name="billTo"
                                 value={field.value}
-                                placeholder="Who is this invoice to?(required)"
+                                placeholder={`${stateTextPlaceholder.billTo}`}
                                 onChange={(event) => setValue("billTo", event.target.value)}
                             />
                             )}
@@ -119,7 +174,7 @@ placeholder="Who is this invoice from?(required)"
 
                     {/* Ship To */}
                   <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Ship To</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Ship To</Translate></CsLabel>
                   </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -142,7 +197,7 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                 <Row className="mb-1 mt-1">
                     <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">Date</CsLabel>
+                            <CsLabel mt="1rem" color="#64748B"><Translate>Date</Translate></CsLabel>
                         </Flex>
                         <ContainerInput>
                             <WrapInput>
@@ -166,7 +221,7 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                     </Flex>
                     <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">Payment</CsLabel>
+                            <CsLabel mt="1rem" color="#64748B"><Translate>Payment</Translate></CsLabel>
                         </Flex>
                         <ContainerInput>
                             <WrapInput>
@@ -178,7 +233,7 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                                         name="paymentTerms"
                                         value={field.value}
                                         // type="text"
-                                        placeholder="Payment"
+                                        placeholder={`${stateTextPlaceholder.payment}`}
                                         onChange={field.onChange}
                                     />
                                     )}
@@ -192,7 +247,7 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                 <Row className="mb-1 mt-1">
 <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">Due Date</CsLabel>
+                            <CsLabel mt="1rem" color="#64748B"><Translate>Due Date</Translate></CsLabel>
                         </Flex>
                         <WrapInput>
                             <Controller 
@@ -214,7 +269,7 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                     </Flex>
                     <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">PO Number</CsLabel>
+                            <CsLabel mt="1rem" color="#64748B"><Translate>PO Number</Translate></CsLabel>
                         </Flex>
                         <WrapInput>
                             <Controller
@@ -225,7 +280,7 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                                     name="poNumber"
                                     value={field.value}
                                     // type="text"
-                                    placeholder="PO Number"
+                                    placeholder={`${stateTextPlaceholder.poNumber}`}
                                     onChange={field.onChange}
                                 />
                                 )}
