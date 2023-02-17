@@ -14,7 +14,19 @@ import { Translate } from "react-auto-translate";
 import { LanguagesContext } from "contexts/Translate";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 
-const FormTabThree = ({ formState: { errors }, control, setValue }) => {
+const FormTabThree = ({
+  controlledFields,
+  formState: { errors },
+  fields,
+  control,
+  setValue,
+  activeTax,
+  setActiveTax,
+  activeDiscount,
+  setActiveDiscount,
+  getValues,
+}) => {
+  const { t } = useTranslation();
   const [typeTax, setTypeTax] = useState(true);
   const [typeDiscount, setTypeDiscount] = useState(false);
   const [typeShipping, setTypeShipping] = useState(false);
@@ -112,19 +124,39 @@ const FormTabThree = ({ formState: { errors }, control, setValue }) => {
 
           <CsContentInfo>
             <Row mt="1rem" style={{ justifyContent: "space-between" }}>
-              <CsTextLeft>
-                <Translate>Subtotal</Translate>
-              </CsTextLeft>
-              <CsTextRight bold>0.00 Pi</CsTextRight>
+              <CsTextLeft>{t("Subtotal")}</CsTextLeft>
+              <CsTextRight fontSize="14px" bold>
+                {!total ? (
+                  0
+                ) : (
+                  <>
+                    {total && typeof total === "number"
+                      ? `${total.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })} Pi`
+                      : "0 Pi"}
+                  </>
+                )}
+              </CsTextRight>
             </Row>
             <Row mt="1rem" style={{ justifyContent: "space-between" }}>
               <ChooseMethod
+                setActiveDiscount={setActiveDiscount}
+                activeDiscount={activeDiscount}
+                activeTax={activeTax}
+                setActiveTax={setActiveTax}
+                control={control}
+                setValue={setValue}
                 typeTax={typeTax}
                 typeDiscount={typeDiscount}
                 setTypeTax={setTypeTax}
                 setTypeDiscount={setTypeDiscount}
                 typeShipping={typeShipping}
                 setTypeShipping={setTypeShipping}
+                isPercent={isPercent}
+                setIsPercent={setIsPercent}
+                errors={errors}
               />
             </Row>
 
@@ -156,28 +188,69 @@ const FormTabThree = ({ formState: { errors }, control, setValue }) => {
             </Row>
 
             <Row mt="1rem" style={{ justifyContent: "space-between" }}>
-              <CsTextLeft>
-                <Translate>Total</Translate>
-              </CsTextLeft>
-              <CsTextRight bold>105.00 Pi</CsTextRight>
+              <CsTextLeft>Total</CsTextLeft>
+              <CsTextRight bold>
+                {!totalFinaly ? (
+                  0
+                ) : (
+                  <>
+                    {`${totalFinaly.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })} Pi`}
+                  </>
+                )}
+              </CsTextRight>
             </Row>
             <Row mt="1rem" style={{ justifyContent: "space-between" }}>
-              <CsTextLeft mr="2rem">
-                <Translate>Amount paid</Translate>
-              </CsTextLeft>
-              <CsAmountPaid>0.00 Pi</CsAmountPaid>
+              <CsTextLeft>Amount paid</CsTextLeft>
+              <CsAmountPaid>
+                <WrapInputAmountPaid>
+                  <Controller
+                    control={control}
+                    name="amountPaid"
+                    // rules={rules.invoicenumber}
+                    render={({ field }) => (
+                      <CsInput
+                        style={{
+                          textAlign: "right",
+                          width: "100%",
+                          padding: 0,
+                        }}
+                        name="amountPaid"
+                        placeholder="0.00 Pi"
+                        value={field.value}
+                        onChange={(event) =>
+                          setValue("amountPaid", event.target.value)
+                        }
+                        // onChange={field.onChange}
+                      />
+                    )}
+                  />
+                </WrapInputAmountPaid>
+                <ErrorMessages errors={errors} name="amountPaid" />
+              </CsAmountPaid>
             </Row>
             <Row mt="1rem" style={{ justifyContent: "space-between" }}>
-              <CsTextLeft>
-                <Translate>Balance Due</Translate>
-              </CsTextLeft>
-              <CsTextRight bold>105.00 Pi</CsTextRight>
+              <CsTextLeft>Balance Due</CsTextLeft>
+              <Text fontSize="14px">
+                {!balanceDue ? (
+                  0
+                ) : (
+                  <>
+                    {`${balanceDue.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })} Pi`}
+                  </>
+                )}
+              </Text>
             </Row>
           </CsContentInfo>
         </CsFlex>
       </CsContainer>
       <CsSubTotal>
-        <Navbar.Brand href={`/createDetail/${isInvoiceIdStorage}`}>
+        <Navbar.Brand>
           <CsButtonAdd>
             <CsText>Preview</CsText>
           </CsButtonAdd>

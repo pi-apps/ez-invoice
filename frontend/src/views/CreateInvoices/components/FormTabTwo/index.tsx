@@ -44,10 +44,15 @@ const FormTabTwo = ({ formState, control, setValue }) => {
         </CsButtonAdd>
         <hr style={{ margin: "10px 0" }} />
         <Row mt="16px" style={{ justifyContent: "space-between" }}>
-          <CsTextLeft>
-            <Translate> Amount Due</Translate>
-          </CsTextLeft>
-          <CsTextRight bold>100.00 Pi</CsTextRight>
+          <CsTextLeft>Amount Due</CsTextLeft>
+          <CsTextRight bold>
+            {total && typeof total === "number"
+              ? `${total.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })} Pi`
+              : "0 Pi"}
+          </CsTextRight>
         </Row>
       </CsSubTotal>
     </CsWrapperForm>

@@ -1396,6 +1396,17 @@
   resolved "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.5.0.tgz"
   integrity sha512-tlJpwF40DEQcfR/QF+wNMVyGMaO9FQp6Z1Wahj4Gk3CJQYHwA2xVG7iKDFdW6zuxZY9XWOpGcfNCTsX4McOsOg==
 
+"@devfedeltalabs/pibridge_uikit@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@devfedeltalabs/pibridge_uikit/-/pibridge_uikit-1.0.10.tgz#582d36f272cd95919aa62ce5caae5fe1f769f610"
+  integrity sha512-y1vDtz9w1IJi41AbDXoTERd2WOPf+xiWwDANTGd0Zd6wSQ/O7JsbcGuXnJZdcpd+Xk+6x6p8X5ohiQO4hKLEgg==
+  dependencies:
+    "@popperjs/core" "^2.9.2"
+    "@types/styled-system" "^5.1.10"
+    lodash "^4.17.20"
+    react-popper "^2.2.5"
+    styled-system "^5.1.5"
+
 "@emotion/is-prop-valid@^0.8.2":
   version "0.8.8"
   resolved "https://registry.npmjs.org/@emotion/is-prop-valid/-/is-prop-valid-0.8.8.tgz"
@@ -2299,17 +2310,6 @@
     eslint-plugin-jsx-a11y "^6.4.1"
     eslint-plugin-react "^7.21.5"
     eslint-plugin-react-hooks "^4.0.0"
-
-"@phamphu19498/pibridge_uikit@^1.0.2":
-  version "1.0.7"
-  resolved "https://registry.npmjs.org/@phamphu19498/pibridge_uikit/-/pibridge_uikit-1.0.7.tgz"
-  integrity sha512-evjnOTp7mvcj6cYKib8YDE+mmin5ymzhbvAdy1xhTu78taVTjKGZuQhabDVE4tBft5f9+kBOtJE89/GBH9srCg==
-  dependencies:
-    "@popperjs/core" "^2.9.2"
-    "@types/styled-system" "^5.1.10"
-    lodash "^4.17.20"
-    react-popper "^2.2.5"
-    styled-system "^5.1.5"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.10"

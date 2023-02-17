@@ -80,14 +80,17 @@ const Card = ({ formState, setValue, control, index }) => {
           <WrapInput>
             <Controller
               control={control}
-              name="quantity"
-              // rules={rules.sender}
+              name={`items[${index}].quantity`}
               render={({ field }) => (
                 <CsInput
-                  name="quantity"
-                  value={field.value}
                   placeholder="1"
-                  onChange={(event) => setValue("quantity", event.target.value)}
+                  {...register(
+                    `items.${index}.quantity` as const,
+                    { pattern: "/^0|[1-9]d*$/" },
+                    {
+                      required: true, // JS only: <p>error message</p> TS only support string
+                    }
+                  )}
                 />
               )}
             />
@@ -95,33 +98,40 @@ const Card = ({ formState, setValue, control, index }) => {
           <WrapInput>
             <Controller
               control={control}
-              name="price"
-              render={({ field }) => (
+              name={`items[${index}].price`}
+              render={() => (
                 <CsInput
-                  name="price"
-                  value={field.value}
                   placeholder="0.00 Pi"
-                  onChange={(event) => setValue("price", event.target.value)}
+                  {...register(`items.${index}.price` as const, {
+                    required: true,
+                  })}
                 />
               )}
             />
           </WrapInput>
         </CsRowINput>
       </CsContent>
+
       <Flex mt="24px">
-        <Cstitle>
-          <Translate>Amount:</Translate>
-        </Cstitle>
-        <CsAmount> Pi</CsAmount>
+        <Cstitle>Amount: </Cstitle>
+        <CsAmount>
+          {total && typeof total === "number"
+            ? `${total.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })} Pi`
+            : "0 Pi"}
+        </CsAmount>
       </Flex>
     </CsWrapperCard>
   );
 };
-const CsCloseIcon = styled(Button)`
+const CsCloseIcon = styled.div`
   background: transparent;
   padding: 0;
   width: 20px;
   height: 20px;
+  cursor: pointer;
 `;
 const Cstitle = styled(Text)`
   color: #94a3b8;

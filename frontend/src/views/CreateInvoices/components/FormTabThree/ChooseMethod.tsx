@@ -1,13 +1,11 @@
 import { Button, Flex, Input, Text } from '@devfedeltalabs/pibridge_uikit'
+import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
 import { AddIcon2, CloseIcon } from 'components/Svg'
 import React, { useState } from 'react'
 import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
 
-const ChooseMethod = ({isPercent, setIsPercent, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
-
-//   const [activeTax, setActiveTax ] = useState<number>(0)
-// const [activeDiscount, setActiveDiscount ] = useState<number>(1)
+const ChooseMethod = ({isPercent, setIsPercent, errors, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
 
   return (
     <Flex flexDirection="column" width="100%">
@@ -82,24 +80,26 @@ const ChooseMethod = ({isPercent, setIsPercent, activeTax,setActiveTax, typeTax,
     {typeShipping === true && (
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
             <CsTextLeft>Shipping</CsTextLeft>
-            <CsRowTax>
-                <WrapInput>
-                    <Controller
-                        control={control}
-                        name="shipping"
-                        // rules={rules.invoicenumber}
-                        render={({ field }) => (
-                        <CsInput
+            <ContainerInput>
+                <CsRowTax>
+                    <WrapInput>
+                        <Controller
+                            control={control}
                             name="shipping"
-                            placeholder="0.00 Pi"
-                            value={field.value}
-                            onChange={(event) => setValue("shipping", event.target.value)}
-                            // onChange={field.onChange}
+                            // rules={rules.invoicenumber}
+                            render={({ field }) => (
+                            <CsInput
+                                name="shipping"
+                                placeholder="0.00 Pi"
+                                value={field.value}
+                                onChange={(event) => setValue("shipping", event.target.value)}
+                            />
+                            )}
                         />
-                        )}
-                    />
-                </WrapInput>
-            </CsRowTax>
+                    </WrapInput>
+                </CsRowTax>
+                <ErrorMessages errors={errors} name="shipping" />
+            </ContainerInput>
         </Flex>
     )}
     </Flex>
@@ -203,5 +203,9 @@ const Csunit = styled(Text)`
     font-size: 14px;
     margin-right: 10px;
     transform: translateY(32%);
+`
+const ContainerInput = styled(Flex)`
+  flex-direction: column;
+  border-radius:8px;
 `
 export default ChooseMethod
