@@ -9,6 +9,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
 import Footer from 'components/Footer';
+import { Translate } from "react-auto-translate";
 
 const DetailSent = () => {
     const navigate = useNavigate();
@@ -35,7 +36,7 @@ const DetailSent = () => {
                 <Header />
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading>Invoice #{slug}</CsHeading>
+                            <CsHeading><Translate>Invoice</Translate> #{slug}</CsHeading>
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
@@ -46,7 +47,7 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Bill From</CsTextLeft>
+                                        <CsTextLeft><Translate>Bill From</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -54,7 +55,7 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Bill To</CsTextLeft>
+                                        <CsTextLeft><Translate>Bill To</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -62,15 +63,15 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Issue Date</CsTextLeft>
+                                        <CsTextLeft><Translate>Issue Date</Translate></CsTextLeft>
                                         {convertDate(details?.issueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Due Date</CsTextLeft>
+                                        <CsTextLeft><Translate>Due Date</Translate></CsTextLeft>
                                         {/* {convertDate(items?.details.dueDate)} */}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Payment Terms</CsTextLeft>
+                                        <CsTextLeft><Translate>Payment Terms</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -79,7 +80,7 @@ const DetailSent = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>PO Number</CsTextLeft>
+                                        <CsTextLeft><Translate>PO Number</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -90,16 +91,16 @@ const DetailSent = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%">item</ColFirstth>
-                                        <Colth width="20%">quantity</Colth>
-                                        <Colth width="20%">unit price</Colth>
-                                        <Colth width="20%">total</Colth>
+                                        <ColFirstth width="20%"><Translate>item</Translate></ColFirstth>
+                                        <Colth width="20%"><Translate>quantity</Translate></Colth>
+                                        <Colth width="20%"><Translate>unit price</Translate></Colth>
+                                        <Colth width="20%"><Translate>total</Translate></Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
                                         return(
                                             <CsRow>
-                                            <ColFirst width="20%">{item?.name}</ColFirst>
-                                            <Col width="20%">{item?.quantity}</Col>
+                                            <ColFirst width="20%"><Translate>{item?.name}</Translate></ColFirst>
+                                            <Col width="20%"><Translate>{item?.quantity}</Translate></Col>
                                             <Col width="20%">{item?.price}Pi</Col>
                                             <Col width="20%">{(item?.quantity)*(item?.price)}</Col>
                                         </CsRow>
@@ -109,7 +110,7 @@ const DetailSent = () => {
                                 </CsContentBill>
                                 <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Subtotal</CsTextLeft>
+                                        <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -118,7 +119,7 @@ const DetailSent = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Allowances</CsTextLeft>
+                                        <CsTextLeft><Translate>Allowances</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -127,7 +128,7 @@ const DetailSent = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Total</CsTextLeft>
+                                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -142,18 +143,18 @@ const DetailSent = () => {
                                     }
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Shipping</CsTextLeft>
+                                            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
                                             <CsTextRight bold>{details?.shipping} Pi</CsTextRight>
                                         </Row>
                                     }
                                     { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Discount: ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.tax} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
                                         </Row>
                                     }
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Amount Due</CsTextLeft>
+                                        <CsTextLeft><Translate>Amount Due</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -165,7 +166,7 @@ const DetailSent = () => {
                             <WAction>
                                 <CsNavItem>
                                     <CsButton onClick={()=> navigate("/invoice")}>
-                                        Back
+                                        <Translate>Back</Translate>
                                     </CsButton>
                                 </CsNavItem>
                             </WAction>

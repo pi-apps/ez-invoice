@@ -40,7 +40,7 @@ const App: React.FC = () => {
             ? DataAb?.language
             : "en"
         }
-        googleApiKey="AIzaSyCGDBWmaZXELZ0joy8LPE5UuXjV4doLXOs"
+        googleApiKey="AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs"
       >
         <Routes>
           <Route path="/" element={<MainLayout />}>

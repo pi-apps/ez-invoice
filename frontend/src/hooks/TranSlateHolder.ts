@@ -4,12 +4,15 @@ import { useContext, useState } from "react";
 export const GetTranslateHolder = async (data, language) => {
   try {
     const response = await axios.get(
-      `https://translation.googleapis.com/language/translate/v2?source=en&target=${language}&key=AIzaSyCGDBWmaZXELZ0joy8LPE5UuXjV4doLXOs&q=${data}&format=text`
+      `https://translation.googleapis.com/language/translate/v2?source=en&target=${language}&key=AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs=${data}&format=text`
     );
     const res = response?.data?.data?.translations[0]?.translatedText;
+    console.log('responseGG', res)
     return res;
     // console.log("res11", response?.data?.data?.translations[0]?.translatedText);
-  } catch (error) {}
+  } catch (error) {
+    console.log()
+  }
 
   // .then(function (response) {
   //   console.log(

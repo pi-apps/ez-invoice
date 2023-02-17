@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
 import Footer from '../Footer';
+import { Translate } from "react-auto-translate";
 
 const CreateDetail = () => {
 
@@ -46,7 +47,7 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Bill From</CsTextLeft>
+                                        <CsTextLeft><Translate>Bill From</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -62,15 +63,15 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Issue Date</CsTextLeft>
+                                        <CsTextLeft><Translate>Issue Date</Translate></CsTextLeft>
                                         {convertDate(details?.issueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Due Date</CsTextLeft>
+                                        <CsTextLeft><Translate>Due Date</Translate></CsTextLeft>
                                         {convertDate(details?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Payment Terms</CsTextLeft>
+                                        <CsTextLeft><Translate>Payment Terms</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -79,7 +80,7 @@ const CreateDetail = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>PO Number</CsTextLeft>
+                                        <CsTextLeft><Translate>PO Number</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -90,10 +91,10 @@ const CreateDetail = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%">item</ColFirstth>
-                                        <Colth width="20%">quantity</Colth>
-                                        <Colth width="20%">unit price</Colth>
-                                        <Colth width="20%">total</Colth>
+                                        <ColFirstth width="20%"><Translate>item</Translate></ColFirstth>
+                                        <Colth width="20%"><Translate>quantity</Translate></Colth>
+                                        <Colth width="20%"><Translate>unit price</Translate></Colth>
+                                        <Colth width="20%"><Translate>total</Translate></Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
                                         return(
@@ -109,7 +110,7 @@ const CreateDetail = () => {
                                 </CsContentBill>
                                 <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Subtotal</CsTextLeft>
+                                        <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -118,7 +119,7 @@ const CreateDetail = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Allowances</CsTextLeft>
+                                        <CsTextLeft><Translate>Allowances</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -127,7 +128,7 @@ const CreateDetail = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Total</CsTextLeft>
+                                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -136,24 +137,24 @@ const CreateDetail = () => {
                                     </Row>
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Tax: ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft><Translate>Tax:</Translate> ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.tax/100 : details?.subTotal-details?.tax} {details?.taxType === 1 ? "%" : "Pi"}</CsTextRight>
                                         </Row>
                                     }
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Shipping</CsTextLeft>
+                                            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
                                             <CsTextRight bold>{details?.shipping} Pi</CsTextRight>
                                         </Row>
                                     }
                                     { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Discount: ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.tax} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
                                         </Row>
                                     }
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Amount Due</CsTextLeft>
+                                        <CsTextLeft><Translate>Amount Due</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -166,7 +167,7 @@ const CreateDetail = () => {
                                     <CsNavItem>
                                         <Navbar.Brand href="/newInvoice">
                                             <CsButton>
-                                                Back
+                                                <Translate>Back</Translate>
                                             </CsButton>
                                         </Navbar.Brand>
                                     </CsNavItem>

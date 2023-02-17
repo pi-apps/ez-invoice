@@ -15,7 +15,7 @@ import useToast from "hooks/useToast";
 import axios from "axios";
 import { GetAllInvoice, UseGetAllInvoice } from "state/invoice";
 import { useNavigate } from "react-router-dom";
-
+import { Translate } from "react-auto-translate";
 interface PropsSubTab{
     isActive:number
 }
@@ -173,7 +173,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
 
     return (
         <>
-        <HeadingTab>Create Invoice</HeadingTab>
+        <HeadingTab><Translate>Create Invoice</Translate></HeadingTab>
         <ContainerSubTab>
             <CsButton role="presentation" onClick={handleMinusTabActive}>
                 &lt;
