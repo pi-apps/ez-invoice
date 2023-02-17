@@ -25,9 +25,8 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [urlDownload, setUrlDownload] = useState();
   const { toastSuccess, toastError } = useToast();
-  const dataInvoiceId = localStorage.getItem("invoiceIdStorage");
-  console.log('urlDownload', urlDownload)
 
+  const invoiceId = localStorage.getItem('invoiceIdStorage')
 
   // language
   const [language, setLanguage] = useState("en");
@@ -42,15 +41,17 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const dispatch = useDispatch<AppDispatch>();
   const accessTokenAuth = getAccessTokenAuth();
 
-  const uploadFileToDrive = async (accessToken, dataInvoiceId) => {
+  const uploadFileToDrive = async (accessToken) => {
     setIsLoading(true);
     try {
       // Download the PDF file from the URL
       const response1 = await fetch(
-        `https://ipfs.moralis.io:2053/ipfs/QmfPga24WUPcAaHHoJjyDXcByFiAsskKP2irttsDx2apxY/${dataInvoiceId}.pdf`
+        `https://ipfs.moralis.io:2053/ipfs/Qmd9jwxJ4fnG8VzaYqMhmo3MCMViubtYnCxEzyuMNsstzd/EZ_1676623154960.pdf`
       );
+        console.log('response1', response1)
       const pdfData = await response1.arrayBuffer();
       const pdfByteArray = new Uint8Array(pdfData);
+
 
       const response = await axios({
         url: "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable",
@@ -60,7 +61,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
           "Content-Type": "application/json",
         },
         data: {
-          name: "haha",
+          name: `haha1`,
           mimeType: "application/pdf",
         },
       });
@@ -90,14 +91,15 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   };
 
   const handleOpenPicker = async () => {
-    await uploadFileToDrive(accessTokenAuth, dataInvoiceId);
+    await uploadFileToDrive(accessTokenAuth);
   };
-  const getUrlDownload = async (dataInvoiceId) => {
-    setIsLoading(true); 
+  const getUrlDownload = async () => {
+    setIsLoading(true);
     try {
       const response = await axiosClient.get(
-        `/invoice/download?invoiceId=${dataInvoiceId}&language=vi`
+        `/invoice/download?invoiceId=${invoiceId}&language=vi`
       );
+      console.log('response', response)
       setUrlDownload(response.data);
       setIsLoading(false);
     } catch (error) {
@@ -106,8 +108,10 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   };
 
   useEffect(() => {
-    getUrlDownload(dataInvoiceId)
+    getUrlDownload()
   }, [])
+
+  console.log('urlDownload', urlDownload)
 
   return (
     <TranSlatorModal>
@@ -120,10 +124,9 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
         <Flex flexDirection="column" width="100%">
           <Text bold fontSize="18px" width="100%" textAlign="center">
             <Translate>Download Invoice</Translate>
-            {/* {t("download_popup.header")} */}
           </Text>
           <Text width="100%" textAlign="center" color="textSubtle" mt="10px">
-            <Translate>Ple ase choose the location for file.</Translate>
+            <Translate>Please choose the location for file.</Translate>
           </Text>
 
           <Flex mt="1rem" justifyContent="space-between">
@@ -133,7 +136,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
                 width="100%"
                 variant="secondary"
                 disabled={!urlDownload && isLoading}
-                onClick={() => getUrlDownload(dataInvoiceId)}
+                onClick={() => getUrlDownload()}
               >
                 <Translate>Hard disk</Translate>
               </CsButton>
