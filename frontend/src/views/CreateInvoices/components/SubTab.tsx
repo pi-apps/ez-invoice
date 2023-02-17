@@ -61,20 +61,21 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         billFrom: Yup.string().required('Bill from is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         billTo: Yup.string().required('Bill to is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         shipTo: Yup.string().required('Ship to is required').max(200, 'Max length is 200 characters'),
-        issueDate: Yup.string().required('Issue date is required'),
-        dueDate: Yup.string().required('Due date is required'),
         paymentTerms: Yup.string().required('Payment terms is required').max(50, 'Max length is 50 characters'),
         poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
         terms: Yup.string().required('Terms is required').max(500, 'Max length is 500 characters').matches(/^(\S+$)/g, 'Please input number'),
         notes: Yup.string().required('Notes is required').max(500, 'Max length is 500 characters'),
-        tax: Yup.string().matches(/^(\S+$)/g, 'Please input number').required('Tax is required'),
+        tax: Yup.string().required('Tax is required').matches(/^(\S+$)/g, 'Please input number'),
+        discount: Yup.string().required('Discount is required').matches(/^(\S+$)/g, 'Please input number'),
+        shipping: Yup.string().required('Shipping is required').matches(/^(\S+$)/g, 'Please input number'),
+        amountPaid: Yup.string().required('Amount paid is required').matches(/^(\S+$)/g, 'Please input number'),
+        // issueDate: Yup.string().required('Issue date is required'),
+        // dueDate: Yup.string().required('Due date is required'),
         // taxType: Yup.string().required('Tax type is required'),
-        discount: Yup.string().matches(/^(\S+$)/g, 'Please input number').required('Discount is required'),
-        shipping: Yup.string().matches(/^(\S+$)/g, 'Please input number').required('Shipping is required'),
-        amountPaid: Yup.string().matches(/^(\S+$)/g, 'Please input number').required('Amount paid is required'),
         // logo: Yup.string().required('Logo is required'),
     });
 
+    // const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
     const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm(formOptions);
