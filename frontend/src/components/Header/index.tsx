@@ -33,10 +33,10 @@ const styles = {
 const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
-  const [loading, setLoading] = useState(false);
 
   UseGetAllInvoice();
   const items = GetAnInvoice();
+  const isLoading = items?.isLoading
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -78,7 +78,7 @@ const Header = () => {
               </Text>
             )} */}
             <TranslateMenu />
-            <UserMenu />
+            <UserMenu isLoading={isLoading}/>
           </Nav>
         </Container>
       </Navbar>

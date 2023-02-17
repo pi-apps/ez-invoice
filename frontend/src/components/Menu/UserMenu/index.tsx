@@ -1,4 +1,4 @@
-import { Button, useModal } from "@devfedeltalabs/pibridge_uikit";
+import { AutoRenewIcon, Button, useModal } from "@devfedeltalabs/pibridge_uikit";
 import { axiosClient } from "config/htttp";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -13,9 +13,13 @@ import { setUser } from "../../../state/user/actions";
 import AccpetModal from "./AccpetModal";
 import LogoutModal from "./LogoutModal";
 import { AuthResult, PaymentDTO, User } from "./type";
+import useToast from "hooks/useToast";
 import { fetchLoading } from "state/invoice/actions";
+import { GetAllInvoice, UseGetAllInvoice } from "state/invoice";
 
-const UserMenu = () => {
+const UserMenu = ({isLoading}) => {
+  const { toastSuccess, toastError } = useToast()
+  
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
@@ -35,6 +39,7 @@ const UserMenu = () => {
           dispatch(fetchLoading({isLoading:false}))
         }
         console.log(`Hi there! You're ready to make payments!`);
+        toastSuccess('Login successfully')
       })
       .catch(function (error) {
         toastError('error', JSON.stringify(error))
@@ -48,6 +53,7 @@ const UserMenu = () => {
     await dispatch(setUser(null));
     await signOutUser();
     await onDismis();
+    toastSuccess('Logout successfully')
     navigate("/");
   };
 
@@ -68,13 +74,9 @@ const UserMenu = () => {
   );
 
   return userData === null || userData === undefined ? (
-    <CsButton onClick={signIn}>
-      <Translate>Login</Translate>
-    </CsButton>
+    <CsButton onClick={signIn} endIcon={isLoading ? <AutoRenewIcon spin color="textDisabled"/> :  <Translate>Login</Translate>} />
   ) : (
-    <CsButton onClick={onPresentLogoutModal}>
-      <Translate>logout</Translate>
-    </CsButton>
+    <CsButton onClick={onPresentLogoutModal} endIcon={isLoading ? <AutoRenewIcon spin color="textDisabled"/> :  <Translate>Logout</Translate>} />
   );
 };
 
