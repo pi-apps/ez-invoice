@@ -25,6 +25,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [urlDownload, setUrlDownload] = useState();
   const { toastSuccess, toastError } = useToast();
+  console.log('urlDownload', urlDownload)
 
   const invoiceId = localStorage.getItem('invoiceIdStorage')
 
@@ -141,7 +142,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
 
             {accessTokenAuth ? (
               <Button
-                disabled={isLoading && urlDownload}
+                disabled={isLoading && !urlDownload}
                 padding="0"
                 width="48%"
                 onClick={() => handleOpenPicker()}
