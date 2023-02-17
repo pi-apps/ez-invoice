@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from '@phamphu19498/pibridge_uikit'
+import { Box } from '@devfedeltalabs/pibridge_uikit'
 
 
 

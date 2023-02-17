@@ -1,9 +1,15 @@
-import { Button, Flex, Image, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Image, Text } from "@devfedeltalabs/pibridge_uikit";
 import React from "react";
 import styled from "styled-components";
 import { Translate } from "react-auto-translate";
 
-const SentInvoiceSuccessfully = () => {
+interface SentSuccess {
+  setIsSentSuccessfully: (e) => void;
+}
+
+const SentInvoiceSuccessfully: React.FC<
+  React.PropsWithChildren<SentSuccess>
+> = ({ setIsSentSuccessfully }) => {
   return (
     <CsContainer>
       <CsFlex>
@@ -20,7 +26,7 @@ const SentInvoiceSuccessfully = () => {
             <Translate>Sent Invoice Successfully</Translate>
           </TextHeader>
         </FlexText>
-        <CsButton>Done</CsButton>
+        <CsButton onClick={() => setIsSentSuccessfully(false)}>Done</CsButton>
       </CsFlex>
     </CsContainer>
   );

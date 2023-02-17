@@ -1,4 +1,4 @@
-import { MenuItemsType } from '@phamphu19498/pibridge_uikit';
+import { MenuItemsType } from '@devfedeltalabs/pibridge_uikit';
 
 
 export type ConfigMenuItemsType = MenuItemsType & { hideSubNav?: boolean }

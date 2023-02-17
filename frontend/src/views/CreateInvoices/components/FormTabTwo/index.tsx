@@ -1,42 +1,96 @@
-import { Button, Flex, Text } from '@phamphu19498/pibridge_uikit'
-import PageFullWidth from 'components/Layout/PageFullWidth'
+import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
 import Row from 'components/Layout/Row'
-import { AddIcon, CloseIcon } from 'components/Svg'
-import React, { useState } from 'react'
+import { AddIcon } from 'components/Svg'
+import { LanguagesContext } from 'contexts/Translate'
+import { GetTranslateHolder } from 'hooks/TranSlateHolder'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import Card from './Card'
+import { Translate } from "react-auto-translate";
 
-const FormTabTwo = ({formState, control, setValue }) => {
-  const [indexes, setIndexes] = React.useState([]);
-  const [ price, setPrice] = useState(0.00)
+const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
 
-  const arraydata = [ { name: '', quantity: 0, price: 0 } ]
-  const [array, setArray] = useState(arraydata)
+  const { language, setLanguage } = useContext(LanguagesContext);
+  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+    billFrom: "Who is this invoice from? (required)",
+    billTo: "Who is this invoice from? (required)",
+    payment: "Payment",
+    poNumber: "PO Number",
+  });
 
-  const handleAddItem = () => {
-    setArray([...array, { name: '', quantity: 0, price: 0 }])
+  const listTextPlaceHolder = {
+    billFrom: "Who is this invoice from? (required)",
+    billTo: "Who is this invoice from? (required)",
+    payment: "Payment",
+    poNumber: "PO Number",
+  };
+
+  const changeTextPlaceHolderLg = async () => {
+    const resBillFrom = await GetTranslateHolder(
+      listTextPlaceHolder.billFrom,
+      language
+    );
+    const resBillTo = await GetTranslateHolder(
+      listTextPlaceHolder.billTo,
+      language
+    );
+    const resPayment = await GetTranslateHolder(
+      listTextPlaceHolder.payment,
+      language
+    );
+    const resPoNumber = await GetTranslateHolder(
+      listTextPlaceHolder.poNumber,
+      language
+    );
+
+    setStateTextPlaceholder({
+      billFrom: resBillFrom,
+      billTo: resBillTo,
+      payment: resPayment,
+      poNumber: resPoNumber,
+    });
+  };
+
+  useEffect(() => {
+    language ? changeTextPlaceHolderLg() : null;
+  }, [language]);
+ 
+  const totalPrice = (fields) => {
+    return fields.reduce((sum, i) => {
+      if(i.price === undefined || i.quantity === undefined){
+        return 0
+      } else{
+        return sum + i.price * i.quantity
+      }
+    },0)
   }
-
-  console.log('array', array)
+    const total = useMemo(() => {
+      return totalPrice(controlledFields)
+    },[controlledFields]);
+    
   return (
     <CsWrapperForm>
       <CsContainer>
-        {
-          array.map((_, index) => (
-            <Card index={index} formState={formState} setValue={setValue} control={control} />
-          ))
-        }
+      {controlledFields.map((item, index) => {
+          return (
+              <Card index={index} remove={remove} fields={controlledFields} register={register} control={control} />
+          );
+        })}
       </CsContainer>
 
       <CsSubTotal>
-        <CsButtonAdd onClick={handleAddItem}>
+        <CsButtonAdd onClick={() => {
+          append({ name: "", quantity: "", price: "" });
+        }}>
           <CsAddIcon />
-          <CsText>Line item</CsText>
+          <CsText><Translate>Line item</Translate></CsText>
         </CsButtonAdd>
         <hr style={{margin: '10px 0'}} />
         <Row mt="16px" style={{justifyContent: "space-between"}}>
-            <CsTextLeft>Amount Due</CsTextLeft>
-            <CsTextRight bold>100.00 Pi</CsTextRight>
+            <CsTextLeft><Translate>Amount Due</Translate></CsTextLeft>
+            <CsTextRight bold>
+              {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}
+              </CsTextRight>
         </Row>
       </CsSubTotal>
       </CsWrapperForm>
@@ -66,13 +120,20 @@ const CsText = styled(Text)`
   margin-left: 10px;
 `
 
-const CsButtonAdd = styled(Button)`
+const CsButtonAdd = styled.div`
   margin-top: 12px;
   margin-bottom: 12px;
   border-bottom: 1px solid #E2E8F0;
+  background: #6B39F4;
+  border-radius: 6px;
+  width: fit-content;
+  align-items: center;
+  width: 95px;
+  height: 35px;
+  padding: 0 10px;
+  display: flex;
+  cursor: pointer;
 `
-
-
 
 const CsSubTotal = styled.div`
   padding: 0 24px;

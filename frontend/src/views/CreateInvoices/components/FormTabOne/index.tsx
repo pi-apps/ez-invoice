@@ -1,6 +1,6 @@
-import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit"
+import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Controller } from "react-hook-form"
@@ -11,17 +11,66 @@ import { AddIcon } from 'components/Svg'
 import Row from 'react-bootstrap/Row'
 import { useDispatch } from 'react-redux'
 import ReactImageUpload from './ReactImageUpload'
+import { GetAllInvoice, UseGetAllInvoice, UseGetAllInvoiceSentCore } from "state/invoice"
+import { LanguagesContext } from "contexts/Translate"
+import { GetTranslateHolder } from "hooks/TranSlateHolder"
+import { Translate } from "react-auto-translate";
 
-const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
+const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
   const dispatch = useDispatch()
-  const [avatar, setAvatar] = useState('')
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
-  const [startDate, setStartDate] = useState(new Date());
-  const [startDueDate, setStartDueDate] = useState(new Date());
+  const { language, setLanguage } = useContext(LanguagesContext);
+  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+    senderEmail: "Who is this invoice from? (required)",
+    billFrom: "Who is this invoice from? (required)",
+    billTo: "Who is this invoice to? (required)",
+    payment: "Payment",
+    poNumber: "PO Number",
+  });
+
+  const listTextPlaceHolder = {
+    senderEmail: "Who is this invoice from? (required)",
+    billFrom: "Who is this invoice from? (required)",
+    billTo: "Who is this invoice to? (required)",
+    payment: "Payment",
+    poNumber: "PO Number",
+  };
+
+  const changeTextPlaceHolderLg = async () => {
+    const resSenderEmail = await GetTranslateHolder(
+        listTextPlaceHolder.senderEmail,
+        language
+      );
+    const resBillFrom = await GetTranslateHolder(
+      listTextPlaceHolder.billFrom,
+      language
+    );
+    const resBillTo = await GetTranslateHolder(
+      listTextPlaceHolder.billTo,
+      language
+    );
+    const resPayment = await GetTranslateHolder(
+      listTextPlaceHolder.payment,
+      language
+    );
+    const resPoNumber = await GetTranslateHolder(
+      listTextPlaceHolder.poNumber,
+      language
+    );
+
+    setStateTextPlaceholder({
+        senderEmail: resSenderEmail,
+      billFrom: resBillFrom,
+      billTo: resBillTo,
+      payment: resPayment,
+      poNumber: resPoNumber,
+    });
+  };
+
   useEffect(() => {
-    setAvatar(`/images/ImgPi/logo.png`)
-  }, [])
+    language ? changeTextPlaceHolderLg() : null;
+  }, [language]);
 
   return (
     <CsContainer >
@@ -40,8 +89,9 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
                             <CsInput
                                 name="invoicenumber"
                                 type="text"
-                                placeholder=""
-                                onChange={field.onChange}
+                                readOnly
+                                placeholder={invoicelength ? invoicelength + 1 : ''}
+                                defaultValue={invoicelength ? invoicelength + 1 : ''}
                             />
                             )}
                         />
@@ -54,7 +104,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
                 
                 {/* Sender Email */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Sender email</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Sender email</Translate></CsLabel>
                 </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -67,7 +117,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
                                 name="senderEmail"
                                 type="text"
                                 value={field.value}
-                                placeholder="Sender email"
+                                placeholder={`${stateTextPlaceholder.senderEmail}`}
                                 onChange={(event) => setValue("senderEmail", event.target.value)}
                             />
                             )}
@@ -78,7 +128,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
 
                 {/* Bill From */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Bill From</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Bill From</Translate></CsLabel>
                   </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -90,7 +140,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
                             <CsTextArea
                                 name="billFrom"
                                 value={field.value}
-                                placeholder="Who is this invoice from? (required)"
+                                placeholder={`${stateTextPlaceholder.billFrom}`}
                                 onChange={(event) => setValue("billFrom", event.target.value)}
                             />
                             )}
@@ -101,7 +151,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
 
                 {/* Bill To */}
                   <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Bill To</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Bill To</Translate></CsLabel>
                   </Flex>
                   <ContainerInput>
                     <WrapInput>
@@ -113,7 +163,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
                             <CsTextArea
                                 name="billTo"
                                 value={field.value}
-                                placeholder="Who is this invoice from? (required)"
+                                placeholder={`${stateTextPlaceholder.billTo}`}
                                 onChange={(event) => setValue("billTo", event.target.value)}
                             />
                             )}
@@ -124,7 +174,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
 
                     {/* Ship To */}
                   <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Ship To</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Ship To</Translate></CsLabel>
                   </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -136,7 +186,7 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
                                 name="shipTo"
                                 value={field.value}
                                 placeholder="(Optional)"
-                                onChange={(event) => setValue("shipTo", event.target.value)}
+onChange={(event) => setValue("shipTo", event.target.value)}
                             />
                             )}
                         />
@@ -145,47 +195,59 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
                 </ContainerInput>
 
                 <Row className="mb-1 mt-1">
+                    <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">Date</CsLabel>
+                            <CsLabel mt="1rem" color="#64748B"><Translate>Date</Translate></CsLabel>
                         </Flex>
-                        <WrapInput>
-                            <Controller 
-                                control={control}
-                                name="issueDate"
-                                // type="text"
-                                render={({ field }) => (
-                                    <>
-                                        <CsDatePicker
-                                        selected={startDate} onChange={(date:any) => setStartDate(date)} />
-                                        {/* <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" /> */}
-                                    </>
-
-                                )}
-                            />
-                        </WrapInput>
-                        <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">Payment</CsLabel>
-                        </Flex>
-                        <WrapInput>
-                            <Controller
-                                control={control}
-                                name="paymentTerms"
-                                render={({ field }) => (
-                                <CsInput
-                                    name="paymentTerms"
-                                    value={field.value}
+                        <ContainerInput>
+                            <WrapInput>
+                                <Controller 
+                                    control={control}
+                                    name="issueDate"
                                     // type="text"
-                                    placeholder="Payment"
-                                    onChange={field.onChange}
+                                    render={({ field }) => (
+                                        <>
+                                            <CsDatePicker 
+                                            id="date"
+                                            value={field.value}
+                                            selected={startDate} onChange={(date:any) => setStartDate(date)} />
+                                            <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" onClick={() => {document.getElementById('date')?.focus() }}/>
+                                        </>
+                                    )}
                                 />
-                                )}
-                            />
                             </WrapInput>
+                            <ErrorMessages errors={errors} name="issueDate" />
+                        </ContainerInput>
+                    </Flex>
+                    <Flex width="50%" flexDirection="column">
+                        <Flex width='100%'>
+                            <CsLabel mt="1rem" color="#64748B"><Translate>Payment</Translate></CsLabel>
+                        </Flex>
+                        <ContainerInput>
+                            <WrapInput>
+                                <Controller
+                                    control={control}
+                                    name="paymentTerms"
+                                    render={({ field }) => (
+                                    <CsInput
+                                        name="paymentTerms"
+                                        value={field.value}
+                                        // type="text"
+                                        placeholder={`${stateTextPlaceholder.payment}`}
+                                        onChange={field.onChange}
+                                    />
+                                    )}
+                                />
+                            </WrapInput>
+                            <ErrorMessages errors={errors} name="paymentTerms" />
+                        </ContainerInput>
+                    </Flex>
                 </Row>
 
                 <Row className="mb-1 mt-1">
+<Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">Due Date</CsLabel>
+                            <CsLabel mt="1rem" color="#64748B"><Translate>Due Date</Translate></CsLabel>
                         </Flex>
                         <WrapInput>
                             <Controller 
@@ -195,15 +257,19 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
                                 render={({ field }) => (
                                     <>
                                         <CsDatePicker
+                                        id="dueDate"
+                                        value={field.value}
                                         selected={startDueDate} onChange={(date:any) => setStartDueDate(date)} />
-                                        {/* <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" /> */}
+                                        <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" onClick={() => {document.getElementById('dueDate')?.focus() }}/>
                                     </>
                                 )}
                             />
                         </WrapInput>
-
+                        <ErrorMessages errors={errors} name="dueDate" />
+                    </Flex>
+                    <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">PO Number</CsLabel>
+                            <CsLabel mt="1rem" color="#64748B"><Translate>PO Number</Translate></CsLabel>
                         </Flex>
                         <WrapInput>
                             <Controller
@@ -214,25 +280,15 @@ const FormTabOne = ({formState:{errors}, control, setValue, images}) => {
                                     name="poNumber"
                                     value={field.value}
                                     // type="text"
-                                    placeholder="PO Number"
+                                    placeholder={`${stateTextPlaceholder.poNumber}`}
                                     onChange={field.onChange}
                                 />
                                 )}
                             />
-                            </WrapInput>
-                    {/* <Flex width="100%" mt="1rem">
-                            <Button 
-                            // disabled={!isValid}
-                                width="100%"
-                                type="submit"
-                                value="Submit"
-                            >
-                                Confirm
-                            </Button>
-                        </Flex> */}
+                        </WrapInput>
+                    <ErrorMessages errors={errors} name="poNumber" />
+                    </Flex>
                 </Row>
-
-                <ErrorMessages errors={errors} name="poNumber" />
 
                 { checkError === true && 
                     <CustomMessageError>{getMessageError}</CustomMessageError> 
@@ -264,7 +320,7 @@ const CsContainer = styled(Flex)`
 const CustomMessageError = styled.div`
   color: ${({ theme }) => theme.colors.primaryBright};
   font-size: 12px;
-  font-weight: 400;
+font-weight: 400;
   letter-spacing: 0.1;
   margin-top: 5px;
   margin-left: 35px;
@@ -284,9 +340,13 @@ const CsFlex = styled(Flex)`
 const CsImageDatePicker = styled.img`
     width: 14px;
     height: 14px;
+    cursor: pointer;
     position: absolute;
     right: 20px;
-    top: 17px;
+    top: 20px;
+    &:hover{
+        transform: translateY(0.5px);
+    }
 `
 const CsButtonAdd = styled(Button)`
   width: fit-content;

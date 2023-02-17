@@ -1,4 +1,4 @@
-import { useModal } from "@phamphu19498/pibridge_uikit";
+import { useModal } from "@devfedeltalabs/pibridge_uikit";
 import { useEffect, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import { useTranslation } from "react-i18next";

@@ -1,47 +1,62 @@
-import { Flex, Text } from "@phamphu19498/pibridge_uikit";
-import React from "react";
-import styled from "styled-components";
+import { Flex, Text } from "@devfedeltalabs/pibridge_uikit";
+import { MONTHS } from "config";
 import { Translate } from "react-auto-translate";
-import Card from "./Card";
 import { GetAnInvoice, UseGetAllInvoiceReceivedCore } from "state/invoice";
+import styled from "styled-components";
+import Card from "./Card";
 
 const ReceiveTab = () => {
-  
-  UseGetAllInvoiceReceivedCore()
-  const items = GetAnInvoice()
+  UseGetAllInvoiceReceivedCore();
+  const items = GetAnInvoice();
+
+  function convertDate(date: any) {
+    if (date) {
+      const today = new Date(date);
+      const dd = String(today.getDate()).padStart(2, "0");
+      const mm = String(today.getMonth() + 1).padStart(2, "0");
+      const yyyy = today.getFullYear();
+      const selectedMonthName = MONTHS[Number(mm) - 1];
+      return (
+        <CsText>
+          {dd} &nbsp;{selectedMonthName} &nbsp;{yyyy}
+        </CsText>
+      );
+    }
+    return null;
+  }
 
   return (
     <CsWrapContainer>
-      { ( items?.listReceived?.length && items?.isLoading === false ) ?
+      {items?.listReceived?.length && items?.isLoading === false ? (
         <>
-            {items?.listReceived.map((items) => {
-              return (
-                <CsContent>
-                  <CsText>
-                    <Translate>{items?.date}</Translate>
-                  </CsText>
-                  {items?.listItems.map((data, index) => {
-                    return (
-                      <Card
-                        images={data?.logoUrl}
-                        id={data?.invoiceId}
-                        create={data?.createAt}
-                        billTo={data?.billTo}
-                        amountDue={data?.amountDue.toString()}
-                        paid={data?.paid}
-                      />
-                    )
-                    
-                  })}
-                </CsContent>
-              );
-            })}
+          {items?.listReceived.map((items) => {
+            return (
+              <CsContent>
+                {convertDate(items?.date)}
+                {items?.listItems.map((data, index) => {
+                  return (
+                    <Card
+                      images={data?.logoUrl}
+                      invoiceId={data?.invoiceId}
+                      create={data?.createAt}
+                      billFrom={data?.billFrom}
+                      amountDue={data?.amountDue.toString()}
+                      paid={data?.paid}
+                      invoiceNumber={data?.invoiceNumber}
+                    />
+                  );
+                })}
+              </CsContent>
+            );
+          })}
         </>
-      :
-        <Flex width='100%' justifyContent="center" mt="2rem">
-            <Text>No Data</Text>
+      ) : (
+        <Flex width="100%" justifyContent="center" mt="2rem">
+          <Text>
+            <Translate>No Data</Translate>
+          </Text>
         </Flex>
-      }
+      )}
     </CsWrapContainer>
   );
 };

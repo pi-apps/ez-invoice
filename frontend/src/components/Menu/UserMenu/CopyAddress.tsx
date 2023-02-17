@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, CopyIcon, Flex, FlexProps, IconButton } from '@phamphu19498/pibridge_uikit'
+import { Box, CopyIcon, Flex, FlexProps, IconButton } from '@devfedeltalabs/pibridge_uikit'
 import styled from 'styled-components'
 
 

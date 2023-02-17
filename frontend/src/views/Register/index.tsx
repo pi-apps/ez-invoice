@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Flex, Text } from "@phamphu19498/pibridge_uikit"
+import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
 import PageFullWidth from "components/Layout/PageFullWidth"
 import Select from 'components/Select/Select'

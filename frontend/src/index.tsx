@@ -12,17 +12,17 @@ import { LanguagesContextProvider } from "contexts/Translate";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Providers>
-      <BrowserRouter>
-        <ResetCSS />
-        <GlobalStyle />
-        <IsOpenProvider>
-          <LanguagesContextProvider>
+    <LanguagesContextProvider>
+      <Providers>
+        <BrowserRouter>
+          <ResetCSS />
+          <GlobalStyle />
+          <IsOpenProvider>
             <App />
-          </LanguagesContextProvider>
-        </IsOpenProvider>
-      </BrowserRouter>
-    </Providers>
+          </IsOpenProvider>
+        </BrowserRouter>
+      </Providers>
+    </LanguagesContextProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -1,4 +1,4 @@
-import { Menu as UikitMenu } from '@phamphu19498/pibridge_uikit'
+import { Menu as UikitMenu } from '@devfedeltalabs/pibridge_uikit'
 import { createContext, useContext, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'

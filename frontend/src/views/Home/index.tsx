@@ -1,4 +1,4 @@
-import { Button, Flex, useModal } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, useModal } from "@devfedeltalabs/pibridge_uikit";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import styled from "styled-components";
 import ReactPlayer from "react-player";

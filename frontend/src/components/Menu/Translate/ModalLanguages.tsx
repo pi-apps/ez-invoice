@@ -1,4 +1,4 @@
-import { Button, Flex, Modal, Text } from "@phamphu19498/pibridge_uikit";
+import { Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Translate } from "react-auto-translate";
@@ -30,6 +30,7 @@ const ModalLanguages: React.FC<Props> = ({
               <ButtonChooseLg
                 onClick={() => {
                   setLanguage(item.code);
+                  sessionStorage.setItem("language", item.code);
                   onDismiss();
                 }}
               >

@@ -3,7 +3,7 @@ import PageFullWidth from "components/Layout/PageFullWidth";
 import Navbar from "react-bootstrap/Navbar";
 import styled from "styled-components";
 import Container from "components/Layout/Container";
-import { Flex, Text, Button } from "@phamphu19498/pibridge_uikit";
+import { Flex, Text, Button } from "@devfedeltalabs/pibridge_uikit";
 import { Translate } from "react-auto-translate";
 import { useDispatch } from "react-redux";
 import { axiosClient } from "config/htttp";
@@ -11,12 +11,11 @@ import { GetAllInvoice } from "state/invoice";
 
 const Header = () => {
   const dispatch = useDispatch()
+
   const handleClickNewInvoice = async () => {
-      const invoiceAll = await axiosClient.get('invoice/all');
-      if(invoiceAll){
-          dispatch(GetAllInvoice());
-      }
+    // dispatch(GetAllInvoice())
   }
+
   return (
     <ContainerHeader>
       <Text fontSize="24px" bold>

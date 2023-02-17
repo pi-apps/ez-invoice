@@ -1,104 +1,96 @@
-import { Button, Flex, Text } from '@phamphu19498/pibridge_uikit'
+import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
-import React, { useState } from 'react'
-import Col from 'react-bootstrap/esm/Col'
-import Row from 'react-bootstrap/esm/Row'
-import { Controller } from 'react-hook-form'
+import { useMemo, useState } from 'react'
+import { Controller, useFieldArray } from 'react-hook-form'
+import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
 
-const Card = ({formState, setValue, control, index } ) => {
+const Card = ({index, remove, fields, register, control} ) => {
 
-  // const amountTotal = amount * price
-  // function handleChangeAmount(event) {
-  //   setAmount(event.target.value)
-  //   // console.log(event.target.value);
-  // }
-  // function handleChangePrice(event) {
-  //   setPrice(event.target.value)
-  //   // console.log(event.target.value);
-  // }
-  
+    const handleCloseItem = () => {
+      if(fields?.length > 1){
+        remove(index)
+      }
+    }
+    
+  const total = useMemo(() => {
+    return Number(fields[index].price)*Number(fields[index].quantity)
+  },[fields]);
+
   return (
     <CsWrapperCard>
         <CsHeading>
             <CsFlexHeading>
-                <CsTextHeading>Item</CsTextHeading>
-                <CsCloseIcon>
+                <CsTextHeading>Item # {index + 1}</CsTextHeading>
+                <CsCloseIcon role="presentation" onClick={handleCloseItem}>
                   <CloseIcon />
                 </CsCloseIcon>
             </CsFlexHeading>
         </CsHeading>
+        {/* <input {...register(`items.${index}.price` as const)} />; */}
         <CsContent>
-            {/* <CsTextArea placeholder='Description of service or product' /> */}
             <ContainerInput>
-                    <WrapInput>
-                        <Controller
-                            control={control}
-                            name="name"
-                            // rules={rules.sender}
-                            render={({ field }) => (
-                            <CsTextArea
-                                name="name"
-                                value={field.value}
-                                placeholder="Description of service or product"
-                                onChange={(event) => setValue("name", event.target.value)}
-                            />
-                            )}
-                        />
-                    </WrapInput>
-              </ContainerInput>
+                <WrapInput>
+                  <Controller
+                    control={control}
+                    name={`items[${index}].name`}
+                    render={() => (
+                        <CsTextArea placeholder='Description of service or product' {...register(`items.${index}.name` as const)} />
+                    )}
+                    />
+                </WrapInput>
+            </ContainerInput>
 
             <CsRowINput>
-                <WrapInput>
-                    <Controller
-                        control={control}
-                        name="quantity"
-                        // rules={rules.sender}
-                        render={({ field }) => (
-                        <CsInput
-                            name="quantity"
-                            value={field.value}
-                            placeholder="1"
-                            onChange={(event) => setValue("quantity", event.target.value)}
-                        />
-                        )}
-                    />
-                </WrapInput>
-                <WrapInput>
-                    <Controller
-                        control={control}
-                        name="price"
-                        render={({ field }) => (
-                        <CsInput
-                            name="price"
-                            value={field.value}
-                            placeholder="0.00 Pi"
-                            onChange={(event) => setValue("price", event.target.value)}
-                        />
-                        )}
-                    />
-                </WrapInput>
+              <WrapInput>
+                  <Controller
+                    control={control}
+                    name={`items[${index}].quantity`}
+                    render={({field}) => (
+                      <CsInput
+                      placeholder='1' {...register(`items.${index}.quantity` as const, 
+                      { pattern: "/^0|[1-9]\d*$/" },
+                      {
+                        required: true // JS only: <p>error message</p> TS only support string
+                      }
+                      )} />
+                    )}
+                  />
+              </WrapInput>
+              <WrapInput>
+                <Controller
+                    control={control}
+                    name={`items[${index}].price`}
+                    render={() => (
+                      <CsInput placeholder='0.00 Pi' {...register(`items.${index}.price` as const, { required: true })} />
+                    )}
+                  />
+              </WrapInput>
             </CsRowINput>
         </CsContent>
+
         <Flex mt="24px">
             <Cstitle>Amount: </Cstitle>
-            <CsAmount>  Pi</CsAmount>
-            
+            <CsAmount>
+              {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}  
+            </CsAmount>
         </Flex>
   </CsWrapperCard>
   )
 }
-const CsCloseIcon = styled(Button)`
+const CsCloseIcon = styled.div`
     background: transparent;
     padding: 0;
     width: 20px;
     height: 20px;
+    cursor: pointer;
 `
 const Cstitle = styled(Text)`
-    color: #94A3B8;
+color: #94A3B8;
 `
 const CsAmount = styled(Text)`
     color: #0F172A;
+    margin-left: 4px;
 `
 
 const CsTextHeading = styled(Text)`
@@ -183,5 +175,14 @@ const CsInput = styled.input`
     font-size: 12px;
     font-weight: 600;
   }
+`
+const CsNumericFormat = styled(NumberFormat)`
+    &:focus-visible {
+        outline: none;
+    }
+    ::placeholder { 
+        color:${({ theme }) => theme.colors.text};
+        opacity: 1; 
+    }
 `
 export default Card

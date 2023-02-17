@@ -1,4 +1,4 @@
-import { Flex } from "@phamphu19498/pibridge_uikit";
+import { Flex } from "@devfedeltalabs/pibridge_uikit";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { AppDispatch } from "state";
