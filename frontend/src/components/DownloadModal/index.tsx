@@ -27,6 +27,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const { toastSuccess, toastError } = useToast();
 
   const invoiceId = localStorage.getItem('invoiceIdStorage')
+  console.log('invoiceId', invoiceId)
 
   // language
   const [language, setLanguage] = useState("en");
@@ -46,12 +47,11 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
     try {
       // Download the PDF file from the URL
       const response1 = await fetch(
-        `https://ipfs.moralis.io:2053/ipfs/Qmd9jwxJ4fnG8VzaYqMhmo3MCMViubtYnCxEzyuMNsstzd/EZ_1676623154960.pdf`
+        // "https://ipfs.moralis.io:2053/ipfs/QmfPga24WUPcAaHHoJjyDXcByFiAsskKP2irttsDx2apxY/EZ_1676364850177.pdf"
+        `${urlDownload}`
       );
-        console.log('response1', response1)
       const pdfData = await response1.arrayBuffer();
       const pdfByteArray = new Uint8Array(pdfData);
-
 
       const response = await axios({
         url: "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable",
@@ -61,7 +61,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
           "Content-Type": "application/json",
         },
         data: {
-          name: `haha1`,
+          name: `${invoiceId}`,
           mimeType: "application/pdf",
         },
       });
@@ -109,7 +109,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
 
   useEffect(() => {
     getUrlDownload()
-  }, [])
+  }, [invoiceId])
 
   console.log('urlDownload', urlDownload)
 
@@ -144,7 +144,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
 
             {accessTokenAuth ? (
               <Button
-                disabled={isLoading}
+                disabled={isLoading && urlDownload}
                 padding="0"
                 width="48%"
                 onClick={() => handleOpenPicker()}
