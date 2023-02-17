@@ -25,6 +25,9 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [urlDownload, setUrlDownload] = useState();
   const { toastSuccess, toastError } = useToast();
+  const dataInvoiceId = localStorage.getItem("invoiceIdStorage");
+  console.log('urlDownload', urlDownload)
+
 
   // language
   const [language, setLanguage] = useState("en");
@@ -39,12 +42,12 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const dispatch = useDispatch<AppDispatch>();
   const accessTokenAuth = getAccessTokenAuth();
 
-  const uploadFileToDrive = async (accessToken) => {
+  const uploadFileToDrive = async (accessToken, dataInvoiceId) => {
     setIsLoading(true);
     try {
       // Download the PDF file from the URL
       const response1 = await fetch(
-        "https://ipfs.moralis.io:2053/ipfs/QmfPga24WUPcAaHHoJjyDXcByFiAsskKP2irttsDx2apxY/EZ_1676364850177.pdf"
+        `https://ipfs.moralis.io:2053/ipfs/QmfPga24WUPcAaHHoJjyDXcByFiAsskKP2irttsDx2apxY/${dataInvoiceId}.pdf`
       );
       const pdfData = await response1.arrayBuffer();
       const pdfByteArray = new Uint8Array(pdfData);
@@ -87,13 +90,13 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   };
 
   const handleOpenPicker = async () => {
-    await uploadFileToDrive(accessTokenAuth);
+    await uploadFileToDrive(accessTokenAuth, dataInvoiceId);
   };
-  const getUrlDownload = async () => {
-    setIsLoading(true);
+  const getUrlDownload = async (dataInvoiceId) => {
+    setIsLoading(true); 
     try {
       const response = await axiosClient.get(
-        `/invoice/download?invoiceId=EZ_1676364850177&language=vi`
+        `/invoice/download?invoiceId=${dataInvoiceId}&language=vi`
       );
       setUrlDownload(response.data);
       setIsLoading(false);
@@ -101,6 +104,10 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    getUrlDownload(dataInvoiceId)
+  }, [])
 
   return (
     <TranSlatorModal>
@@ -126,7 +133,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
                 width="100%"
                 variant="secondary"
                 disabled={!urlDownload && isLoading}
-                onClick={() => getUrlDownload()}
+                onClick={() => getUrlDownload(dataInvoiceId)}
               >
                 <Translate>Hard disk</Translate>
               </CsButton>

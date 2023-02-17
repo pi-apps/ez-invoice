@@ -62,7 +62,7 @@
             <p><%= dueDate %></p>
             <p><%= paymentTerms %></p>
             <p><%= poNumber %></p>
-            <p style="font-weight: bold"><%= amountDue.toFixed(2) %> Pi</p>
+            <p style="font-weight: bold"><%= amountDue %> Pi</p>
           </div>
         </div>
       </div>
@@ -78,8 +78,8 @@
         <tr>
           <td><%= items[i].name %></td>
           <td style="text-align: right;"><%= items[i].quantity %></td>
-          <td style="text-align: right;"><%= items[i].price.toFixed(2) %> Pi</td>
-          <td style="text-align: right;"><%= items[i].total.toFixed(2) %> Pi</td>
+          <td style="text-align: right;"><%= items[i].price %> Pi</td>
+          <td style="text-align: right;"><%= items[i].total %> Pi</td>
         </tr>
       <% } %>
     </table>
@@ -106,13 +106,13 @@
             <p><%= text_amount_due %>:</p>
           </div>
           <div style="flex: 1; text-align: right;">
-            <p><%= subTotal.toFixed(2) %> Pi</p>
-            <% if (taxType != 0) {%><p><%= taxType == 1 ? (subTotal * tax / 100).toFixed(2) : tax.toFixed(2) %> Pi</p><% } %>
-            <% if (discountType == 1) { %> <% if (discount != 0) {%><p><%= discount.toFixed(2) %> Pi</p><% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><p><%= (subTotal * discount / 100).toFixed(2) %> Pi</p><% } %> <% } %>
-            <% if (shipping != 0) {%><p><%= shipping.toFixed(2) %> Pi</p><% } %>
-            <p><%= total.toFixed(2) %> Pi</p>
-            <% if (amountPaid != 0) {%><p><%= amountPaid.toFixed(2) %> Pi</p><% } %>
-            <p><%= amountDue.toFixed(2) %> Pi</p>
+            <p><%= subTotal %> Pi</p>
+            <% if (taxType != 0) {%><p><%= taxType == 1 ? (subTotal * tax / 100) : tax %> Pi</p><% } %>
+            <% if (discountType == 1) { %> <% if (discount != 0) {%><p><%= discount %> Pi</p><% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><p><%= (subTotal * discount / 100) %> Pi</p><% } %> <% } %>
+            <% if (shipping != 0) {%><p><%= shipping %> Pi</p><% } %>
+            <p><%= total %> Pi</p>
+            <% if (amountPaid != 0) {%><p><%= amountPaid %> Pi</p><% } %>
+            <p><%= amountDue %> Pi</p>
           </div>
         </div>
         </div>
