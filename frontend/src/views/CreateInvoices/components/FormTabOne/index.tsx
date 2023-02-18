@@ -16,7 +16,7 @@ import { LanguagesContext } from "contexts/Translate"
 import { GetTranslateHolder } from "hooks/TranSlateHolder"
 import { Translate } from "react-auto-translate";
 
-const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
+const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
   const dispatch = useDispatch()
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
@@ -123,14 +123,22 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                             control={control}
                             name="senderEmail"
                             // rules={rules.senderEmail}
-                            render={({ field }) => (
-                            <CsInput
-                                name="senderEmail"
-                                type="text"
-                                value={field.value}
-                                placeholder={`${stateTextPlaceholder.senderEmail}`}
-                                onChange={(event) => setValue("senderEmail", event.target.value)}
-                            />
+                            render={({ field, fieldState: {error} }) => (
+                                <>
+                                <CsInput
+                                    name="senderEmail"
+                                    type="text"
+                                    value={field.value}
+                                    onBlur={field.onBlur}
+                                    placeholder={`${stateTextPlaceholder.senderEmail}`}
+                                    // onChange={(event) => setValue("senderEmail", event.target.value)}
+                                    onChange={field.onChange}
+                                />
+                                {/* <Text>{error}</Text> */}
+                                {errors.email && touchedFields.email && (
+                                    <span>{errors.email.message}</span>
+                                )}
+                                </>
                             )}
                         />
                     </WrapInput>

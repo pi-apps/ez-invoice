@@ -78,7 +78,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     // const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
-    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm(formOptions);
+    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, mode: 'onTouched'});
     const { errors , touchedFields, isDirty, isLoading } = formState;
     const { fields, append, remove } = useFieldArray({
         control,
