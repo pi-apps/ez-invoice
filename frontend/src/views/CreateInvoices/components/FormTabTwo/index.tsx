@@ -8,8 +8,7 @@ import styled from 'styled-components'
 import Card from './Card'
 import { Translate } from "react-auto-translate";
 
-const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
-
+const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFields, remove, register, control}) => {
   const { language, setLanguage } = useContext(LanguagesContext);
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
     billFrom: "Who is this invoice from? (required)",
@@ -73,14 +72,14 @@ const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
       <CsContainer>
       {controlledFields.map((item, index) => {
           return (
-              <Card index={index} remove={remove} fields={controlledFields} register={register} control={control} />
+              <Card item={item} index={index} remove={remove} fields={controlledFields} register={register} control={control} />
           );
         })}
       </CsContainer>
 
       <CsSubTotal>
         <CsButtonAdd onClick={() => {
-          append({ name: "", quantity: "", price: "" });
+          append({ name: "", quantity: 0, price: 0 });
         }}>
           <CsAddIcon />
           <CsText><Translate>Line item</Translate></CsText>

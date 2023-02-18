@@ -48,11 +48,11 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         items: [{name: "",quantity:0,price:0}],
         notes:'',
         terms:'',
-        tax:'',
+        tax:0,
         taxType:'',
-        discount:'',
-        shipping:'',
-        amountPaid:'',
+        discount:0,
+        shipping:0,
+        amountPaid:0,
         logo: "",
     }
     
@@ -63,12 +63,12 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         shipTo: Yup.string().required('Ship to is required').max(200, 'Max length is 200 characters'),
         paymentTerms: Yup.string().required('Payment terms is required').max(50, 'Max length is 50 characters'),
         poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
-        terms: Yup.string().required('Terms is required').max(500, 'Max length is 500 characters').matches(/^(\S+$)/g, 'Please input number'),
+        terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().required('Notes is required').max(500, 'Max length is 500 characters'),
-        tax: Yup.string().required('Tax is required').matches(/^(\S+$)/g, 'Please input number'),
-        discount: Yup.string().required('Discount is required').matches(/^(\S+$)/g, 'Please input number'),
-        shipping: Yup.string().required('Shipping is required').matches(/^(\S+$)/g, 'Please input number'),
-        amountPaid: Yup.string().required('Amount paid is required').matches(/^(\S+$)/g, 'Please input number'),
+        tax: Yup.string().matches(/[0-9]+/ , 'Please input number'),
+        discount: Yup.string().matches(/[0-9]+/, 'Please input number'),
+        shipping: Yup.string().matches(/[0-9]+/, 'Please input number'),
+        amountPaid: Yup.string().matches(/[0-9]+/, 'Please input number').matches(/^(\S+$)/g, 'Please input number'),
         // issueDate: Yup.string().required('Issue date is required'),
         // dueDate: Yup.string().required('Due date is required'),
         // taxType: Yup.string().required('Tax type is required'),
@@ -78,7 +78,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     // const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
-    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm(formOptions);
+    const {register, handleSubmit, formState, control,setError, getValues, setValue, watch } = useForm({...formOptions, mode: 'onTouched'});
     const { errors , touchedFields, isDirty, isLoading } = formState;
     const { fields, append, remove } = useFieldArray({
         control,
@@ -124,7 +124,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                         }
                     }
                 );
-    if(submitReq.status == 200){
+                if(submitReq.status == 200){
                     toastSuccess('Create invoice successfully');
                     setInvoiceid(submitReq?.data?.invoiceId)
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
@@ -149,10 +149,10 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
 
     const renderScreens = ( isActive) => {
         if(isActive === 1){
-            return <FormTabOne startDueDate={startDueDate} setStartDueDate={setStartDueDate} startDate={startDate} setStartDate={setStartDate} invoicelength={invoicelength} images={getValues("logo")} formState={formState} setValue={setValue} control={control} />
+            return <FormTabOne register={register} startDueDate={startDueDate} setStartDueDate={setStartDueDate} startDate={startDate} setStartDate={setStartDate} invoicelength={invoicelength} images={getValues("logo")} formState={formState} setValue={setValue} control={control} />
         }
         if(isActive === 2){
-            return <FormTabTwo controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
+            return <FormTabTwo formState={formState} controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
         }
         if(isActive === 3){
             return <FormTabThree 

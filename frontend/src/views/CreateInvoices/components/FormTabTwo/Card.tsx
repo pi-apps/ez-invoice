@@ -1,12 +1,16 @@
 import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
+import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
 import { useMemo, useState } from 'react'
 import { Controller, useFieldArray } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
+import { Translate } from "react-auto-translate";
 
-const Card = ({index, remove, fields, register, control} ) => {
-
+const Card = ({index,item, remove, fields, register, control } ) => {
+    const priceNumber = Number(item?.price)
+    const quantityNumber = Number(item?.quantity)
+    console.log('item', typeof item?.price)
     const handleCloseItem = () => {
       if(fields?.length > 1){
         remove(index)
@@ -34,43 +38,52 @@ const Card = ({index, remove, fields, register, control} ) => {
                   <Controller
                     control={control}
                     name={`items[${index}].name`}
-                    render={() => (
-                        <CsTextArea placeholder='Description of service or product' {...register(`items.${index}.name` as const,
-                        { 
-                          required: true,
-                          pattern: /^[0-9\b]+$/
-                        }
-                        )} />
+                    defaultValue=""
+                    rules={{
+                      required: 'Username is required',
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: 'Invalid email address',
+                      },
+                    }}
+                    render={({ field }) => (
+                        <CsTextArea onBlur={field.onBlur} placeholder='Description of service or product' {...register(`items.${index}.name` as const)} />
                     )}
                     />
                 </WrapInput>
             </ContainerInput>
-
+            {item.name === '' ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input alphabet</Translate></Text> : item.name.length > 100 && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Max length is 100 characters</Translate></Text>}
             <CsRowINput>
-              <WrapInput>
+              <ContainerInputQuantity>
+                <WrapInput>
+                    <Controller
+                      control={control}
+                      name={`items[${index}].quantity`}
+                      render={({field}) => (
+                        <CsInput
+                          onBlur={field.onBlur}
+                          placeholder='1' {...register(`items.${index}.quantity` as const, 
+                        )} />
+                        )}
+                        />
+                </WrapInput>
+                {item.quantity === '' ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : typeof item.quantity !== 'number' && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text>}
+              </ContainerInputQuantity>
+              <ContainerInputQuantity>
                   <Controller
-                    control={control}
-                    name={`items[${index}].quantity`}
-                    render={({field}) => (
-                      <CsInput
-                      placeholder='1' {...register(`items.${index}.quantity` as const, 
-                      { pattern: "/^0|[1-9]\d*$/" },
-                      {
-                        required: true // JS only: <p>error message</p> TS only support string
-                      }
-                      )} />
-                    )}
-                  />
-              </WrapInput>
-              <WrapInput>
-                <Controller
-                    control={control}
-                    name={`items[${index}].price`}
-                    render={() => (
-                      <CsInput placeholder='0.00 Pi' {...register(`items.${index}.price` as const, { required: true })} />
-                    )}
-                  />
-              </WrapInput>
+                      control={control}
+                      name={`items[${index}].price`}
+                      render={({field}) => (
+                        <CsInput onBlur={field.onBlur} placeholder='0.00 Pi' {...register(`items.${index}.price` as const,
+                        {
+                          // valueAsNumber: true,
+                          pattern: "^[0-9\b]+$",
+                        }
+                        )} />
+                      )}
+                    />
+                {item.price === '' ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : typeof item.price !== 'number' && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text>}
+              </ContainerInputQuantity>
             </CsRowINput>
         </CsContent>
 
@@ -189,5 +202,11 @@ const CsNumericFormat = styled(NumberFormat)`
         color:${({ theme }) => theme.colors.text};
         opacity: 1; 
     }
+`
+
+const ContainerInputQuantity = styled(Flex)`
+  flex-direction: column;
+  justify-content: flex-start;
+
 `
 export default Card

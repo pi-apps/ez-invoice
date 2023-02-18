@@ -92,28 +92,25 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
 
     const taxValuePercent = taxValue * total / 100 
     const DiscountValuePercent = discountValue * total / 100 
+    const isDiscountValuePercent = DiscountValuePercent <= 100 ? DiscountValuePercent : total
+    const isDiscount = (discountValue < total) ? discountValue : total
 
     const totalFinal = (total) => {
       if(activeTax === 2 && isPercent === false){
-        return total + taxValue + shippingValue - discountValue
+        return total + taxValue + shippingValue - isDiscount
       } else if(activeTax === 2 && isPercent === true){
-        return total + taxValue + shippingValue - DiscountValuePercent
+        return total + taxValue + shippingValue - isDiscountValuePercent
       } else if(activeTax === 1 && isPercent === true){
-        return total + taxValuePercent + shippingValue - DiscountValuePercent
+        return total + taxValuePercent + shippingValue - isDiscountValuePercent
       } else if(activeTax === 1 && isPercent === false){
-        return total + taxValuePercent + shippingValue - discountValue
+        return total + taxValuePercent + shippingValue - isDiscount
       }
     } 
 
     const totalFinaly = totalFinal(total)
-    const balanceDue = totalFinaly - amountPaidValue
+    const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
     const isInvoiceIdStorage = localStorage.getItem('invoiceIdStorage')
-
-    // const handlePreview = async () => {
-    //   await UseGetAllInvoice()
-    //   const items = await GetAllInvoice()
-    // }
-
+    
   return (
     <CsWrapperForm>
       <CsContainer>
@@ -123,7 +120,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                     <CsLabel mt="1rem" color="#64748B"><Translate>Notes</Translate></CsLabel>
                 </Flex>
                 <ContainerInput>
-<WrapInput>
+                    <WrapInput>
                         <Controller
                             control={control}
                             name="notes"
@@ -132,9 +129,9 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                             <CsTextArea
                                 name="notes"
                                 // type="text"
+                                onBlur={field.onBlur}
                                 placeholder="Description of service or product"
                                 value={field.value}
-                                // onChange={(event) => setValue("notes", event.target.value)}
                                 onChange={field.onChange}
                             />
                             )}
@@ -153,13 +150,11 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                         <Controller
                             control={control}
                             name="terms"
-                            // rules={rules.invoicenumber}
                             render={({ field }) => (
                             <CsTextArea
                                 name="terms"
                                 placeholder="1"
                                 value={field.value}
-                                // onChange={(event) => setValue("terms", event.target.value)}
                                 onChange={field.onChange}
                             />
                             )}
@@ -239,8 +234,8 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                                         name="amountPaid"
                                         placeholder="0.00 Pi"
                                         value={field.value}
-                                        onChange={(event) => setValue("amountPaid", event.target.value)}
-                                        // onChange={field.onChange}
+                                        onBlur={field.onBlur}
+                                        onChange={field.onChange}
                                     />
 )}
                               />
