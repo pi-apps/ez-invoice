@@ -78,7 +78,11 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     // const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
+<<<<<<< HEAD
     const {register, handleSubmit, formState, control,setError, getValues, setValue, watch } = useForm({...formOptions, mode: 'onTouched'});
+=======
+    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, mode: 'onTouched'});
+>>>>>>> features/createInvoice
     const { errors , touchedFields, isDirty, isLoading } = formState;
     const { fields, append, remove } = useFieldArray({
         control,
@@ -149,7 +153,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
 
     const renderScreens = ( isActive) => {
         if(isActive === 1){
-            return <FormTabOne register={register} startDueDate={startDueDate} setStartDueDate={setStartDueDate} startDate={startDate} setStartDate={setStartDate} invoicelength={invoicelength} images={getValues("logo")} formState={formState} setValue={setValue} control={control} />
+            return <FormTabOne startDueDate={startDueDate} setStartDueDate={setStartDueDate} startDate={startDate} setStartDate={setStartDate} invoicelength={invoicelength} images={getValues("logo")} formState={formState} setValue={setValue} control={control} />
         }
         if(isActive === 2){
             return <FormTabTwo formState={formState} controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />

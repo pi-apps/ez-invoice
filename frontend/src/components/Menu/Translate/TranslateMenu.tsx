@@ -5,16 +5,41 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Languages from "./Languages.json";
 import { Translate } from "react-auto-translate";
+import Langauges from './Languages.json'
 
 const TranslateMenu = () => {
   const [isShowMenu, setIsShowMenu] = useState(false);
   const { language, setLanguage } = useContext(LanguagesContext);
   const [nameCountryLanguage, setNameCountryLanguage] = useState(null);
+  const dataLanguage = localStorage.getItem("language");
+
+    // language
+    // const [languageStorage, setLanguageStorage] = useState("en");
+    // const getLanguage = async () => {
+    //   const data = await localStorage.getItem("language");
+    //   setLanguageStorage(data);
+    //   setNameCountryLanguage(data)
+    // };
+    // useEffect(() => {
+    //   getLanguage();
+    // }, []);
+
+
+
+    console.log('dataLanguage1', dataLanguage)
+    console.log('languageSto', language)
+
+    useEffect(() => {
+      if (dataLanguage) {
+        const found = Langauges.find(element => element.code === dataLanguage);
+        setNameCountryLanguage(found.name)
+      }
+    }, [dataLanguage])
 
   return (
-    <Flex position="relative">
+    <Flex position="relative">  
       <ImageContainer onClick={() => setIsShowMenu(!isShowMenu)}>
-        {language ? (
+        {nameCountryLanguage ? (
           <TextLanguage>
             <Translate>
               {nameCountryLanguage ? nameCountryLanguage : "language"}
@@ -32,7 +57,7 @@ const TranslateMenu = () => {
                 <ButtonChooseLg
                   onClick={() => {
                     setLanguage(item.code);
-                    sessionStorage.setItem("language", item.code);
+                    localStorage.setItem("language", item.code);
                     setNameCountryLanguage(item.name);
                     setIsShowMenu(!isShowMenu);
                   }}

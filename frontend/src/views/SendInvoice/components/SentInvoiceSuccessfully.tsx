@@ -26,7 +26,9 @@ const SentInvoiceSuccessfully: React.FC<
             <Translate>Sent Invoice Successfully</Translate>
           </TextHeader>
         </FlexText>
-        <CsButton onClick={() => setIsSentSuccessfully(false)}>Done</CsButton>
+        <Flex width='100%'>
+          <CsButton onClick={() => setIsSentSuccessfully(false)}><Translate>Done</Translate></CsButton>
+        </Flex>
       </CsFlex>
     </CsContainer>
   );
@@ -80,7 +82,7 @@ const CsButton = styled(Button)`
   align-items: center;
   padding: 8px 16px;
   gap: 8px;
-  width: 327px;
+  width: 100%;
   height: 56px;
   background: #f8f5ff;
   border-radius: 12px;

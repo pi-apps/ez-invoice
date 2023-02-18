@@ -16,11 +16,12 @@ import { LanguagesContext } from "contexts/Translate"
 import { GetTranslateHolder } from "hooks/TranSlateHolder"
 import { Translate } from "react-auto-translate";
 
-const FormTabOne = ({formState:{errors, touchedFields}, register, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
+const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
   const dispatch = useDispatch()
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
-  const { language, setLanguage } = useContext(LanguagesContext);
+//   const { language, setLanguage } = useContext(LanguagesContext);
+  const languageStorage  = localStorage.getItem('language');
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
     senderEmail: "Who is this invoice from? (required)",
     billFrom: "Who is this invoice from? (required)",
@@ -42,27 +43,29 @@ const FormTabOne = ({formState:{errors, touchedFields}, register, control, setVa
   const changeTextPlaceHolderLg = async () => {
     const resSenderEmail = await GetTranslateHolder(
         listTextPlaceHolder.senderEmail,
-        language
+        // language
+        languageStorage
       );
+      console.log('resSenderEmail', resSenderEmail)
     const resBillFrom = await GetTranslateHolder(
       listTextPlaceHolder.billFrom,
-      language
+      languageStorage
     );
     const resBillTo = await GetTranslateHolder(
       listTextPlaceHolder.billTo,
-      language
+      languageStorage
     );
     const resShipTo = await GetTranslateHolder(
         listTextPlaceHolder.shipTo,
-        language
+        languageStorage
       );
     const resPayment = await GetTranslateHolder(
       listTextPlaceHolder.payment,
-      language
+      languageStorage
     );
     const resPoNumber = await GetTranslateHolder(
       listTextPlaceHolder.poNumber,
-      language
+      languageStorage
     );
 
     setStateTextPlaceholder({
@@ -76,15 +79,24 @@ const FormTabOne = ({formState:{errors, touchedFields}, register, control, setVa
   };
 
   useEffect(() => {
-    language ? changeTextPlaceHolderLg() : null;
-  }, [language]);
+    if (languageStorage === 'en')     
+    return setStateTextPlaceholder({
+        senderEmail: "Who is this invoice from? (required)",
+        billFrom: "Who is this invoice from? (required)",
+        billTo: "Who is this invoice to? (required)",
+        shipTo: "Who is this invoice to? (required)",
+        payment: "Payment",
+        poNumber: "PO Number",
+      });;
+    changeTextPlaceHolderLg()
+  }, [languageStorage]);
 
   return (
     <CsContainer >
             <CsFlex>
                 {/* Invoice number */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Invoice number</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Invoice number</Translate></CsLabel>
                 </Flex>
                 <ContainerInput>
                     <WrapInput>

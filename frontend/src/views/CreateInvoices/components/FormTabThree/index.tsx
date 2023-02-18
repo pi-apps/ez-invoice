@@ -28,50 +28,32 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
 
-    const { language, setLanguage } = useContext(LanguagesContext);
-  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
-    billFrom: "Who is this invoice from? (required)",
-    billTo: "Who is this invoice from? (required)",
-    payment: "Payment",
-    poNumber: "PO Number",
-  });
-
-  const listTextPlaceHolder = {
-    billFrom: "Who is this invoice from? (required)",
-    billTo: "Who is this invoice from? (required)",
-    payment: "Payment",
-    poNumber: "PO Number",
-  };
-
-  const changeTextPlaceHolderLg = async () => {
-    const resBillFrom = await GetTranslateHolder(
-      listTextPlaceHolder.billFrom,
-      language
-    );
-    const resBillTo = await GetTranslateHolder(
-      listTextPlaceHolder.billTo,
-      language
-    );
-    const resPayment = await GetTranslateHolder(
-      listTextPlaceHolder.payment,
-      language
-    );
-    const resPoNumber = await GetTranslateHolder(
-      listTextPlaceHolder.poNumber,
-      language
-    );
-
-    setStateTextPlaceholder({
-      billFrom: resBillFrom,
-      billTo: resBillTo,
-      payment: resPayment,
-      poNumber: resPoNumber,
+    const languageStorage  = localStorage.getItem('language');
+    const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+      notes: "Description of service or product",
     });
-  };
-
-  useEffect(() => {
-    language ? changeTextPlaceHolderLg() : null;
-  }, [language]);
+  
+    const listTextPlaceHolder = {
+      notes: "Description of service or product",
+    };
+  
+    const changeTextPlaceHolderLg = async () => {
+      const resSenderEmail = await GetTranslateHolder(
+          listTextPlaceHolder.notes,
+          languageStorage
+        );
+      setStateTextPlaceholder({
+        notes: resSenderEmail,
+      });
+    };
+  
+    useEffect(() => {
+      if (languageStorage === 'en')     
+      return setStateTextPlaceholder({
+          notes: "Description of service or product",
+        });;
+      changeTextPlaceHolderLg()
+    }, [languageStorage]);
     
     const totalPrice = (fields) => {
       return fields?.reduce((sum, i) => {
@@ -130,7 +112,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                                 name="notes"
                                 // type="text"
                                 onBlur={field.onBlur}
-                                placeholder="Description of service or product"
+                                placeholder={`${stateTextPlaceholder.notes}`} 
                                 value={field.value}
                                 onChange={field.onChange}
                             />
@@ -167,7 +149,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
 
                 <CsContentInfo>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>{t('Subtotal')}</CsTextLeft>
+                        <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
                         <CsTextRight fontSize='14px' bold>{!total ? 0 : <>
                           {total && typeof total === 'number'  ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`: '0 Pi'}
                         </>}</CsTextRight>
@@ -210,13 +192,13 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                         {typeTax === false && (
                             <CsButtonAddTpye onClick={() => setTypeTax(true)}>
                                 <CsAddIcon/>
-                                <CsTextType><Translate>Tax</Translate></CsTextType>
+                                <CsTextType><Translate>Name</Translate></CsTextType>
                             </CsButtonAddTpye>
                         )}
                     </Row>
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>Total</CsTextLeft>
+                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
                         <CsTextRight bold>{!totalFinaly ? 0 : <>
                           {`${totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                         </> }</CsTextRight>

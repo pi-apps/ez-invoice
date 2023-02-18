@@ -6,18 +6,21 @@ import HeaderCreateinVoice from "./components/HeaderCreateinVoice";
 import SubTab from "./components/SubTab";
 import { GetTabInvoice } from "state/invoice";
 import Footer from "./components/Footer";
+import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 
 const CreateInvoices = () => {
     const [ dataTabActive ] = GetTabInvoice()
     const isActive = dataTabActive?.isActive
     return (
-        <PageFullWidth>
-            <CsContainer>
-                <HeaderCreateinVoice />
-                <SubTab isActive={isActive}/>
-                <Footer isActive={isActive}/>
-            </CsContainer>
-        </PageFullWidth>
+        <TranSlatorModal>
+            <PageFullWidth>
+                <CsContainer>
+                    <HeaderCreateinVoice />
+                    <SubTab isActive={isActive}/>
+                    <Footer isActive={isActive}/>
+                </CsContainer>
+            </PageFullWidth>
+        </TranSlatorModal>
     )
 }
 export default CreateInvoices

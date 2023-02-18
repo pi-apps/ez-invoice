@@ -28,6 +28,10 @@ BigNumber.config({
 const App: React.FC = () => {
   const DataAb = getUser();
   const { language, setLanguage } = useContext(LanguagesContext);
+  const languageStorage = localStorage.getItem('language')
+
+  console.log('languageStorage', languageStorage)
+  console.log('languagGG', language)
 
   return (
     <Fragment>
@@ -36,6 +40,7 @@ const App: React.FC = () => {
         to={
           language !== null
             ? language
+            : languageStorage ? languageStorage
             : DataAb?.language
             ? DataAb?.language
             : "en"
