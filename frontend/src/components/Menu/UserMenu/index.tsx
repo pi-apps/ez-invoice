@@ -30,8 +30,10 @@ const UserMenu = ({isLoading}) => {
     window.Pi.authenticate(scopes, onIncompletePaymentFound)
       .then(async function (auth) {
         const loginUser = await signInUser(auth);
+        console.log('loginUser', loginUser)
         if (loginUser) {
           const userInfor = await axiosClient.get("user/info");
+          console.log('userInfor', userInfor)
           if (userInfor) {
             dispatch(setUser(userInfor.data));
           }

@@ -1,11 +1,43 @@
 import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
-import { useMemo, useState } from 'react'
+import { LanguagesContext } from 'contexts/Translate'
+import { GetTranslateHolder } from 'hooks/TranSlateHolder'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
+import { Translate } from "react-auto-translate";
 
 const Card = ({index, remove, fields, register, control} ) => {
+
+  const { language, setLanguage } = useContext(LanguagesContext);
+  const languageStorage  = localStorage.getItem('language');
+  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+    iterm: "Description of service or product",
+  });
+
+  const listTextPlaceHolder = {
+    iterm: "Description of service or product",
+  };
+
+  const changeTextPlaceHolderLg = async () => {
+    const resIterm = await GetTranslateHolder(
+      listTextPlaceHolder.iterm,
+      languageStorage
+    );
+
+    setStateTextPlaceholder({
+      iterm: resIterm,
+    });
+  };
+
+  useEffect(() => {
+    if (languageStorage === 'en')     
+    return setStateTextPlaceholder({
+      iterm: "Description of service or product",
+      });;
+    changeTextPlaceHolderLg()
+  }, [languageStorage]);
 
     const handleCloseItem = () => {
       if(fields?.length > 1){
@@ -21,7 +53,7 @@ const Card = ({index, remove, fields, register, control} ) => {
     <CsWrapperCard>
         <CsHeading>
             <CsFlexHeading>
-                <CsTextHeading>Item # {index + 1}</CsTextHeading>
+                <CsTextHeading><Translate>Item</Translate> # {index + 1}</CsTextHeading>
                 <CsCloseIcon role="presentation" onClick={handleCloseItem}>
                   <CloseIcon />
                 </CsCloseIcon>
@@ -35,7 +67,7 @@ const Card = ({index, remove, fields, register, control} ) => {
                     control={control}
                     name={`items[${index}].name`}
                     render={() => (
-                        <CsTextArea placeholder='Description of service or product' {...register(`items.${index}.name` as const,
+                        <CsTextArea placeholder={`${stateTextPlaceholder.iterm}`} {...register(`items.${index}.name` as const,
                         { 
                           required: true,
                           pattern: /^[0-9\b]+$/
@@ -75,7 +107,7 @@ const Card = ({index, remove, fields, register, control} ) => {
         </CsContent>
 
         <Flex mt="24px">
-            <Cstitle>Amount: </Cstitle>
+            <Cstitle><Translate>Amount:</Translate> </Cstitle>
             <CsAmount>
               {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}  
             </CsAmount>

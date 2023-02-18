@@ -20,6 +20,9 @@ const FormSendInvoice: React.FC<
   const [errorSentText, setErrorSentText] = useState("");
   const DataAb = getUser();
 
+  const invoiceIdStorage = localStorage.getItem('invoiceIdStorage')
+  console.log('invoiceIdStorage', invoiceIdStorage)
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required"),
   });
@@ -31,7 +34,7 @@ const FormSendInvoice: React.FC<
 
   const handleLogin = async (data) => {
     const dataPost = {
-      invoiceId: "EZ_1676364850177",
+      invoiceId: invoiceIdStorage,
       email: data.email,
       language: DataAb?.language ? DataAb.language : "en",
     };
@@ -96,7 +99,7 @@ const FormSendInvoice: React.FC<
             ) : null}
           </Flex>
           <Flex>
-            <CsButton type="submit" value="Submit">
+            <CsButton disabled={!invoiceIdStorage} type="submit" value="Submit">
               Send
             </CsButton>
           </Flex>

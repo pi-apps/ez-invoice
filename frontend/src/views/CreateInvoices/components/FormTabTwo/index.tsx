@@ -9,51 +9,6 @@ import Card from './Card'
 import { Translate } from "react-auto-translate";
 
 const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
-
-  const { language, setLanguage } = useContext(LanguagesContext);
-  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
-    billFrom: "Who is this invoice from? (required)",
-    billTo: "Who is this invoice from? (required)",
-    payment: "Payment",
-    poNumber: "PO Number",
-  });
-
-  const listTextPlaceHolder = {
-    billFrom: "Who is this invoice from? (required)",
-    billTo: "Who is this invoice from? (required)",
-    payment: "Payment",
-    poNumber: "PO Number",
-  };
-
-  const changeTextPlaceHolderLg = async () => {
-    const resBillFrom = await GetTranslateHolder(
-      listTextPlaceHolder.billFrom,
-      language
-    );
-    const resBillTo = await GetTranslateHolder(
-      listTextPlaceHolder.billTo,
-      language
-    );
-    const resPayment = await GetTranslateHolder(
-      listTextPlaceHolder.payment,
-      language
-    );
-    const resPoNumber = await GetTranslateHolder(
-      listTextPlaceHolder.poNumber,
-      language
-    );
-
-    setStateTextPlaceholder({
-      billFrom: resBillFrom,
-      billTo: resBillTo,
-      payment: resPayment,
-      poNumber: resPoNumber,
-    });
-  };
-
-  useEffect(() => {
-    language ? changeTextPlaceHolderLg() : null;
-  }, [language]);
  
   const totalPrice = (fields) => {
     return fields.reduce((sum, i) => {
