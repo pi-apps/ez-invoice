@@ -82,7 +82,7 @@ const CsButton = styled(Button)`
   align-items: center;
   padding: 8px 16px;
   gap: 8px;
-  width: 327px;
+  width: 100%;
   height: 56px;
   background: #f8f5ff;
   border-radius: 12px;

@@ -1,7 +1,6 @@
 import { Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
 import DownLoadIcon from "components/Svg/Icons/DowloadIcon";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import axios from "axios";
@@ -21,7 +20,6 @@ interface Props {
 }
 
 const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
-  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [urlDownload, setUrlDownload] = useState();
   const { toastSuccess, toastError } = useToast();
@@ -47,7 +45,6 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
     try {
       // Download the PDF file from the URL
       const response1 = await fetch(
-        // "https://ipfs.moralis.io:2053/ipfs/QmfPga24WUPcAaHHoJjyDXcByFiAsskKP2irttsDx2apxY/EZ_1676364850177.pdf"
         `${urlDownload}`
       );
       const pdfData = await response1.arrayBuffer();
