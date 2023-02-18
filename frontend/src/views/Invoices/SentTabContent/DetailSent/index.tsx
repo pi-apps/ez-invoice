@@ -68,7 +68,7 @@ const DetailSent = () => {
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft><Translate>Due Date</Translate></CsTextLeft>
-                                        {/* {convertDate(items?.details.dueDate)} */}
+                                        {convertDate(details?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft><Translate>Payment Terms</Translate></CsTextLeft>

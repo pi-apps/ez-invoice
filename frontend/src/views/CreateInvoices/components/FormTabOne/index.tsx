@@ -211,7 +211,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 name="shipTo"
                                 value={field.value}
                                 onBlur={field.onBlur}
-                                placeholder="Who is this invoice to?(required)"
+                                placeholder={`${stateTextPlaceholder.shipTo}`}
                                 onChange={field.onChange}
                             />
                             )}

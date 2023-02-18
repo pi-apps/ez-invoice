@@ -78,11 +78,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     // const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
-<<<<<<< HEAD
-    const {register, handleSubmit, formState, control,setError, getValues, setValue, watch } = useForm({...formOptions, mode: 'onTouched'});
-=======
     const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, mode: 'onTouched'});
->>>>>>> features/createInvoice
     const { errors , touchedFields, isDirty, isLoading } = formState;
     const { fields, append, remove } = useFieldArray({
         control,
@@ -179,7 +175,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         <>
         <HeadingTab><Translate>Create Invoice</Translate></HeadingTab>
         <ContainerSubTab>
-            <CsButton role="presentation" onClick={handleMinusTabActive}>
+            <CsButton isActive={isActive > 1} role="presentation" onClick={handleMinusTabActive}>
                 &lt;
             </CsButton>
             <CsTab>
@@ -193,7 +189,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                     3
                 </TabButton>
             </CsTab>
-            <CsButton role="presentation" onClick={handlePlusTabActive}>
+            <CsButton isActive={isActive < 3} role="presentation" onClick={handlePlusTabActive}>
                 &gt;
             </CsButton>
         </ContainerSubTab>
@@ -221,15 +217,15 @@ const CsTab = styled(Flex)`
     width: fit-content;
     align-items: center;
 `
-const CsButton = styled.div`
+const CsButton = styled.div<{isActive:boolean}>`
     cursor: pointer;
     background: transparent;
     border-radius: 50%;
-    color: #94A3B8;
     font-size: 20px;
     height: 35px;
     width: 35px;
     padding: 0;
+    color: ${({ isActive }) => isActive ? "#6B39F4" : '#94A3B8'};
     &:hover{
         color: #6B39F4;
     }
