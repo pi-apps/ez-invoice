@@ -30,11 +30,11 @@ const TranslateMenu = () => {
     console.log('languageSto', language)
 
     useEffect(() => {
-      const found = Langauges.find(element => element.code === dataLanguage);
-      console.log('nameCountryLanguage', found)
-
-      setNameCountryLanguage(found.name)
-    }, [nameCountryLanguage])
+      if (dataLanguage) {
+        const found = Langauges.find(element => element.code === dataLanguage);
+        setNameCountryLanguage(found.name)
+      }
+    }, [dataLanguage])
 
   return (
     <Flex position="relative">  
