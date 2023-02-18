@@ -154,7 +154,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
 
                 <CsContentInfo>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>{t('Subtotal')}</CsTextLeft>
+                        <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
                         <CsTextRight fontSize='14px' bold>{!total ? 0 : <>
                           {total && typeof total === 'number'  ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`: '0 Pi'}
                         </>}</CsTextRight>
@@ -197,13 +197,13 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                         {typeTax === false && (
                             <CsButtonAddTpye onClick={() => setTypeTax(true)}>
                                 <CsAddIcon/>
-                                <CsTextType><Translate>Tax</Translate></CsTextType>
+                                <CsTextType><Translate>Name</Translate></CsTextType>
                             </CsButtonAddTpye>
                         )}
                     </Row>
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>Total</CsTextLeft>
+                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
                         <CsTextRight bold>{!totalFinaly ? 0 : <>
                           {`${totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                         </> }</CsTextRight>

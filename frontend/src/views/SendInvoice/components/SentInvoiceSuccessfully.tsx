@@ -27,7 +27,7 @@ const SentInvoiceSuccessfully: React.FC<
           </TextHeader>
         </FlexText>
         <Flex width='100%'>
-          <CsButton onClick={() => setIsSentSuccessfully(false)}>Done</CsButton>
+          <CsButton onClick={() => setIsSentSuccessfully(false)}><Translate>Done</Translate></CsButton>
         </Flex>
       </CsFlex>
     </CsContainer>
