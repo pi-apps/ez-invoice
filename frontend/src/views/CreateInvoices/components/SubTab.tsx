@@ -153,7 +153,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             return <FormTabOne startDueDate={startDueDate} setStartDueDate={setStartDueDate} startDate={startDate} setStartDate={setStartDate} invoicelength={invoicelength} images={getValues("logo")} formState={formState} setValue={setValue} control={control} />
         }
         if(isActive === 2){
-            return <FormTabTwo errors={errors} controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
+            return <FormTabTwo controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
         }
         if(isActive === 3){
             return <FormTabThree 

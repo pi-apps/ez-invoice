@@ -78,7 +78,6 @@ const Card = ({index, remove, fields, register, control} ) => {
                     )}
                     />
                 </WrapInput>
-                <ErrorMessages errors={errors} name="desForm2" />
             </ContainerInput>
 
             <CsRowINput>
