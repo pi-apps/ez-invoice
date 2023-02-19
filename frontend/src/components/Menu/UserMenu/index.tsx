@@ -38,10 +38,10 @@ const UserMenu = ({isLoading}) => {
           dispatch(fetchLoading({isLoading:false}))
         }
         console.log(`Hi there! You're ready to make payments!`);
-        toastSuccess('Login successfully')
+        toastSuccess(null, <Translate>Login successfully</Translate>)
       })
       .catch(function (error) {
-        toastError('error', JSON.stringify(error))
+        toastError('error', <Translate>{JSON.stringify(error)}</Translate>)
         console.error(error);
         dispatch(fetchLoading({isLoading:false}))
       });
@@ -52,7 +52,7 @@ const UserMenu = ({isLoading}) => {
     await dispatch(setUser(null));
     await signOutUser();
     await onDismis();
-    toastSuccess('Logout successfully')
+    toastSuccess(null, <Translate>Logout successfully</Translate>)
     navigate("/");
   };
 

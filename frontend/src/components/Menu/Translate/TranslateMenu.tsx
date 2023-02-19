@@ -115,6 +115,7 @@ const ListTranslate = styled(Flex)`
   justify-content: center;
   background: #e6e6e6;
   border-radius: 6px;
+  z-index: 999;
 `;
 
 const ContainerList = styled(Flex)`
