@@ -26,7 +26,7 @@ const FormSendInvoice: React.FC<
   const invoiceIdStorage = localStorage.getItem('invoiceIdStorage')
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().required("Email is required"),
+    email: Yup.string().required("Email is required").max(100, 'Max length is 100 characters'),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -114,8 +114,9 @@ const FormSendInvoice: React.FC<
               render={({ field }) => (
                 <CsInput
                   name="email"
+                  type='email'
                   value={getValues("email")}
-                  type="email"
+                  // type="email"
                   placeholder={`${stateTextPlaceholder.recipientEmail}`}
                   onChange={(e) => {
                     field.onChange(e);

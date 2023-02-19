@@ -2,6 +2,7 @@ import { Button, Flex, Image, Text } from "@devfedeltalabs/pibridge_uikit";
 import React from "react";
 import styled from "styled-components";
 import { Translate } from "react-auto-translate";
+import { useNavigate } from "react-router-dom";
 
 interface SentSuccess {
   setIsSentSuccessfully: (e) => void;
@@ -10,6 +11,14 @@ interface SentSuccess {
 const SentInvoiceSuccessfully: React.FC<
   React.PropsWithChildren<SentSuccess>
 > = ({ setIsSentSuccessfully }) => {
+
+  const navigate = useNavigate();
+
+  const handleDone = () => {
+    setIsSentSuccessfully(false) 
+    navigate("/invoice")
+  }
+
   return (
     <CsContainer>
       <CsFlex>
@@ -27,7 +36,7 @@ const SentInvoiceSuccessfully: React.FC<
           </TextHeader>
         </FlexText>
         <Flex width='100%'>
-          <CsButton onClick={() => setIsSentSuccessfully(false)}><Translate>Done</Translate></CsButton>
+          <CsButton onClick={handleDone}><Translate>Done</Translate></CsButton>
         </Flex>
       </CsFlex>
     </CsContainer>
