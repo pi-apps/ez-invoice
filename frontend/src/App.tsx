@@ -12,10 +12,10 @@ import { ToastListener } from "./contexts/ToastsContext";
 import Register from "views/Register";
 import Invoices from "views/Invoices";
 import CreateDetail from "views/CreateInvoices/components/CreateDetail";
-import { Translator } from "react-auto-translate";
 import { getUser } from "./state/user";
 import SendInvoice from "views/SendInvoice";
 import { LanguagesContext } from "contexts/Translate";
+import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -26,28 +26,11 @@ BigNumber.config({
 });
 
 const App: React.FC = () => {
-  const DataAb = getUser();
-  const { language, setLanguage } = useContext(LanguagesContext);
-  const languageStorage = localStorage.getItem('language')
-
-  console.log('languageStorage', languageStorage)
-  console.log('languagGG', language)
 
   return (
     <Fragment>
-      <Translator
-        from="en"
-        to={
-          language !== null
-            ? language
-            : languageStorage ? languageStorage
-            : DataAb?.language
-            ? DataAb?.language
-            : "en"
-        }
-        googleApiKey="AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs"
-      >
-        <Routes>
+      <TranSlatorModal>       
+         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             {/* <Route path="register" element={<Register />} /> */}
@@ -61,7 +44,7 @@ const App: React.FC = () => {
           <Route path="newInvoice/send" element={<SendInvoice />} />
         </Routes>
         <ToastListener />
-      </Translator>
+      </TranSlatorModal>
     </Fragment>
   );
 };
