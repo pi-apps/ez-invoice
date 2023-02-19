@@ -55,7 +55,7 @@ const Footer = ({ isActive }) => {
     >
       <Nav.Item style={styles.navItem}>
         <Navbar.Brand href="/history">
-          <CsButton style={{ background: "#F8F5FF" }} disabled>
+          <CsButton style={{ background: "#F8F5FF" }}>
             <Translate>History</Translate>
           </CsButton>
         </Navbar.Brand>

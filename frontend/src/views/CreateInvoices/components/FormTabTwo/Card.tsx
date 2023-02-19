@@ -9,6 +9,7 @@ import { GetTranslateHolder } from 'hooks/TranSlateHolder'
 import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
 
 const Card = ({index,item, remove, fields, register, control } ) => {
+  console.log('control' , control?._formState?.touchedFields?.items?.[0]?.name)
     const priceNumber = Number(item?.price)
     const quantityNumber = Number(item?.quantity)
     const handleCloseItem = () => {
@@ -67,20 +68,18 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                     control={control}
                     name={`items[${index}].name`}
                     defaultValue=""
-                    rules={{
-                      required: 'Username is required',
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: 'Invalid email address',
-                      },
-                    }}
                     render={({ field }) => (
-                        <CsTextArea onBlur={field.onBlur} placeholder={`${stateTextPlaceholder.name}`}  {...register(`items.${index}.name` as const)} />
+                        <CsTextArea onChange={field.onChange} onBlur={field.onBlur} placeholder={`${stateTextPlaceholder.name}`}  {...register(`items.${index}.name` as const)} />
                     )}
                     />
                 </WrapInput>
             </ContainerInput>
-            {item.name === '' ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input alphabet</Translate></Text> : item.name.length > 100 && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Max length is 100 characters</Translate></Text>}
+            {item.name === ' ' ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input alphabet</Translate></Text> : item.name.length > 100 && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Max length is 100 characters</Translate></Text> 
+            || 
+            <>
+              {(control?._formState?.touchedFields?.items?.[0]?.name === true && item.name === '') && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Description is required</Translate></Text>}
+            </>
+            }
             <CsRowINput>
               <ContainerInputQuantity>
                 <WrapInput>
@@ -88,14 +87,19 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                       control={control}
                       name={`items[${index}].quantity`}
                       render={({field}) => (
-                        <CsInput
+                        <CsInput type='number'
                           onBlur={field.onBlur}
                           placeholder='1' {...register(`items.${index}.quantity` as const, 
                         )} />
                         )}
                         />
                 </WrapInput>
-                {item.quantity === '' && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text>}
+                {(item.quantity === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
+                  <>
+                    {(Number(item.quantity) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
+                  </>
+                }
+                {/* {(item.quantity === '' || Number(item.quantity) <= 0 )&& <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text>} */}
               </ContainerInputQuantity>
 
               <ContainerInputQuantity>
@@ -104,7 +108,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                         control={control}
                         name={`items[${index}].price`}
                         render={({field}) => (
-                          <CsInput onBlur={field.onBlur} placeholder='0.00 Pi' {...register(`items.${index}.price` as const,
+                          <CsInput type='number' onBlur={field.onBlur} placeholder='0.00 Pi' {...register(`items.${index}.price` as const,
                           {
                             // valueAsNumber: true,
                             pattern: "^[0-9\b]+$",
@@ -113,7 +117,10 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                         )}
                       />
                 </WrapInput>
-                  {item.price === '' && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text>}
+                  {(item.price === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
+                  <>
+                    {(Number(item.price) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
+                  </>}
               </ContainerInputQuantity>
             </CsRowINput>
         </CsContent>

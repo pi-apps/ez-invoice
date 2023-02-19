@@ -12,6 +12,7 @@ import DetailReceived from "views/Invoices/ReceiveContent/DetailReceived";
 import { ToastListener } from "./contexts/ToastsContext";
 import Register from "views/Register";
 import Invoices from "views/Invoices";
+import History from "views/History";
 import CreateDetail from "views/CreateInvoices/components/CreateDetail";
 import { getUser } from "./state/user";
 import SendInvoice from "views/SendInvoice";
@@ -57,6 +58,7 @@ const App: React.FC = () => {
           <Route path="detailReceived/:slug" element={<DetailReceived />} />
           <Route path="createDetail/:slug" element={<CreateDetail />} />
           <Route path="newInvoice/send" element={<SendInvoice />} />
+          <Route path="history" element={<History />} />
         </Routes>
         <ToastListener />
       </Translator>

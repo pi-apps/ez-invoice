@@ -11,5 +11,6 @@ export { default as AddIcon } from './Icons/AddIcon';
 export { default as AddIcon2 } from './Icons/AddIcon2';
 export { default as DownloadIcon } from './Icons/DowloadIcon';
 export { default as DatePickerIcon } from './Icons/DatePickerIcon';
+export { default as RemoveIcon } from './Icons/RemoveIcon';
 
 export type { SvgProps } from "./types";
