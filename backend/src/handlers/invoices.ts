@@ -1,26 +1,27 @@
 import { Router } from "express";
 import multer from 'multer';
-import platformAPIClient from "../services/platformAPIClient";
+import { AuthenUser } from "../services/authen";
 import InvoicesModel from "../models/invoices";
 import utils from "../services/utils";
 
-const upload = multer({ dest: "uploads/"});
+const upload = multer({ dest: "uploads/" });
 
 export default function mountInvoiceEndpoints(router: Router) {
     // Create an invoice
     router.post('/create', upload.single("logo"), async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
-            const currentUser = req.session.currentUser;
+            const currentUser = userInfo;
             const numOfInvoices = await InvoicesModel.countDocuments({ uid: currentUser.uid });
             const file = req.file;
-            let logoUrl = "";    
+            let logoUrl = "";
             if (file) {
                 logoUrl = await utils.uploadToIpfs(file);
             }
-            
+
             const items = JSON.parse(req.body.items);
             let subTotal = 0;
             for (let i = 0; i < items.length; i++) {
@@ -64,10 +65,10 @@ export default function mountInvoiceEndpoints(router: Router) {
                 paid: false,
                 logoUrl: logoUrl,
             };
-    
+
             const newInvoice = new InvoicesModel(invoice);
             await newInvoice.save();
-    
+
             return res.status(200).json(newInvoice);
         } catch (error: any) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
@@ -77,10 +78,11 @@ export default function mountInvoiceEndpoints(router: Router) {
     // Get all invoices sent
     router.get('/all-sent', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
-            const currentUser = req.session.currentUser
+            const currentUser = userInfo;
             const invoices = await InvoicesModel.find({ uid: currentUser.uid });
             return res.status(200).json(invoices);
         } catch (error: any) {
@@ -91,10 +93,11 @@ export default function mountInvoiceEndpoints(router: Router) {
     // Get all invoices received
     router.get('/all-received', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
-            const currentUser = req.session.currentUser
+            const currentUser = userInfo;
             const invoices = await InvoicesModel.find({ receiverId: currentUser.uid });
             return res.status(200).json(invoices);
         } catch (error: any) {
@@ -105,10 +108,11 @@ export default function mountInvoiceEndpoints(router: Router) {
     // Get an invoice
     router.get('/detail/:invoiceId', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
-            const currentUser = req.session.currentUser
+            const currentUser = userInfo;
             // find by uid or receiverId
             const invoice = await InvoicesModel.findOne({ $or: [{ uid: currentUser.uid }, { receiverId: currentUser.uid }], invoiceId: req.params.invoiceId });
             if (!invoice) {
@@ -123,17 +127,18 @@ export default function mountInvoiceEndpoints(router: Router) {
     // Download an invoice
     router.get('/download', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
-            const currentUser = req.session.currentUser
+            const currentUser = userInfo;
             const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: req.query.invoiceId });
             if (!invoice) {
                 return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
             }
-            if (invoice.downloadUrl) {
-                return res.status(200).json(invoice.downloadUrl);
-            }
+            // if (invoice.downloadUrl) {
+            //     return res.status(200).json(invoice.downloadUrl);
+            // }
             const language = req.query.language || "en";
             const downloadUrl = await utils.generatePdf(invoice, language);
             // update the invoice with the download url
@@ -147,10 +152,11 @@ export default function mountInvoiceEndpoints(router: Router) {
     // send email an invoice
     router.post('/send', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
-            const currentUser = req.session.currentUser
+            const currentUser = userInfo;
             const language = req.body.language || "en";
             const invoice = await InvoicesModel.findOne({ uid: currentUser.uid, invoiceId: req.body.invoiceId });
             if (!invoice) {

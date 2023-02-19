@@ -25,7 +25,9 @@
   <body>
     <div style="display: flex; flex-direction: row;">
       <div style="flex: 1;">
-        <img src="<%= logoUrl %>" alt="logo" height="80px" width="80px" />
+        <% if (logoUrl) { %>
+        <img src="<%= logoUrl %>" height="80px" width="80px" />
+        <% } %>
       </div>
       <div style="flex: 1; text-align: right;">
         <h1 style="text-align: right;"><%= text_title %></h1>
