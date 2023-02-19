@@ -234,6 +234,6 @@ const CsNumericFormat = styled(NumberFormat)`
 `
 
 const ContainerInputQuantity = styled.div`
-
+  width: 50%;
 `
 export default Card
