@@ -130,7 +130,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
-                    toastError('error', 'system error!!!')
+                    toastError('error', <Translate>System error!!!</Translate>)
                     setLoadingPreview(false)
             }
     }
