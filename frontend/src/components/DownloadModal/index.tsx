@@ -77,7 +77,8 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
       toastSuccess(null, <Translate>Upload Success</Translate>);
     } catch (error) {
       setIsLoadingGGDrive(false)
-      toastError(null, <Translate>Upload Failed</Translate>);
+      dispatch(setAccessToken(''));
+      toastError(null, <Translate>Upload Failed, Your google account has expired, please login again!</Translate>);
     }
   };
 

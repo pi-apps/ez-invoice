@@ -74,7 +74,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         // dueDate: Yup.string().required('Due date is required'),
         // taxType: Yup.string().required('Tax type is required'),
         // logo: Yup.string().required('Logo is required'),
-        desForm2: Yup.string().required('Please input alphabet').max(100, 'Max length is 100 characters'),
     });
 
     // const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
