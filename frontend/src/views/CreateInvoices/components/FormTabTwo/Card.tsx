@@ -7,6 +7,7 @@ import { Controller, useFieldArray } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
 import { Translate } from "react-auto-translate";
+import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
 
 const Card = ({index, remove, fields, register, control} ) => {
 
@@ -65,7 +66,8 @@ const Card = ({index, remove, fields, register, control} ) => {
                 <WrapInput>
                   <Controller
                     control={control}
-                    name={`items[${index}].name`}
+                    // name={`items[${index}].name`}
+                    name='desForm2'
                     render={() => (
                         <CsTextArea placeholder={`${stateTextPlaceholder.iterm}`} {...register(`items.${index}.name` as const,
                         { 
@@ -76,6 +78,7 @@ const Card = ({index, remove, fields, register, control} ) => {
                     )}
                     />
                 </WrapInput>
+                <ErrorMessages errors={errors} name="desForm2" />
             </ContainerInput>
 
             <CsRowINput>
