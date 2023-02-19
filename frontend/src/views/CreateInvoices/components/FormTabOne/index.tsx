@@ -29,6 +29,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     shipTo: "Who is this invoice to? (required)",
     payment: "Payment",
     poNumber: "PO Number",
+    option: "Optional",
   });
 
   const listTextPlaceHolder = {
@@ -38,6 +39,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     shipTo: "Who is this invoice to? (required)",
     payment: "Payment",
     poNumber: "PO Number",
+    option: "Optional",
   };
 
   const changeTextPlaceHolderLg = async () => {
@@ -67,7 +69,11 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
       listTextPlaceHolder.poNumber,
       languageStorage
     );
-
+    const resOption = await GetTranslateHolder(
+        listTextPlaceHolder.option,
+        languageStorage
+      );
+  
     setStateTextPlaceholder({
       senderEmail: resSenderEmail,
       billFrom: resBillFrom,
@@ -75,6 +81,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
       shipTo: resShipTo,
       payment: resPayment,
       poNumber: resPoNumber,
+      option: resOption,
     });
   };
 
@@ -87,6 +94,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
         shipTo: "Who is this invoice to? (required)",
         payment: "Payment",
         poNumber: "PO Number",
+        option: "Optional",
       });;
     changeTextPlaceHolderLg()
   }, [languageStorage]);
@@ -210,9 +218,8 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                             <CsTextArea
                                 name="shipTo"
                                 value={field.value}
-                                onBlur={field.onBlur}
-                                placeholder={`${stateTextPlaceholder.shipTo}`}
-                                onChange={field.onChange}
+                                placeholder={`(${stateTextPlaceholder.option})`}
+                                onChange={(event) => setValue("shipTo", event.target.value)}
                             />
                             )}
                         />

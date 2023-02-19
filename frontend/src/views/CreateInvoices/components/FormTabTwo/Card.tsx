@@ -1,5 +1,4 @@
 import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
-import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray } from 'react-hook-form'
@@ -7,6 +6,7 @@ import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
 import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from 'hooks/TranSlateHolder'
+import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
 
 const Card = ({index,item, remove, fields, register, control } ) => {
     const priceNumber = Number(item?.price)
@@ -79,6 +79,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                     )}
                     />
                 </WrapInput>
+                <ErrorMessages errors={errors} name="desForm2" />
             </ContainerInput>
             {item.name === '' ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input alphabet</Translate></Text> : item.name.length > 100 && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Max length is 100 characters</Translate></Text>}
             <CsRowINput>

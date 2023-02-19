@@ -1,4 +1,4 @@
-import { Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
+import { AutoRenewIcon, Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
 import DownLoadIcon from "components/Svg/Icons/DowloadIcon";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -21,9 +21,9 @@ interface Props {
 
 const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingGGDrive, setIsLoadingGGDrive] = useState(false);
   const [urlDownload, setUrlDownload] = useState();
   const { toastSuccess, toastError } = useToast();
-  console.log('urlDownload', urlDownload)
 
   const invoiceId = localStorage.getItem('invoiceIdStorage')
 
@@ -41,7 +41,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const accessTokenAuth = getAccessTokenAuth();
 
   const uploadFileToDrive = async (accessToken) => {
-    setIsLoading(true);
+    setIsLoadingGGDrive(true)
     try {
       // Download the PDF file from the URL
       const response1 = await fetch(
@@ -73,10 +73,10 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
         },
         data: pdfByteArray,
       });
-      setIsLoading(false);
+      setIsLoadingGGDrive(false)
       toastSuccess(null, <Translate>Upload Success</Translate>);
     } catch (error) {
-      setIsLoading(false);
+      setIsLoadingGGDrive(false)
       toastError(null, <Translate>Upload Failed</Translate>);
     }
   };
@@ -132,24 +132,24 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
                 variant="secondary"
                 disabled={!urlDownload && isLoading}
                 onClick={() => getUrlDownload()}
-              >
-                <Translate>Hard disk</Translate>
-              </CsButton>
+                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Hard disk</Translate>}
+              />
             </LinkDownload>
 
             {accessTokenAuth ? (
               <Button
                 disabled={isLoading && !urlDownload}
+                endIcon={isLoadingGGDrive ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Google Drive</Translate>}
                 padding="0"
                 width="48%"
                 onClick={() => handleOpenPicker()}
-              >
-                <Translate>Google Drive</Translate>
-              </Button>
+              />
             ) : (
-              <Button disabled={isLoading} onClick={handleLoginAuthGoogle}>
-                <Translate>Login Google</Translate>
-              </Button>
+              <Button 
+                disabled={isLoading}
+                onClick={handleLoginAuthGoogle}
+                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Login Google</Translate>}
+              />
             )}
           </Flex>
         </Flex>
