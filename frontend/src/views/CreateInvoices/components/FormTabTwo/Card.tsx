@@ -79,7 +79,6 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                     )}
                     />
                 </WrapInput>
-                <ErrorMessages errors={errors} name="desForm2" />
             </ContainerInput>
             {item.name === '' ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input alphabet</Translate></Text> : item.name.length > 100 && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Max length is 100 characters</Translate></Text>}
             <CsRowINput>
@@ -235,6 +234,6 @@ const CsNumericFormat = styled(NumberFormat)`
 `
 
 const ContainerInputQuantity = styled.div`
-
+  width: 50%;
 `
 export default Card

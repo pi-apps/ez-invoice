@@ -76,7 +76,8 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const DiscountValuePercent = discountValue * total / 100 
     const isDiscountValuePercent = DiscountValuePercent <= 100 ? DiscountValuePercent : total
     const isDiscount = (discountValue < total) ? discountValue : total
-
+    console.log('isDiscountValuePercent', isDiscountValuePercent)
+    
     const totalFinal = (total) => {
       if(activeTax === 2 && isPercent === false){
         return total + taxValue + shippingValue - isDiscount
@@ -192,7 +193,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                         {typeTax === false && (
                             <CsButtonAddTpye onClick={() => setTypeTax(true)}>
                                 <CsAddIcon/>
-                                <CsTextType><Translate>Name</Translate></CsTextType>
+                                <CsTextType><Translate>Tax</Translate></CsTextType>
                             </CsButtonAddTpye>
                         )}
                     </Row>
