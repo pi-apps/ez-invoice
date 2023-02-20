@@ -23,11 +23,8 @@ const FormSendInvoice: React.FC<
   const DataAb = getUser();
   const [isLoading, setIsLoading] = useState(false)
 
-  console.log('DataAb', DataAb)
-
   const invoiceIdStorage = localStorage.getItem('invoiceIdStorage')
   const languageStorage  = localStorage.getItem('language');
-  console.log('languageStorage', languageStorage)
 
 
   const validationSchema = Yup.object().shape({

@@ -9,7 +9,7 @@ import styled from "styled-components";
 import { Translate } from "react-auto-translate";
 import { AppDispatch } from "../../../state";
 import { getUser } from "../../../state/user";
-import { setUser } from "../../../state/user/actions";
+import { getAccessToken, setUser } from "../../../state/user/actions";
 import AccpetModal from "./AccpetModal";
 import LogoutModal from "./LogoutModal";
 import { AuthResult, PaymentDTO, User } from "./type";
@@ -30,8 +30,13 @@ const UserMenu = ({isLoading}) => {
     window.Pi.authenticate(scopes, onIncompletePaymentFound)
       .then(async function (auth) {
         const loginUser = await signInUser(auth);
+        dispatch(getAccessToken({accessToken:loginUser?.data?.message.accessToken}));
         if (loginUser) {
-          const userInfor = await axiosClient.get("user/info");
+          const userInfor = await axiosClient.get("user/info", {
+            headers: {
+              'Authorization': `${loginUser?.data?.message.accessToken}`,
+            }
+          });
           if (userInfor) {
             dispatch(setUser(userInfor.data));
           }

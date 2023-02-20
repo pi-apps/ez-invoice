@@ -1,12 +1,11 @@
 import { Button, useModal } from "@devfedeltalabs/pibridge_uikit";
-import { useState } from "react";
-import Nav from "react-bootstrap/Nav";
-import { useTranslation } from "react-i18next";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import Navbar from "react-bootstrap/Navbar";
 import DownloadModal from "components/DownloadModal";
 import { Translate } from "react-auto-translate";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const styles = {
   main: {
@@ -36,17 +35,6 @@ const Footer = ({ isActive }) => {
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<DownloadModal />);
 
-  const handleMenu = (action) => {
-    switch (action) {
-      case "invoice":
-        navigate("/invoice");
-        break;
-      default:
-        navigate("/");
-        break;
-    }
-  };
-  const isInvoiceIdStorage = localStorage.getItem("invoiceIdStorage");
   return (
     <NavCustom
       activeKey="/"
@@ -64,7 +52,7 @@ const Footer = ({ isActive }) => {
       <Nav.Item style={styles.navItem}>
         <Navbar.Brand onClick={openLoginModal}>
         <CsButtonDownload 
-        disabled={(isActive === 1 || isActive === 2) || !isInvoiceIdStorage}
+        disabled={(isActive === 1 || isActive === 2)}
         >
             <Translate>Download</Translate>
           </CsButtonDownload>
@@ -74,7 +62,7 @@ const Footer = ({ isActive }) => {
       <Nav.Item style={styles.navItem}>
         <Navbar.Brand href="/newInvoice/send">
           <CsButton
-           disabled={(isActive === 1 || isActive === 2) || !isInvoiceIdStorage}
+           disabled={(isActive === 1 || isActive === 2)}
           >
             <Translate>Send</Translate>
           </CsButton>
@@ -84,23 +72,23 @@ const Footer = ({ isActive }) => {
   );
 };
 const CsButton = styled(Button)<{ isActive: boolean }>`
-  width: 101px;
-  height: 48px;
-  background: ${({ isActive }) => (isActive ? "#6B39F4" : "#F8F5FF")};
-  color: #6b39f4;
-  &:disabled {
-    background-color: #f8f5ff;
-    color: #d8cafd;
-  }
+    width: 101px;
+    height: 48px;
+    background: ${({ isActive }) => (isActive ? "#6B39F4" : "#F8F5FF")};
+    color: #6b39f4;
+    &:disabled {
+      background-color: #f8f5ff;
+      color: #d8cafd;
+    }
 `;
 const CsButtonDownload = styled(Button)<{}>`
-  width: 101px;
-  height: 48px;
-  background: #6b39f4;
-  color: #fff;
-  &:disabled {
-    background-color: #f8f5ff;
-    color: #d8cafd;
-  }
+    width: 101px;
+    height: 48px;
+    background: #6b39f4;
+    color: #fff;
+    &:disabled {
+      background-color: #f8f5ff;
+      color: #d8cafd;
+    }
 `;
 export default Footer;

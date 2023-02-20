@@ -6,6 +6,7 @@ import { Controller, useFieldArray, useForm } from "react-hook-form"
 import { AppDispatch } from 'state'
 import { tabActiveNewInvoice } from "state/invoice/actions";
 import { useEffect, useState } from "react";
+import { getAccessToken } from "state/user";
 import * as Yup from 'yup'
 import FormTabOne from "./FormTabOne";
 import FormTabTwo from "./FormTabTwo";
@@ -21,20 +22,22 @@ interface PropsSubTab{
 }
 
 const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
-  const navigate = useNavigate();
-  const { toastSuccess, toastError } = useToast()
-  const [images, setImages] = useState([]);
-  const [activeTax, setActiveTax ] = useState<number>(1)
-  const [activeDiscount, setActiveDiscount ] = useState<number>(1)
-  const [invoiceId, setInvoiceid] = useState('')
-  const [startDate, setStartDate] = useState(new Date());
-  const [startDueDate, setStartDueDate] = useState(new Date());
-  localStorage.setItem('invoiceIdStorage', invoiceId)
+    const navigate = useNavigate();
+    const { toastSuccess, toastError } = useToast()
+    const [images, setImages] = useState([]);
+    const [activeTax, setActiveTax ] = useState<number>(1)
+    const [activeDiscount, setActiveDiscount ] = useState<number>(1)
+    const [invoiceId, setInvoiceid] = useState('')
+    const [startDate, setStartDate] = useState(new Date());
+    const [startDueDate, setStartDueDate] = useState(new Date());
 
-  UseGetAllInvoice()
-  const items = GetAllInvoice()
-  const invoicelength = items?.[0]?.allInvoice?.length
-  const [loadingPreview, setLoadingPreview] = useState(false)
+    const accessToken = getAccessToken()
+
+    UseGetAllInvoice()
+    
+    const items = GetAllInvoice()
+    const invoicelength = items?.[0]?.allInvoice?.length
+    const [loadingPreview, setLoadingPreview] = useState(false)
     const dispatch = useDispatch<AppDispatch>()
     
     const InitValues = {
@@ -121,7 +124,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                     {
                         headers: {
                             'Content-Type': `multipart/form-data`,
-                            'Accept': '*'
+                            'Accept': '*',
+                            'Authorization': accessToken,
                         }
                     }
                 );

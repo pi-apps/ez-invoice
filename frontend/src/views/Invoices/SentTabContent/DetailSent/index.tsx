@@ -10,11 +10,15 @@ import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
 import Footer from 'components/Footer';
 import { Translate } from "react-auto-translate";
+import { getAccessToken } from 'state/user';
 
 const DetailSent = () => {
     const navigate = useNavigate();
     let { slug } = useParams()
-    UseGetAnInvoiceCore(slug)
+    
+    const dataUser = getAccessToken()
+
+    UseGetAnInvoiceCore(slug, dataUser)
     const items = GetAnInvoice()
     const details = items?.details
     function convertDate(date: any) {

@@ -36,13 +36,13 @@ export const GetAllInvoice = () => {
   return [allInvoice];
 };
 
-export const UseGetAnInvoiceCore = (invoiceId: string) => {
+export const UseGetAnInvoiceCore = (invoiceId: string, accessToken:string) => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const getDataInvoice = async () => {
       try {
         dispatch(fetchLoading({ isLoading: true }));
-        const resultInvoiceDetail = await fetchAnInvoice(invoiceId);
+        const resultInvoiceDetail = await fetchAnInvoice(invoiceId, accessToken);
         dispatch(getAnInvoice(resultInvoiceDetail));
         dispatch(fetchLoading({ isLoading: false }));
       } catch (e) {
@@ -58,13 +58,13 @@ export const UseGetAnInvoiceCore = (invoiceId: string) => {
   }, [dispatch, invoiceId]);
 };
 
-export const UseGetAllInvoiceSentCore = () => {
+export const UseGetAllInvoiceSentCore = (accessToken:string) => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const getDataAllInvoiceSent = async () => {
       try {
         dispatch(fetchLoading({ isLoading: true }));
-        const resultInvoiceDetail = await fetchAllInvoiceSent();
+        const resultInvoiceDetail = await fetchAllInvoiceSent(accessToken);
 
         dispatch(getAllInvoiceSent(resultInvoiceDetail));
         dispatch(fetchLoading({ isLoading: false }));
@@ -94,13 +94,13 @@ export const UseGetAllInvoice = () => {
   }, [dispatch]);
 };
 
-export const UseGetAllInvoiceReceivedCore = () => {
+export const UseGetAllInvoiceReceivedCore = (accessToken:string) => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const getDataAllInvoiceReceived = async () => {
       try {
         dispatch(fetchLoading({ isLoading: true }));
-        const resultInvoiceReceived = await fetchAllInvoiceReceived();
+        const resultInvoiceReceived = await fetchAllInvoiceReceived(accessToken);
         dispatch(getAllInvoiceReceived(resultInvoiceReceived));
         dispatch(fetchLoading({ isLoading: false }));
       } catch (e) {
