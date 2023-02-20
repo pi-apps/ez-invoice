@@ -2,6 +2,7 @@ import axios from "axios";
 import { Router } from "express";
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
+import { AuthenUser } from "../services/authen";
 import InvoicesModel from "../models/invoices";
 import utils from "../services/utils";
 
@@ -21,11 +22,11 @@ export default function mountPaymentsEndpoints(router: Router) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
         }
     });
-
     // get invoice id from signature
     router.get('/get-invoice-id/:signature', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
             // find by uid or receiverId
@@ -38,14 +39,14 @@ export default function mountPaymentsEndpoints(router: Router) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
         }
     });
-
     // update receiver id
     router.post('/update-receiver', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
-            const currentUser = req.session.currentUser
+            const currentUser = userInfo;
             const receiverId = currentUser.uid;
             const invoiceId = req.body.invoiceId;
             const signature = req.body.signature;
@@ -67,34 +68,35 @@ export default function mountPaymentsEndpoints(router: Router) {
     // handle the incomplete payment
     router.post('/incomplete', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
-            const payment = req.body.payment;
-            const paymentId = payment?.identifier;
+            const payment: any = req.body.payment;
+            const paymentId: any = payment?.identifier;
             const txid = payment?.transaction && payment?.transaction.txid;
             const txURL = payment?.transaction && payment?.transaction._link;
-    
+
             // find the incomplete order
             const order = await InvoicesModel.findOne({ pi_payment_id: paymentId });
-    
+
             // order doesn't exist 
             if (!order) {
                 return res.status(400).json({ message: "Order not found" });
             }
-    
+
             // check the transaction on the Pi blockchain
             const horizonResponse = await axios.create({ timeout: 20000 }).get(txURL);
             const paymentIdOnBlock = horizonResponse.data.memo;
-    
+
             // and check other data as well e.g. amount
             if (paymentIdOnBlock !== order.pi_payment_id) {
                 return res.status(400).json({ message: "Payment id doesn't match." });
             }
-    
+
             // mark the order as paid
             await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { txid, paid: true } });
-    
+
             // let Pi Servers know that the payment is completed
             await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
             return res.status(200).json({ message: `Handled the incomplete payment ${paymentId}` });
@@ -106,13 +108,14 @@ export default function mountPaymentsEndpoints(router: Router) {
     // approve the current payment
     router.post('/approve', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
             const invoiceId = req.body.invoiceId;
             const paymentId = req.body.paymentId;
             // update paymentId
-            await InvoicesModel.updateOne({ invoiceId: invoiceId }, { $set: { pi_payment_id: paymentId } })
+            await InvoicesModel.updateOne({ invoiceId: invoiceId }, { $set: { paymentId: paymentId } })
             // let Pi Servers know that you're ready
             await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
             return res.status(200).json({ message: `Approved the payment ${paymentId}` });
@@ -124,9 +127,11 @@ export default function mountPaymentsEndpoints(router: Router) {
     // complete the current payment
     router.post('/complete', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
+            const currentUser = userInfo;
             const language = req.body.language;
             const paymentId = req.body.paymentId;
             const txid = req.body.txid;
@@ -138,7 +143,7 @@ export default function mountPaymentsEndpoints(router: Router) {
             await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
             // send mail if the payment is completed
             const senderEmail = invoice.senderEmail;
-            await utils.sendEmailPaymentSuccess(invoice, senderEmail, req.session.currentUser.username, language);
+            await utils.sendEmailPaymentSuccess(invoice, senderEmail, currentUser.username, language);
             return res.status(200).json({ message: `Completed the payment ${paymentId}` });
         } catch (error: any) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
@@ -148,7 +153,8 @@ export default function mountPaymentsEndpoints(router: Router) {
     // handle the cancelled payment
     router.post('/cancelled_payment', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
             const paymentId = req.body.paymentId;
@@ -162,7 +168,8 @@ export default function mountPaymentsEndpoints(router: Router) {
     // get detail a payment
     router.get('/detail/:paymentId', async (req, res) => {
         try {
-            if (!req.session.currentUser) {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
             const paymentId = req.params.paymentId;

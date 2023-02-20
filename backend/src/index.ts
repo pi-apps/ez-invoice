@@ -8,7 +8,6 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import logger from 'morgan';
 import MongoStore from 'connect-mongo';
-import { MongoClient } from 'mongodb';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payments';
 import mountUserEndpoints from './handlers/users';
@@ -54,8 +53,8 @@ app.use(cookieParser());
 // Use sessions:
 app.use(session({
   secret: env.session_secret,
-  resave: true,
-  saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
   store: MongoStore.create({
     mongoUrl: mongoUri,
     collectionName: 'user_sessions'
