@@ -218,8 +218,9 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                             <CsTextArea
                                 name="shipTo"
                                 value={field.value}
+                                onBlur={field.onBlur}
                                 placeholder={`(${stateTextPlaceholder.option})`}
-                                onChange={(event) => setValue("shipTo", event.target.value)}
+                                onChange={field.onChange}
                             />
                             )}
                         />
