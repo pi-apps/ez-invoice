@@ -38,7 +38,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     };
   
     useEffect(() => {
-      if (languageStorage === 'en')     
+      if (!languageStorage || languageStorage === 'en')     
       return setStateTextPlaceholder({
           name: "Description of service or product",
         });;
