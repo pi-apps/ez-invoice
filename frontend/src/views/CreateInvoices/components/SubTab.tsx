@@ -32,7 +32,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
   const { setInvoiceId } = useContext(InvoiceIdContext);
-//   localStorage.setItem('invoiceIdStorage', invoiceId)
 
   UseGetAllInvoice()
   const items = GetAllInvoice()
@@ -73,8 +72,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         discount: Yup.string().matches(/[0-9]+/, 'Please input number'),
         shipping: Yup.string().matches(/[0-9]+/, 'Please input number'),
         amountPaid: Yup.string().matches(/[0-9]+/, 'Please input number').matches(/^(\S+$)/g, 'Please input number'),
-        // issueDate: Yup.date().required('Issue date is required'),
-        // dueDate: Yup.date().required('Due date is required'),
+        // issueDate: Yup.string().required('Issue date is required'),
+        // dueDate: Yup.string().required('Due date is required'),
         // taxType: Yup.string().required('Tax type is required'),
         // logo: Yup.string().required('Logo is required'),
     });

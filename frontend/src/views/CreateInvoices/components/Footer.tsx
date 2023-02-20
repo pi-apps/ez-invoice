@@ -8,6 +8,7 @@ import Navbar from "react-bootstrap/Navbar";
 import DownloadModal from "components/DownloadModal";
 import { Translate } from "react-auto-translate";
 import { InvoiceIdContext } from "contexts/InVoiceIdContext";
+import { getInvoiceId } from "state/newInvoiceId";
 
 const styles = {
   main: {
@@ -47,8 +48,7 @@ const Footer = ({ isActive }) => {
         break;
     }
   };
-  const isInvoiceIdStorage = localStorage.getItem("invoiceIdStorage");
-  const { invoiceId, setInvoiceId } = useContext(InvoiceIdContext);
+  const invoiceId = getInvoiceId();
   return (
     <NavCustom
       activeKey="/"

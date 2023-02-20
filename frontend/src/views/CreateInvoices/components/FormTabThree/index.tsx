@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import { LanguagesContext } from 'contexts/Translate';
 import { Translate } from "react-auto-translate";
+import { getLanguageTrans } from 'state/LanguageTrans';
 
 const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
     const { t } = useTranslation()
@@ -28,8 +29,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
 
-    const languageStorage  = localStorage.getItem('language');
-    const { language, setLanguage } = useContext(LanguagesContext);
+    const languageTransRedux = getLanguageTrans();
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       notes: "Description of service or product",
     });
@@ -41,7 +41,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const changeTextPlaceHolderLg = async () => {
       const resSenderEmail = await GetTranslateHolder(
           listTextPlaceHolder.notes,
-          language
+          languageTransRedux
         );
       setStateTextPlaceholder({
         notes: resSenderEmail,
@@ -49,12 +49,12 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     };
   
     useEffect(() => {
-      if (!language || language === 'en')     
+      if (!languageTransRedux || languageTransRedux === 'en')     
       return setStateTextPlaceholder({
           notes: "Description of service or product",
         });;
       changeTextPlaceHolderLg()
-    }, [language]);
+    }, [languageTransRedux]);
     
     const totalPrice = (fields) => {
       return fields?.reduce((sum, i) => {

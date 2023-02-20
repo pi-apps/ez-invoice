@@ -1,36 +1,29 @@
 import { Button, Flex, Text, useModal } from "@devfedeltalabs/pibridge_uikit";
-import { log } from "console";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "state";
 import { LanguagesContext } from "contexts/Translate";
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Languages from "./Languages.json";
 import { Translate } from "react-auto-translate";
 import Langauges from './Languages.json'
+import { setLanguageTransRedux } from "state/LanguageTrans/actions";
+import { getLanguageTrans } from "state/LanguageTrans";
 
 const TranslateMenu = () => {
+  const dispatch = useDispatch<AppDispatch>()
+  
   const [isShowMenu, setIsShowMenu] = useState(false);
   const { language, setLanguage } = useContext(LanguagesContext);
+  const languageTransRedux = getLanguageTrans();
   const [nameCountryLanguage, setNameCountryLanguage] = useState(null);
-  // const dataLanguage = localStorage.getItem("language");
-
-    // language
-    // const [languageStorage, setLanguageStorage] = useState("en");
-    // const getLanguage = async () => {
-    //   const data = await localStorage.getItem("language");
-    //   setLanguageStorage(data);
-    //   setNameCountryLanguage(data)
-    // };
-    // useEffect(() => {
-    //   getLanguage();
-    // }, []);
-
 
     useEffect(() => {
-      if (language) {
-        const found = Langauges.find(element => element.code === language);
+      if (languageTransRedux) {
+        const found = Langauges.find(element => element.code === languageTransRedux);
         setNameCountryLanguage(found.name)
       }
-    }, [language])
+    }, [languageTransRedux])
 
   return (
     <Flex position="relative">  
@@ -53,8 +46,8 @@ const TranslateMenu = () => {
                 <ButtonChooseLg
                   onClick={() => {
                     setLanguage(item.code);
-                    // localStorage.setItem("language", item.code);
                     setNameCountryLanguage(item.name);
+                    dispatch(setLanguageTransRedux(item.code))
                     setIsShowMenu(!isShowMenu);
                   }}
                 >

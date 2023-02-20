@@ -10,8 +10,9 @@ import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import { LanguagesContext } from "contexts/Translate";
-import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 import { getInvoiceId } from "state/newInvoiceId";
+import { InvoiceIdContext } from "contexts/InVoiceIdContext";
+import { getLanguageTrans } from "state/LanguageTrans";
 
 interface FormSendInvoiceTypes {
   setIsSentSuccessfully: (e) => void;
@@ -23,14 +24,13 @@ const FormSendInvoice: React.FC<
   const [errorSentText, setErrorSentText] = useState("");
   const DataAb = getUser();
   const [isLoading, setIsLoading] = useState(false)
-
-  const { invoiceId, setInvoiceId } = useContext(InvoiceIdContext);
-  // const invoiceIdStorage = localStorage.getItem('invoiceIdStorage')
-  const languageStorage  = localStorage.getItem('language');
+  
   const { language, setLanguage } = useContext(LanguagesContext);
 
   const invoiceIdRedux = getInvoiceId();
-  console.log('invoiceIdRedux', invoiceIdRedux)
+  const languageTransRedux = getLanguageTrans();
+
+  console.log('languageTransRedux', languageTransRedux)
   
 
   const validationSchema = Yup.object().shape({
@@ -45,9 +45,9 @@ const FormSendInvoice: React.FC<
   const handleLogin = async (data) => {
     setIsLoading(true)
     const dataPost = {
-      invoiceId: invoiceId,
+      invoiceId: invoiceIdRedux,
       email: data.email,
-      language: language ? language : "en",
+      language: languageTransRedux ? languageTransRedux : "en",
     };
 
     try {
@@ -83,7 +83,7 @@ const FormSendInvoice: React.FC<
     const resRecipientEmail= await GetTranslateHolder(
         listTextPlaceHolder.recipientEmail,
         // language
-        language
+        languageTransRedux
       );
     setStateTextPlaceholder({
       recipientEmail: resRecipientEmail,
@@ -91,12 +91,12 @@ const FormSendInvoice: React.FC<
   };
 
   useEffect(() => {
-    if (!language || language === 'en')     
+    if (!languageTransRedux || languageTransRedux === 'en')     
     return setStateTextPlaceholder({
         recipientEmail: "Who is this invoice to? (required)",
       });;
     changeTextPlaceHolderLg()
-  }, [language]);
+  }, [languageTransRedux]);
 
   return (
     <CsContainer>
@@ -139,7 +139,7 @@ const FormSendInvoice: React.FC<
           </Flex>
           <Flex>
             <CsButton
-              disabled={!invoiceId}
+              disabled={!invoiceIdRedux}
               type="submit" 
               value="Submit" 
               endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Send</Translate>}

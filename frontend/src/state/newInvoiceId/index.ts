@@ -7,3 +7,4 @@ export const getInvoiceId = () => {
   );
   return newInvoiceId.invoiceId;
 };
+

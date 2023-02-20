@@ -1,6 +1,7 @@
 import { LanguagesContext } from "contexts/Translate";
 import { useContext, useEffect, useState } from "react";
 import { Translator } from "react-auto-translate";
+import { getLanguageTrans } from "state/LanguageTrans";
 import { getUser } from "state/user";
 
 const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
@@ -10,14 +11,7 @@ const TranSlatorModal = ({ children }) => {
 
   // language
   const { language, setLanguage } = useContext(LanguagesContext);
-  const languageStorage = localStorage.getItem('language')
-  // const getLanguage = async () => {
-  //   const data = await localStorage.getItem("language");
-  //   setLanguage(data);
-  // };
-  // useEffect(() => {
-  //   getLanguage();
-  // }, [language]);
+  const languageTransRedux = getLanguageTrans();
 
   return (
     <Translator
@@ -25,7 +19,7 @@ const TranSlatorModal = ({ children }) => {
     to={
       language !== null
         ? language
-        : languageStorage ? languageStorage
+        : languageTransRedux ? languageTransRedux
         : DataAb?.language
         ? DataAb?.language
         : "en"

@@ -15,14 +15,13 @@ import { GetAllInvoice, UseGetAllInvoice, UseGetAllInvoiceSentCore } from "state
 import { LanguagesContext } from "contexts/Translate"
 import { GetTranslateHolder } from "hooks/TranSlateHolder"
 import { Translate } from "react-auto-translate";
+import { getLanguageTrans } from "state/LanguageTrans"
 
 const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
   const dispatch = useDispatch()
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
-//   const { language, setLanguage } = useContext(LanguagesContext);
-  const languageStorage  = localStorage.getItem('language');
-  const { language, setLanguage } = useContext(LanguagesContext);
+  const languageTransRedux = getLanguageTrans();
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
     senderEmail: "Who is this invoice from? (required)",
     billFrom: "Who is this invoice from? (required)",
@@ -47,32 +46,32 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     const resSenderEmail = await GetTranslateHolder(
         listTextPlaceHolder.senderEmail,
         // language
-        language
+        languageTransRedux
       );
       console.log('resSenderEmail', resSenderEmail)
     const resBillFrom = await GetTranslateHolder(
       listTextPlaceHolder.billFrom,
-      language
+      languageTransRedux
     );
     const resBillTo = await GetTranslateHolder(
       listTextPlaceHolder.billTo,
-      language
+      languageTransRedux
     );
     const resShipTo = await GetTranslateHolder(
         listTextPlaceHolder.shipTo,
-        language
+        languageTransRedux
       );
     const resPayment = await GetTranslateHolder(
       listTextPlaceHolder.payment,
-      language
+      languageTransRedux
     );
     const resPoNumber = await GetTranslateHolder(
       listTextPlaceHolder.poNumber,
-      language
+      languageTransRedux
     );
     const resOption = await GetTranslateHolder(
         listTextPlaceHolder.option,
-        language
+        languageTransRedux
       );
   
     setStateTextPlaceholder({
@@ -87,7 +86,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
   };
 
   useEffect(() => {
-    if (!language || language === 'en')     
+    if (!languageTransRedux || languageTransRedux === 'en')     
     return setStateTextPlaceholder({
         senderEmail: "Who is this invoice from? (required)",
         billFrom: "Who is this invoice from? (required)",
@@ -98,11 +97,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
         option: "Optional",
       });;
     changeTextPlaceHolderLg()
-  }, [language]);
-
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+  }, [languageTransRedux]);
 
   return (
     <CsContainer >
