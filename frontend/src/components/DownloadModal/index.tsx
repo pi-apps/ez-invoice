@@ -1,6 +1,6 @@
 import { AutoRenewIcon, Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
 import DownLoadIcon from "components/Svg/Icons/DowloadIcon";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import axios from "axios";
@@ -14,6 +14,7 @@ import { AppDispatch } from "state";
 import { getAccessTokenAuth } from "state/googleAuth";
 import { setAccessToken } from "state/googleAuth/actions";
 import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
+import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 
 interface Props {
   onDismiss?: () => void;
@@ -25,7 +26,8 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const [urlDownload, setUrlDownload] = useState();
   const { toastSuccess, toastError } = useToast();
 
-  const invoiceId = localStorage.getItem('invoiceIdStorage')
+  // const invoiceId = localStorage.getItem('invoiceIdStorage')
+  const { invoiceId, setInvoiceId } = useContext(InvoiceIdContext);
 
   // language
   const [language, setLanguage] = useState("en");

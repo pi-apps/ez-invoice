@@ -22,6 +22,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
   const [getMessageError, setMessageError] = useState()
 //   const { language, setLanguage } = useContext(LanguagesContext);
   const languageStorage  = localStorage.getItem('language');
+  const { language, setLanguage } = useContext(LanguagesContext);
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
     senderEmail: "Who is this invoice from? (required)",
     billFrom: "Who is this invoice from? (required)",
@@ -46,32 +47,32 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     const resSenderEmail = await GetTranslateHolder(
         listTextPlaceHolder.senderEmail,
         // language
-        languageStorage
+        language
       );
       console.log('resSenderEmail', resSenderEmail)
     const resBillFrom = await GetTranslateHolder(
       listTextPlaceHolder.billFrom,
-      languageStorage
+      language
     );
     const resBillTo = await GetTranslateHolder(
       listTextPlaceHolder.billTo,
-      languageStorage
+      language
     );
     const resShipTo = await GetTranslateHolder(
         listTextPlaceHolder.shipTo,
-        languageStorage
+        language
       );
     const resPayment = await GetTranslateHolder(
       listTextPlaceHolder.payment,
-      languageStorage
+      language
     );
     const resPoNumber = await GetTranslateHolder(
       listTextPlaceHolder.poNumber,
-      languageStorage
+      language
     );
     const resOption = await GetTranslateHolder(
         listTextPlaceHolder.option,
-        languageStorage
+        language
       );
   
     setStateTextPlaceholder({
@@ -86,7 +87,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
   };
 
   useEffect(() => {
-    if (!languageStorage || languageStorage === 'en')     
+    if (!language || language === 'en')     
     return setStateTextPlaceholder({
         senderEmail: "Who is this invoice from? (required)",
         billFrom: "Who is this invoice from? (required)",
@@ -97,7 +98,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
         option: "Optional",
       });;
     changeTextPlaceHolderLg()
-  }, [languageStorage]);
+  }, [language]);
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
