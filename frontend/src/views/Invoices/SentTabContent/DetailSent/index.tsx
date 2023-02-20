@@ -4,7 +4,7 @@ import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
 import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import { Fragment } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
@@ -43,7 +43,11 @@ const DetailSent = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                            <Fragment>
+                                                { details?.logoUrl &&
+                                                    <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                                }
+                                            </Fragment>
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>

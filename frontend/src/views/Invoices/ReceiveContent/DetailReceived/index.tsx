@@ -1,5 +1,6 @@
 import { Button, Flex, Image, Skeleton, Text } from '@devfedeltalabs/pibridge_uikit';
 import Footer from 'components/Footer';
+import { Fragment } from 'react';
 import Header from 'components/Header';
 import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
@@ -28,7 +29,6 @@ const DetailSent = () => {
         }
         return <Skeleton width={60} />
     }
-    console.log("details", details)
     return (
         <PageFullWidth>
             <CsContainer>
@@ -42,7 +42,11 @@ const DetailSent = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                            <Fragment>
+                                                { details?.logoUrl &&
+                                                    <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                                }
+                                            </Fragment>
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
