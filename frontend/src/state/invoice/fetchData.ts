@@ -56,9 +56,13 @@ export const fetchAllInvoiceSent = async (accessToken:string): Promise<ListSent>
     }
 }
 
-export const fetchAllInvoice = async (): Promise<AllInvoice> => {
+export const fetchAllInvoice = async (accessToken:string): Promise<AllInvoice> => {
   try {
-      const submitReq = await axiosClient.get(`invoice/all-sent`);
+      const submitReq = await axiosClient.get(`invoice/all-sent`, {
+        headers: {
+          'Authorization': accessToken,
+        }
+      });
         const dataAllIvoice = submitReq?.data
       return {
         allInvoice: dataAllIvoice,

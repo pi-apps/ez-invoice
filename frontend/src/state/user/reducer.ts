@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit"
-import { setUser, getAccessToken } from "./actions"
+import { setUser, accessToken } from "./actions"
 import { UserType } from "./types"
 
 interface globalStateUser {
@@ -17,7 +17,7 @@ export default createReducer(initialState, (builder) =>
     .addCase(setUser, (state, action) => {
       state.userInfor = action.payload
     })
-    .addCase(getAccessToken, (state, action) => {
+    .addCase(accessToken, (state, action) => {
         state.accessToken = action.payload.accessToken
     })
 )    

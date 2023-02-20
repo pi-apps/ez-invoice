@@ -33,7 +33,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
 
     const accessToken = getAccessToken()
 
-    UseGetAllInvoice()
+    UseGetAllInvoice(accessToken)
     
     const items = GetAllInvoice()
     const invoicelength = items?.[0]?.allInvoice?.length

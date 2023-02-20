@@ -55,7 +55,7 @@ export const UseGetAnInvoiceCore = (invoiceId: string, accessToken:string) => {
       dispatch(getAnInvoice({ details: null }));
       dispatch(fetchFailure({ isFailure: true }));
     }
-  }, [dispatch, invoiceId]);
+  }, [dispatch, invoiceId, accessToken]);
 };
 
 export const UseGetAllInvoiceSentCore = (accessToken:string) => {
@@ -73,16 +73,16 @@ export const UseGetAllInvoiceSentCore = (accessToken:string) => {
       }
     };
     getDataAllInvoiceSent();
-  }, [dispatch]);
+  }, [dispatch, accessToken]);
 };
 
-export const UseGetAllInvoice = () => {
+export const UseGetAllInvoice = (accessToken:string) => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const getDataAllInvoiceSent = async () => {
       try {
         dispatch(fetchLoading({ isLoading: true }));
-        const resultInvoice = await fetchAllInvoice();
+        const resultInvoice = await fetchAllInvoice(accessToken);
 
         await dispatch(getAllInvoiceAll(resultInvoice));
         dispatch(fetchLoading({ isLoading: false }));
@@ -91,7 +91,7 @@ export const UseGetAllInvoice = () => {
       }
     };
     getDataAllInvoiceSent();
-  }, [dispatch]);
+  }, [dispatch, accessToken]);
 };
 
 export const UseGetAllInvoiceReceivedCore = (accessToken:string) => {
@@ -108,7 +108,7 @@ export const UseGetAllInvoiceReceivedCore = (accessToken:string) => {
       }
     };
     getDataAllInvoiceReceived();
-  }, [dispatch]);
+  }, [dispatch, accessToken]);
 };
 
 export const GetAnInvoice = () => {

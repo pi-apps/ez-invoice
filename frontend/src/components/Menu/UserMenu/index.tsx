@@ -8,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Translate } from "react-auto-translate";
 import { AppDispatch } from "../../../state";
-import { getUser } from "../../../state/user";
-import { getAccessToken, setUser } from "../../../state/user/actions";
+import { getAccessToken, getUser } from "../../../state/user";
+import { accessToken, setUser } from "../../../state/user/actions";
+
 import AccpetModal from "./AccpetModal";
 import LogoutModal from "./LogoutModal";
 import { AuthResult, PaymentDTO, User } from "./type";
@@ -18,19 +19,20 @@ import { fetchLoading } from "state/invoice/actions";
 
 const UserMenu = ({isLoading}) => {
   const { toastSuccess, toastError } = useToast()
-  
+  const accessTokenUser = getAccessToken()
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
   const { t } = useTranslation();
-
+  
   const signIn = async () => {
     dispatch(fetchLoading({isLoading:true}))
     const scopes = ["username", "payments"];
     window.Pi.authenticate(scopes, onIncompletePaymentFound)
       .then(async function (auth) {
         const loginUser = await signInUser(auth);
-        dispatch(getAccessToken({accessToken:loginUser?.data?.message.accessToken}));
+        
+        dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
         if (loginUser) {
           const userInfor = await axiosClient.get("user/info", {
             headers: {
@@ -52,13 +54,23 @@ const UserMenu = ({isLoading}) => {
       });
     // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
   };
-  
-  const signOut = async () => {
-    await dispatch(setUser(null));
-    await signOutUser();
-    await onDismis();
-    toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Logout successfully</Translate></Text>)
-    navigate("/");
+  console.log("userData", userData)
+  const signOut = async (token:string) => {
+    if( token.length ) {
+      // await axiosClient.post("/user/signout", {
+      //   headers: {
+      //     'Authorization': token,
+      //   }
+      // });
+      await dispatch(setUser(null));
+      await dispatch(accessToken({accessToken:""}));
+      await onDismis();
+      toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Logout successfully</Translate></Text>)
+      navigate("/");
+    } else {
+      toastError('Error')
+    }
+   
   };
 
   const signInUser = async (authResult: AuthResult) => {
@@ -69,12 +81,8 @@ const UserMenu = ({isLoading}) => {
     return axiosClient.post("/payments/incomplete", { payment });
   };
 
-  const signOutUser = () => {
-    return axiosClient.post("/user/signout");
-  };
-
   const [onPresentLogoutModal, onDismis] = useModal(
-    <LogoutModal onSubmit={signOut} />
+    <LogoutModal onSubmit={() => signOut(accessTokenUser)} />
   );
 
   return userData === null || userData === undefined ? (

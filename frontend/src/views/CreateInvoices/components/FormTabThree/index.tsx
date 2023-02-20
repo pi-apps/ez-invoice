@@ -1,20 +1,15 @@
-import { AutoRenewIcon, Button, Flex, Image, Input, Text } from '@devfedeltalabs/pibridge_uikit'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Controller, useForm } from "react-hook-form"
-import ErrorMessages from "components/ErrorMessages/ErrorMessage"
-import Navbar from 'react-bootstrap/Navbar';
-import * as Yup from 'yup'
-import styled from 'styled-components'
+import { AutoRenewIcon, Button, Flex, Input, Text } from '@devfedeltalabs/pibridge_uikit';
+import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import Row from 'components/Layout/Row';
-import { useTranslation } from 'react-i18next';
-import ChooseMethod from './ChooseMethod';
 import { AddIcon2 } from 'components/Svg';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { GetAllInvoice, UseGetAllInvoice } from 'state/invoice';
-import { useNavigate } from 'react-router-dom';
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
-import { LanguagesContext } from 'contexts/Translate';
+import { useEffect, useMemo, useState } from 'react';
 import { Translate } from "react-auto-translate";
+import Navbar from 'react-bootstrap/Navbar';
+import { Controller } from "react-hook-form";
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import ChooseMethod from './ChooseMethod';
 
 const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
     const { t } = useTranslation()

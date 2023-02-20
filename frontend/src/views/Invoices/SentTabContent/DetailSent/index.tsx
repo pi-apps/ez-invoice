@@ -17,7 +17,7 @@ const DetailSent = () => {
     let { slug } = useParams()
     
     const dataUser = getAccessToken()
-
+    
     UseGetAnInvoiceCore(slug, dataUser)
     const items = GetAnInvoice()
     const details = items?.details
