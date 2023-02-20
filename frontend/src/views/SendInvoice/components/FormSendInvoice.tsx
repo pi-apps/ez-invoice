@@ -26,7 +26,9 @@ const FormSendInvoice: React.FC<
   console.log('DataAb', DataAb)
 
   const invoiceIdStorage = localStorage.getItem('invoiceIdStorage')
-  console.log('invoiceIdStorage', invoiceIdStorage)
+  const languageStorage  = localStorage.getItem('language');
+  console.log('languageStorage', languageStorage)
+
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100, 'Max length is 100 characters').email('Invalid email address'),
@@ -42,7 +44,7 @@ const FormSendInvoice: React.FC<
     const dataPost = {
       invoiceId: invoiceIdStorage,
       email: data.email,
-      language: invoiceIdStorage ? invoiceIdStorage : "en",
+      language: languageStorage ? languageStorage : "en",
     };
 
     try {
@@ -66,7 +68,6 @@ const FormSendInvoice: React.FC<
   };
 
   // translate placeholder
-  const languageStorage  = localStorage.getItem('language');
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
     recipientEmail: "Who is this invoice from? (required)",
   });

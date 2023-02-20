@@ -99,6 +99,10 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     changeTextPlaceHolderLg()
   }, [languageStorage]);
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   return (
     <CsContainer >
             <CsFlex>
