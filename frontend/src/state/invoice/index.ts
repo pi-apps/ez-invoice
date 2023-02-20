@@ -72,7 +72,12 @@ export const UseGetAllInvoiceSentCore = (accessToken:string) => {
         console.log(e);
       }
     };
-    getDataAllInvoiceSent();
+    if (accessToken?.length){
+        getDataAllInvoiceSent();
+    } else {
+      dispatch(getAllInvoiceSent({listSent: null,}));
+    }
+    
   }, [dispatch, accessToken]);
 };
 
@@ -83,14 +88,18 @@ export const UseGetAllInvoice = (accessToken:string) => {
       try {
         dispatch(fetchLoading({ isLoading: true }));
         const resultInvoice = await fetchAllInvoice(accessToken);
-
-        await dispatch(getAllInvoiceAll(resultInvoice));
+        dispatch(getAllInvoiceAll(resultInvoice));
         dispatch(fetchLoading({ isLoading: false }));
       } catch (e) {
         console.log(e);
       }
     };
-    getDataAllInvoiceSent();
+    if( accessToken?.length ){
+      getDataAllInvoiceSent();
+    } else {
+      dispatch(getAllInvoiceAll({ allInvoice: null }));
+    }
+    
   }, [dispatch, accessToken]);
 };
 
@@ -107,7 +116,12 @@ export const UseGetAllInvoiceReceivedCore = (accessToken:string) => {
         console.log(e);
       }
     };
-    getDataAllInvoiceReceived();
+    if ( accessToken?.length ) {
+      getDataAllInvoiceReceived()
+    } else {
+      dispatch(getAllInvoiceReceived({ listReceived: null }));
+    }
+    
   }, [dispatch, accessToken]);
 };
 

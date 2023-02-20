@@ -14,7 +14,6 @@ import { Controller } from 'react-hook-form';
 import ChooseMethod from './ChooseMethod';
 
 const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
-    const { t } = useTranslation()
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)

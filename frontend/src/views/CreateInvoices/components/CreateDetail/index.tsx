@@ -184,7 +184,7 @@ const CreateDetail = () => {
                                     </CsNavItem>
                             </WAction>
                         </Flex>
-                        <Footer isActive={3} invoiceId={slug} />
+                        <Footer isActive={3}/>
                     </CsWrapContainer>
             </CsContainer>
         </PageFullWidth>

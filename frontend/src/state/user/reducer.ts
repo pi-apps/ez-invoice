@@ -1,15 +1,17 @@
 import { createReducer } from "@reduxjs/toolkit"
-import { setUser, accessToken } from "./actions"
+import { setUser, accessToken, isLoading } from "./actions"
 import { UserType } from "./types"
 
 interface globalStateUser {
     userInfor: UserType | null
     accessToken:string
+    isLoading:boolean
 }
 
 export const initialState: globalStateUser = {
     userInfor: null,
-    accessToken:""
+    accessToken:"",
+    isLoading:false
 }
 
 export default createReducer(initialState, (builder) => 
@@ -19,5 +21,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(accessToken, (state, action) => {
         state.accessToken = action.payload.accessToken
+    })
+    .addCase(isLoading, (state, action) => {
+        state.isLoading = action.payload.isLoading
     })
 )    

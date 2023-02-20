@@ -46,7 +46,12 @@ const Header = () => {
         dispatch(setUser(user.data));
       }
     };
-    fetchUser();
+    if (accessToken?.length){
+      fetchUser();
+    } else {
+      dispatch(setUser(null));
+    }
+    
   }, []);
 
   return (
@@ -79,7 +84,7 @@ const Header = () => {
               </Text>
             )} */}
             <TranslateMenu />
-            <UserMenu isLoading={isLoading}/>
+            <UserMenu/>
           </Nav>
         </Container>
       </Navbar>

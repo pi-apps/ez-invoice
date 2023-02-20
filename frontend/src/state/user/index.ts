@@ -10,3 +10,8 @@ export const getAccessToken = () => {
     const user = useSelector<AppState, AppState['user']>((state) => state.user)
     return user.accessToken;
 }
+
+export const getStatusLoading = () => {
+    const user = useSelector<AppState, AppState['user']>((state) => state.user)
+    return user.isLoading;
+}

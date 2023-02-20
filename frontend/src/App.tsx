@@ -54,8 +54,6 @@ const App: React.FC = () => {
          <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
-            {/* <Route path="register" element={<Register />} /> */}
-            {/* <Route path="account" element={<Register />} /> */}
           </Route>
           <Route path="invoice" element={<Invoices />} />
           <Route path="newInvoice" element={<CreateInvoices />} />
