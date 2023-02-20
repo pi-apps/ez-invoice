@@ -4,14 +4,15 @@ import { AddIcon2, CloseIcon } from 'components/Svg'
 import React, { useState } from 'react'
 import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
+import { Translate } from "react-auto-translate";
 
-const ChooseMethod = ({isPercent, setIsPercent, errors, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
+const ChooseMethod = ({ isPercent, setIsPercent, errors, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
 
   return (
     <Flex flexDirection="column" width="100%">
         {typeTax === true && (
             <Flex width="100%" alignItems="center" justifyContent="space-between">
-                <CsTextLeft>Tax</CsTextLeft>
+                <CsTextLeft><Translate>Tax</Translate></CsTextLeft>
                 <ContainerInput>
                     <CsRowTax>
                         <CsRowTaxLeft>
@@ -23,14 +24,14 @@ const ChooseMethod = ({isPercent, setIsPercent, errors, activeTax,setActiveTax, 
                                 <Controller
                                     control={control}
                                     name="tax"
-                                    // rules={rules.invoicenumber}
                                     render={({ field }) => (
                                         <>
                                             <CsInput
                                                 name="tax"
+                                                onBlur={field.onBlur}
                                                 placeholder={`0.00 ${(activeTax === 1) ? '%' : 'Pi'} `}
                                                 value={field.value}
-                                                onChange={(event) => setValue("tax", event.target.value)}
+                                                onChange={field.onChange}
                                             />
                                         </>
                                     )}
@@ -48,7 +49,7 @@ const ChooseMethod = ({isPercent, setIsPercent, errors, activeTax,setActiveTax, 
 
         {typeDiscount === true && (
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
-            <CsTextLeft>Discount</CsTextLeft>
+            <CsTextLeft><Translate>Discount</Translate></CsTextLeft>
             <ContainerInput>
                 <CsRowTax>
                     <CsRowTaxLeft>
@@ -60,14 +61,14 @@ const ChooseMethod = ({isPercent, setIsPercent, errors, activeTax,setActiveTax, 
                             <Controller
                                 control={control}
                                 name="discount"
-                                // rules={rules.invoicenumber}
                                 render={({ field }) => (
                                     <>
                                         <CsInput
                                             name="discount"
+                                            onBlur={field.onBlur}
                                             placeholder={`0.00 ${(isPercent  === true) ? '%' : 'Pi'} `}
                                             value={field.value}
-                                            onChange={(event) => setValue("discount", event.target.value)}
+                                            onChange={field.onChange}
                                         />
                                     </>
                                 )}
@@ -86,20 +87,20 @@ const ChooseMethod = ({isPercent, setIsPercent, errors, activeTax,setActiveTax, 
 
     {typeShipping === true && (
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
-            <CsTextLeft>Shipping</CsTextLeft>
+            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
             <ContainerInput>
                 <CsRowTax>
                     <WrapInput>
                         <Controller
                             control={control}
                             name="shipping"
-                            // rules={rules.invoicenumber}
                             render={({ field }) => (
                             <CsInput
                                 name="shipping"
+                                onBlur={field.onBlur}
                                 placeholder="0.00 Pi"
                                 value={field.value}
-                                onChange={(event) => setValue("shipping", event.target.value)}
+                                onChange={field.onChange}
                             />
                             )}
                         />

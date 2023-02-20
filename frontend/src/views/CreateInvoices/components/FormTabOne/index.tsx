@@ -7,7 +7,7 @@ import { Controller } from "react-hook-form"
 import styled from "styled-components"
 import { ContainerInput, CsInput, CsTextArea, WrapInput } from "../styles"
 // import Form from 'react-bootstrap/Form';
-import { AddIcon } from 'components/Svg'
+import { AddIcon, DatePickerIcon } from 'components/Svg'
 import Row from 'react-bootstrap/Row'
 import { useDispatch } from 'react-redux'
 import ReactImageUpload from './ReactImageUpload'
@@ -16,68 +16,99 @@ import { LanguagesContext } from "contexts/Translate"
 import { GetTranslateHolder } from "hooks/TranSlateHolder"
 import { Translate } from "react-auto-translate";
 
-const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
+const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
   const dispatch = useDispatch()
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
-  const { language, setLanguage } = useContext(LanguagesContext);
+//   const { language, setLanguage } = useContext(LanguagesContext);
+  const languageStorage  = localStorage.getItem('language');
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
     senderEmail: "Who is this invoice from? (required)",
     billFrom: "Who is this invoice from? (required)",
     billTo: "Who is this invoice to? (required)",
+    shipTo: "Who is this invoice to? (required)",
     payment: "Payment",
     poNumber: "PO Number",
+    option: "Optional",
   });
 
   const listTextPlaceHolder = {
     senderEmail: "Who is this invoice from? (required)",
     billFrom: "Who is this invoice from? (required)",
     billTo: "Who is this invoice to? (required)",
+    shipTo: "Who is this invoice to? (required)",
     payment: "Payment",
     poNumber: "PO Number",
+    option: "Optional",
   };
 
   const changeTextPlaceHolderLg = async () => {
     const resSenderEmail = await GetTranslateHolder(
         listTextPlaceHolder.senderEmail,
-        language
+        // language
+        languageStorage
       );
+      console.log('resSenderEmail', resSenderEmail)
     const resBillFrom = await GetTranslateHolder(
       listTextPlaceHolder.billFrom,
-      language
+      languageStorage
     );
     const resBillTo = await GetTranslateHolder(
       listTextPlaceHolder.billTo,
-      language
+      languageStorage
     );
+    const resShipTo = await GetTranslateHolder(
+        listTextPlaceHolder.shipTo,
+        languageStorage
+      );
     const resPayment = await GetTranslateHolder(
       listTextPlaceHolder.payment,
-      language
+      languageStorage
     );
     const resPoNumber = await GetTranslateHolder(
       listTextPlaceHolder.poNumber,
-      language
+      languageStorage
     );
-
+    const resOption = await GetTranslateHolder(
+        listTextPlaceHolder.option,
+        languageStorage
+      );
+  
     setStateTextPlaceholder({
-        senderEmail: resSenderEmail,
+      senderEmail: resSenderEmail,
       billFrom: resBillFrom,
       billTo: resBillTo,
+      shipTo: resShipTo,
       payment: resPayment,
       poNumber: resPoNumber,
+      option: resOption,
     });
   };
 
   useEffect(() => {
-    language ? changeTextPlaceHolderLg() : null;
-  }, [language]);
+    if (!languageStorage || languageStorage === 'en')     
+    return setStateTextPlaceholder({
+        senderEmail: "Who is this invoice from? (required)",
+        billFrom: "Who is this invoice from? (required)",
+        billTo: "Who is this invoice to? (required)",
+        shipTo: "Who is this invoice to? (required)",
+        payment: "Payment",
+        poNumber: "PO Number",
+        option: "Optional",
+      });;
+    changeTextPlaceHolderLg()
+  }, [languageStorage]);
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   return (
     <CsContainer >
             <CsFlex>
                 {/* Invoice number */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">Invoice number</CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Invoice number</Translate></CsLabel>
                 </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -111,15 +142,20 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                         <Controller
                             control={control}
                             name="senderEmail"
-                            // rules={rules.senderEmail}
                             render={({ field }) => (
-                            <CsInput
-                                name="senderEmail"
-                                type="text"
-                                value={field.value}
-                                placeholder={`${stateTextPlaceholder.senderEmail}`}
-                                onChange={(event) => setValue("senderEmail", event.target.value)}
-                            />
+                                <>
+                                <CsInput
+                                    name="senderEmail"
+                                    // type="email"
+                                    value={field.value}
+                                    onBlur={field.onBlur}
+                                    placeholder={`${stateTextPlaceholder.senderEmail}`}
+                                    onChange={field.onChange}
+                                />
+                                {errors.email && touchedFields.email && (
+                                    <span>{errors.email.message}</span>
+                                )}
+                                </>
                             )}
                         />
                     </WrapInput>
@@ -135,13 +171,13 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                         <Controller
                             control={control}
                             name="billFrom"
-                            // rules={rules.sender}
                             render={({ field }) => (
                             <CsTextArea
                                 name="billFrom"
                                 value={field.value}
+                                onBlur={field.onBlur}
                                 placeholder={`${stateTextPlaceholder.billFrom}`}
-                                onChange={(event) => setValue("billFrom", event.target.value)}
+                                onChange={field.onChange}
                             />
                             )}
                         />
@@ -163,8 +199,9 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                             <CsTextArea
                                 name="billTo"
                                 value={field.value}
+                                onBlur={field.onBlur}
                                 placeholder={`${stateTextPlaceholder.billTo}`}
-                                onChange={(event) => setValue("billTo", event.target.value)}
+                                onChange={field.onChange}
                             />
                             )}
                         />
@@ -185,8 +222,9 @@ const FormTabOne = ({formState:{errors}, control, setValue, images, invoicelengt
                             <CsTextArea
                                 name="shipTo"
                                 value={field.value}
-                                placeholder="(Optional)"
-onChange={(event) => setValue("shipTo", event.target.value)}
+                                onBlur={field.onBlur}
+                                placeholder={`(${stateTextPlaceholder.option})`}
+                                onChange={field.onChange}
                             />
                             )}
                         />
@@ -210,8 +248,11 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                                             <CsDatePicker 
                                             id="date"
                                             value={field.value}
-                                            selected={startDate} onChange={(date:any) => setStartDate(date)} />
-                                            <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" onClick={() => {document.getElementById('date')?.focus() }}/>
+                                            onBlur={field.onBlur}
+                                            selected={startDate} onChange={(date:any) => {
+                                                setStartDate(date)
+                                            }} />
+                                            <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('date')?.focus() }}/>
                                         </>
                                     )}
                                 />
@@ -230,9 +271,10 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                                     name="paymentTerms"
                                     render={({ field }) => (
                                     <CsInput
+                                        type="text"
                                         name="paymentTerms"
                                         value={field.value}
-                                        // type="text"
+                                        onBlur={field.onBlur}
                                         placeholder={`${stateTextPlaceholder.payment}`}
                                         onChange={field.onChange}
                                     />
@@ -245,7 +287,7 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                 </Row>
 
                 <Row className="mb-1 mt-1">
-<Flex width="50%" flexDirection="column">
+                    <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
                             <CsLabel mt="1rem" color="#64748B"><Translate>Due Date</Translate></CsLabel>
                         </Flex>
@@ -260,7 +302,7 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                                         id="dueDate"
                                         value={field.value}
                                         selected={startDueDate} onChange={(date:any) => setStartDueDate(date)} />
-                                        <CsImageDatePicker src="/images/imgPi/Group.png" alt="" role="presentation" onClick={() => {document.getElementById('dueDate')?.focus() }}/>
+                                        <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('dueDate')?.focus() }}/>
                                     </>
                                 )}
                             />
@@ -277,11 +319,12 @@ onChange={(event) => setValue("shipTo", event.target.value)}
                                 name="poNumber"
                                 render={({ field }) => (
                                 <CsInput
+                                    type="text"
                                     name="poNumber"
                                     value={field.value}
-                                    // type="text"
-                                    placeholder={`${stateTextPlaceholder.poNumber}`}
+                                    onBlur={field.onBlur}
                                     onChange={field.onChange}
+                                    placeholder={`${stateTextPlaceholder.poNumber}`}
                                 />
                                 )}
                             />
@@ -337,9 +380,9 @@ const CsFlex = styled(Flex)`
     padding: 12px;
     width: 100%;
 `
-const CsImageDatePicker = styled.img`
-    width: 14px;
-    height: 14px;
+const CsImageDatePicker = styled(DatePickerIcon)`
+    width: 16px;
+    height: 16px;
     cursor: pointer;
     position: absolute;
     right: 20px;

@@ -1,17 +1,50 @@
 import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
+import { Translate } from "react-auto-translate";
+import { GetTranslateHolder } from 'hooks/TranSlateHolder'
+import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
 
-const Card = ({index, remove, fields, register, control} ) => {
-
+const Card = ({index,item, remove, fields, register, control } ) => {
+  console.log('control' , control?._formState?.touchedFields?.items?.[0]?.name)
+    const priceNumber = Number(item?.price)
+    const quantityNumber = Number(item?.quantity)
     const handleCloseItem = () => {
       if(fields?.length > 1){
         remove(index)
       }
     }
+
+    const languageStorage  = localStorage.getItem('language');
+    const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+      name: "Description of service or product",
+    });
+  
+    const listTextPlaceHolder = {
+      name: "Description of service or product",
+    };
+  
+    const changeTextPlaceHolderLg = async () => {
+      const resSenderEmail = await GetTranslateHolder(
+          listTextPlaceHolder.name,
+          languageStorage
+        );
+      setStateTextPlaceholder({
+        name: resSenderEmail,
+      });
+    };
+  
+    useEffect(() => {
+      if (!languageStorage || languageStorage === 'en')     
+      return setStateTextPlaceholder({
+          name: "Description of service or product",
+        });;
+      changeTextPlaceHolderLg()
+    }, [languageStorage]);
+    
     
   const total = useMemo(() => {
     return Number(fields[index].price)*Number(fields[index].quantity)
@@ -21,7 +54,7 @@ const Card = ({index, remove, fields, register, control} ) => {
     <CsWrapperCard>
         <CsHeading>
             <CsFlexHeading>
-                <CsTextHeading>Item # {index + 1}</CsTextHeading>
+                <CsTextHeading><Translate>Item</Translate> # {index + 1}</CsTextHeading>
                 <CsCloseIcon role="presentation" onClick={handleCloseItem}>
                   <CloseIcon />
                 </CsCloseIcon>
@@ -34,48 +67,66 @@ const Card = ({index, remove, fields, register, control} ) => {
                   <Controller
                     control={control}
                     name={`items[${index}].name`}
-                    render={() => (
-                        <CsTextArea placeholder='Description of service or product' {...register(`items.${index}.name` as const,
-                        { 
-                          required: true,
-                          pattern: /^[0-9\b]+$/
-                        }
-                        )} />
+                    defaultValue=""
+                    render={({ field }) => (
+                        <CsTextArea onChange={field.onChange} onBlur={field.onBlur} placeholder={`${stateTextPlaceholder.name}`}  {...register(`items.${index}.name` as const)} />
                     )}
                     />
                 </WrapInput>
             </ContainerInput>
-
+            {item.name === ' ' ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input alphabet</Translate></Text> : item.name.length > 100 && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Max length is 100 characters</Translate></Text> 
+            || 
+            <>
+              {(control?._formState?.touchedFields?.items?.[0]?.name === true && item.name === '') && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Description is required</Translate></Text>}
+            </>
+            }
             <CsRowINput>
-              <WrapInput>
-                  <Controller
-                    control={control}
-                    name={`items[${index}].quantity`}
-                    render={({field}) => (
-                      <CsInput
-                      placeholder='1' {...register(`items.${index}.quantity` as const, 
-                      { pattern: "/^0|[1-9]\d*$/" },
-                      {
-                        required: true // JS only: <p>error message</p> TS only support string
-                      }
-                      )} />
-                    )}
-                  />
-              </WrapInput>
-              <WrapInput>
-                <Controller
-                    control={control}
-                    name={`items[${index}].price`}
-                    render={() => (
-                      <CsInput placeholder='0.00 Pi' {...register(`items.${index}.price` as const, { required: true })} />
-                    )}
-                  />
-              </WrapInput>
+              <ContainerInputQuantity>
+                <WrapInput>
+                    <Controller
+                      control={control}
+                      name={`items[${index}].quantity`}
+                      render={({field}) => (
+                        <CsInput type='number'
+                          onBlur={field.onBlur}
+                          placeholder='1' {...register(`items.${index}.quantity` as const, 
+                        )} />
+                        )}
+                        />
+                </WrapInput>
+                {(item.quantity === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
+                  <>
+                    {(Number(item.quantity) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
+                  </>
+                }
+                {/* {(item.quantity === '' || Number(item.quantity) <= 0 )&& <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text>} */}
+              </ContainerInputQuantity>
+
+              <ContainerInputQuantity>
+                <WrapInput>
+                    <Controller
+                        control={control}
+                        name={`items[${index}].price`}
+                        render={({field}) => (
+                          <CsInput type='number' onBlur={field.onBlur} placeholder='0.00 Pi' {...register(`items.${index}.price` as const,
+                          {
+                            // valueAsNumber: true,
+                            pattern: "^[0-9\b]+$",
+                          }
+                          )} />
+                        )}
+                      />
+                </WrapInput>
+                  {(item.price === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
+                  <>
+                    {(Number(item.price) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
+                  </>}
+              </ContainerInputQuantity>
             </CsRowINput>
         </CsContent>
 
         <Flex mt="24px">
-            <Cstitle>Amount: </Cstitle>
+            <Cstitle><Translate>Amount: </Translate></Cstitle>
             <CsAmount>
               {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}  
             </CsAmount>
@@ -162,8 +213,6 @@ const CsFlexHeading = styled(Flex)`
 const CsRowINput = styled(Flex)`
     margin-top: 24px;
     gap: 10px;
-    align-items: center;
-    justify-content: space-between;
 `
 const CsInput = styled.input`
   gap: 8px;
@@ -189,5 +238,9 @@ const CsNumericFormat = styled(NumberFormat)`
         color:${({ theme }) => theme.colors.text};
         opacity: 1; 
     }
+`
+
+const ContainerInputQuantity = styled.div`
+  width: 50%;
 `
 export default Card

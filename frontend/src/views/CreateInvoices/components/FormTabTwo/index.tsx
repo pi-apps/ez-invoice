@@ -8,52 +8,7 @@ import styled from 'styled-components'
 import Card from './Card'
 import { Translate } from "react-auto-translate";
 
-const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
-
-  const { language, setLanguage } = useContext(LanguagesContext);
-  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
-    billFrom: "Who is this invoice from? (required)",
-    billTo: "Who is this invoice from? (required)",
-    payment: "Payment",
-    poNumber: "PO Number",
-  });
-
-  const listTextPlaceHolder = {
-    billFrom: "Who is this invoice from? (required)",
-    billTo: "Who is this invoice from? (required)",
-    payment: "Payment",
-    poNumber: "PO Number",
-  };
-
-  const changeTextPlaceHolderLg = async () => {
-    const resBillFrom = await GetTranslateHolder(
-      listTextPlaceHolder.billFrom,
-      language
-    );
-    const resBillTo = await GetTranslateHolder(
-      listTextPlaceHolder.billTo,
-      language
-    );
-    const resPayment = await GetTranslateHolder(
-      listTextPlaceHolder.payment,
-      language
-    );
-    const resPoNumber = await GetTranslateHolder(
-      listTextPlaceHolder.poNumber,
-      language
-    );
-
-    setStateTextPlaceholder({
-      billFrom: resBillFrom,
-      billTo: resBillTo,
-      payment: resPayment,
-      poNumber: resPoNumber,
-    });
-  };
-
-  useEffect(() => {
-    language ? changeTextPlaceHolderLg() : null;
-  }, [language]);
+const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFields, remove, register, control}) => {
  
   const totalPrice = (fields) => {
     return fields.reduce((sum, i) => {
@@ -73,14 +28,14 @@ const FormTabTwo = ({append, controlledFields, remove, register, control}) => {
       <CsContainer>
       {controlledFields.map((item, index) => {
           return (
-              <Card index={index} remove={remove} fields={controlledFields} register={register} control={control} />
+              <Card item={item} index={index} remove={remove} fields={controlledFields} register={register} control={control} />
           );
         })}
       </CsContainer>
 
       <CsSubTotal>
         <CsButtonAdd onClick={() => {
-          append({ name: "", quantity: "", price: "" });
+          append({ name: "", quantity: 0, price: 0 });
         }}>
           <CsAddIcon />
           <CsText><Translate>Line item</Translate></CsText>

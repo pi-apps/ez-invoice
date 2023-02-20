@@ -1,7 +1,6 @@
-import { Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
+import { AutoRenewIcon, Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
 import DownLoadIcon from "components/Svg/Icons/DowloadIcon";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import axios from "axios";
@@ -21,11 +20,10 @@ interface Props {
 }
 
 const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
-  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingGGDrive, setIsLoadingGGDrive] = useState(false);
   const [urlDownload, setUrlDownload] = useState();
   const { toastSuccess, toastError } = useToast();
-  console.log('urlDownload', urlDownload)
 
   const invoiceId = localStorage.getItem('invoiceIdStorage')
 
@@ -43,11 +41,9 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const accessTokenAuth = getAccessTokenAuth();
 
   const uploadFileToDrive = async (accessToken) => {
-    setIsLoading(true);
+    setIsLoadingGGDrive(true)
     try {
-      // Download the PDF file from the URL
       const response1 = await fetch(
-        // "https://ipfs.moralis.io:2053/ipfs/QmfPga24WUPcAaHHoJjyDXcByFiAsskKP2irttsDx2apxY/EZ_1676364850177.pdf"
         `${urlDownload}`
       );
       const pdfData = await response1.arrayBuffer();
@@ -76,11 +72,12 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
         },
         data: pdfByteArray,
       });
-      setIsLoading(false);
-      toastSuccess(null, <Translate>Upload Success</Translate>);
+      setIsLoadingGGDrive(false)
+      toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Upload Success</Translate></Text>);
     } catch (error) {
-      setIsLoading(false);
-      toastError(null, <Translate>Upload Failed</Translate>);
+      setIsLoadingGGDrive(false)
+      dispatch(setAccessToken(''));
+      toastError(null, <Text style={{justifyContent: 'center'}}><Translate>Upload Failed, Your google account has expired, please login again!</Translate></Text>);
     }
   };
 
@@ -135,24 +132,24 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
                 variant="secondary"
                 disabled={!urlDownload && isLoading}
                 onClick={() => getUrlDownload()}
-              >
-                <Translate>Hard disk</Translate>
-              </CsButton>
+                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Hard disk</Translate>}
+              />
             </LinkDownload>
 
             {accessTokenAuth ? (
               <Button
                 disabled={isLoading && !urlDownload}
+                endIcon={isLoadingGGDrive ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Google Drive</Translate>}
                 padding="0"
                 width="48%"
                 onClick={() => handleOpenPicker()}
-              >
-                <Translate>Google Drive</Translate>
-              </Button>
+              />
             ) : (
-              <Button disabled={isLoading} onClick={handleLoginAuthGoogle}>
-                <Translate>Login Google</Translate>
-              </Button>
+              <Button 
+                disabled={isLoading}
+                onClick={handleLoginAuthGoogle}
+                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Login Google</Translate>}
+              />
             )}
           </Flex>
         </Flex>
@@ -169,5 +166,9 @@ const LinkDownload = styled.a`
   width: 48%;
   height: 48px;
 `;
+
+const CsText = styled(Text)`
+  justify-content: center;
+`
 
 export default DownloadModal;

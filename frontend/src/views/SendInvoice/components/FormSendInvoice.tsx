@@ -1,13 +1,15 @@
-import { Button, Flex, Input, Text } from "@devfedeltalabs/pibridge_uikit";
+import { AutoRenewIcon, Button, Flex, Input, Text } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import ErrorMessages from "./ErrorMessage";
+// import ErrorMessages from "./ErrorMessage";
 import { getUser } from "state/user";
 import { axiosClient } from "config/htttp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 // import { axiosClient } from "config/htttp";
 
 interface FormSendInvoiceTypes {
@@ -19,9 +21,17 @@ const FormSendInvoice: React.FC<
 > = ({ setIsSentSuccessfully }) => {
   const [errorSentText, setErrorSentText] = useState("");
   const DataAb = getUser();
+  const [isLoading, setIsLoading] = useState(false)
+
+  console.log('DataAb', DataAb)
+
+  const invoiceIdStorage = localStorage.getItem('invoiceIdStorage')
+  const languageStorage  = localStorage.getItem('language');
+  console.log('languageStorage', languageStorage)
+
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().required("Email is required"),
+    email: Yup.string().required("Email is required").max(100, 'Max length is 100 characters').email('Invalid email address'),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -30,10 +40,11 @@ const FormSendInvoice: React.FC<
   const { errors } = formState;
 
   const handleLogin = async (data) => {
+    setIsLoading(true)
     const dataPost = {
-      invoiceId: "EZ_1676364850177",
+      invoiceId: invoiceIdStorage,
       email: data.email,
-      language: DataAb?.language ? DataAb.language : "en",
+      language: languageStorage ? languageStorage : "en",
     };
 
     try {
@@ -48,11 +59,41 @@ const FormSendInvoice: React.FC<
       } else {
         setIsSentSuccessfully(false);
       }
+      setIsLoading(false)
     } catch (error) {
       setIsSentSuccessfully(false);
       setErrorSentText("Invoice not found");
+      setIsLoading(false)
     }
   };
+
+  // translate placeholder
+  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+    recipientEmail: "Who is this invoice from? (required)",
+  });
+
+  const listTextPlaceHolder = {
+    recipientEmail: "Who is this invoice from? (required)",
+  };
+
+  const changeTextPlaceHolderLg = async () => {
+    const resRecipientEmail= await GetTranslateHolder(
+        listTextPlaceHolder.recipientEmail,
+        // language
+        languageStorage
+      );
+    setStateTextPlaceholder({
+      recipientEmail: resRecipientEmail,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageStorage || languageStorage === 'en')     
+    return setStateTextPlaceholder({
+        recipientEmail: "Who is this invoice from? (required)",
+      });;
+    changeTextPlaceHolderLg()
+  }, [languageStorage]);
 
   return (
     <CsContainer>
@@ -74,15 +115,13 @@ const FormSendInvoice: React.FC<
             <Controller
               control={control}
               name="email"
-              rules={{
-                required: "Email is required",
-              }}
               render={({ field }) => (
                 <CsInput
                   name="email"
+                  // type='email'
                   value={getValues("email")}
-                  type="email"
-                  placeholder="Recipient email"
+                  // type="email"
+                  placeholder={`${stateTextPlaceholder.recipientEmail}`}
                   onChange={(e) => {
                     field.onChange(e);
                     setErrorSentText("");
@@ -92,13 +131,16 @@ const FormSendInvoice: React.FC<
             />
             <ErrorMessages errors={errors} name="email" />
             {errorSentText ? (
-              <ErrorMessagesSent>{errorSentText}</ErrorMessagesSent>
-            ) : null}
+              <ErrorMessagesSent><Translate>{errorSentText}</Translate></ErrorMessagesSent>
+            ) : null} 
           </Flex>
           <Flex>
-            <CsButton type="submit" value="Submit">
-              Send
-            </CsButton>
+            <CsButton
+              disabled={!invoiceIdStorage}
+              type="submit" 
+              value="Submit" 
+              endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Send</Translate>}
+            />
           </Flex>
         </FormContainer>
       </CsFlex>

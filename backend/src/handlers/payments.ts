@@ -22,7 +22,23 @@ export default function mountPaymentsEndpoints(router: Router) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
         }
     });
-
+    // get invoice id from signature
+    router.get('/get-invoice-id/:signature', async (req, res) => {
+        try {
+            const userInfo = await AuthenUser(req.headers.authorization);
+            if (!userInfo) {
+                return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+            }
+            // find by uid or receiverId
+            const invoice = await InvoicesModel.findOne({ signature: req.params.signature });
+            if (!invoice) {
+                return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
+            }
+            return res.status(200).json(invoice.invoiceId);
+        } catch (error: any) {
+            return res.status(500).json({ error: 'internal_server_error', message: error.message });
+        }
+    });
     // update receiver id
     router.post('/update-receiver', async (req, res) => {
         try {

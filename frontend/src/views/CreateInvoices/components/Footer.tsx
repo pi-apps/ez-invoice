@@ -55,7 +55,7 @@ const Footer = ({ isActive }) => {
     >
       <Nav.Item style={styles.navItem}>
         <Navbar.Brand href="/history">
-          <CsButton style={{ background: "#F8F5FF" }} disabled>
+          <CsButton style={{ background: "#F8F5FF" }}>
             <Translate>History</Translate>
           </CsButton>
         </Navbar.Brand>
@@ -64,7 +64,7 @@ const Footer = ({ isActive }) => {
       <Nav.Item style={styles.navItem}>
         <Navbar.Brand onClick={openLoginModal}>
         <CsButtonDownload 
-        // disabled={(isActive === 1 || isActive === 2) || !isInvoiceIdStorage}
+        disabled={(isActive === 1 || isActive === 2) || !isInvoiceIdStorage}
         >
             <Translate>Download</Translate>
           </CsButtonDownload>
@@ -74,7 +74,7 @@ const Footer = ({ isActive }) => {
       <Nav.Item style={styles.navItem}>
         <Navbar.Brand href="/newInvoice/send">
           <CsButton
-          //  disabled={(isActive === 1 || isActive === 2) || !isInvoiceIdStorage}
+           disabled={(isActive === 1 || isActive === 2) || !isInvoiceIdStorage}
           >
             <Translate>Send</Translate>
           </CsButton>

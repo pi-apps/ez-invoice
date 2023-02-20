@@ -7,12 +7,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import MainLayout from "./components/Layout/mainLayout";
 import CreateInvoices from "views/CreateInvoices";
 import DetailSent from "views/Invoices/SentTabContent/DetailSent";
+import { Translator } from "react-auto-translate";
 import DetailReceived from "views/Invoices/ReceiveContent/DetailReceived";
 import { ToastListener } from "./contexts/ToastsContext";
 import Register from "views/Register";
 import Invoices from "views/Invoices";
+import History from "views/History";
 import CreateDetail from "views/CreateInvoices/components/CreateDetail";
-import { Translator } from "react-auto-translate";
 import { getUser } from "./state/user";
 import SendInvoice from "views/SendInvoice";
 import { LanguagesContext } from "contexts/Translate";
@@ -25,9 +26,15 @@ BigNumber.config({
   DECIMAL_PLACES: 80,
 });
 
+
+
+const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
+
 const App: React.FC = () => {
+
   const DataAb = getUser();
   const { language, setLanguage } = useContext(LanguagesContext);
+  const languageStorage = localStorage.getItem('language')
 
   return (
     <Fragment>
@@ -36,13 +43,14 @@ const App: React.FC = () => {
         to={
           language !== null
             ? language
+            : languageStorage ? languageStorage
             : DataAb?.language
             ? DataAb?.language
             : "en"
         }
-        googleApiKey="AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs"
+        googleApiKey={APIKEY_GOOGLE}
       >
-        <Routes>
+         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             {/* <Route path="register" element={<Register />} /> */}
@@ -54,6 +62,7 @@ const App: React.FC = () => {
           <Route path="detailReceived/:slug" element={<DetailReceived />} />
           <Route path="createDetail/:slug" element={<CreateDetail />} />
           <Route path="newInvoice/send" element={<SendInvoice />} />
+          <Route path="history" element={<History />} />
         </Routes>
         <ToastListener />
       </Translator>

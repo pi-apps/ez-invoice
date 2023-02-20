@@ -4,4 +4,4 @@ build
 !/log/.gitkeep
 .env
 /uploads
-/downloads
+/downloads/*.pdf

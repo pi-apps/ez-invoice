@@ -10,8 +10,8 @@ function ErrorMessages({ errors, name }: Props) {
   const logerror = errors[name];
   return (
     <ErrorMess>
-      {/* {logerror ? <Translate>{logerror && logerror.message}</Translate> : null} */}
-      {logerror && logerror.message}
+      {logerror ? <Translate>{logerror && logerror.message}</Translate> : null}
+      {/* {logerror && logerror.message} */}
     </ErrorMess>
   );
 }

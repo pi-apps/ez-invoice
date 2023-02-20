@@ -84,7 +84,7 @@ export const UseGetAllInvoice = () => {
         dispatch(fetchLoading({ isLoading: true }));
         const resultInvoice = await fetchAllInvoice();
 
-        dispatch(getAllInvoiceAll(resultInvoice));
+        await dispatch(getAllInvoiceAll(resultInvoice));
         dispatch(fetchLoading({ isLoading: false }));
       } catch (e) {
         console.log(e);

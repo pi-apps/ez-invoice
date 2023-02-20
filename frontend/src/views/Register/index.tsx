@@ -15,6 +15,7 @@ import useToast from '../../hooks/useToast'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setUser } from '../../state/user/actions'
+import { Translate } from "react-auto-translate";
 
 const Register = () => {
     // form validation rules 
@@ -41,10 +42,10 @@ const Register = () => {
     const onSubmit = async data => {
         const submitReq = await axiosClient.post('/user/update', data);
         if(submitReq.status == 200 || submitReq.status == 201){
-            toastSuccess('update successful');
+            toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Update successful</Translate></Text>);
             dispatch(setUser(submitReq.data));
         }else {
-            toastError('error', 'system error!!!')
+            toastError('error', <Text style={{justifyContent: 'center'}}><Translate>System error!!!</Translate></Text>)
         }
     }
 

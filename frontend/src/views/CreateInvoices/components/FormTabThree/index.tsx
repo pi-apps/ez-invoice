@@ -28,50 +28,32 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
 
-    const { language, setLanguage } = useContext(LanguagesContext);
-  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
-    billFrom: "Who is this invoice from? (required)",
-    billTo: "Who is this invoice from? (required)",
-    payment: "Payment",
-    poNumber: "PO Number",
-  });
-
-  const listTextPlaceHolder = {
-    billFrom: "Who is this invoice from? (required)",
-    billTo: "Who is this invoice from? (required)",
-    payment: "Payment",
-    poNumber: "PO Number",
-  };
-
-  const changeTextPlaceHolderLg = async () => {
-    const resBillFrom = await GetTranslateHolder(
-      listTextPlaceHolder.billFrom,
-      language
-    );
-    const resBillTo = await GetTranslateHolder(
-      listTextPlaceHolder.billTo,
-      language
-    );
-    const resPayment = await GetTranslateHolder(
-      listTextPlaceHolder.payment,
-      language
-    );
-    const resPoNumber = await GetTranslateHolder(
-      listTextPlaceHolder.poNumber,
-      language
-    );
-
-    setStateTextPlaceholder({
-      billFrom: resBillFrom,
-      billTo: resBillTo,
-      payment: resPayment,
-      poNumber: resPoNumber,
+    const languageStorage  = localStorage.getItem('language');
+    const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+      notes: "Description of service or product",
     });
-  };
-
-  useEffect(() => {
-    language ? changeTextPlaceHolderLg() : null;
-  }, [language]);
+  
+    const listTextPlaceHolder = {
+      notes: "Description of service or product",
+    };
+  
+    const changeTextPlaceHolderLg = async () => {
+      const resSenderEmail = await GetTranslateHolder(
+          listTextPlaceHolder.notes,
+          languageStorage
+        );
+      setStateTextPlaceholder({
+        notes: resSenderEmail,
+      });
+    };
+  
+    useEffect(() => {
+      if (!languageStorage || languageStorage === 'en')     
+      return setStateTextPlaceholder({
+          notes: "Description of service or product",
+        });;
+      changeTextPlaceHolderLg()
+    }, [languageStorage]);
     
     const totalPrice = (fields) => {
       return fields?.reduce((sum, i) => {
@@ -92,28 +74,25 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
 
     const taxValuePercent = taxValue * total / 100 
     const DiscountValuePercent = discountValue * total / 100 
-
+    const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
+    const isDiscount = (discountValue < total) ? discountValue : total
+    
     const totalFinal = (total) => {
       if(activeTax === 2 && isPercent === false){
-        return total + taxValue + shippingValue - discountValue
+        return total + taxValue + shippingValue - isDiscount
       } else if(activeTax === 2 && isPercent === true){
-        return total + taxValue + shippingValue - DiscountValuePercent
+        return total + taxValue + shippingValue - isDiscountValuePercent
       } else if(activeTax === 1 && isPercent === true){
-        return total + taxValuePercent + shippingValue - DiscountValuePercent
+        return total + taxValuePercent + shippingValue - isDiscountValuePercent
       } else if(activeTax === 1 && isPercent === false){
-        return total + taxValuePercent + shippingValue - discountValue
+        return total + taxValuePercent + shippingValue - isDiscount
       }
     } 
 
     const totalFinaly = totalFinal(total)
-    const balanceDue = totalFinaly - amountPaidValue
+    const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
     const isInvoiceIdStorage = localStorage.getItem('invoiceIdStorage')
-
-    // const handlePreview = async () => {
-    //   await UseGetAllInvoice()
-    //   const items = await GetAllInvoice()
-    // }
-
+    
   return (
     <CsWrapperForm>
       <CsContainer>
@@ -123,7 +102,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                     <CsLabel mt="1rem" color="#64748B"><Translate>Notes</Translate></CsLabel>
                 </Flex>
                 <ContainerInput>
-<WrapInput>
+                    <WrapInput>
                         <Controller
                             control={control}
                             name="notes"
@@ -132,9 +111,9 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                             <CsTextArea
                                 name="notes"
                                 // type="text"
-                                placeholder="Description of service or product"
+                                onBlur={field.onBlur}
+                                placeholder={`${stateTextPlaceholder.notes}`} 
                                 value={field.value}
-                                // onChange={(event) => setValue("notes", event.target.value)}
                                 onChange={field.onChange}
                             />
                             )}
@@ -153,13 +132,11 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                         <Controller
                             control={control}
                             name="terms"
-                            // rules={rules.invoicenumber}
                             render={({ field }) => (
                             <CsTextArea
                                 name="terms"
                                 placeholder="1"
                                 value={field.value}
-                                // onChange={(event) => setValue("terms", event.target.value)}
                                 onChange={field.onChange}
                             />
                             )}
@@ -172,7 +149,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
 
                 <CsContentInfo>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>{t('Subtotal')}</CsTextLeft>
+                        <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
                         <CsTextRight fontSize='14px' bold>{!total ? 0 : <>
                           {total && typeof total === 'number'  ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`: '0 Pi'}
                         </>}</CsTextRight>
@@ -221,7 +198,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                     </Row>
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>Total</CsTextLeft>
+                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
                         <CsTextRight bold>{!totalFinaly ? 0 : <>
                           {`${totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                         </> }</CsTextRight>
@@ -239,10 +216,10 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                                         name="amountPaid"
                                         placeholder="0.00 Pi"
                                         value={field.value}
-                                        onChange={(event) => setValue("amountPaid", event.target.value)}
-                                        // onChange={field.onChange}
+                                        onBlur={field.onBlur}
+                                        onChange={field.onChange}
                                     />
-)}
+                                  )}
                               />
                             </WrapInputAmountPaid>
                           <ErrorMessages errors={errors} name="amountPaid" />
