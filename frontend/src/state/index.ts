@@ -8,7 +8,6 @@ import loginGoogle from "./googleAuth/reducer";
 import invoiceId from "./newInvoiceId/reducer"
 
 const PERSISTED_KEYS: string[] = [
-  "user",
   "transactions",
   "lists",
   "loginGoogle",

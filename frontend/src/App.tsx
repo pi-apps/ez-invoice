@@ -61,7 +61,7 @@ const App: React.FC = () => {
           <Route path="detailSent/:slug" element={<DetailSent />} />
           <Route path="detailReceived/:slug" element={<DetailReceived />} />
           <Route path="createDetail/:slug" element={<CreateDetail />} />
-          <Route path="newInvoice/send" element={<SendInvoice />} />
+          <Route path="send/:invoiceId" element={<SendInvoice />} />
           <Route path="history" element={<History />} />
         </Routes>
         <ToastListener />

@@ -4,6 +4,8 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { getUser } from "state/user";
+import { getAccessToken } from "state/user";
+import { useParams } from 'react-router-dom';
 import { axiosClient } from "config/htttp";
 import { useContext, useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
@@ -20,17 +22,13 @@ interface FormSendInvoiceTypes {
 const FormSendInvoice: React.FC<
   React.PropsWithChildren<FormSendInvoiceTypes>
 > = ({ setIsSentSuccessfully }) => {
+  let { invoiceId } = useParams()
   const [errorSentText, setErrorSentText] = useState("");
-  const DataAb = getUser();
   const [isLoading, setIsLoading] = useState(false)
-
-  const { invoiceId, setInvoiceId } = useContext(InvoiceIdContext);
-  // const invoiceIdStorage = localStorage.getItem('invoiceIdStorage')
-  const languageStorage  = localStorage.getItem('language');
+  const accessTokenUser = getAccessToken()
+  
   const { language, setLanguage } = useContext(LanguagesContext);
 
-  const invoiceIdRedux = getInvoiceId();
-  console.log('invoiceIdRedux', invoiceIdRedux)
   
 
   const validationSchema = Yup.object().shape({
@@ -55,6 +53,7 @@ const FormSendInvoice: React.FC<
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          'Authorization': accessTokenUser,
         },
       });
       if (response.status === 200) {

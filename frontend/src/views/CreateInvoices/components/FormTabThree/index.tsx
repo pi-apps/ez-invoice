@@ -1,7 +1,9 @@
 import { AutoRenewIcon, Button, Flex, Input, Text } from '@devfedeltalabs/pibridge_uikit';
 import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import Row from 'components/Layout/Row';
+import { useContext } from 'react';
 import { AddIcon2 } from 'components/Svg';
+import { LanguagesContext } from 'contexts/Translate';
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import { useEffect, useMemo, useState } from 'react';
 import { Translate } from "react-auto-translate";
@@ -23,7 +25,6 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
 
-    const languageStorage  = localStorage.getItem('language');
     const { language, setLanguage } = useContext(LanguagesContext);
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       notes: "Description of service or product",

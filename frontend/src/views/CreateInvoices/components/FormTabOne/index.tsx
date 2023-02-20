@@ -1,6 +1,6 @@
 import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Controller } from "react-hook-form"
@@ -13,13 +13,12 @@ import { Translate } from "react-auto-translate"
 import Row from 'react-bootstrap/Row'
 import { useDispatch } from 'react-redux'
 import ReactImageUpload from './ReactImageUpload'
+import { LanguagesContext } from "contexts/Translate"
 
 const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
   const dispatch = useDispatch()
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
-//   const { language, setLanguage } = useContext(LanguagesContext);
-  const languageStorage  = localStorage.getItem('language');
   const { language, setLanguage } = useContext(LanguagesContext);
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
     senderEmail: "Who is this invoice from? (required)",

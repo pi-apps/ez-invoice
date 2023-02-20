@@ -54,7 +54,6 @@ const UserMenu = ({isLoading}) => {
       });
     // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
   };
-  console.log("userData", userData)
   const signOut = async (token:string) => {
     if( token.length ) {
       // await axiosClient.post("/user/signout", {

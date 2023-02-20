@@ -32,7 +32,7 @@ const styles = {
 
 const NavCustom = styled(Nav)``;
 
-const Footer = ({ isActive }) => {
+const Footer = ({ isActive, invoiceId="" }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<DownloadModal />);
@@ -48,7 +48,8 @@ const Footer = ({ isActive }) => {
     }
   };
   const isInvoiceIdStorage = localStorage.getItem("invoiceIdStorage");
-  const { invoiceId, setInvoiceId } = useContext(InvoiceIdContext);
+  // const { invoiceId, setInvoiceId } = useContext(InvoiceIdContext);
+  
   return (
     <NavCustom
       activeKey="/"
@@ -74,7 +75,7 @@ const Footer = ({ isActive }) => {
       </Nav.Item>
 
       <Nav.Item style={styles.navItem}>
-        <Navbar.Brand href="/newInvoice/send">
+        <Navbar.Brand href={`/send/${invoiceId}`}>
           <CsButton
            disabled={(isActive === 1 || isActive === 2) || !invoiceId}
           >
