@@ -17,6 +17,7 @@ import { GetAllInvoice, UseGetAllInvoice } from "state/invoice";
 import { useNavigate } from "react-router-dom";
 import { Translate } from "react-auto-translate";
 import { InvoiceIdContext } from "contexts/InVoiceIdContext";
+import { setInvoiceIdRedux } from "state/newInvoiceId/actions";
 interface PropsSubTab{
     isActive:number
 }
@@ -129,6 +130,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                     toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
                     setInvoiceid(submitReq?.data?.invoiceId)
                     setInvoiceId(submitReq?.data?.invoiceId)
+                    console.log('submitReq?.data?.invoiceId', submitReq?.data?.invoiceId)
+                    dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
