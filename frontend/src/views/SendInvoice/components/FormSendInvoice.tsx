@@ -23,7 +23,10 @@ const FormSendInvoice: React.FC<
   const DataAb = getUser();
   const [isLoading, setIsLoading] = useState(false)
 
+  console.log('DataAb', DataAb)
+
   const invoiceIdStorage = localStorage.getItem('invoiceIdStorage')
+  console.log('invoiceIdStorage', invoiceIdStorage)
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100, 'Max length is 100 characters').email('Invalid email address'),
@@ -39,7 +42,7 @@ const FormSendInvoice: React.FC<
     const dataPost = {
       invoiceId: invoiceIdStorage,
       email: data.email,
-      language: DataAb?.language ? DataAb.language : "en",
+      language: invoiceIdStorage ? invoiceIdStorage : "en",
     };
 
     try {
