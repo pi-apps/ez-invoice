@@ -1,4 +1,4 @@
-import { AutoRenewIcon, Button, useModal } from "@devfedeltalabs/pibridge_uikit";
+import { AutoRenewIcon, Button, Text, useModal } from "@devfedeltalabs/pibridge_uikit";
 import { axiosClient } from "config/htttp";
 import _ from "lodash";
 import { useEffect, useState } from "react";
@@ -38,10 +38,10 @@ const UserMenu = ({isLoading}) => {
           dispatch(fetchLoading({isLoading:false}))
         }
         console.log(`Hi there! You're ready to make payments!`);
-        toastSuccess(null, <Translate>Login successfully</Translate>)
+        toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Login successfully</Translate></Text>)
       })
       .catch(function (error) {
-        toastError('error', <Translate>{JSON.stringify(error)}</Translate>)
+        toastError('error', <Text style={{justifyContent: 'center'}}><Translate>{JSON.stringify(error)}</Translate></Text>)
         console.error(error);
         dispatch(fetchLoading({isLoading:false}))
       });
@@ -52,7 +52,7 @@ const UserMenu = ({isLoading}) => {
     await dispatch(setUser(null));
     await signOutUser();
     await onDismis();
-    toastSuccess(null, <Translate>Logout successfully</Translate>)
+    toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Logout successfully</Translate></Text>)
     navigate("/");
   };
 

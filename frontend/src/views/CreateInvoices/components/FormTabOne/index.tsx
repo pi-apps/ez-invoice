@@ -86,7 +86,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
   };
 
   useEffect(() => {
-    if (languageStorage === 'en')     
+    if (!languageStorage || languageStorage === 'en')     
     return setStateTextPlaceholder({
         senderEmail: "Who is this invoice from? (required)",
         billFrom: "Who is this invoice from? (required)",

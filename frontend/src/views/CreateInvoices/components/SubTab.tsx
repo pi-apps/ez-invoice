@@ -126,12 +126,12 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                     }
                 );
                 if(submitReq.status == 200){
-                    toastSuccess('Create invoice successfully');
+                    toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
                     setInvoiceid(submitReq?.data?.invoiceId)
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
-                    toastError('error', <Translate>System error!!!</Translate>)
+                    toastError('error', <Text style={{justifyContent: 'center'}}><Translate>System error!!!</Translate></Text>)
                     setLoadingPreview(false)
             }
     }

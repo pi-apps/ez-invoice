@@ -48,7 +48,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     };
   
     useEffect(() => {
-      if (languageStorage === 'en')     
+      if (!languageStorage || languageStorage === 'en')     
       return setStateTextPlaceholder({
           notes: "Description of service or product",
         });;
