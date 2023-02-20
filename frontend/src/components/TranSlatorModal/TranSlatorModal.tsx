@@ -3,6 +3,8 @@ import { useContext, useEffect, useState } from "react";
 import { Translator } from "react-auto-translate";
 import { getUser } from "state/user";
 
+const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
+
 const TranSlatorModal = ({ children }) => {
   const DataAb = getUser();
 
@@ -28,7 +30,7 @@ const TranSlatorModal = ({ children }) => {
         ? DataAb?.language
         : "en"
     }
-    googleApiKey="AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs"
+    googleApiKey={APIKEY_GOOGLE}
   >
       {children}
     </Translator>

@@ -26,6 +26,10 @@ BigNumber.config({
   DECIMAL_PLACES: 80,
 });
 
+
+
+const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
+
 const App: React.FC = () => {
 
   const DataAb = getUser();
@@ -44,7 +48,7 @@ const App: React.FC = () => {
             ? DataAb?.language
             : "en"
         }
-        googleApiKey="AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs"
+        googleApiKey={APIKEY_GOOGLE}
       >
          <Routes>
           <Route path="/" element={<MainLayout />}>

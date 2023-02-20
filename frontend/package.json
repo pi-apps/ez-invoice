@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
-    "@leecheuk/react-google-login": "^5.4.1",
     "@devfedeltalabs/pibridge_uikit": "^1.0.10",
+    "@leecheuk/react-google-login": "^5.4.1",
     "@lottiefiles/react-lottie-player": "^3.4.2",
     "@reduxjs/toolkit": "^1.5.0",
     "@types/multicodec": "^1.0.0",
