@@ -29,6 +29,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const amountPaidValue =  Number(getValues('amountPaid'))
 
     const languageStorage  = localStorage.getItem('language');
+    const { language, setLanguage } = useContext(LanguagesContext);
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       notes: "Description of service or product",
     });
@@ -40,7 +41,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const changeTextPlaceHolderLg = async () => {
       const resSenderEmail = await GetTranslateHolder(
           listTextPlaceHolder.notes,
-          languageStorage
+          language
         );
       setStateTextPlaceholder({
         notes: resSenderEmail,
@@ -48,12 +49,12 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     };
   
     useEffect(() => {
-      if (!languageStorage || languageStorage === 'en')     
+      if (!language || language === 'en')     
       return setStateTextPlaceholder({
           notes: "Description of service or product",
         });;
       changeTextPlaceHolderLg()
-    }, [languageStorage]);
+    }, [language]);
     
     const totalPrice = (fields) => {
       return fields?.reduce((sum, i) => {

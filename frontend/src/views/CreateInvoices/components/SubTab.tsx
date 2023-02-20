@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 import { AppDispatch } from 'state'
 import { tabActiveNewInvoice } from "state/invoice/actions";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as Yup from 'yup'
 import FormTabOne from "./FormTabOne";
 import FormTabTwo from "./FormTabTwo";
@@ -16,6 +16,7 @@ import axios from "axios";
 import { GetAllInvoice, UseGetAllInvoice } from "state/invoice";
 import { useNavigate } from "react-router-dom";
 import { Translate } from "react-auto-translate";
+import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 interface PropsSubTab{
     isActive:number
 }
@@ -29,7 +30,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
   const [invoiceId, setInvoiceid] = useState('')
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
-  localStorage.setItem('invoiceIdStorage', invoiceId)
+  const { setInvoiceId } = useContext(InvoiceIdContext);
+//   localStorage.setItem('invoiceIdStorage', invoiceId)
 
   UseGetAllInvoice()
   const items = GetAllInvoice()
@@ -95,7 +97,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     });
 
     const onSubmit = async data => {
-        // console.log("data", data)
         setLoadingPreview(true)
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
@@ -116,7 +117,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             formData.append("amountPaid", `${data.amountPaid}`);
             formData.append("logo", data.logo);
             
-            // console.log("formData", formData)
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {
                         headers: {
@@ -128,6 +128,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                 if(submitReq.status == 200){
                     toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
                     setInvoiceid(submitReq?.data?.invoiceId)
+                    setInvoiceId(submitReq?.data?.invoiceId)
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {

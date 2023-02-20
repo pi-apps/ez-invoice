@@ -9,19 +9,22 @@ import Menu, { IsOpenProvider } from "./components/Menu";
 import Header from "./components/Header";
 import "./i18n";
 import { LanguagesContextProvider } from "contexts/Translate";
+import { InVoiceIdContextProvider } from "contexts/InVoiceIdContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <LanguagesContextProvider>
-      <Providers>
-        <BrowserRouter>
-          <ResetCSS />
-          <GlobalStyle />
-          <IsOpenProvider>
-            <App />
-          </IsOpenProvider>
-        </BrowserRouter>
-      </Providers>
+      <InVoiceIdContextProvider>
+        <Providers>
+          <BrowserRouter>
+            <ResetCSS />
+            <GlobalStyle />
+            <IsOpenProvider>
+              <App />
+            </IsOpenProvider>
+          </BrowserRouter>
+        </Providers>
+      </InVoiceIdContextProvider>
     </LanguagesContextProvider>
   </React.StrictMode>,
   document.getElementById("root")

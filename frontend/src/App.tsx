@@ -33,7 +33,7 @@ const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
 const App: React.FC = () => {
 
   const DataAb = getUser();
-  const { language, setLanguage } = useContext(LanguagesContext);
+  const { language } = useContext(LanguagesContext);
   const languageStorage = localStorage.getItem('language')
 
   return (
@@ -43,7 +43,7 @@ const App: React.FC = () => {
         to={
           language !== null
             ? language
-            : languageStorage ? languageStorage
+            // : languageStorage ? languageStorage
             : DataAb?.language
             ? DataAb?.language
             : "en"

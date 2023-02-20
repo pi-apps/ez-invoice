@@ -1,5 +1,5 @@
 import { Button, useModal } from "@devfedeltalabs/pibridge_uikit";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import DownloadModal from "components/DownloadModal";
 import { Translate } from "react-auto-translate";
+import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 
 const styles = {
   main: {
@@ -47,6 +48,7 @@ const Footer = ({ isActive }) => {
     }
   };
   const isInvoiceIdStorage = localStorage.getItem("invoiceIdStorage");
+  const { invoiceId, setInvoiceId } = useContext(InvoiceIdContext);
   return (
     <NavCustom
       activeKey="/"
@@ -64,7 +66,7 @@ const Footer = ({ isActive }) => {
       <Nav.Item style={styles.navItem}>
         <Navbar.Brand onClick={openLoginModal}>
         <CsButtonDownload 
-        disabled={(isActive === 1 || isActive === 2) || !isInvoiceIdStorage}
+        disabled={(isActive === 1 || isActive === 2) || !invoiceId}
         >
             <Translate>Download</Translate>
           </CsButtonDownload>
@@ -74,7 +76,7 @@ const Footer = ({ isActive }) => {
       <Nav.Item style={styles.navItem}>
         <Navbar.Brand href="/newInvoice/send">
           <CsButton
-           disabled={(isActive === 1 || isActive === 2) || !isInvoiceIdStorage}
+           disabled={(isActive === 1 || isActive === 2) || !invoiceId}
           >
             <Translate>Send</Translate>
           </CsButton>
