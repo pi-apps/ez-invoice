@@ -74,9 +74,8 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
 
     const taxValuePercent = taxValue * total / 100 
     const DiscountValuePercent = discountValue * total / 100 
-    const isDiscountValuePercent = DiscountValuePercent <= 100 ? DiscountValuePercent : total
+    const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
     const isDiscount = (discountValue < total) ? discountValue : total
-    console.log('isDiscountValuePercent', isDiscountValuePercent)
     
     const totalFinal = (total) => {
       if(activeTax === 2 && isPercent === false){
@@ -220,7 +219,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                                         onBlur={field.onBlur}
                                         onChange={field.onChange}
                                     />
-)}
+                                  )}
                               />
                             </WrapInputAmountPaid>
                           <ErrorMessages errors={errors} name="amountPaid" />
