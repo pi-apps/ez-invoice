@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import updateVersion from "./global/actions";
 import invoice from "./invoice/reducer";
 import user from "./user/reducer";
+import payment from "./payment/reducer"
 import loginGoogle from "./googleAuth/reducer";
 
 const PERSISTED_KEYS: string[] = [
@@ -19,6 +20,7 @@ const store = configureStore({
     invoice,
     user,
     loginGoogle,
+    payment
   },
   middleware: [
     ...getDefaultMiddleware({ thunk: true, serializableCheck: false }),

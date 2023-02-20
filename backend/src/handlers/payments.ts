@@ -93,16 +93,24 @@ export default function mountPaymentsEndpoints(router: Router) {
 
     // approve the current payment
     router.post('/approve', async (req, res) => {
-        if (!req.session.currentUser) {
-            return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+        try {
+            if (!req.session.currentUser) {
+                return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+            }
+            console.log(req.body);
+            
+            const invoiceId = req.body.invoiceId;
+            const paymentId = req.body.paymentId;
+            // update paymentId
+            await InvoicesModel.updateOne({ invoiceId: invoiceId }, { $set: { pi_payment_id: paymentId } })
+            // let Pi Servers know that you're ready
+            await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
+            return res.status(200).json({ message: `Approved the payment ${paymentId}` });
+        } catch (error:any) {
+            console.log(error);
+            
+            return res.status(500).json({ message: error.message });
         }
-        const invoiceId = req.body.invoiceId;
-        const paymentId = req.body.paymentId;
-        // update paymentId
-        await InvoicesModel.updateOne({ invoiceId: invoiceId }, { $set: { paymentId: paymentId } })
-        // let Pi Servers know that you're ready
-        await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
-        return res.status(200).json({ message: `Approved the payment ${paymentId}` });
     });
 
     // complete the current payment

@@ -9,6 +9,7 @@ import CreateInvoices from "views/CreateInvoices";
 import DetailSent from "views/Invoices/SentTabContent/DetailSent";
 import { Translator } from "react-auto-translate";
 import DetailReceived from "views/Invoices/ReceiveContent/DetailReceived";
+import Payment from "views/Payment/index"
 import { ToastListener } from "./contexts/ToastsContext";
 import Register from "views/Register";
 import Invoices from "views/Invoices";
@@ -62,6 +63,7 @@ const App: React.FC = () => {
           <Route path="detailReceived/:slug" element={<DetailReceived />} />
           <Route path="createDetail/:slug" element={<CreateDetail />} />
           <Route path="newInvoice/send" element={<SendInvoice />} />
+          <Route path="payment/:signature" element={<Payment/>} />
           <Route path="history" element={<History />} />
         </Routes>
         <ToastListener />
