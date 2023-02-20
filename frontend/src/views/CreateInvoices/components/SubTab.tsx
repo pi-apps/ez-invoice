@@ -58,20 +58,20 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     }
     
     const validationSchema = Yup.object().shape({
-        senderEmail: Yup.string().required('Sender email is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
+        senderEmail: Yup.string().required('Sender email is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').email('Invalid email address'),
         billFrom: Yup.string().required('Bill from is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         billTo: Yup.string().required('Bill to is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         shipTo: Yup.string().required('Ship to is required').max(200, 'Max length is 200 characters'),
         paymentTerms: Yup.string().required('Payment terms is required').max(50, 'Max length is 50 characters'),
-        poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
+        // poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().required('Notes is required').max(500, 'Max length is 500 characters'),
         tax: Yup.string().matches(/[0-9]+/ , 'Please input number'),
         discount: Yup.string().matches(/[0-9]+/, 'Please input number'),
         shipping: Yup.string().matches(/[0-9]+/, 'Please input number'),
         amountPaid: Yup.string().matches(/[0-9]+/, 'Please input number').matches(/^(\S+$)/g, 'Please input number'),
-        // issueDate: Yup.string().required('Issue date is required'),
-        // dueDate: Yup.string().required('Due date is required'),
+        // issueDate: Yup.date().required('Issue date is required'),
+        // dueDate: Yup.date().required('Due date is required'),
         // taxType: Yup.string().required('Tax type is required'),
         // logo: Yup.string().required('Logo is required'),
     });

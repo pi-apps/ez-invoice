@@ -88,7 +88,7 @@ const FormSendInvoice: React.FC<
   };
 
   useEffect(() => {
-    if (languageStorage === 'en')     
+    if (!languageStorage || languageStorage === 'en')     
     return setStateTextPlaceholder({
         recipientEmail: "Who is this invoice from? (required)",
       });;
@@ -136,7 +136,7 @@ const FormSendInvoice: React.FC<
           </Flex>
           <Flex>
             <CsButton
-              // disabled={!invoiceIdStorage}
+              disabled={!invoiceIdStorage}
               type="submit" 
               value="Submit" 
               endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Send</Translate>}

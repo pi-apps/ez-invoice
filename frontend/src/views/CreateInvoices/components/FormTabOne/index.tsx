@@ -146,7 +146,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 <>
                                 <CsInput
                                     name="senderEmail"
-                                    type="email"
+                                    // type="email"
                                     value={field.value}
                                     onBlur={field.onBlur}
                                     placeholder={`${stateTextPlaceholder.senderEmail}`}
@@ -249,7 +249,9 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                             id="date"
                                             value={field.value}
                                             onBlur={field.onBlur}
-                                            selected={startDate} onChange={(date:any) => setStartDate(date)} />
+                                            selected={startDate} onChange={(date:any) => {
+                                                setStartDate(date)
+                                            }} />
                                             <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('date')?.focus() }}/>
                                         </>
                                     )}
