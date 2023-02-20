@@ -14,7 +14,7 @@ console.log('item', item)
           </WrapperImg>
           <Flex flexDirection='column'>
             <Text fontWeight={700} fontSize='12px' color='#0F172A'><Translate>{item?.name}</Translate></Text>
-            <Text fontSize='10px' color='#64748B'>Jan 13, 2023</Text>
+            <Text fontSize='10px' color='#64748B'><Translate>Jan 13, 2023</Translate></Text>
           </Flex>
         </Flex>
         <CsButtonDelete role="presentation">
