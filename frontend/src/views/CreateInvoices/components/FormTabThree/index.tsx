@@ -1,23 +1,19 @@
-import { AutoRenewIcon, Button, Flex, Image, Input, Text } from '@devfedeltalabs/pibridge_uikit'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Controller, useForm } from "react-hook-form"
-import ErrorMessages from "components/ErrorMessages/ErrorMessage"
-import Navbar from 'react-bootstrap/Navbar';
-import * as Yup from 'yup'
-import styled from 'styled-components'
+import { AutoRenewIcon, Button, Flex, Input, Text } from '@devfedeltalabs/pibridge_uikit';
+import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import Row from 'components/Layout/Row';
-import { useTranslation } from 'react-i18next';
-import ChooseMethod from './ChooseMethod';
+import { useContext } from 'react';
 import { AddIcon2 } from 'components/Svg';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { GetAllInvoice, UseGetAllInvoice } from 'state/invoice';
-import { useNavigate } from 'react-router-dom';
-import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import { LanguagesContext } from 'contexts/Translate';
+import { GetTranslateHolder } from 'hooks/TranSlateHolder';
+import { useEffect, useMemo, useState } from 'react';
 import { Translate } from "react-auto-translate";
+import { getLanguageTrans } from 'state/LanguageTrans';
+import Navbar from 'react-bootstrap/esm/Navbar';
+import styled from 'styled-components';
+import { Controller } from 'react-hook-form';
+import ChooseMethod from './ChooseMethod';
 
 const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
-    const { t } = useTranslation()
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)
@@ -28,7 +24,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
 
-    const languageStorage  = localStorage.getItem('language');
+    const languageTransRedux = getLanguageTrans();
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       notes: "Description of service or product",
     });
@@ -40,7 +36,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const changeTextPlaceHolderLg = async () => {
       const resSenderEmail = await GetTranslateHolder(
           listTextPlaceHolder.notes,
-          languageStorage
+          languageTransRedux
         );
       setStateTextPlaceholder({
         notes: resSenderEmail,
@@ -48,12 +44,12 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     };
   
     useEffect(() => {
-      if (!languageStorage || languageStorage === 'en')     
+      if (!languageTransRedux || languageTransRedux === 'en')     
       return setStateTextPlaceholder({
           notes: "Description of service or product",
         });;
       changeTextPlaceHolderLg()
-    }, [languageStorage]);
+    }, [languageTransRedux]);
     
     const totalPrice = (fields) => {
       return fields?.reduce((sum, i) => {

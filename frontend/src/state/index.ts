@@ -6,12 +6,15 @@ import invoice from "./invoice/reducer";
 import user from "./user/reducer";
 import payment from "./payment/reducer"
 import loginGoogle from "./googleAuth/reducer";
+import invoiceId from "./newInvoiceId/reducer"
+import languageTrans from "./LanguageTrans/reducer"
 
 const PERSISTED_KEYS: string[] = [
-  "user",
   "transactions",
   "lists",
   "loginGoogle",
+  "invoiceId",
+  "languageTrans",
 ];
 
 const store = configureStore({
@@ -20,7 +23,8 @@ const store = configureStore({
     invoice,
     user,
     loginGoogle,
-    payment
+    invoiceId,
+    languageTrans,
   },
   middleware: [
     ...getDefaultMiddleware({ thunk: true, serializableCheck: false }),

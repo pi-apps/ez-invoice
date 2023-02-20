@@ -115,7 +115,7 @@ const CsText = styled(Text)`
   font-size: 12px;
 `;
 const CsStaTusUnpaid = styled(Flex)`
-  width: 50px;
+  /* width: 50px; */
   background: #fcf8e9;
   border-radius: 6px;
   color: #ffcb11;

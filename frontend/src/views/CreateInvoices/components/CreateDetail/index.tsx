@@ -10,11 +10,16 @@ import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
 import Footer from '../Footer';
 import { Translate } from "react-auto-translate";
+import { getAccessToken } from 'state/user';
+import { Fragment, useContext, useEffect } from 'react';
+import { InvoiceIdContext } from 'contexts/InVoiceIdContext';
 
 const CreateDetail = () => {
 
     let { slug } = useParams()
-    UseGetAnInvoiceCore(slug)
+    const dataUser = getAccessToken()
+    const { setInvoiceId } = useContext(InvoiceIdContext);
+    UseGetAnInvoiceCore(slug, dataUser)
     const items = GetAnInvoice()
     const details = items?.details
     function convertDate(date: any) {
@@ -29,7 +34,9 @@ const CreateDetail = () => {
         }
         return <Skeleton width={60} />
     }
-    
+    useEffect(()=> {
+        setInvoiceId(items?.details?.invoiceId)
+    },[items?.details])
     return (
         <PageFullWidth>
             <CsContainer>
@@ -43,7 +50,11 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                            <Fragment>
+                                                { details?.logoUrl &&
+                                                    <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                                }
+                                            </Fragment>
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
@@ -173,7 +184,7 @@ const CreateDetail = () => {
                                     </CsNavItem>
                             </WAction>
                         </Flex>
-                        <Footer isActive="" />
+                        <Footer isActive={3}/>
                     </CsWrapContainer>
             </CsContainer>
         </PageFullWidth>

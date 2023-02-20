@@ -1,6 +1,6 @@
 import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Controller } from "react-hook-form"
@@ -8,20 +8,18 @@ import styled from "styled-components"
 import { ContainerInput, CsInput, CsTextArea, WrapInput } from "../styles"
 // import Form from 'react-bootstrap/Form';
 import { AddIcon, DatePickerIcon } from 'components/Svg'
+import { GetTranslateHolder } from "hooks/TranSlateHolder"
+import { Translate } from "react-auto-translate"
 import Row from 'react-bootstrap/Row'
 import { useDispatch } from 'react-redux'
+import { getLanguageTrans } from "state/LanguageTrans"
 import ReactImageUpload from './ReactImageUpload'
-import { GetAllInvoice, UseGetAllInvoice, UseGetAllInvoiceSentCore } from "state/invoice"
-import { LanguagesContext } from "contexts/Translate"
-import { GetTranslateHolder } from "hooks/TranSlateHolder"
-import { Translate } from "react-auto-translate";
 
 const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
   const dispatch = useDispatch()
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
-//   const { language, setLanguage } = useContext(LanguagesContext);
-  const languageStorage  = localStorage.getItem('language');
+  const languageTransRedux = getLanguageTrans();
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
     senderEmail: "Who is this invoice from? (required)",
     billFrom: "Who is this invoice from? (required)",
@@ -46,32 +44,32 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     const resSenderEmail = await GetTranslateHolder(
         listTextPlaceHolder.senderEmail,
         // language
-        languageStorage
+        languageTransRedux
       );
       console.log('resSenderEmail', resSenderEmail)
     const resBillFrom = await GetTranslateHolder(
       listTextPlaceHolder.billFrom,
-      languageStorage
+      languageTransRedux
     );
     const resBillTo = await GetTranslateHolder(
       listTextPlaceHolder.billTo,
-      languageStorage
+      languageTransRedux
     );
     const resShipTo = await GetTranslateHolder(
         listTextPlaceHolder.shipTo,
-        languageStorage
+        languageTransRedux
       );
     const resPayment = await GetTranslateHolder(
       listTextPlaceHolder.payment,
-      languageStorage
+      languageTransRedux
     );
     const resPoNumber = await GetTranslateHolder(
       listTextPlaceHolder.poNumber,
-      languageStorage
+      languageTransRedux
     );
     const resOption = await GetTranslateHolder(
         listTextPlaceHolder.option,
-        languageStorage
+        languageTransRedux
       );
   
     setStateTextPlaceholder({
@@ -86,7 +84,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
   };
 
   useEffect(() => {
-    if (!languageStorage || languageStorage === 'en')     
+    if (!languageTransRedux || languageTransRedux === 'en')     
     return setStateTextPlaceholder({
         senderEmail: "Who is this invoice from? (required)",
         billFrom: "Who is this invoice from? (required)",
@@ -97,11 +95,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
         option: "Optional",
       });;
     changeTextPlaceHolderLg()
-  }, [languageStorage]);
-
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+  }, [languageTransRedux]);
 
   return (
     <CsContainer >
@@ -146,7 +140,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 <>
                                 <CsInput
                                     name="senderEmail"
-                                    type="email"
+                                    // type="email"
                                     value={field.value}
                                     onBlur={field.onBlur}
                                     placeholder={`${stateTextPlaceholder.senderEmail}`}
@@ -249,7 +243,9 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                             id="date"
                                             value={field.value}
                                             onBlur={field.onBlur}
-                                            selected={startDate} onChange={(date:any) => setStartDate(date)} />
+                                            selected={startDate} onChange={(date:any) => {
+                                                setStartDate(date)
+                                            }} />
                                             <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('date')?.focus() }}/>
                                         </>
                                     )}

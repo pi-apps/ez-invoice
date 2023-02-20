@@ -1,15 +1,14 @@
-import React from "react";
-import PageFullWidth from "components/Layout/PageFullWidth";
-import styled from "styled-components";
-import Container from "components/Layout/Container";
+import { Flex } from "@devfedeltalabs/pibridge_uikit";
+import Footer from "components/Footer";
 import HeaderMain from "components/Header";
+import Container from "components/Layout/Container";
+import PageFullWidth from "components/Layout/PageFullWidth";
+import { GetDataInvoice } from "state/invoice";
+import styled from "styled-components";
 import HeaderInvoice from "./components/Header";
 import SubTab from "./components/SubTab";
-import { GetDataInvoice, UseGetAllInvoiceSentCore, GetAnInvoice } from "state/invoice";
-import { Flex } from "@devfedeltalabs/pibridge_uikit";
-import SentTab from "./SentTabContent/SentTab";
-import Footer from "components/Footer";
 import ReceiveTab from "./ReceiveContent/ReceiveTab";
+import SentTab from "./SentTabContent/SentTab";
 
 const Invoices = () => {
     const [ dataInvoice ] = GetDataInvoice()

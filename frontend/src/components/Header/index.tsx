@@ -1,18 +1,15 @@
-import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import UserMenu from "../Menu/UserMenu";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../state";
-import { useEffect, useState } from "react";
-import { axiosClient } from "../../config/htttp";
-import { setUser } from "../../state/user/actions";
-import { useNavigate } from "react-router-dom";
-import { getUser } from "../../state/user";
-import { Text } from "@devfedeltalabs/pibridge_uikit";
 import TranslateMenu from "components/Menu/Translate/TranslateMenu";
-import { Translate } from "react-auto-translate";
+import { useEffect } from "react";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import { useDispatch } from "react-redux";
 import { GetAnInvoice, UseGetAllInvoice } from "state/invoice";
+import { axiosClient } from "../../config/htttp";
+import { AppDispatch } from "../../state";
+import { getAccessToken, getUser } from "../../state/user";
+import { setUser } from "../../state/user/actions";
+import UserMenu from "../Menu/UserMenu";
 
 const styles = {
   navbar: {
@@ -33,19 +30,28 @@ const styles = {
 const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
-
-  UseGetAllInvoice();
+  const accessToken = getAccessToken()
+  UseGetAllInvoice(accessToken);
   const items = GetAnInvoice();
   const isLoading = items?.isLoading
 
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await axiosClient.get("user/info");
+      const user = await axiosClient.get("user/info", {
+        headers: {
+          'Authorization': accessToken,
+        }
+      });
       if (user) {
         dispatch(setUser(user.data));
       }
     };
-    fetchUser();
+    if (accessToken?.length){
+      fetchUser();
+    } else {
+      dispatch(setUser(null));
+    }
+    
   }, []);
 
   return (
@@ -78,7 +84,7 @@ const Header = () => {
               </Text>
             )} */}
             <TranslateMenu />
-            <UserMenu isLoading={isLoading}/>
+            <UserMenu/>
           </Nav>
         </Container>
       </Navbar>

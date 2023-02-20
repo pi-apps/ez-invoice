@@ -1,21 +1,23 @@
-import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
-import { useDispatch } from "react-redux";
-import { yupResolver } from '@hookform/resolvers/yup'
-import styled from "styled-components";
-import { Controller, useFieldArray, useForm } from "react-hook-form"
-import { AppDispatch } from 'state'
-import { tabActiveNewInvoice } from "state/invoice/actions";
-import { useEffect, useState } from "react";
-import * as Yup from 'yup'
-import FormTabOne from "./FormTabOne";
-import FormTabTwo from "./FormTabTwo";
-import FormTabThree from "./FormTabThree";
-import { backendURL, Csconfig, axiosClient } from "config/htttp";
+import { Flex, Text } from "@devfedeltalabs/pibridge_uikit";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { axiosClient } from "config/htttp";
+import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 import useToast from "hooks/useToast";
-import axios from "axios";
-import { GetAllInvoice, UseGetAllInvoice } from "state/invoice";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import { Translate } from "react-auto-translate";
+import { useFieldArray, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { AppDispatch } from 'state';
+import { GetAllInvoice, UseGetAllInvoice } from "state/invoice";
+import { tabActiveNewInvoice } from "state/invoice/actions";
+import { setInvoiceIdRedux } from "state/newInvoiceId/actions";
+import { getAccessToken } from "state/user";
+import styled from "styled-components";
+import * as Yup from 'yup';
+import FormTabOne from "./FormTabOne";
+import FormTabThree from "./FormTabThree";
+import FormTabTwo from "./FormTabTwo";
 interface PropsSubTab{
     isActive:number
 }
@@ -29,12 +31,15 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
   const [invoiceId, setInvoiceid] = useState('')
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
-  localStorage.setItem('invoiceIdStorage', invoiceId)
+  const { setInvoiceId } = useContext(InvoiceIdContext);
 
-  UseGetAllInvoice()
-  const items = GetAllInvoice()
-  const invoicelength = items?.[0]?.allInvoice?.length
-  const [loadingPreview, setLoadingPreview] = useState(false)
+    const accessToken = getAccessToken()
+
+    UseGetAllInvoice(accessToken)
+    
+    const items = GetAllInvoice()
+    const invoicelength = items?.[0]?.allInvoice?.length
+    const [loadingPreview, setLoadingPreview] = useState(false)
     const dispatch = useDispatch<AppDispatch>()
     
     const InitValues = {
@@ -58,12 +63,12 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     }
     
     const validationSchema = Yup.object().shape({
-        senderEmail: Yup.string().required('Sender email is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
+        senderEmail: Yup.string().required('Sender email is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').email('Invalid email address'),
         billFrom: Yup.string().required('Bill from is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         billTo: Yup.string().required('Bill to is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         shipTo: Yup.string().required('Ship to is required').max(200, 'Max length is 200 characters'),
         paymentTerms: Yup.string().required('Payment terms is required').max(50, 'Max length is 50 characters'),
-        poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
+        // poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().required('Notes is required').max(500, 'Max length is 500 characters'),
         tax: Yup.string().matches(/[0-9]+/ , 'Please input number'),
@@ -95,7 +100,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     });
 
     const onSubmit = async data => {
-        // console.log("data", data)
         setLoadingPreview(true)
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
@@ -116,18 +120,20 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             formData.append("amountPaid", `${data.amountPaid}`);
             formData.append("logo", data.logo);
             
-            // console.log("formData", formData)
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {
                         headers: {
                             'Content-Type': `multipart/form-data`,
-                            'Accept': '*'
+                            'Accept': '*',
+                            'Authorization': accessToken,
                         }
                     }
                 );
                 if(submitReq.status == 200){
                     toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
                     setInvoiceid(submitReq?.data?.invoiceId)
+                    setInvoiceId(submitReq?.data?.invoiceId)
+                    dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {

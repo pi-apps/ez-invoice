@@ -2,11 +2,15 @@ import { Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { MONTHS } from "config";
 import { Translate } from "react-auto-translate";
 import { GetAnInvoice, UseGetAllInvoiceReceivedCore } from "state/invoice";
+import { getAccessToken, getUser } from "state/user";
 import styled from "styled-components";
 import Card from "./Card";
 
 const ReceiveTab = () => {
-  UseGetAllInvoiceReceivedCore();
+  
+  const dataUser = getAccessToken()
+  UseGetAllInvoiceReceivedCore(dataUser);
+ 
   const items = GetAnInvoice();
 
   function convertDate(date: any) {

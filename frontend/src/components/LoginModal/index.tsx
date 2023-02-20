@@ -29,7 +29,11 @@ const LoginModal: React.FC<Props> = ({ onDismiss }) => {
     const loginUser = await signInUser(authResult);
     // setUserData(authResult.user);
     if (loginUser) {
-      const userInfor = await axiosClient.get("user/info");
+      const userInfor = await axiosClient.get("user/info", {
+        headers: {
+          'Authorization': `${loginUser?.data?.message.accessToken}`,
+        }
+      });
       if (userInfor) {
         dispatch(fetchLoading({ isLoading: false }));
         dispatch(setUser(userInfor.data));
