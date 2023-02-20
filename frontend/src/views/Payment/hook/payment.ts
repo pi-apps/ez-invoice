@@ -34,23 +34,36 @@ export const onError = (error: Error, payment?: PaymentDTO) => {
 }
 
 export const payment = async (memo: string, amount: number, invoiceId:string) => {
-    console.log("memo", memo)
-    console.log("amount", amount)
     localStorage.setItem("invoiceId", invoiceId)
     const scopes = ["username", "payments"];
-    window.Pi.authenticate(scopes, onIncompletePaymentFound)
-      .then(async function (auth) {        
-        const paymentData = { amount, memo, metadata: {invoiceId: invoiceId} };        
-        const callbacks = {
+    const result = await window.Pi.authenticate(scopes, onIncompletePaymentFound)
+    
+    if ( result ) {
+      const paymentData = { amount, memo, metadata: {invoiceId: invoiceId} };        
+      const callbacks = {
           onReadyForServerApproval,
           onReadyForServerCompletion,
           onCancel,
           onError
         };
-        const payment = await window.Pi.createPayment(paymentData, callbacks);
-        return payment
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-  }
+      const payment = await window.Pi.createPayment(paymentData, callbacks);
+      return payment
+    } else {
+      return null
+    }
+    // window.Pi.authenticate(scopes, onIncompletePaymentFound)
+    //   .then(async function (auth) {        
+    //     const paymentData = { amount, memo, metadata: {invoiceId: invoiceId} };        
+    //     const callbacks = {
+    //       onReadyForServerApproval,
+    //       onReadyForServerCompletion,
+    //       onCancel,
+    //       onError
+    //     };
+    //     const payment = await window.Pi.createPayment(paymentData, callbacks);
+    //     return payment
+    //   })
+    //   .catch(function (error) {
+    //     console.error(error);
+    //   });
+}

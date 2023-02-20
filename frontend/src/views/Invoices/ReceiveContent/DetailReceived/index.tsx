@@ -28,7 +28,7 @@ const DetailSent = () => {
         }
         return <Skeleton width={60} />
     }
-    
+    console.log("details", details)
     return (
         <PageFullWidth>
             <CsContainer>
@@ -163,6 +163,11 @@ const DetailSent = () => {
                                 </CsContentInfo>
                             </WContent>
                             <WAction>
+                                <CsNavItem>
+                                    <CsButton onClick={()=> navigate(`/payment/${details?.signature}`)}>
+                                            Pay now
+                                    </CsButton>
+                                </CsNavItem>
                                 <CsNavItem>
                                     <CsButton onClick={()=> navigate("/invoice")}>
                                             Back

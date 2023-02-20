@@ -38,7 +38,7 @@ const Card: React.FC<Props> = ({
     return null
   }
   return (
-    <Navbar.Brand href={`/detailSent/${invoiceId}`}>
+    <Navbar.Brand href={`/detailReceived/${invoiceId}`}>
       <CsContainer>
         <CsRow>
           <CsCol>
