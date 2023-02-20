@@ -7,10 +7,10 @@ import { LanguagesContext } from 'contexts/Translate';
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import { useEffect, useMemo, useState } from 'react';
 import { Translate } from "react-auto-translate";
-import Navbar from 'react-bootstrap/Navbar';
-import { Controller } from "react-hook-form";
-import { useTranslation } from 'react-i18next';
+import { getLanguageTrans } from 'state/LanguageTrans';
+import Navbar from 'react-bootstrap/esm/Navbar';
 import styled from 'styled-components';
+import { Controller } from 'react-hook-form';
 import ChooseMethod from './ChooseMethod';
 
 const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
@@ -25,7 +25,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
 
-    const { language, setLanguage } = useContext(LanguagesContext);
+    const languageTransRedux = getLanguageTrans();
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       notes: "Description of service or product",
     });
@@ -37,7 +37,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const changeTextPlaceHolderLg = async () => {
       const resSenderEmail = await GetTranslateHolder(
           listTextPlaceHolder.notes,
-          language
+          languageTransRedux
         );
       setStateTextPlaceholder({
         notes: resSenderEmail,
@@ -45,12 +45,12 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     };
   
     useEffect(() => {
-      if (!language || language === 'en')     
+      if (!languageTransRedux || languageTransRedux === 'en')     
       return setStateTextPlaceholder({
           notes: "Description of service or product",
         });;
       changeTextPlaceHolderLg()
-    }, [language]);
+    }, [languageTransRedux]);
     
     const totalPrice = (fields) => {
       return fields?.reduce((sum, i) => {

@@ -17,6 +17,7 @@ import CreateDetail from "views/CreateInvoices/components/CreateDetail";
 import { getUser } from "./state/user";
 import SendInvoice from "views/SendInvoice";
 import { LanguagesContext } from "contexts/Translate";
+import { getLanguageTrans } from "state/LanguageTrans";
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -34,7 +35,7 @@ const App: React.FC = () => {
 
   const DataAb = getUser();
   const { language } = useContext(LanguagesContext);
-  const languageStorage = localStorage.getItem('language')
+  const languageTransRedux = getLanguageTrans();
 
   return (
     <Fragment>
@@ -43,7 +44,7 @@ const App: React.FC = () => {
         to={
           language !== null
             ? language
-            // : languageStorage ? languageStorage
+            : languageTransRedux ? languageTransRedux
             : DataAb?.language
             ? DataAb?.language
             : "en"

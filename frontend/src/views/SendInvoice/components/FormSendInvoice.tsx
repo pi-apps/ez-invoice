@@ -12,8 +12,9 @@ import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import { LanguagesContext } from "contexts/Translate";
-import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 import { getInvoiceId } from "state/newInvoiceId";
+import { InvoiceIdContext } from "contexts/InVoiceIdContext";
+import { getLanguageTrans } from "state/LanguageTrans";
 
 interface FormSendInvoiceTypes {
   setIsSentSuccessfully: (e) => void;
@@ -26,10 +27,9 @@ const FormSendInvoice: React.FC<
   const [errorSentText, setErrorSentText] = useState("");
   const [isLoading, setIsLoading] = useState(false)
   const accessTokenUser = getAccessToken()
-  
-  const { language, setLanguage } = useContext(LanguagesContext);
 
-  
+  const invoiceIdRedux = getInvoiceId();
+  const languageTransRedux = getLanguageTrans();  
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100, 'Max length is 100 characters').email('Invalid email address'),
@@ -43,9 +43,9 @@ const FormSendInvoice: React.FC<
   const handleLogin = async (data) => {
     setIsLoading(true)
     const dataPost = {
-      invoiceId: invoiceId,
+      invoiceId: invoiceIdRedux,
       email: data.email,
-      language: language ? language : "en",
+      language: languageTransRedux ? languageTransRedux : "en",
     };
 
     try {
@@ -82,7 +82,7 @@ const FormSendInvoice: React.FC<
     const resRecipientEmail= await GetTranslateHolder(
         listTextPlaceHolder.recipientEmail,
         // language
-        language
+        languageTransRedux
       );
     setStateTextPlaceholder({
       recipientEmail: resRecipientEmail,
@@ -90,12 +90,12 @@ const FormSendInvoice: React.FC<
   };
 
   useEffect(() => {
-    if (!language || language === 'en')     
+    if (!languageTransRedux || languageTransRedux === 'en')     
     return setStateTextPlaceholder({
         recipientEmail: "Who is this invoice to? (required)",
       });;
     changeTextPlaceHolderLg()
-  }, [language]);
+  }, [languageTransRedux]);
 
   return (
     <CsContainer>
@@ -138,7 +138,7 @@ const FormSendInvoice: React.FC<
           </Flex>
           <Flex>
             <CsButton
-              disabled={!invoiceId}
+              disabled={!invoiceIdRedux}
               type="submit" 
               value="Submit" 
               endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Send</Translate>}

@@ -1,17 +1,17 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { setInvoiceIdRedux } from "./actions";
+import { setLanguageTransRedux } from "./actions";
 
 interface globalStateGoogle {
-  invoiceId: any;
+  languageTrans: any;
 }
 
 export const initialState: globalStateGoogle = {
-  invoiceId: '',
+  languageTrans: '',
 
 };
 
 export default createReducer(initialState, (builder) =>
-  builder.addCase(setInvoiceIdRedux, (state, action) => {
-    state.invoiceId = action.payload;
+  builder.addCase(setLanguageTransRedux, (state, action) => {
+    state.languageTrans = action.payload;
   })
 );

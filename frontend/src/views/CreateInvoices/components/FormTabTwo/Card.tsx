@@ -6,8 +6,7 @@ import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
 import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from 'hooks/TranSlateHolder'
-import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
-import { LanguagesContext } from 'contexts/Translate'
+import { getLanguageTrans } from 'state/LanguageTrans'
 
 const Card = ({index,item, remove, fields, register, control } ) => {
   console.log('control' , control?._formState?.touchedFields?.items?.[0]?.name)
@@ -19,8 +18,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
       }
     }
 
-    const languageStorage  = localStorage.getItem('language');
-    const { language, setLanguage } = useContext(LanguagesContext);
+    const languageTransRedux = getLanguageTrans();
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       name: "Description of service or product",
     });
@@ -32,7 +30,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     const changeTextPlaceHolderLg = async () => {
       const resSenderEmail = await GetTranslateHolder(
           listTextPlaceHolder.name,
-          language
+          languageTransRedux
         );
       setStateTextPlaceholder({
         name: resSenderEmail,
@@ -40,12 +38,12 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     };
   
     useEffect(() => {
-      if (!language || language === 'en')     
+      if (!languageTransRedux || languageTransRedux === 'en')     
       return setStateTextPlaceholder({
           name: "Description of service or product",
         });;
       changeTextPlaceHolderLg()
-    }, [language]);
+    }, [languageTransRedux]);
     
     
   const total = useMemo(() => {
