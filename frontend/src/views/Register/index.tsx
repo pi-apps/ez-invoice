@@ -42,10 +42,10 @@ const Register = () => {
     const onSubmit = async data => {
         const submitReq = await axiosClient.post('/user/update', data);
         if(submitReq.status == 200 || submitReq.status == 201){
-            toastSuccess(null, <Translate>Update successful</Translate>);
+            toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Update successful</Translate></Text>);
             dispatch(setUser(submitReq.data));
         }else {
-            toastError('error', <Translate>System error!!!</Translate>)
+            toastError('error', <Text style={{justifyContent: 'center'}}><Translate>System error!!!</Translate></Text>)
         }
     }
 

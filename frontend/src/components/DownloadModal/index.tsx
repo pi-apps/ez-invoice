@@ -43,7 +43,6 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const uploadFileToDrive = async (accessToken) => {
     setIsLoadingGGDrive(true)
     try {
-      // Download the PDF file from the URL
       const response1 = await fetch(
         `${urlDownload}`
       );
@@ -74,11 +73,11 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
         data: pdfByteArray,
       });
       setIsLoadingGGDrive(false)
-      toastSuccess(null, <Translate>Upload Success</Translate>);
+      toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Upload Success</Translate></Text>);
     } catch (error) {
       setIsLoadingGGDrive(false)
       dispatch(setAccessToken(''));
-      toastError(null, <Translate>Upload Failed, Your google account has expired, please login again!</Translate>);
+      toastError(null, <Text style={{justifyContent: 'center'}}><Translate>Upload Failed, Your google account has expired, please login again!</Translate></Text>);
     }
   };
 
@@ -167,5 +166,9 @@ const LinkDownload = styled.a`
   width: 48%;
   height: 48px;
 `;
+
+const CsText = styled(Text)`
+  justify-content: center;
+`
 
 export default DownloadModal;
