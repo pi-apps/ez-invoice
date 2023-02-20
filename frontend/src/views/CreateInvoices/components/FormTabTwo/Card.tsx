@@ -1,12 +1,13 @@
 import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
-import { useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
 import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from 'hooks/TranSlateHolder'
 import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
+import { LanguagesContext } from 'contexts/Translate'
 
 const Card = ({index,item, remove, fields, register, control } ) => {
   console.log('control' , control?._formState?.touchedFields?.items?.[0]?.name)
@@ -19,6 +20,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     }
 
     const languageStorage  = localStorage.getItem('language');
+    const { language, setLanguage } = useContext(LanguagesContext);
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       name: "Description of service or product",
     });
@@ -30,7 +32,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     const changeTextPlaceHolderLg = async () => {
       const resSenderEmail = await GetTranslateHolder(
           listTextPlaceHolder.name,
-          languageStorage
+          language
         );
       setStateTextPlaceholder({
         name: resSenderEmail,
@@ -38,12 +40,12 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     };
   
     useEffect(() => {
-      if (!languageStorage || languageStorage === 'en')     
+      if (!language || language === 'en')     
       return setStateTextPlaceholder({
           name: "Description of service or product",
         });;
       changeTextPlaceHolderLg()
-    }, [languageStorage]);
+    }, [language]);
     
     
   const total = useMemo(() => {

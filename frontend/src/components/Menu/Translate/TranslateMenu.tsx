@@ -11,7 +11,7 @@ const TranslateMenu = () => {
   const [isShowMenu, setIsShowMenu] = useState(false);
   const { language, setLanguage } = useContext(LanguagesContext);
   const [nameCountryLanguage, setNameCountryLanguage] = useState(null);
-  const dataLanguage = localStorage.getItem("language");
+  // const dataLanguage = localStorage.getItem("language");
 
     // language
     // const [languageStorage, setLanguageStorage] = useState("en");
@@ -25,16 +25,12 @@ const TranslateMenu = () => {
     // }, []);
 
 
-
-    console.log('dataLanguage1', dataLanguage)
-    console.log('languageSto', language)
-
     useEffect(() => {
-      if (dataLanguage) {
-        const found = Langauges.find(element => element.code === dataLanguage);
+      if (language) {
+        const found = Langauges.find(element => element.code === language);
         setNameCountryLanguage(found.name)
       }
-    }, [dataLanguage])
+    }, [language])
 
   return (
     <Flex position="relative">  
@@ -42,7 +38,7 @@ const TranslateMenu = () => {
         {nameCountryLanguage ? (
           <TextLanguage>
             <Translate>
-              {nameCountryLanguage ? nameCountryLanguage : "language"}
+              {nameCountryLanguage}
             </Translate>
           </TextLanguage>
         ) : (
@@ -57,7 +53,7 @@ const TranslateMenu = () => {
                 <ButtonChooseLg
                   onClick={() => {
                     setLanguage(item.code);
-                    localStorage.setItem("language", item.code);
+                    // localStorage.setItem("language", item.code);
                     setNameCountryLanguage(item.name);
                     setIsShowMenu(!isShowMenu);
                   }}

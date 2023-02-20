@@ -5,12 +5,14 @@ import updateVersion from "./global/actions";
 import invoice from "./invoice/reducer";
 import user from "./user/reducer";
 import loginGoogle from "./googleAuth/reducer";
+import invoiceId from "./newInvoiceId/reducer"
 
 const PERSISTED_KEYS: string[] = [
   "user",
   "transactions",
   "lists",
   "loginGoogle",
+  "invoiceId",
 ];
 
 const store = configureStore({
@@ -19,6 +21,7 @@ const store = configureStore({
     invoice,
     user,
     loginGoogle,
+    invoiceId,
   },
   middleware: [
     ...getDefaultMiddleware({ thunk: true, serializableCheck: false }),
