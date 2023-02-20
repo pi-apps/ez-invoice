@@ -9,7 +9,6 @@ import invoiceId from "./newInvoiceId/reducer"
 import languageTrans from "./LanguageTrans/reducer"
 
 const PERSISTED_KEYS: string[] = [
-  "user",
   "transactions",
   "lists",
   "loginGoogle",
