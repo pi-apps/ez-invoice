@@ -254,6 +254,9 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 />
                             </WrapInput>
                             <ErrorMessages errors={errors} name="issueDate" />
+                            {startDate === null && (
+                                <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Issue date is required</Translate></Text>
+                            )}
                         </ContainerInput>
                     </Flex>
                     <Flex width="50%" flexDirection="column">
@@ -304,6 +307,9 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                             />
                         </WrapInput>
                         <ErrorMessages errors={errors} name="dueDate" />
+                        {startDueDate === null && (
+                            <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Due date is required</Translate></Text>
+                        )}
                     </Flex>
                     <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
@@ -328,7 +334,6 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                     <ErrorMessages errors={errors} name="poNumber" />
                     </Flex>
                 </Row>
-
                 { checkError === true && 
                     <CustomMessageError>{getMessageError}</CustomMessageError> 
                 }
