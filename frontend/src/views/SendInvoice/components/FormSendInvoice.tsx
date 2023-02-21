@@ -64,10 +64,10 @@ const FormSendInvoice: React.FC<
         setIsSentSuccessfully(false);
       }
       setIsLoading(false)
-    } catch (error) {
+    } catch (error: any) {
       setIsSentSuccessfully(false);
       // setErrorSentText("Invoice not found",);
-      toastError(`${error}`)
+      toastError(JSON.stringify(error?.message))
       setIsLoading(false)
     }
   };
