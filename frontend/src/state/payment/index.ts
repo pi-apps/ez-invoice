@@ -29,7 +29,7 @@ export const PaymentCore = (signature: string, token) => {
         dispatch(isFetchError({isError:true}));
       }
       
-    }, [dispatch, signature]);
+    }, [dispatch, signature, token]);
   };
   
 export const GetDataPayment = () => {
