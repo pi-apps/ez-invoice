@@ -8,22 +8,12 @@ const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
 
 const TranSlatorModal = ({ children }) => {
   const DataAb = getUser();
-
-  // language
-  const { language, setLanguage } = useContext(LanguagesContext);
-  const languageTransRedux = getLanguageTrans();
+  const languageUserApi = DataAb?.language
 
   return (
     <Translator
     from="en"
-    to={
-      language !== null
-        ? language
-        : languageTransRedux ? languageTransRedux
-        : DataAb?.language
-        ? DataAb?.language
-        : "en"
-    }
+    to={languageUserApi ? languageUserApi : "en"}
     googleApiKey={APIKEY_GOOGLE}
   >
       {children}
