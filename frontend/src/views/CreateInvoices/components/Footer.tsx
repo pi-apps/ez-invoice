@@ -65,13 +65,12 @@ const Footer = ({ isActive }) => {
       </Nav.Item>
 
       <Nav.Item style={styles.navItem}>
-        <Navbar.Brand onClick={openLoginModal}>
         <CsButtonDownload 
-        disabled={(isActive === 1 || isActive === 2) || !invoiceId}
+          disabled={(isActive === 1 || isActive === 2) || !invoiceId}
+          onClick={openLoginModal}
         >
             <Translate>Download</Translate>
           </CsButtonDownload>
-        </Navbar.Brand>
       </Nav.Item>
 
       <Nav.Item style={styles.navItem}>

@@ -4,6 +4,7 @@ import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
 import Nav from 'react-bootstrap/Nav';
+import { NavLink } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import { useParams } from 'react-router-dom';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
@@ -177,11 +178,11 @@ const CreateDetail = () => {
                             </WContent>
                             <WAction>
                                     <CsNavItem>
-                                        <Navbar.Brand href="/newInvoice">
+                                        <NavLink to="/newInvoice">
                                             <CsButton>
                                                 <Translate>Back</Translate>
                                             </CsButton>
-                                        </Navbar.Brand>
+                                        </NavLink>
                                     </CsNavItem>
                             </WAction>
                         </Flex>
