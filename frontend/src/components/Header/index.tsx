@@ -2,6 +2,7 @@ import TranslateMenu from "components/Menu/Translate/TranslateMenu";
 import { useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
+import { NavLink } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import { useDispatch } from "react-redux";
 import { GetAnInvoice, UseGetAllInvoice } from "state/invoice";
@@ -58,7 +59,7 @@ const Header = () => {
     <>
       <Navbar bg="transparent" style={styles.navbar}>
         <Container>
-          <Navbar.Brand href="/">
+          <NavLink to="/"> 
             <img
               alt="ezinvoice-logo"
               src="/images/ImgPi/logo.png"
@@ -66,7 +67,7 @@ const Header = () => {
               width="100px"
               className="d-inline-block align-top"
             />
-          </Navbar.Brand>
+          </NavLink>
           <Nav className="justify-content-end">
             {/* {userData?.username && (
               <Text

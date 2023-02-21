@@ -2,6 +2,7 @@ import React from "react";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Navbar from "react-bootstrap/Navbar";
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 import Container from "components/Layout/Container";
 import { Flex, Text, Button } from "@devfedeltalabs/pibridge_uikit";
 import { Translate } from "react-auto-translate";
@@ -12,10 +13,6 @@ import { GetAllInvoice } from "state/invoice";
 const Header = () => {
   const dispatch = useDispatch()
 
-  const handleClickNewInvoice = async () => {
-    // dispatch(GetAllInvoice())
-  }
-
   return (
     <ContainerHeader>
       <Flex width="100%">
@@ -25,17 +22,19 @@ const Header = () => {
         <Text color="#64748B" fontSize="14px" bold><Translate>Let’s get started with a free EzInvoice account.</Translate></Text>
       </Flex>
       <Flex justifyContent="space-between" width="100%" style={{gap: '10px'}}>
-        <Navbar.Brand style={{width:'50%'}}>
-          <CsExport onClick={handleClickNewInvoice} marginTop="14px" width='100%'>
+        <Flex width="50%">
+          <CsExport marginTop="14px" width='100%'>
             <Translate>Export</Translate>
           </CsExport>
-        </Navbar.Brand>
+        </Flex>
 
-        <Navbar.Brand href="/newInvoice" style={{width:'50%'}}>
-          <Button onClick={handleClickNewInvoice} marginTop="14px" width='100%'>
-            <Translate>New invoice</Translate>
-          </Button>
-        </Navbar.Brand>
+        <Flex width="50%">
+          <NavLink to="/newInvoice">
+            <Button marginTop="14px" width='100%'>
+              <Translate>New invoice</Translate>
+            </Button>
+          </NavLink>
+        </Flex>
       </Flex>
     </ContainerHeader>
   );
