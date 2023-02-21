@@ -114,7 +114,7 @@ const CreateDetail = () => {
                                             <CsRow>
                                             <ColFirst width="20%">{item?.name}</ColFirst>
                                             <Col width="20%">{item?.quantity}</Col>
-                                            <Col width="20%">{item?.price}Pi</Col>
+                                            <Col width="20%">{item?.price} Pi</Col>
                                             <Col width="20%">{(item?.quantity)*(item?.price)}</Col>
                                         </CsRow>
                                         )
@@ -131,27 +131,16 @@ const CreateDetail = () => {
                                         }
                                         
                                     </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Allowances</Translate></CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>-{details?.amountPaid} Pi</CsTextRight>
-                                        }
-                                        
-                                    </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.total} Pi</CsTextRight>
-                                        }
-                                    </Row>
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft><Translate>Tax:</Translate> ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.tax/100 : details?.subTotal-details?.tax} {details?.taxType === 1 ? "%" : "Pi"}</CsTextRight>
+                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.tax/100 : details?.tax} {details?.taxType === 1 ? "%" : "Pi"}</CsTextRight>
+                                        </Row>
+                                    }
+                                    {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.discount} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
                                         </Row>
                                     }
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
@@ -160,12 +149,23 @@ const CreateDetail = () => {
                                             <CsTextRight bold>{details?.shipping} Pi</CsTextRight>
                                         </Row>
                                     }
-                                    { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.tax} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
-                                        </Row>
-                                    }
+ 
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.total} Pi</CsTextRight>
+                                        }
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft><Translate>Allowances</Translate></CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>-{details?.amountPaid} Pi</CsTextRight>
+                                        }
+                                    </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft><Translate>Amount Due</Translate></CsTextLeft>
                                         { items?.isLoading ?

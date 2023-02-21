@@ -1,4 +1,4 @@
-import { AutoRenewIcon, Button, Flex, Input, Text } from '@devfedeltalabs/pibridge_uikit';
+import { AutoRenewIcon, Button, Flex, HelpIcon, Input, Text, useTooltip } from '@devfedeltalabs/pibridge_uikit';
 import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import Row from 'components/Layout/Row';
 import { useContext } from 'react';
@@ -25,6 +25,13 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
 
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
+
+    const { targetRef, tooltip, tooltipVisible } = useTooltip(
+      <Flex flexDirection="column">
+        <Text fontSize='9px'>Balance Due = Sub total + Tax - Discount + Shipping - Amount paid</Text>
+      </Flex>,
+      { placement: 'top-end', tooltipOffset: [5, 5] },
+    )
 
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       notes: "Description of service or product",
@@ -224,14 +231,20 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                     </Row>
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft><Translate>Balance Due</Translate></CsTextLeft>
+                        <CsTextLeft><Translate>Balance Due</Translate>
+                        <ReferenceElement ref={targetRef}>
+                          <HelpIcon color="#94A3B8" />
+                        </ReferenceElement> 
+                        {tooltipVisible && tooltip}
+                        </CsTextLeft>
                         <Text fontSize='14px'>{!balanceDue ? 0 : <>
                           {`${balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                        </> }</Text>
+                          </> }
+                        </Text>
                     </Row>
-                    <Row mt="1rem" style={{justifyContent: "space-between"}}>
+                    {/* <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <Text color='#94A3B8' fontSize='10px'>Balance due = Sub total + Tax - Discount + Shipping - Amount paid </Text>
-                    </Row>
+                    </Row> */}
                 </CsContentInfo>
             </CsFlex>
       </CsContainer>
@@ -241,6 +254,17 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
       </CsWrapperForm>
   )
 }
+
+const ReferenceElement = styled.div`
+  display: inline-block;
+  align-items:baseline;
+  margin-left:5px; 
+  cursor: pointer;
+  color: text;
+  svg{
+    width: 14px;
+  }
+`
 
 const CsButtonAddTpye = styled(Button)`
   margin-left: 30px;

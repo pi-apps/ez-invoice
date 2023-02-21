@@ -9,38 +9,7 @@ import sesService from "./aws-ses-service";
 import { lang_pdf } from "./languages/lang_pdf";
 import { lang_email } from "./languages/lang_email";
 import { lang_email_success } from "./languages/lang_email_success";
-
-
-
-const { createInvoice } = require("./createInvoice.js");
-
-const invoice123 = {
-  shipping: {
-    name: "John Doe",
-    address: "1234 Main Street",
-    city: "San Francisco",
-    state: "CA",
-    country: "US",
-    postal_code: 94111
-  },
-  items: [
-    {
-      item: "TC 100",
-      description: "Toner Cartridge",
-      quantity: 2,
-      amount: 6000
-    },
-    {
-      item: "USB_EXT",
-      description: "USB Cable Extender",
-      quantity: 1,
-      amount: 2000
-    }
-  ],
-  subtotal: 8000,
-  paid: 0,
-  invoice_nr: 1234
-};
+import createInvoice from "./createInvoice";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
