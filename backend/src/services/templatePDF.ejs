@@ -71,10 +71,10 @@
     </div>
     <table>
       <tr style="text-align: left;">
-        <th><%= text_item %></th>
-        <th><%= text_quantity %></th>
-        <th><%= text_price %></th>
-        <th><%= text_total %></th>
+        <th style="text-transform:uppercase;"><%= text_item %></th>
+        <th style="text-transform:uppercase;"><%= text_quantity %></th>
+        <th style="text-transform:uppercase;"><%= text_price %></th>
+        <th style="text-transform:uppercase;"><%= text_total %></th>
       </tr>
       <% for (let i = 0; i < items.length; i++) { %>
         <tr>
@@ -103,14 +103,14 @@
               <% if (discount != 0) {%><p><%= text_discount %>:</p><% } %>
             <% } %>
             <% if (shipping != 0) {%><p><%= text_shipping %>:</p><% } %>
-            <p>Total:</p>
+            <p><%= text_total %>:</p>
             <% if (amountPaid != 0) {%><p><%= text_amount_paid %>:</p><% } %>
             <p><%= text_amount_due %>:</p>
           </div>
           <div style="flex: 1; text-align: right;">
             <p><%= subTotal %> Pi</p>
             <% if (taxType != 0) {%><p><%= taxType == 1 ? (subTotal * tax / 100) : tax %> Pi</p><% } %>
-            <% if (discountType == 1) { %> <% if (discount != 0) {%><p><%= discount %> Pi</p><% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><p><%= (subTotal * discount / 100) %> Pi</p><% } %> <% } %>
+            <% if (discountType == 1) { %> <% if (discount != 0) {%><p><%= ((subTotal + (subTotal * tax / 100)) * discount / 100) %> Pi</p><% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><p><%= discount %> Pi</p><% } %> <% } %>
             <% if (shipping != 0) {%><p><%= shipping %> Pi</p><% } %>
             <p><%= total %> Pi</p>
             <% if (amountPaid != 0) {%><p><%= amountPaid %> Pi</p><% } %>
