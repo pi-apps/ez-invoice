@@ -150,7 +150,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
                 onClick={() => getUrlDownload()}
                 endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Hard disk</Translate>}
               >
-              </CsButton>
+              </CsButton> */}
               </LinkDownload>
 
             {/* {accessTokenAuth ? (
