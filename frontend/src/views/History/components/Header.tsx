@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Navbar from "react-bootstrap/Navbar";
 import styled from "styled-components";

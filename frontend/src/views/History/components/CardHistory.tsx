@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { Translate } from "react-auto-translate";
 
 const CardHistory = ({handleDeleteItem, item}) => {
-console.log('item', item)
   return (
     <WrapperCard>
       <CsWrapCard>
@@ -19,7 +18,6 @@ console.log('item', item)
         </Flex>
         <CsButtonDelete role="presentation">
           <Text fontWeight={700} fontSize='12px' color='#0F172A'>{item?.price} Pi</Text>
-          <Flex onClick={() => handleDeleteItem(item.id)} alignItems='center'><CloseIcon transform='translateY(1px)' width='12px' color='#CE1D1D'/><Text fontWeight={700} fontSize='8px' color='#CE1D1D'><Translate>Delete</Translate></Text></Flex>
         </CsButtonDelete>
       </CsWrapCard>
     </WrapperCard>
