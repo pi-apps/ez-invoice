@@ -43,7 +43,10 @@ export const UseGetAnInvoiceCore = (invoiceId: string, accessToken:string) => {
       try {
         dispatch(fetchLoading({ isLoading: true }));
         const resultInvoiceDetail = await fetchAnInvoice(invoiceId, accessToken);
-        dispatch(getAnInvoice(resultInvoiceDetail));
+        // console.log('resultInvoiceDetail', resultInvoiceDetail)
+        if(resultInvoiceDetail){
+          await dispatch(getAnInvoice(resultInvoiceDetail));
+        }
         dispatch(fetchLoading({ isLoading: false }));
       } catch (e) {
         console.log(e);
