@@ -20,9 +20,10 @@ import FormTabThree from "./FormTabThree";
 import FormTabTwo from "./FormTabTwo";
 interface PropsSubTab{
     isActive:number
+    setInvoiceId: any
 }
 
-const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
+const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId}) => {
   const navigate = useNavigate();
   const { toastSuccess, toastError } = useToast()
   const [images, setImages] = useState([]);
@@ -31,7 +32,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
   const [invoiceId, setInvoiceid] = useState('')
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
-  const { setInvoiceId } = useContext(InvoiceIdContext);
+//   const { setInvoiceId } = useContext(InvoiceIdContext);
 
     const accessToken = getAccessToken()
 
@@ -133,7 +134,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                     toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
                     setInvoiceid(submitReq?.data?.invoiceId)
                     setInvoiceId(submitReq?.data?.invoiceId)
-                    dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
+                    // dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {

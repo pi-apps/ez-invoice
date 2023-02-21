@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import styled from "styled-components";
 import Container from "components/Layout/Container";
@@ -11,13 +11,15 @@ import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 const CreateInvoices = () => {
     const [ dataTabActive ] = GetTabInvoice()
     const isActive = dataTabActive?.isActive
+    const [invoiceId, setInvoiceId] = useState('')
+    console.log('invoiceIdTong', invoiceId)
     return (
         <TranSlatorModal>
             <PageFullWidth>
                 <CsContainer>
                     <HeaderCreateinVoice />
-                    <SubTab isActive={isActive}/>
-                    <Footer isActive={isActive}/>
+                    <SubTab setInvoiceId={setInvoiceId} isActive={isActive}/>
+                    <Footer invoiceId={invoiceId} isActive={isActive}/>
                 </CsContainer>
             </PageFullWidth>
         </TranSlatorModal>

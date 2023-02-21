@@ -35,22 +35,11 @@ const App: React.FC = () => {
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
 
-  const { language } = useContext(LanguagesContext);
-  const languageTransRedux = getLanguageTrans();
-
   return (
     <Fragment>
       <Translator
         from="en"
-        to={
-          languageUserApi ? languageUserApi :
-          language !== null
-            ? language
-            : languageTransRedux ? languageTransRedux
-            : DataAb?.language
-            ? DataAb?.language
-            : "en"
-        }
+        to={languageUserApi ? languageUserApi : "en"}
         googleApiKey={APIKEY_GOOGLE}
       >
          <Routes>
@@ -62,7 +51,7 @@ const App: React.FC = () => {
           <Route path="detailSent/:slug" element={<DetailSent />} />
           <Route path="detailReceived/:slug" element={<DetailReceived />} />
           <Route path="createDetail/:slug" element={<CreateDetail />} />
-          <Route path="send/:invoiceId" element={<SendInvoice />} />
+          <Route path="send/:slug" element={<SendInvoice />} />
           <Route path="history" element={<History />} />
         </Routes>
         <ToastListener />
