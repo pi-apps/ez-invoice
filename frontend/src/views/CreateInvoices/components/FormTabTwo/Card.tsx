@@ -71,9 +71,14 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                     name={`items[${index}].name`}
                     defaultValue=""
                     render={({ field }) => (
-                        <CsTextArea onChange={field.onChange} onBlur={field.onBlur} placeholder={`${stateTextPlaceholder.name}`}  {...register(`items.${index}.name` as const)} />
+                        <CsTextArea 
+                          onChange={field.onChange} 
+                          onBlur={field.onBlur} 
+                          placeholder={`${stateTextPlaceholder.name}`} 
+                          {...register(`items.${index}.name` as const)} 
+                        />
                     )}
-                    />
+                  />
                 </WrapInput>
             </ContainerInput>
             {item.name === ' ' ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input alphabet</Translate></Text> : item.name.length > 100 && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Max length is 100 characters</Translate></Text> 
@@ -82,7 +87,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
               {(control?._formState?.touchedFields?.items?.[0]?.name === true && item.name === '') && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Description is required</Translate></Text>}
             </>
             }
-            <CsRowINput>
+            <CsRowInput>
               <ContainerInputQuantity>
                 <WrapInput>
                     <Controller
@@ -124,7 +129,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                     {(Number(item.price) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
                   </>}
               </ContainerInputQuantity>
-            </CsRowINput>
+            </CsRowInput>
         </CsContent>
 
         <Flex mt="24px">
@@ -181,21 +186,22 @@ const WrapInput = styled(Flex)`
   position: relative;
   background-color:#F8F9FD;
   border-radius: 10px;
+  height: fit-content;
   width: 100%;
   input{
     padding: 10px;
   }
 `
+
 export const CsTextArea = styled.textarea`
   background: #F8F9FD;
   border: none;
   padding-left: 10px;
   border-radius: 10px;
   width: 100%;
-  height: 100px;
+  height: 100px !important;
   resize: unset;
   padding: 10px;
-  width: 100%;
   box-shadow: none;
   font-size:14px;
   &::placeholder{
@@ -212,7 +218,7 @@ const CsFlexHeading = styled(Flex)`
     justify-content: space-between;
     margin-bottom: 14px;
 `
-const CsRowINput = styled(Flex)`
+const CsRowInput = styled(Flex)`
     margin-top: 24px;
     gap: 10px;
 `

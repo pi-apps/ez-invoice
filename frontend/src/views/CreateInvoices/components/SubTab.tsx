@@ -117,7 +117,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId}) => {
             formData.append("terms", `${data.terms}`);
             formData.append("tax", `${data.tax}`);
             formData.append("taxType", `${activeTax}`);
-            // formData.append("discountType", `${activeDiscount}`);
+            formData.append("discountType", `${activeDiscount}`);   
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
@@ -140,7 +140,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId}) => {
                     toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
                     setInvoiceid(submitReq?.data?.invoiceId)
                     setInvoiceId(submitReq?.data?.invoiceId)
-                    // dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
+                    dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
@@ -232,16 +232,16 @@ const CsTab = styled(Flex)`
     align-items: center;
 `
 const CsButton = styled.div<{isActive:boolean}>`
-    cursor: pointer;
+    cursor: ${({ isActive }) => isActive ? "pointer" : "default"};
+    color: ${({ isActive }) => isActive ? "#6B39F4" : '#94A3B8'};
     background: transparent;
     border-radius: 50%;
     font-size: 20px;
     height: 35px;
     width: 35px;
     padding: 0;
-    color: ${({ isActive }) => isActive ? "#6B39F4" : '#94A3B8'};
     &:hover{
-        color: #6B39F4;
+        color: ${({ isActive }) => isActive && "#6B39F4" };
     }
     &:active{
         color: #6B39F4;
