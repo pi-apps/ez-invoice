@@ -16,7 +16,7 @@ import { getLanguageTrans } from "state/LanguageTrans"
 import ReactImageUpload from './ReactImageUpload'
 import { getUser } from "state/user"
 
-const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
+const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate, getValues}) => {
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
 
@@ -139,6 +139,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                         <Controller
                             control={control}
                             name="senderEmail"
+                            defaultValue={getValues("senderEmail")}
                             render={({ field }) => (
                                 <>
                                 <CsInput
@@ -243,7 +244,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                     render={({ field }) => (
                                         <>
                                             <CsDatePicker 
-                                            id="date"
+                                            id="issueDate"
                                             value={field.value}
                                             onBlur={field.onBlur}
                                             selected={startDate} onChange={(date:any) => {

@@ -52,7 +52,7 @@ export const UseGetAnInvoiceCore = (invoiceId: string, accessToken:string) => {
         console.log(e);
       }
     };
-    if (invoiceId.length) {
+    if (invoiceId?.length) {
       getDataInvoice();
     } else {
       dispatch(getAnInvoice({ details: null }));
