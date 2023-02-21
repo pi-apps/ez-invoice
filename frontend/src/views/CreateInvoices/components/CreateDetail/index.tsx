@@ -52,7 +52,11 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                            <>
+                                                { details?.logoUrl &&
+                                                    <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                                }
+                                            </>
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
