@@ -83,9 +83,9 @@ export default function mountUserEndpoints(router: Router) {
             }
             const user = userInfo;
             const data = req.body;
-            if (data.firstName === undefined || data.lastName === undefined || data.email === undefined || data.language === undefined) {
-                return res.status(400).json({ error: 'bad_request', message: "Bad request" });
-            }
+            // if (data.firstName === undefined || data.lastName === undefined || data.email === undefined || data.language === undefined) {
+            //     return res.status(400).json({ error: 'bad_request', message: "Bad request" });
+            // }
             const result = await UsersModel.findOneAndUpdate(
                 { uid: user.uid },
                 {
