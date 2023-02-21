@@ -23,6 +23,7 @@ services:
     environment:
       BACKEND_URL: ${BACKEND_URL}
       SANDBOX_SDK: "false"
+      APIKEY_GOOGLE: ${APIKEY_GOOGLE}
 
   backend:
     build: ./backend
