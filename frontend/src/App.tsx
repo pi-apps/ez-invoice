@@ -47,8 +47,8 @@ const App: React.FC = () => {
       <Translator
         from="en"
         // to={languageUserApi ? languageUserApi : language ? language : "en"}
-        to="vi"
-        googleApiKey={APIKEY_GOOGLE}
+        to="en"
+        googleApiKey="AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs"
       >
          <Routes>
           <Route path="/" element={<MainLayout />}>
