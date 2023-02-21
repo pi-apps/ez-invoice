@@ -16,6 +16,7 @@ import { setAccessToken } from "state/googleAuth/actions";
 import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 import { getInvoiceId } from "state/newInvoiceId";
 import { getAccessToken, getUser } from "state/user";
+import { AnyARecord } from "dns";
 
 interface Props {
   onDismiss?: () => void;
@@ -90,6 +91,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
   const getUrlDownload = async () => {
     setIsLoading(true);
     const sendLanguage = languageUserApi ?? 'en'
+    toastSuccess('', <Text>{invoiceId} {sendLanguage} {token}</Text>)
     try {
       const response = await axiosClient.get(
         `/invoice/download?invoiceId=${invoiceId}&language=${sendLanguage}`, {
@@ -112,8 +114,9 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
       //     })
       // })
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
+      toastError(JSON.stringify(error?.message))
     }
   };
 
