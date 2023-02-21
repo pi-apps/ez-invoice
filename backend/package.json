@@ -16,6 +16,7 @@
     "@types/express-session": "^1.17.5",
     "aws-sdk": "^2.1312.0",
     "axios": "^0.21.1",
+    "bignumber.js": "^9.1.1",
     "connect-mongo": "^4.4.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
