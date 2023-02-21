@@ -90,7 +90,7 @@ const ChooseMethod = ({ isPercent, setIsPercent, errors, activeTax,setActiveTax,
             <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
             <ContainerInput>
                 <CsRowTax>
-                    <WrapInput>
+                    <WrapInputShipping>
                         <Controller
                             control={control}
                             name="shipping"
@@ -104,8 +104,11 @@ const ChooseMethod = ({ isPercent, setIsPercent, errors, activeTax,setActiveTax,
                             />
                             )}
                         />
-                    </WrapInput>
-                </CsRowTax>
+                    </WrapInputShipping>
+                    <CsCloseIcon onClick={() => setTypeShipping(false)}>
+                        <CloseIcon />
+                    </CsCloseIcon>
+                    </CsRowTax>
                 <ErrorMessages errors={errors} name="shipping" />
             </ContainerInput>
         </Flex>
@@ -187,7 +190,15 @@ const WrapInput = styled(Flex)`
     padding: 10px;
   }
 `
-
+const WrapInputShipping = styled(Flex)`
+  position: relative;
+  background-color:#F8F9FD;
+  border-radius: 10px;
+  width: 100%;
+  input{
+    padding: 0;
+  }
+`
 const CsInput = styled(Input)`
   background: none;
   text-align: right;

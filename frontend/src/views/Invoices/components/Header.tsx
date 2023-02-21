@@ -2,16 +2,17 @@ import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { RefreshIcon } from "components/Svg";
 import { useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Header = () => {
-  const [refresh, setRefresh ] = useState<number>()
+  const navigate = useNavigate();
+
   const handleRefresh = () => {
-    useEffect(() => {
-      setRefresh(Date.now())
-    },[refresh])
+    navigate("/");
+    window.location.reload()
   }
+
   return (
     <ContainerHeader>
       <Text fontSize="24px" bold>
@@ -41,6 +42,15 @@ const Csrefresh = styled(Flex)`
   border-radius: 10px;
   margin-right: 12px;
   padding: 12px;
+  &:hover{
+    svg{
+      transition: 0.5s;
+      transform: rotate(45deg);
+    }
+  }
+  &:active{
+    margin-top: 1px;
+  }
 `
 
 const ContainerHeader = styled(Flex)`
