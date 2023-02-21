@@ -19,9 +19,10 @@ import { getAccessToken, getUser } from "state/user";
 
 interface Props {
   onDismiss?: () => void;
+  invoiceId: any;
 }
 
-const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
+const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingGGDrive, setIsLoadingGGDrive] = useState(false);
@@ -30,7 +31,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
 
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
-  const invoiceId = getInvoiceId();
+  // const invoiceId = getInvoiceId();
 
   const dispatch = useDispatch<AppDispatch>();
   const accessTokenAuth = getAccessTokenAuth();
@@ -138,8 +139,10 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
 
           <Flex mt="1rem" justifyContent="space-between">
             <LinkDownload href={urlDownload} download>
-              <Translate>Hard disk</Translate>
-              {/* <CsButton
+              {urlDownload},
+              {invoiceId}
+              Hard disk
+              <CsButton
                 padding="0"
                 width="100%"
                 variant="secondary"
@@ -147,7 +150,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
                 onClick={() => getUrlDownload()}
                 endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Hard disk</Translate>}
               >
-              </CsButton> */}
+              </CsButton> 
               </LinkDownload>
 
             {/* {accessTokenAuth ? (

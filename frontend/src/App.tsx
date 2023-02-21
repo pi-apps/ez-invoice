@@ -31,9 +31,15 @@ BigNumber.config({
 
 const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
 
-const App: React.FC = () => {
+const App: React.FC = () => { 
+  const [languageState, setLanguageState] = useState(null)
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
+
+  useEffect(() => {
+    if (!languageUserApi || languageUserApi === 'en')     
+    setLanguageState(languageUserApi)
+  }, [languageUserApi]);
 
   return (
     <Fragment>
