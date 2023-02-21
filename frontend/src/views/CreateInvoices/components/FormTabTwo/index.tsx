@@ -83,7 +83,7 @@ const CsButtonAdd = styled.div`
   border-radius: 6px;
   width: fit-content;
   align-items: center;
-  width: 95px;
+  width: fit-content;
   height: 35px;
   padding: 0 10px;
   display: flex;

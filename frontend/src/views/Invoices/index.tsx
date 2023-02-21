@@ -22,8 +22,6 @@ const Invoices = () => {
         }
     }
 
-   
-
     return (
         <PageFullWidth>
             <CsContainer>
