@@ -102,7 +102,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     });
     // use update default values
     useEffect(()=>{
-        if( itemInvoice && invoiceId.length ) {
+        if( itemInvoice && invoiceId?.length ) {
             setValue("senderEmail", itemInvoice?.senderEmail);
             setValue("billFrom", itemInvoice?.billFrom);
             setValue("billTo", itemInvoice?.billTo);

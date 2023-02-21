@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import styled from "styled-components";
 import Container from "components/Layout/Container";
@@ -12,14 +12,15 @@ import { useParams } from "react-router-dom";
 const UpdateInvoices = () => {
     const [ dataTabActive ] = GetTabInvoice()
     const isActive = dataTabActive?.isActive
+    const [invoice, setInvoice] = useState('')
     let { invoiceId } = useParams()
     return (
         <TranSlatorModal>
             <PageFullWidth>
                 <CsContainer>
                     <HeaderCreateinVoice />
-                    <SubTab isActive={isActive} invoiceId={invoiceId} />
-                    <Footer isActive={isActive}/>
+                    <SubTab setInvoiceId={setInvoice} isActive={isActive} invoiceId={invoiceId}/>
+                    <Footer invoiceId={invoice} isActive={isActive}/>
                 </CsContainer>
             </PageFullWidth>
         </TranSlatorModal>

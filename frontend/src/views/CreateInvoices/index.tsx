@@ -12,7 +12,6 @@ const CreateInvoices = () => {
     const [ dataTabActive ] = GetTabInvoice()
     const isActive = dataTabActive?.isActive
     const [invoiceId, setInvoiceId] = useState('')
-    console.log('invoiceIdTong', invoiceId)
     return (
         <TranSlatorModal>
             <PageFullWidth>

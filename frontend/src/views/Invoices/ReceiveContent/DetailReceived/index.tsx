@@ -1,18 +1,16 @@
 import { Button, Flex, Image, Skeleton, Text } from '@devfedeltalabs/pibridge_uikit';
 import Footer from 'components/Footer';
-import { Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
 import Header from 'components/Header';
 import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
-import Nav from 'react-bootstrap/Nav';
-import { useNavigate, useParams } from 'react-router-dom';
-import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
-import styled from 'styled-components';
-import { Translate } from "react-auto-translate";
-import { getAccessToken } from 'state/user';
 import { Fragment } from 'react';
+import { Translate } from "react-auto-translate";
+import Nav from 'react-bootstrap/Nav';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
+import { getAccessToken } from 'state/user';
+import styled from 'styled-components';
 
 const DetailSent = () => {
     const navigate = useNavigate();
