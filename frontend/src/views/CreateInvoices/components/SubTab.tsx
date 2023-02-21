@@ -20,9 +20,10 @@ import FormTabThree from "./FormTabThree";
 import FormTabTwo from "./FormTabTwo";
 interface PropsSubTab{
     isActive:number
+    setInvoiceId: any
 }
 
-const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
+const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId}) => {
   const navigate = useNavigate();
   const { toastSuccess, toastError } = useToast()
   const [images, setImages] = useState([]);
@@ -31,7 +32,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
   const [invoiceId, setInvoiceid] = useState('')
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
-  const { setInvoiceId } = useContext(InvoiceIdContext);
+//   const { setInvoiceId } = useContext(InvoiceIdContext);
 
     const accessToken = getAccessToken()
 
@@ -51,7 +52,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         dueDate: new Date(),
         paymentTerms:'',
         poNumber:'',
-        items: [{name: "",quantity:0,price:0}],
+        items: [{name: "",quantity: '',price:''}],
         notes:'',
         terms:'',
         tax:0,
@@ -66,15 +67,15 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         senderEmail: Yup.string().required('Sender email is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').email('Invalid email address'),
         billFrom: Yup.string().required('Bill from is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         billTo: Yup.string().required('Bill to is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
-        shipTo: Yup.string().required('Ship to is required').max(200, 'Max length is 200 characters'),
-        paymentTerms: Yup.string().required('Payment terms is required').max(50, 'Max length is 50 characters'),
+        shipTo: Yup.string().max(200, 'Max length is 200 characters'),
+        paymentTerms: Yup.string().max(50, 'Max length is 50 characters'),
         // poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
-        notes: Yup.string().required('Notes is required').max(500, 'Max length is 500 characters'),
-        tax: Yup.string().matches(/[0-9]+/ , 'Please input number'),
-        discount: Yup.string().matches(/[0-9]+/, 'Please input number'),
-        shipping: Yup.string().matches(/[0-9]+/, 'Please input number'),
-        amountPaid: Yup.string().required('amount paid is required').matches(/[0-9]+/, 'Please input number').matches(/^(\S+$)/g, 'Please input number'),
+        notes: Yup.string().max(500, 'Max length is 500 characters'),
+        // tax: Yup.string().matches(/[0-9]+/ , 'Please input number'),
+        // discount: Yup.string().matches(/[0-9]+/, 'Please input number'),
+        // shipping: Yup.string().matches(/[0-9]+/, 'Please input number'),
+        // amountPaid: Yup.string().matches(/[0-9]+/, 'Please input number').matches(/^(\S+$)/g, 'Please input number'),
         // issueDate: Yup.string().required('Issue date is required'),
         // dueDate: Yup.string().required('Due date is required'),
         // taxType: Yup.string().required('Tax type is required'),
@@ -100,6 +101,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
     });
 
     const onSubmit = async data => {
+        console.log('data', data)
         setLoadingPreview(true)
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
@@ -115,10 +117,13 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             formData.append("terms", `${data.terms}`);
             formData.append("tax", `${data.tax}`);
             formData.append("taxType", `${activeTax}`);
+            formData.append("discountType", `${activeDiscount}`);   
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
             formData.append("logo", data.logo);
+
+            console.log('formData', formData)
             
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {
@@ -129,6 +134,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                         }
                     }
                 );
+                console.log('submitReq', submitReq)
+
                 if(submitReq.status == 200){
                     toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
                     setInvoiceid(submitReq?.data?.invoiceId)
@@ -225,16 +232,16 @@ const CsTab = styled(Flex)`
     align-items: center;
 `
 const CsButton = styled.div<{isActive:boolean}>`
-    cursor: pointer;
+    cursor: ${({ isActive }) => isActive ? "pointer" : "default"};
+    color: ${({ isActive }) => isActive ? "#6B39F4" : '#94A3B8'};
     background: transparent;
     border-radius: 50%;
     font-size: 20px;
     height: 35px;
     width: 35px;
     padding: 0;
-    color: ${({ isActive }) => isActive ? "#6B39F4" : '#94A3B8'};
     &:hover{
-        color: #6B39F4;
+        color: ${({ isActive }) => isActive && "#6B39F4" };
     }
     &:active{
         color: #6B39F4;

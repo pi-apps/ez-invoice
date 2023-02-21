@@ -34,10 +34,11 @@ const styles = {
 
 const NavCustom = styled(Nav)``;
 
-const Footer = ({ isActive }) => {
+const Footer = ({ isActive, invoiceId }) => {
+  console.log('invoiceIdFooter', invoiceId)
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [openLoginModal] = useModal(<DownloadModal />);
+  const [openLoginModal] = useModal(<DownloadModal invoiceId={invoiceId}/>);
 
   const handleMenu = (action) => {
     switch (action) {
@@ -49,7 +50,7 @@ const Footer = ({ isActive }) => {
         break;
     }
   };
-  const invoiceId = getInvoiceId();
+  // const invoiceId = getInvoiceId();
   return (
     <NavCustom
       activeKey="/"

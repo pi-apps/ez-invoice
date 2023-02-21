@@ -11,10 +11,8 @@ import { useContext, useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import ErrorMessages from "components/ErrorMessages/ErrorMessage";
-import { LanguagesContext } from "contexts/Translate";
 import { getInvoiceId } from "state/newInvoiceId";
-import { InvoiceIdContext } from "contexts/InVoiceIdContext";
-import { getLanguageTrans } from "state/LanguageTrans";
+import useToast from "hooks/useToast";
 
 interface FormSendInvoiceTypes {
   setIsSentSuccessfully: (e) => void;
@@ -23,13 +21,17 @@ interface FormSendInvoiceTypes {
 const FormSendInvoice: React.FC<
   React.PropsWithChildren<FormSendInvoiceTypes>
 > = ({ setIsSentSuccessfully }) => {
-  let { invoiceId } = useParams()
   const [errorSentText, setErrorSentText] = useState("");
   const [isLoading, setIsLoading] = useState(false)
   const accessTokenUser = getAccessToken()
+  const { toastSuccess, toastError } = useToast();
 
+  let { slug } = useParams()
+
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
   const invoiceIdRedux = getInvoiceId();
-  const languageTransRedux = getLanguageTrans();  
+  console.log('languageUserApi', languageUserApi)
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100, 'Max length is 100 characters').email('Invalid email address'),
@@ -43,10 +45,17 @@ const FormSendInvoice: React.FC<
   const handleLogin = async (data) => {
     setIsLoading(true)
     const dataPost = {
-      invoiceId: invoiceIdRedux,
+      invoiceId: slug,
       email: data.email,
-      language: languageTransRedux ? languageTransRedux : "en",
+      language: languageUserApi ? languageUserApi : "en",
     };
+
+    toastSuccess('', <Flex flexDirection='column'>
+      <Text>{dataPost?.invoiceId}</Text>
+      <Text>{dataPost.email}</Text>
+      <Text>{dataPost.language} </Text>
+      <Text>{accessTokenUser}</Text>
+    </Flex>)
 
     try {
       const response = await axiosClient.post("invoice/send", dataPost, {
@@ -62,27 +71,28 @@ const FormSendInvoice: React.FC<
         setIsSentSuccessfully(false);
       }
       setIsLoading(false)
-    } catch (error) {
+    } catch (error: any) {
       setIsSentSuccessfully(false);
-      setErrorSentText("Invoice not found");
+      // setErrorSentText("Invoice not found",);
+      // toastError(JSON.stringify(error?.message))
       setIsLoading(false)
     }
   };
 
   // translate placeholder
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
-    recipientEmail: "Who is this invoice to? (required)",
+    recipientEmail: "Recipient email",
   });
 
   const listTextPlaceHolder = {
-    recipientEmail: "Who is this invoice to? (required)",
+    recipientEmail: "WRecipient email",
   };
 
   const changeTextPlaceHolderLg = async () => {
     const resRecipientEmail= await GetTranslateHolder(
         listTextPlaceHolder.recipientEmail,
         // language
-        languageTransRedux
+        languageUserApi
       );
     setStateTextPlaceholder({
       recipientEmail: resRecipientEmail,
@@ -90,12 +100,12 @@ const FormSendInvoice: React.FC<
   };
 
   useEffect(() => {
-    if (!languageTransRedux || languageTransRedux === 'en')     
+    if (!languageUserApi || languageUserApi === 'en')     
     return setStateTextPlaceholder({
-        recipientEmail: "Who is this invoice to? (required)",
+        recipientEmail: "Recipient email",
       });;
     changeTextPlaceHolderLg()
-  }, [languageTransRedux]);
+  }, [languageUserApi]);
 
   return (
     <CsContainer>
@@ -138,10 +148,10 @@ const FormSendInvoice: React.FC<
           </Flex>
           <Flex>
             <CsButton
-              disabled={!invoiceIdRedux}
+              disabled={!slug}
               type="submit" 
               value="Submit" 
-              endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Send</Translate>}
+              endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>{slug},{languageUserApi}</Translate>}
             />
           </Flex>
         </FormContainer>

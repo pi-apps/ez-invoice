@@ -12,8 +12,6 @@ import languageTrans from "./LanguageTrans/reducer"
 const PERSISTED_KEYS: string[] = [
   "transactions",
   "lists",
-  "loginGoogle",
-  "invoiceId",
 ];
 
 const store = configureStore({

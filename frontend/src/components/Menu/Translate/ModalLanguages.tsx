@@ -19,8 +19,6 @@ const ModalLanguages: React.FC<Props> = ({
   language,
   setLanguage,
 }) => {
-  const { t } = useTranslation();
-  
   return (
     <CsModal title="" onDismiss={onDismiss} maxWidth="550px">
       <CsContainer>

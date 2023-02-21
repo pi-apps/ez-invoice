@@ -32,24 +32,23 @@ BigNumber.config({
 
 const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
 
-const App: React.FC = () => {
-
-  const DataAb = getUser();
+const App: React.FC = () => { 
   const { language } = useContext(LanguagesContext);
-  const languageTransRedux = getLanguageTrans();
+  const [languageState, setLanguageState] = useState(null)
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
+
+  useEffect(() => {
+    if (!languageUserApi || languageUserApi === 'en')     
+    setLanguageState(languageUserApi)
+  }, [languageUserApi]);
 
   return (
     <Fragment>
       <Translator
         from="en"
-        to={
-          language !== null
-            ? language
-            : languageTransRedux ? languageTransRedux
-            : DataAb?.language
-            ? DataAb?.language
-            : "en"
-        }
+        // to={languageUserApi ? languageUserApi : language ? language : "en"}
+        to="vi"
         googleApiKey={APIKEY_GOOGLE}
       >
          <Routes>
@@ -61,8 +60,8 @@ const App: React.FC = () => {
           <Route path="detailSent/:slug" element={<DetailSent />} />
           <Route path="detailReceived/:slug" element={<DetailReceived />} />
           <Route path="createDetail/:slug" element={<CreateDetail />} />
-          <Route path="send/:invoiceId" element={<SendInvoice />} />
           <Route path="payment/:signature" element={<Payment />} />
+          <Route path="send/:slug" element={<SendInvoice />} />
           <Route path="history" element={<History />} />
         </Routes>
         <ToastListener />
