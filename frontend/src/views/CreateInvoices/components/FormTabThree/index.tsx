@@ -17,13 +17,13 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)
-
+    const [balaneDue, setBalanceDue] = useState(0)
     const [isPercent, setIsPercent] = useState(true)
     const taxValue =  Number(getValues('tax'))
     const shippingValue =  Number(getValues('shipping'))
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
-
+    console.log('balaneDue', balaneDue)
     const languageTransRedux = getLanguageTrans();
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       notes: "Description of service or product",
@@ -72,7 +72,6 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const DiscountValuePercent = discountValue * total / 100 
     const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
     const isDiscount = (discountValue < total) ? discountValue : total
-    
     const totalFinal = (total) => {
       if(activeTax === 2 && isPercent === false){
         return total + taxValue + shippingValue - isDiscount
@@ -87,7 +86,10 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
 
     const totalFinaly = totalFinal(total)
     const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
-    const isInvoiceIdStorage = localStorage.getItem('invoiceIdStorage')
+
+    useEffect(() => {
+      setBalanceDue(amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0)
+    },[amountPaidValue])
     
   return (
     <CsWrapperForm>
@@ -213,7 +215,8 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                                         placeholder="0.00 Pi"
                                         value={field.value}
                                         onBlur={field.onBlur}
-                                        onChange={field.onChange}
+                                        // onChange={field.onChange}
+                                        onChange={(event) => setValue("amountPaid", event.target.value)}
                                     />
                                   )}
                               />
@@ -232,9 +235,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
             </CsFlex>
       </CsContainer>
       <CsSubTotal>
-      <Navbar.Brand>
-          <CsButtonAdd  endIcon={loadingPreview ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText><Translate>Preview</Translate> </CsText>}></CsButtonAdd>
-      </Navbar.Brand>
+        <CsButtonAdd  endIcon={loadingPreview ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText><Translate>Preview</Translate> </CsText>}></CsButtonAdd>
       </CsSubTotal>
       </CsWrapperForm>
   )

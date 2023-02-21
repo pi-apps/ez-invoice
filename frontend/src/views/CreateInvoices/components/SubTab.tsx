@@ -74,7 +74,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         tax: Yup.string().matches(/[0-9]+/ , 'Please input number'),
         discount: Yup.string().matches(/[0-9]+/, 'Please input number'),
         shipping: Yup.string().matches(/[0-9]+/, 'Please input number'),
-        amountPaid: Yup.string().matches(/[0-9]+/, 'Please input number').matches(/^(\S+$)/g, 'Please input number'),
+        amountPaid: Yup.string().required('amount paid is required').matches(/[0-9]+/, 'Please input number').matches(/^(\S+$)/g, 'Please input number'),
         // issueDate: Yup.string().required('Issue date is required'),
         // dueDate: Yup.string().required('Due date is required'),
         // taxType: Yup.string().required('Tax type is required'),

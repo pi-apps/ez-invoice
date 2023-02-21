@@ -4,6 +4,7 @@ import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
 import Nav from 'react-bootstrap/Nav';
+import { NavLink } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import { useParams } from 'react-router-dom';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
@@ -22,6 +23,7 @@ const CreateDetail = () => {
     UseGetAnInvoiceCore(slug, dataUser)
     const items = GetAnInvoice()
     const details = items?.details
+    console.log('details', details)
     function convertDate(date: any) {
         if (date) {
           const today = new Date(date)
@@ -129,23 +131,6 @@ const CreateDetail = () => {
                                         }
                                         
                                     </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Allowances</Translate></CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>-{details?.amountPaid} Pi</CsTextRight>
-                                        }
-                                        
-                                    </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.total} Pi</CsTextRight>
-                                        }
-                                    </Row>
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft><Translate>Tax:</Translate> ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
@@ -161,9 +146,26 @@ const CreateDetail = () => {
                                     { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.tax}Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.discountType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.discount}Pi</CsTextRight>
                                         </Row>
                                     }
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.total} Pi</CsTextRight>
+                                        }
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft><Translate>Allowances</Translate></CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>-{details?.amountPaid} Pi</CsTextRight>
+                                        }
+                                        
+                                    </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft><Translate>Amount Due</Translate></CsTextLeft>
                                         { items?.isLoading ?
@@ -176,11 +178,11 @@ const CreateDetail = () => {
                             </WContent>
                             <WAction>
                                     <CsNavItem>
-                                        <Navbar.Brand href="/newInvoice">
+                                        <NavLink to="/newInvoice">
                                             <CsButton>
                                                 <Translate>Back</Translate>
                                             </CsButton>
-                                        </Navbar.Brand>
+                                        </NavLink>
                                     </CsNavItem>
                             </WAction>
                         </Flex>

@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Flex, Image, Text } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
 import Navbar from "react-bootstrap/Navbar";
+import { NavLink } from "react-router-dom";
+
 import { useParams } from "react-router-dom";
 import { Translate } from "react-auto-translate";
 
@@ -12,7 +14,7 @@ interface Props {
   billFrom:string
   amountDue:string
   paid:boolean
-  invoiceNumber:number
+  invoiceNumber:number 
 }
 
 const Card: React.FC<Props> = ({ 
@@ -38,7 +40,7 @@ const Card: React.FC<Props> = ({
     return null
   }
   return (
-    <Navbar.Brand href={`/detailReceived/${invoiceId}`}>
+    <NavLink to={`/detailSent/${invoiceId}`}>
       <CsContainer>
         <CsRow>
           <CsCol>
@@ -54,16 +56,15 @@ const Card: React.FC<Props> = ({
               
             </CsButton>
           </CsCol>
-          <Flex flexDirection="column">
-            <CsText bold>
-              <Translate>Invoice</Translate> #{invoiceNumber}
-            </CsText>
-            {convertDate(create)}
-          </Flex>
           <CsCol>
+            <CsText bold>
+              <Translate>#{invoiceNumber}</Translate> 
+            </CsText>
+          </CsCol>
+          <CsColBill>
             <CsText bold>{billFrom}</CsText>
             <CsText>{amountDue} Pi</CsText>
-          </CsCol>
+          </CsColBill>
           <CsCol>
             { !paid  ? (
               <CsStaTusUnpaid>
@@ -77,7 +78,7 @@ const Card: React.FC<Props> = ({
           </CsCol>
         </CsRow>
       </CsContainer>
-    </Navbar.Brand>
+    </NavLink>
   );
 };
 const CsContainer = styled.div`
@@ -94,13 +95,20 @@ const CsRow = styled(Flex)`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 16px 8px;
 `;
 const CsCol = styled(Flex)`
-  flex-direction: column;
-  align-items: center;
-  /* width: 100%; */
-  height: 100%;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 17.5%;
+`;
+
+const CsColBill = styled(Flex)`
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 47.5%;
 `;
 
 const CsButton = styled(Button)`
