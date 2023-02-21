@@ -12,6 +12,7 @@ import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import { getInvoiceId } from "state/newInvoiceId";
+import useToast from "hooks/useToast";
 
 interface FormSendInvoiceTypes {
   setIsSentSuccessfully: (e) => void;
@@ -23,6 +24,7 @@ const FormSendInvoice: React.FC<
   const [errorSentText, setErrorSentText] = useState("");
   const [isLoading, setIsLoading] = useState(false)
   const accessTokenUser = getAccessToken()
+  const { toastSuccess, toastError } = useToast();
 
   let { slug } = useParams()
 
@@ -42,7 +44,7 @@ const FormSendInvoice: React.FC<
   const handleLogin = async (data) => {
     setIsLoading(true)
     const dataPost = {
-      invoiceId: invoiceIdRedux,
+      invoiceId: slug,
       email: data.email,
       language: slug ? slug : "en",
     };
@@ -63,7 +65,8 @@ const FormSendInvoice: React.FC<
       setIsLoading(false)
     } catch (error) {
       setIsSentSuccessfully(false);
-      setErrorSentText("Invoice not found");
+      // setErrorSentText("Invoice not found",);
+      toastError(`${error}`)
       setIsLoading(false)
     }
   };

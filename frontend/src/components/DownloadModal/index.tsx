@@ -137,7 +137,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
           </Text>
 
           <Flex mt="1rem" justifyContent="space-between">
-            <LinkDownload href={urlDownload} download target="_blank">
+            
               <CsButton
                 padding="0"
                 width="100%"
@@ -145,10 +145,11 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
                 disabled={!urlDownload && isLoading}
                 onClick={() => getUrlDownload()}
                 endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Hard disk</Translate>}
-              />
-            </LinkDownload>
+              >
+                <LinkDownload href={urlDownload} download={urlDownload}></LinkDownload>
+              </CsButton>
 
-            {accessTokenAuth ? (
+            {/* {accessTokenAuth ? (
               <Button
                 disabled={isLoading && !urlDownload}
                 endIcon={isLoadingGGDrive ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Google Drive</Translate>}
@@ -162,7 +163,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
                 onClick={handleLoginAuthGoogle}
                 endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Login Google</Translate>}
               />
-            )}
+            )} */}
           </Flex>
         </Flex>
       </Modal>
