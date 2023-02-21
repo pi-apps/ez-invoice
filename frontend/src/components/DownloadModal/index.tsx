@@ -98,18 +98,18 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
         }
       );
       setUrlDownload(response.data);
-      fetch(response.data).then(response => {
-        console.log("response", response);
-          response.blob().then(blob => {
-              // Creating new object of PDF file
-              const fileURL = window.URL.createObjectURL(blob);
-              // Setting various property values
-              let alink = document.createElement('a');
-              alink.href = fileURL;
-              alink.download = `${invoiceId}.pdf`;
-              alink.click();
-          })
-      })
+      // fetch(response.data).then(response => {
+      //   console.log("response", response);
+      //     response.blob().then(blob => {
+      //         // Creating new object of PDF file
+      //         const fileURL = window.URL.createObjectURL(blob);
+      //         // Setting various property values
+      //         let alink = document.createElement('a');
+      //         alink.href = fileURL;
+      //         alink.download = `${invoiceId}.pdf`;
+      //         alink.click();
+      //     })
+      // })
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -137,7 +137,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
           </Text>
 
           <Flex mt="1rem" justifyContent="space-between">
-            
+            <LinkDownload href={urlDownload} download>
               <CsButton
                 padding="0"
                 width="100%"
@@ -146,8 +146,8 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
                 onClick={() => getUrlDownload()}
                 endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Hard disk</Translate>}
               >
-                <LinkDownload href={urlDownload} download={urlDownload}></LinkDownload>
               </CsButton>
+              </LinkDownload>
 
             {/* {accessTokenAuth ? (
               <Button
