@@ -20,10 +20,10 @@ const SubTab: React.FC<PropsSubTab> = ({ isSent }) => {
         <Translate>Sent</Translate>
       </TabButton>
       <TabButton
-        isActive={isSent === false}
-        onClick={() => dispatch(tabActive({ isSent: false }))}
-      >
-        <Translate>Received</Translate>
+          isActive={isSent === false}
+          onClick={() => dispatch(tabActive({ isSent: false }))}
+        >
+          <Translate>Received</Translate>
       </TabButton>
     </ContainerSubTab>
   );

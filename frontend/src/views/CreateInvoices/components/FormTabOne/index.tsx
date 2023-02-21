@@ -118,8 +118,8 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 name="invoicenumber"
                                 type="text"
                                 readOnly
-                                placeholder={invoicelength ? invoicelength + 1 : ''}
-                                defaultValue={invoicelength ? invoicelength + 1 : ''}
+                                placeholder={invoicelength ? invoicelength + 1 : 1}
+                                defaultValue={invoicelength ? invoicelength + 1 : 1}
                             />
                             )}
                         />

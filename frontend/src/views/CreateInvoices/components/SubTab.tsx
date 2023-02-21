@@ -54,10 +54,10 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         items: [{name: "",quantity: '',price:''}],
         notes:'',
         terms:'',
-        tax:'',
+        tax:0,
         taxType:'',
-        discount:'',
-        shipping:'',
+        discount:0,
+        shipping:0,
         amountPaid:0,
         logo: "",
     }
@@ -71,10 +71,10 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         // poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().max(500, 'Max length is 500 characters'),
-        tax: Yup.string().matches(/[0-9]+/ , 'Please input number'),
-        discount: Yup.string().matches(/[0-9]+/, 'Please input number'),
-        shipping: Yup.string().matches(/[0-9]+/, 'Please input number'),
-        amountPaid: Yup.string().matches(/[0-9]+/, 'Please input number').matches(/^(\S+$)/g, 'Please input number'),
+        // tax: Yup.string().matches(/[0-9]+/ , 'Please input number'),
+        // discount: Yup.string().matches(/[0-9]+/, 'Please input number'),
+        // shipping: Yup.string().matches(/[0-9]+/, 'Please input number'),
+        // amountPaid: Yup.string().matches(/[0-9]+/, 'Please input number').matches(/^(\S+$)/g, 'Please input number'),
         // issueDate: Yup.string().required('Issue date is required'),
         // dueDate: Yup.string().required('Due date is required'),
         // taxType: Yup.string().required('Tax type is required'),
@@ -116,7 +116,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             formData.append("terms", `${data.terms}`);
             formData.append("tax", `${data.tax}`);
             formData.append("taxType", `${activeTax}`);
-            formData.append("discountType", `${activeDiscount}`);
+            // formData.append("discountType", `${activeDiscount}`);
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
@@ -133,6 +133,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                         }
                     }
                 );
+                console.log('submitReq', submitReq)
+
                 if(submitReq.status == 200){
                     toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
                     setInvoiceid(submitReq?.data?.invoiceId)
