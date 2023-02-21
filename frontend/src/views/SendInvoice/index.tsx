@@ -11,6 +11,7 @@ import SentInvoiceSuccessfully from "./components/SentInvoiceSuccessfully";
 import { Translate } from "react-auto-translate";
 
 const SendInvoice = () => {
+  
   const [isSentSuccessfully, setIsSentSuccessfully] = useState(false);
   return (
     <PageFullWidth>

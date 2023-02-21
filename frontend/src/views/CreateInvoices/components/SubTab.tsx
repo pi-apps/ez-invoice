@@ -19,18 +19,20 @@ import FormTabOne from "./FormTabOne";
 import FormTabThree from "./FormTabThree";
 import FormTabTwo from "./FormTabTwo";
 interface PropsSubTab{
-    isActive:number,
+    isActive:number
+    setInvoiceId: any
     invoiceId?:string
 }
 
-const SubTab:React.FC<PropsSubTab> = ({isActive, invoiceId=""}) => {
-    const navigate = useNavigate();
-    const { toastSuccess, toastError } = useToast()
-    const [activeTax, setActiveTax ] = useState<number>(1)
-    const [activeDiscount, setActiveDiscount ] = useState<number>(1)
-    const [startDate, setStartDate] = useState(new Date());
-    const [startDueDate, setStartDueDate] = useState(new Date());
-    const { setInvoiceId } = useContext(InvoiceIdContext);
+const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
+  const navigate = useNavigate();
+  const { toastSuccess, toastError } = useToast()
+  const [activeTax, setActiveTax ] = useState<number>(1)
+  const [activeDiscount, setActiveDiscount ] = useState<number>(1)
+//   const [invoiceId, setInvoiceid] = useState('')
+  const [startDate, setStartDate] = useState(new Date());
+  const [startDueDate, setStartDueDate] = useState(new Date());
+//   const { setInvoiceId } = useContext(InvoiceIdContext);
 
     const accessToken = getAccessToken()
     UseGetAnInvoiceCore(invoiceId, accessToken)
@@ -57,12 +59,12 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, invoiceId=""}) => {
         items: [{name: "",quantity: '',price:''}],
         notes:'',
         terms:'',
-        tax:0,
+        tax: 0,
         taxType:'',
-        discount:0,
-        shipping:0,
-        amountPaid:0,
-        logo: '',
+        discount: 0,
+        shipping: 0,
+        amountPaid: 0,
+        logo: "",
     }
     
     const validationSchema = Yup.object().shape({
@@ -138,7 +140,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, invoiceId=""}) => {
             formData.append("terms", `${data.terms}`);
             formData.append("tax", `${data.tax}`);
             formData.append("taxType", `${activeTax}`);
-            formData.append("discountType", `${activeDiscount}`);
+            formData.append("discountType", `${activeDiscount}`);   
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
@@ -157,8 +159,9 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, invoiceId=""}) => {
 
                 if(submitReq.status == 200){
                     toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
-                    setInvoiceId(submitReq?.data?.invoiceId)
-                    dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
+                    // setInvoiceid(submitReq?.data?.invoiceId)
+                    await setInvoiceId(submitReq?.data?.invoiceId)
+                    await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
@@ -256,16 +259,16 @@ const CsTab = styled(Flex)`
     align-items: center;
 `
 const CsButton = styled.div<{isActive:boolean}>`
-    cursor: pointer;
+    cursor: ${({ isActive }) => isActive ? "pointer" : "default"};
+    color: ${({ isActive }) => isActive ? "#6B39F4" : '#94A3B8'};
     background: transparent;
     border-radius: 50%;
     font-size: 20px;
     height: 35px;
     width: 35px;
     padding: 0;
-    color: ${({ isActive }) => isActive ? "#6B39F4" : '#94A3B8'};
     &:hover{
-        color: #6B39F4;
+        color: ${({ isActive }) => isActive && "#6B39F4" };
     }
     &:active{
         color: #6B39F4;

@@ -12,12 +12,21 @@ import { getUser } from "../../state/user";
 import { AuthResult } from "../../components/Menu/UserMenu/type";
 import { setUser } from "../../state/user/actions";
 import { axiosClient } from "../../config/htttp";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import useToast from "hooks/useToast";
 
 const Home = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<LoginModal />);
   const userData = getUser();
+  const { toastSuccess, toastError } = useToast();
+
+  const changeTextPlaceHolderLg = async () => {
+    const resSenderEmail = await GetTranslateHolder('dsds', 'dsdsd');
+    toastSuccess(`${resSenderEmail}`)
+
+  };
 
   return (
     <PageFullWidth>
@@ -43,6 +52,13 @@ const Home = () => {
           >
             {/* <Translate>{t("start_now")}</Translate> */}
             <Translate>Start now</Translate>
+          </Button>
+          <Button
+            mt="1.5rem"
+            width="100%"
+            onClick={() => changeTextPlaceHolderLg()}
+          >
+            <Translate>Start</Translate>
           </Button>
         </Flex>
       </CsContainer>

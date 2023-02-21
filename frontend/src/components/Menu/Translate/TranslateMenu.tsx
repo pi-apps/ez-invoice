@@ -1,13 +1,11 @@
 import { AutoRenewIcon, Button, Flex, Text, useModal } from "@devfedeltalabs/pibridge_uikit";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "state";
-import { LanguagesContext } from "contexts/Translate";
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Languages from "./Languages.json";
 import { Translate } from "react-auto-translate";
 import Langauges from './Languages.json'
-import { setLanguageTransRedux } from "state/LanguageTrans/actions";
 import { axiosClient } from "config/htttp";
 import { getAccessToken, getUser } from "state/user";
 import { setUser } from "state/user/actions";
@@ -18,7 +16,6 @@ const TranslateMenu = () => {
   const languageUserApi = DataAb?.language
   
   const [isShowMenu, setIsShowMenu] = useState(false);
-  const { language, setLanguage } = useContext(LanguagesContext);
   const [nameCountryLanguage, setNameCountryLanguage] = useState(languageUserApi);
   const [isLoading, setIsLoading] = useState(false)
   const token = getAccessToken()
@@ -51,13 +48,15 @@ const TranslateMenu = () => {
       }
     }, [languageUserApi])
 
+    console.log('nameCountryLanguage', nameCountryLanguage)
+
   return (
     <Flex position="relative">  
       <ImageContainer
         onClick={() => setIsShowMenu(!isShowMenu)}
         endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> :
          <>
-            {nameCountryLanguage ? (
+            { languageUserApi && nameCountryLanguage ? (
               <TextLanguage>
                 <Translate>
                   {nameCountryLanguage}
@@ -76,9 +75,7 @@ const TranslateMenu = () => {
               <FlexButtonChooseLg key={item?.index}>
                 <ButtonChooseLg
                   onClick={() => {
-                    setLanguage(item.code);
                     setNameCountryLanguage(item.name);
-                    dispatch(setLanguageTransRedux(item.code))
                     setIsShowMenu(!isShowMenu);
                     changeLanguageUser(item.code)
                   }}

@@ -1,30 +1,17 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import useToast from "./useToast";
+const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
 
 export const GetTranslateHolder = async (data, language) => {
-  console.log('testTrans')
+  
   try {
     const response = await axios.get(
-      `https://translation.googleapis.com/language/translate/v2?source=en&target=${language}&key=AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs&q=${data}&format=text`, {headers: {}}
+      `https://translation.googleapis.com/language/translate/v2?source=en&target=vi&key=AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs&q=Down load&format=text`, {headers: {}}
     );
     const res = response?.data?.data?.translations[0]?.translatedText;
-    console.log('responseGG', res)
     return res;
     // console.log("res11", response?.data?.data?.translations[0]?.translatedText);
   } catch (error) {
-    console.log('errorGG', error)
+    console.log(error)
   }
-
-  // .then(function (response) {
-  //   console.log(
-  //     "g101",
-  //     response?.data?.data?.translations[0]?.translatedText
-  //   );
-  //   const res = response?.data?.data?.translations[0]?.translatedText;
-  //   return res;
-  // })
-  // .catch(function (error) {
-  //   console.log(error);
-  //   return error;
-  // });
 };

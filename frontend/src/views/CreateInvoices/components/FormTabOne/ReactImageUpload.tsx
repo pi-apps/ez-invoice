@@ -1,6 +1,6 @@
 import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { useState } from "react";
-import { AddIcon } from "components/Svg";
+import { AddIcon, CloseIcon } from "components/Svg";
 import ImageUploading from "react-images-uploading";
 import styled from "styled-components";
 import { Translate } from "react-auto-translate";
@@ -45,10 +45,14 @@ function ReactImageUpload({images , setValue }) {
                 const imageName = logoImg[0].file?.name
                 return(
                   <Flex mt='1rem' key={index} alignItems="center">
-                    <CsAvatar src={logoImg[0].data_url} alt={imageName} />
-                    <div className="image-item__btn-wrapper">
-                      <CsButtonAdd onClick={() => onImageUpdate(index)}><CsText><Translate>Update</Translate></CsText></CsButtonAdd>
-                      <CsButtonAdd onClick={() => onImageDelete()}><CsText><Translate>Remove</Translate></CsText></CsButtonAdd>
+                    <Flex position='relative'>
+                      <CsAvatar src={logoImg[0].data_url} alt={imageName} />
+                      <CsButtonClose onClick={() => onImageDelete()}><CloseIcon/></CsButtonClose>
+                    </Flex>
+
+                    <div className="image-item__btn-wrapper" style={{display: 'flex', gap: '10px'}}>
+                      <CsButtonAdd onClick={() => onImageUpdate(index)}><CsText><Translate>Update</Translate></CsText>
+                      </CsButtonAdd>
                     </div>
                   </Flex>
             )})}
@@ -60,23 +64,12 @@ function ReactImageUpload({images , setValue }) {
 }
 
 const CsAvatar = styled.img`
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     object-fit: contain;
     border-radius: 50%;
     margin-right: 10px;
-`
-const CsButtonUpdate = styled.div`
-  margin-top: 12px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid #E2E8F0;
-  margin-right: 10px;
-
-`
-const CsButtonRemove = styled.div`
-  margin-top: 12px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid #E2E8F0;
+    border: 1px solid #6B39F4;
 `
 
 const CsButtonAdd = styled.div`
@@ -87,11 +80,31 @@ const CsButtonAdd = styled.div`
   justify-content: center;
   width: fit-content;
   cursor: pointer;
-  height: 45px;
+  height: 35px;
   background: #6B39F4;
   border-radius: 6px;
   margin-bottom: 12px;
   padding: 0 20px;
+`
+const CsButtonClose = styled.div`
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  cursor: pointer;
+  height: fit-content;
+  border-radius: 6px;
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  padding: 4px;
+  right: 9px;
+  top: 0px;
+  border: 1px solid transparent;
+  &:hover{
+    border: 1px solid #4949491a;
+  }
 `
 
 const CsAddIcon = styled(AddIcon)`

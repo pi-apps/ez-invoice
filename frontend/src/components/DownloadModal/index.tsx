@@ -16,12 +16,14 @@ import { setAccessToken } from "state/googleAuth/actions";
 import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 import { getInvoiceId } from "state/newInvoiceId";
 import { getAccessToken, getUser } from "state/user";
+import { AnyARecord } from "dns";
 
 interface Props {
   onDismiss?: () => void;
+  invoiceId: any;
 }
 
-const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
+const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingGGDrive, setIsLoadingGGDrive] = useState(false);
@@ -30,7 +32,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
 
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
-  const invoiceId = getInvoiceId();
+  // const invoiceId = getInvoiceId();
 
   const dispatch = useDispatch<AppDispatch>();
   const accessTokenAuth = getAccessTokenAuth();
@@ -89,6 +91,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   const getUrlDownload = async () => {
     setIsLoading(true);
     const sendLanguage = languageUserApi ?? 'en'
+    toastSuccess('', <Text>{invoiceId} {sendLanguage} {token}</Text>)
     try {
       const response = await axiosClient.get(
         `/invoice/download?invoiceId=${invoiceId}&language=${sendLanguage}`, {
@@ -98,9 +101,22 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
         }
       );
       setUrlDownload(response.data);
+      // fetch(response.data).then(response => {
+      //   console.log("response", response);
+      //     response.blob().then(blob => {
+      //         // Creating new object of PDF file
+      //         const fileURL = window.URL.createObjectURL(blob);
+      //         // Setting various property values
+      //         let alink = document.createElement('a');
+      //         alink.href = fileURL;
+      //         alink.download = `${invoiceId}.pdf`;
+      //         alink.click();
+      //     })
+      // })
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
+      toastError(JSON.stringify(error?.message))
     }
   };
 
@@ -125,7 +141,10 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
           </Text>
 
           <Flex mt="1rem" justifyContent="space-between">
-            <LinkDownload href={urlDownload} download target="_blank">
+            <LinkDownload href={urlDownload} download>
+              {urlDownload},
+              {invoiceId}
+              Hard disk
               <CsButton
                 padding="0"
                 width="100%"
@@ -133,10 +152,11 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
                 disabled={!urlDownload && isLoading}
                 onClick={() => getUrlDownload()}
                 endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Hard disk</Translate>}
-              />
-            </LinkDownload>
+              >
+              </CsButton> 
+              </LinkDownload>
 
-            {accessTokenAuth ? (
+            {/* {accessTokenAuth ? (
               <Button
                 disabled={isLoading && !urlDownload}
                 endIcon={isLoadingGGDrive ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Google Drive</Translate>}
@@ -150,7 +170,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
                 onClick={handleLoginAuthGoogle}
                 endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Login Google</Translate>}
               />
-            )}
+            )} */}
           </Flex>
         </Flex>
       </Modal>
