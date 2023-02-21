@@ -32,6 +32,7 @@ BigNumber.config({
 const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
 
 const App: React.FC = () => { 
+  const { language } = useContext(LanguagesContext);
   const [languageState, setLanguageState] = useState(null)
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
@@ -45,7 +46,8 @@ const App: React.FC = () => {
     <Fragment>
       <Translator
         from="en"
-        to={languageUserApi ? languageUserApi : "en"}
+        // to={languageUserApi ? languageUserApi : language ? language : "en"}
+        to="vi"
         googleApiKey={APIKEY_GOOGLE}
       >
          <Routes>
