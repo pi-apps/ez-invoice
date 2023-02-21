@@ -101,10 +101,14 @@ async function generatePdf(invoice: any, language: any) {
   let options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'] };
 
   let file = { content: html };
-  html_to_pdf.generatePdf(file, options).then((pdfBuffer: any) => {
-    fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, pdfBuffer);
-  });
-
+  const pdfBuffer = await html_to_pdf.generatePdf(file, options);
+  fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, pdfBuffer);
+  const download = {
+    filename: `${invoice.invoiceId}.pdf`,
+    path: `./downloads/${invoice.invoiceId}.pdf`,
+  }
+  const downloadUrl = uploadToIpfs(download);
+  return downloadUrl;
   // const browser = await puppeteer.launch({
   //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
   // });
@@ -113,12 +117,6 @@ async function generatePdf(invoice: any, language: any) {
   // const buffer = await page.pdf({ format: 'A4' });
   // await browser.close();
   // fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, buffer);
-  const download = {
-    filename: `${invoice.invoiceId}.pdf`,
-    path: `./downloads/${invoice.invoiceId}.pdf`,
-  }
-  const downloadUrl = uploadToIpfs(download);
-  return downloadUrl;
 }
 
 async function sendEmail(invoice: any, email: string, username: string, signature: string, language: string) {
