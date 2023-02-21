@@ -3,5 +3,3 @@ build
 /log/*
 !/log/.gitkeep
 .env
-/uploads
-/downloads/*.pdf
