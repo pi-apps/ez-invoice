@@ -20,10 +20,11 @@ interface FormSendInvoiceTypes {
 const FormSendInvoice: React.FC<
   React.PropsWithChildren<FormSendInvoiceTypes>
 > = ({ setIsSentSuccessfully }) => {
-  let { invoiceId } = useParams()
   const [errorSentText, setErrorSentText] = useState("");
   const [isLoading, setIsLoading] = useState(false)
   const accessTokenUser = getAccessToken()
+
+  let { slug } = useParams()
 
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
@@ -43,7 +44,7 @@ const FormSendInvoice: React.FC<
     const dataPost = {
       invoiceId: invoiceIdRedux,
       email: data.email,
-      language: languageUserApi ? languageUserApi : "en",
+      language: slug ? slug : "en",
     };
 
     try {
@@ -69,11 +70,11 @@ const FormSendInvoice: React.FC<
 
   // translate placeholder
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
-    recipientEmail: "Who is this invoice to? (required)",
+    recipientEmail: "Recipient email",
   });
 
   const listTextPlaceHolder = {
-    recipientEmail: "Who is this invoice to? (required)",
+    recipientEmail: "WRecipient email",
   };
 
   const changeTextPlaceHolderLg = async () => {
@@ -90,7 +91,7 @@ const FormSendInvoice: React.FC<
   useEffect(() => {
     if (!languageUserApi || languageUserApi === 'en')     
     return setStateTextPlaceholder({
-        recipientEmail: "Who is this invoice to? (required)",
+        recipientEmail: "Recipient email",
       });;
     changeTextPlaceHolderLg()
   }, [languageUserApi]);
@@ -136,10 +137,10 @@ const FormSendInvoice: React.FC<
           </Flex>
           <Flex>
             <CsButton
-              disabled={!invoiceIdRedux}
+              disabled={!slug}
               type="submit" 
               value="Submit" 
-              endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Send</Translate>}
+              endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>{slug},{languageUserApi}</Translate>}
             />
           </Flex>
         </FormContainer>
