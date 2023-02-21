@@ -3,14 +3,15 @@ import styled from "styled-components";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-// import ErrorMessages from "./ErrorMessage";
 import { getUser } from "state/user";
+import { getAccessToken } from "state/user";
+import { useParams } from 'react-router-dom';
 import { axiosClient } from "config/htttp";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import ErrorMessages from "components/ErrorMessages/ErrorMessage";
-// import { axiosClient } from "config/htttp";
+import { getInvoiceId } from "state/newInvoiceId";
 
 interface FormSendInvoiceTypes {
   setIsSentSuccessfully: (e) => void;
@@ -19,16 +20,14 @@ interface FormSendInvoiceTypes {
 const FormSendInvoice: React.FC<
   React.PropsWithChildren<FormSendInvoiceTypes>
 > = ({ setIsSentSuccessfully }) => {
+  let { invoiceId } = useParams()
   const [errorSentText, setErrorSentText] = useState("");
-  const DataAb = getUser();
   const [isLoading, setIsLoading] = useState(false)
+  const accessTokenUser = getAccessToken()
 
-  console.log('DataAb', DataAb)
-
-  const invoiceIdStorage = localStorage.getItem('invoiceIdStorage')
-  const languageStorage  = localStorage.getItem('language');
-  console.log('languageStorage', languageStorage)
-
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
+  const invoiceIdRedux = getInvoiceId();
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100, 'Max length is 100 characters').email('Invalid email address'),
@@ -42,9 +41,9 @@ const FormSendInvoice: React.FC<
   const handleLogin = async (data) => {
     setIsLoading(true)
     const dataPost = {
-      invoiceId: invoiceIdStorage,
+      invoiceId: invoiceIdRedux,
       email: data.email,
-      language: languageStorage ? languageStorage : "en",
+      language: languageUserApi ? languageUserApi : "en",
     };
 
     try {
@@ -52,6 +51,7 @@ const FormSendInvoice: React.FC<
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          'Authorization': accessTokenUser,
         },
       });
       if (response.status === 200) {
@@ -69,18 +69,18 @@ const FormSendInvoice: React.FC<
 
   // translate placeholder
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
-    recipientEmail: "Who is this invoice from? (required)",
+    recipientEmail: "Who is this invoice to? (required)",
   });
 
   const listTextPlaceHolder = {
-    recipientEmail: "Who is this invoice from? (required)",
+    recipientEmail: "Who is this invoice to? (required)",
   };
 
   const changeTextPlaceHolderLg = async () => {
     const resRecipientEmail= await GetTranslateHolder(
         listTextPlaceHolder.recipientEmail,
         // language
-        languageStorage
+        languageUserApi
       );
     setStateTextPlaceholder({
       recipientEmail: resRecipientEmail,
@@ -88,12 +88,12 @@ const FormSendInvoice: React.FC<
   };
 
   useEffect(() => {
-    if (!languageStorage || languageStorage === 'en')     
+    if (!languageUserApi || languageUserApi === 'en')     
     return setStateTextPlaceholder({
-        recipientEmail: "Who is this invoice from? (required)",
+        recipientEmail: "Who is this invoice to? (required)",
       });;
     changeTextPlaceHolderLg()
-  }, [languageStorage]);
+  }, [languageUserApi]);
 
   return (
     <CsContainer>
@@ -136,7 +136,7 @@ const FormSendInvoice: React.FC<
           </Flex>
           <Flex>
             <CsButton
-              disabled={!invoiceIdStorage}
+              disabled={!invoiceIdRedux}
               type="submit" 
               value="Submit" 
               endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Send</Translate>}

@@ -36,13 +36,13 @@ export const GetAllInvoice = () => {
   return [allInvoice];
 };
 
-export const UseGetAnInvoiceCore = (invoiceId: string) => {
+export const UseGetAnInvoiceCore = (invoiceId: string, accessToken:string) => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const getDataInvoice = async () => {
       try {
         dispatch(fetchLoading({ isLoading: true }));
-        const resultInvoiceDetail = await fetchAnInvoice(invoiceId);
+        const resultInvoiceDetail = await fetchAnInvoice(invoiceId, accessToken);
         dispatch(getAnInvoice(resultInvoiceDetail));
         dispatch(fetchLoading({ isLoading: false }));
       } catch (e) {
@@ -55,16 +55,16 @@ export const UseGetAnInvoiceCore = (invoiceId: string) => {
       dispatch(getAnInvoice({ details: null }));
       dispatch(fetchFailure({ isFailure: true }));
     }
-  }, [dispatch, invoiceId]);
+  }, [dispatch, invoiceId, accessToken]);
 };
 
-export const UseGetAllInvoiceSentCore = () => {
+export const UseGetAllInvoiceSentCore = (accessToken:string) => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const getDataAllInvoiceSent = async () => {
       try {
         dispatch(fetchLoading({ isLoading: true }));
-        const resultInvoiceDetail = await fetchAllInvoiceSent();
+        const resultInvoiceDetail = await fetchAllInvoiceSent(accessToken);
 
         dispatch(getAllInvoiceSent(resultInvoiceDetail));
         dispatch(fetchLoading({ isLoading: false }));
@@ -72,43 +72,57 @@ export const UseGetAllInvoiceSentCore = () => {
         console.log(e);
       }
     };
-    getDataAllInvoiceSent();
-  }, [dispatch]);
+    if (accessToken?.length){
+        getDataAllInvoiceSent();
+    } else {
+      dispatch(getAllInvoiceSent({listSent: null,}));
+    }
+    
+  }, [dispatch, accessToken]);
 };
 
-export const UseGetAllInvoice = () => {
+export const UseGetAllInvoice = (accessToken:string) => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const getDataAllInvoiceSent = async () => {
       try {
         dispatch(fetchLoading({ isLoading: true }));
-        const resultInvoice = await fetchAllInvoice();
-
-        await dispatch(getAllInvoiceAll(resultInvoice));
+        const resultInvoice = await fetchAllInvoice(accessToken);
+        dispatch(getAllInvoiceAll(resultInvoice));
         dispatch(fetchLoading({ isLoading: false }));
       } catch (e) {
         console.log(e);
       }
     };
-    getDataAllInvoiceSent();
-  }, [dispatch]);
+    if( accessToken?.length ){
+      getDataAllInvoiceSent();
+    } else {
+      dispatch(getAllInvoiceAll({ allInvoice: null }));
+    }
+    
+  }, [dispatch, accessToken]);
 };
 
-export const UseGetAllInvoiceReceivedCore = () => {
+export const UseGetAllInvoiceReceivedCore = (accessToken:string) => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     const getDataAllInvoiceReceived = async () => {
       try {
         dispatch(fetchLoading({ isLoading: true }));
-        const resultInvoiceReceived = await fetchAllInvoiceReceived();
+        const resultInvoiceReceived = await fetchAllInvoiceReceived(accessToken);
         dispatch(getAllInvoiceReceived(resultInvoiceReceived));
         dispatch(fetchLoading({ isLoading: false }));
       } catch (e) {
         console.log(e);
       }
     };
-    getDataAllInvoiceReceived();
-  }, [dispatch]);
+    if ( accessToken?.length ) {
+      getDataAllInvoiceReceived()
+    } else {
+      dispatch(getAllInvoiceReceived({ listReceived: null }));
+    }
+    
+  }, [dispatch, accessToken]);
 };
 
 export const GetAnInvoice = () => {

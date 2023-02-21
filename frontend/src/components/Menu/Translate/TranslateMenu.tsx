@@ -1,54 +1,74 @@
-import { Button, Flex, Text, useModal } from "@devfedeltalabs/pibridge_uikit";
-import { log } from "console";
+import { AutoRenewIcon, Button, Flex, Text, useModal } from "@devfedeltalabs/pibridge_uikit";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "state";
 import { LanguagesContext } from "contexts/Translate";
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Languages from "./Languages.json";
 import { Translate } from "react-auto-translate";
 import Langauges from './Languages.json'
+import { setLanguageTransRedux } from "state/LanguageTrans/actions";
+import { axiosClient } from "config/htttp";
+import { getAccessToken, getUser } from "state/user";
+import { setUser } from "state/user/actions";
 
 const TranslateMenu = () => {
+  const dispatch = useDispatch<AppDispatch>()
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
+  
   const [isShowMenu, setIsShowMenu] = useState(false);
   const { language, setLanguage } = useContext(LanguagesContext);
-  const [nameCountryLanguage, setNameCountryLanguage] = useState(null);
-  const dataLanguage = localStorage.getItem("language");
-
-    // language
-    // const [languageStorage, setLanguageStorage] = useState("en");
-    // const getLanguage = async () => {
-    //   const data = await localStorage.getItem("language");
-    //   setLanguageStorage(data);
-    //   setNameCountryLanguage(data)
-    // };
-    // useEffect(() => {
-    //   getLanguage();
-    // }, []);
+  const [nameCountryLanguage, setNameCountryLanguage] = useState(languageUserApi);
+  const [isLoading, setIsLoading] = useState(false)
+  const token = getAccessToken()
 
 
-
-    console.log('dataLanguage1', dataLanguage)
-    console.log('languageSto', language)
+  const changeLanguageUser = async (data) => {
+    setIsLoading(true)
+    const dataBody = {
+      language: `${data}`
+    }
+    try {
+      const res = await axiosClient.post('/user/update', dataBody, {
+        headers: {
+          "Authorization": token
+        }
+      })
+      console.log('resChange', res?.data)
+      dispatch(setUser(res?.data));
+      setIsLoading(false)
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
+    }
+  }
 
     useEffect(() => {
-      if (dataLanguage) {
-        const found = Langauges.find(element => element.code === dataLanguage);
+      if (languageUserApi) {
+        const found = Langauges.find(element => element.code === languageUserApi);
         setNameCountryLanguage(found.name)
       }
-    }, [dataLanguage])
+    }, [languageUserApi])
 
   return (
     <Flex position="relative">  
-      <ImageContainer onClick={() => setIsShowMenu(!isShowMenu)}>
-        {nameCountryLanguage ? (
-          <TextLanguage>
-            <Translate>
-              {nameCountryLanguage ? nameCountryLanguage : "language"}
-            </Translate>
-          </TextLanguage>
-        ) : (
-          <TextLanguage>English</TextLanguage>
-        )}
-      </ImageContainer>
+      <ImageContainer
+        onClick={() => setIsShowMenu(!isShowMenu)}
+        endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> :
+         <>
+            {nameCountryLanguage ? (
+              <TextLanguage>
+                <Translate>
+                  {nameCountryLanguage}
+                </Translate>
+              </TextLanguage>
+            ) : (
+              <TextLanguage>English</TextLanguage>
+            )}
+         </>
+        }
+      />
       {isShowMenu && (
         <ListTranslate>
           <ContainerList>
@@ -57,9 +77,10 @@ const TranslateMenu = () => {
                 <ButtonChooseLg
                   onClick={() => {
                     setLanguage(item.code);
-                    localStorage.setItem("language", item.code);
                     setNameCountryLanguage(item.name);
+                    dispatch(setLanguageTransRedux(item.code))
                     setIsShowMenu(!isShowMenu);
+                    changeLanguageUser(item.code)
                   }}
                 >
                   {item.name}

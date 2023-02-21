@@ -1,5 +1,6 @@
 import { Router } from "express";
 import multer from 'multer';
+const BigNumber = require('bignumber.js');
 import { AuthenUser } from "../services/authen";
 import InvoicesModel from "../models/invoices";
 import utils from "../services/utils";
@@ -32,11 +33,16 @@ export default function mountInvoiceEndpoints(router: Router) {
             const discount = req.body.discount;
             const discountType = req.body.discountType;
             const shipping = req.body.shipping;
-            const amountTax = taxType == 1 ? subTotal * Number(tax) / 100 : Number(tax);
-            const amountDiscount = discountType == 1 ? subTotal * Number(discount) / 100 : Number(discount);
-            const total = subTotal + amountTax - amountDiscount + Number(shipping);
+            const amountTax = taxType == 1 ? new BigNumber(subTotal).multipliedBy(tax).dividedBy(100) : new BigNumber(tax);
+            const amountAfterTax = new BigNumber(subTotal).plus(amountTax);
+            console.log("amountAfterTax", amountAfterTax);
+            
+            const amountDiscount = discountType == 1 ? new BigNumber(amountAfterTax).multipliedBy(discount).dividedBy(100) : new BigNumber(discount);
+            console.log("amountDiscount", amountDiscount);
+            
+            const total = new BigNumber(amountAfterTax).minus(amountDiscount).plus(shipping);
             const amountPaid = req.body.amountPaid;
-            const amountDue = total - Number(amountPaid);
+            const amountDue = new BigNumber(total).minus(amountPaid);
             const invoice: any = {
                 invoiceId: `EZ_${Date.now()}`,
                 invoiceNumber: numOfInvoices + 1,
@@ -52,15 +58,15 @@ export default function mountInvoiceEndpoints(router: Router) {
                 items: items,
                 notes: req.body.notes,
                 terms: req.body.terms,
-                subTotal: subTotal,
-                tax: tax,
+                subTotal: subTotal.toString(),
+                tax: tax.toString(),
                 taxType: taxType,
-                discount: discount,
+                discount: discount.toString(),
                 discountType: discountType,
-                shipping: shipping,
-                total: total,
-                amountPaid: amountPaid,
-                amountDue: amountDue,
+                shipping: shipping.toString(),
+                total: total.toString(),
+                amountPaid: amountPaid.toString(),
+                amountDue: amountDue.toString(),
                 status: "unpaid",
                 paid: false,
                 logoUrl: logoUrl,

@@ -4,11 +4,12 @@ import { useDispatch } from "react-redux";
 import { Translate } from "react-auto-translate";
 import { axiosClient } from "../../config/htttp";
 import { AppDispatch } from "../../state";
-import { setUser } from "../../state/user/actions";
+import { accessToken, isLoading, setUser } from "../../state/user/actions";
 import { AuthResult, PaymentDTO } from "../Menu/UserMenu/type";
 import LoginIcon from "../Svg/Icons/LoginIcon";
 import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 import { fetchLoading } from "state/invoice/actions";
+import useToast from "hooks/useToast";
 
 interface Props {
   onDismiss?: () => void;
@@ -16,24 +17,39 @@ interface Props {
 
 const LoginModal: React.FC<Props> = ({ onDismiss }) => {
   const { t } = useTranslation();
-  const dispatch = useDispatch<AppDispatch>();
-
+  const dispatch = useDispatch<AppDispatch>(); 
+  const { toastSuccess, toastError } = useToast()
   const signIn = async () => {
-    dispatch(fetchLoading({ isLoading: true }));
-    const scopes = ["username", "payments"];
-    // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
-    const authResult: AuthResult = await window.Pi.authenticate(
-      scopes,
-      onIncompletePaymentFound
-    );
-    const loginUser = await signInUser(authResult);
-    // setUserData(authResult.user);
-    if (loginUser) {
-      const userInfor = await axiosClient.get("user/info");
-      if (userInfor) {
-        dispatch(fetchLoading({ isLoading: false }));
-        dispatch(setUser(userInfor.data));
+    try {
+      const scopes = ["username", "payments"];
+      dispatch(isLoading({isLoading:true}))
+      const resultLogin = await  window.Pi.authenticate(scopes, onIncompletePaymentFound)
+      if( resultLogin ) {
+          const loginUser = await signInUser(resultLogin);
+          if (loginUser?.data.message.accessToken.length) {
+            dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
+            const userInfor = await axiosClient.get("user/info", {
+              headers: {
+                'Authorization': `${loginUser?.data?.message.accessToken}`,
+              }
+            });
+            
+            if (userInfor) {
+              dispatch(setUser(userInfor.data));
+            }
+            dispatch(isLoading({isLoading:false}))
+          } else {
+            dispatch(isLoading({isLoading:false}))
+          }
+          console.log(`Hi there! You're ready to make payments!`);
+          dispatch(isLoading({isLoading:false}))
+          toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Login successfully</Translate></Text>)
+      } else {
+        toastError('Error', <Text style={{justifyContent: 'center'}}><Translate>Somethig went wrong</Translate></Text>)
+        dispatch(isLoading({isLoading:false}))
       }
+    } catch (error) {
+      dispatch(isLoading({isLoading:false}))
     }
   };
 

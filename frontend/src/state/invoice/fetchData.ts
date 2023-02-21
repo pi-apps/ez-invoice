@@ -3,9 +3,13 @@ import { DetailsInvoice, ListReceived, ListSent, AllInvoice} from "./types"
 import { axiosClient } from "config/htttp"
 import _ from 'lodash'
 
-export const fetchAnInvoice = async (invoiceId:string): Promise<DetailsInvoice> => {
+export const fetchAnInvoice = async (invoiceId:string, accessToken:string): Promise<DetailsInvoice> => {
     try {
-        const submitReq = await axiosClient.get(`invoice/detail/${invoiceId}`);
+        const submitReq = await axiosClient.get(`invoice/detail/${invoiceId}`, {
+          headers: {
+            'Authorization': accessToken,
+          }
+        });
         return {
             details: submitReq?.data
         } 
@@ -17,9 +21,13 @@ export const fetchAnInvoice = async (invoiceId:string): Promise<DetailsInvoice> 
     }
 }
 
-export const fetchAllInvoiceSent = async (): Promise<ListSent> => {
+export const fetchAllInvoiceSent = async (accessToken:string): Promise<ListSent> => {
     try {
-        const submitReq = await axiosClient.get(`invoice/all-sent`);
+        const submitReq = await axiosClient.get(`invoice/all-sent`, {
+          headers: {
+            'Authorization': accessToken,
+          }
+        });
         const groups = submitReq?.data.reduce((groups, items) => {
             const date = items.createAt.split('T')[0];
             if (!groups[date]) {
@@ -48,9 +56,13 @@ export const fetchAllInvoiceSent = async (): Promise<ListSent> => {
     }
 }
 
-export const fetchAllInvoice = async (): Promise<AllInvoice> => {
+export const fetchAllInvoice = async (accessToken:string): Promise<AllInvoice> => {
   try {
-      const submitReq = await axiosClient.get(`invoice/all-sent`);
+      const submitReq = await axiosClient.get(`invoice/all-sent`, {
+        headers: {
+          'Authorization': accessToken,
+        }
+      });
         const dataAllIvoice = submitReq?.data
       return {
         allInvoice: dataAllIvoice,
@@ -63,9 +75,13 @@ export const fetchAllInvoice = async (): Promise<AllInvoice> => {
   }
 }
 
-export const fetchAllInvoiceReceived = async (): Promise<ListReceived> => {
+export const fetchAllInvoiceReceived = async (accessToken:string): Promise<ListReceived> => {
     try {
-        const submitReq = await axiosClient.get(`invoice/all-received`);
+        const submitReq = await axiosClient.get(`invoice/all-received`, {
+          headers: {
+            'Authorization': accessToken,
+          }
+        });
         const groups = submitReq?.data.reduce((groups, items) => {
             const date = items.createAt.split('T')[0];
             if (!groups[date]) {

@@ -1,6 +1,6 @@
 import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Controller } from "react-hook-form"
@@ -8,20 +8,21 @@ import styled from "styled-components"
 import { ContainerInput, CsInput, CsTextArea, WrapInput } from "../styles"
 // import Form from 'react-bootstrap/Form';
 import { AddIcon, DatePickerIcon } from 'components/Svg'
+import { GetTranslateHolder } from "hooks/TranSlateHolder"
+import { Translate } from "react-auto-translate"
 import Row from 'react-bootstrap/Row'
 import { useDispatch } from 'react-redux'
+import { getLanguageTrans } from "state/LanguageTrans"
 import ReactImageUpload from './ReactImageUpload'
-import { GetAllInvoice, UseGetAllInvoice, UseGetAllInvoiceSentCore } from "state/invoice"
-import { LanguagesContext } from "contexts/Translate"
-import { GetTranslateHolder } from "hooks/TranSlateHolder"
-import { Translate } from "react-auto-translate";
+import { getUser } from "state/user"
 
 const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
-  const dispatch = useDispatch()
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
-//   const { language, setLanguage } = useContext(LanguagesContext);
-  const languageStorage  = localStorage.getItem('language');
+
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
+
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
     senderEmail: "Who is this invoice from? (required)",
     billFrom: "Who is this invoice from? (required)",
@@ -46,32 +47,32 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     const resSenderEmail = await GetTranslateHolder(
         listTextPlaceHolder.senderEmail,
         // language
-        languageStorage
+        languageUserApi
       );
       console.log('resSenderEmail', resSenderEmail)
     const resBillFrom = await GetTranslateHolder(
       listTextPlaceHolder.billFrom,
-      languageStorage
+      languageUserApi
     );
     const resBillTo = await GetTranslateHolder(
       listTextPlaceHolder.billTo,
-      languageStorage
+      languageUserApi
     );
     const resShipTo = await GetTranslateHolder(
         listTextPlaceHolder.shipTo,
-        languageStorage
+        languageUserApi
       );
     const resPayment = await GetTranslateHolder(
       listTextPlaceHolder.payment,
-      languageStorage
+      languageUserApi
     );
     const resPoNumber = await GetTranslateHolder(
       listTextPlaceHolder.poNumber,
-      languageStorage
+      languageUserApi
     );
     const resOption = await GetTranslateHolder(
         listTextPlaceHolder.option,
-        languageStorage
+        languageUserApi
       );
   
     setStateTextPlaceholder({
@@ -86,9 +87,9 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
   };
 
   useEffect(() => {
-    if (!languageStorage || languageStorage === 'en')     
+    if (!languageUserApi || languageUserApi === 'en')     
     return setStateTextPlaceholder({
-        senderEmail: "Who is this invoice from? (required)",
+        senderEmail: "Sender email",
         billFrom: "Who is this invoice from? (required)",
         billTo: "Who is this invoice to? (required)",
         shipTo: "Who is this invoice to? (required)",
@@ -97,11 +98,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
         option: "Optional",
       });;
     changeTextPlaceHolderLg()
-  }, [languageStorage]);
-
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+  }, [languageUserApi]);
 
   return (
     <CsContainer >
@@ -135,7 +132,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                 
                 {/* Sender Email */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B"><Translate>Sender email</Translate></CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Sender Email</Translate></CsLabel>
                 </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -257,6 +254,9 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                     )}
                                 />
                             </WrapInput>
+                            {startDate === null && (
+                                <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Issue date is required</Translate></Text>
+                            )}
                             <ErrorMessages errors={errors} name="issueDate" />
                         </ContainerInput>
                     </Flex>
@@ -307,6 +307,9 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 )}
                             />
                         </WrapInput>
+                        {startDueDate === null && (
+                            <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Due date is required</Translate></Text>
+                        )}
                         <ErrorMessages errors={errors} name="dueDate" />
                     </Flex>
                     <Flex width="50%" flexDirection="column">
@@ -332,7 +335,6 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                     <ErrorMessages errors={errors} name="poNumber" />
                     </Flex>
                 </Row>
-
                 { checkError === true && 
                     <CustomMessageError>{getMessageError}</CustomMessageError> 
                 }

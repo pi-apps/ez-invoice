@@ -1,6 +1,6 @@
 import { AutoRenewIcon, Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
 import DownLoadIcon from "components/Svg/Icons/DowloadIcon";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import axios from "axios";
@@ -14,31 +14,27 @@ import { AppDispatch } from "state";
 import { getAccessTokenAuth } from "state/googleAuth";
 import { setAccessToken } from "state/googleAuth/actions";
 import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
+import { getInvoiceId } from "state/newInvoiceId";
+import { getAccessToken, getUser } from "state/user";
 
 interface Props {
   onDismiss?: () => void;
 }
 
 const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
+
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingGGDrive, setIsLoadingGGDrive] = useState(false);
   const [urlDownload, setUrlDownload] = useState();
   const { toastSuccess, toastError } = useToast();
 
-  const invoiceId = localStorage.getItem('invoiceIdStorage')
-
-  // language
-  const [language, setLanguage] = useState("en");
-  const getLanguage = async () => {
-    const data = await sessionStorage.getItem("language");
-    setLanguage(data);
-  };
-  useEffect(() => {
-    getLanguage();
-  }, []);
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
+  const invoiceId = getInvoiceId();
 
   const dispatch = useDispatch<AppDispatch>();
   const accessTokenAuth = getAccessTokenAuth();
+  const token = getAccessToken()
 
   const uploadFileToDrive = async (accessToken) => {
     setIsLoadingGGDrive(true)
@@ -92,11 +88,15 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   };
   const getUrlDownload = async () => {
     setIsLoading(true);
+    const sendLanguage = languageUserApi ?? 'en'
     try {
       const response = await axiosClient.get(
-        `/invoice/download?invoiceId=${invoiceId}&language=vi`
+        `/invoice/download?invoiceId=${invoiceId}&language=${sendLanguage}`, {
+          headers: {
+            "Authorization": token
+          }
+        }
       );
-      console.log('response', response)
       setUrlDownload(response.data);
       setIsLoading(false);
     } catch (error) {

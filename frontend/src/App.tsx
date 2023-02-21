@@ -17,6 +17,7 @@ import CreateDetail from "views/CreateInvoices/components/CreateDetail";
 import { getUser } from "./state/user";
 import SendInvoice from "views/SendInvoice";
 import { LanguagesContext } from "contexts/Translate";
+import { getLanguageTrans } from "state/LanguageTrans";
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -31,19 +32,21 @@ BigNumber.config({
 const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
 
 const App: React.FC = () => {
-
   const DataAb = getUser();
-  const { language, setLanguage } = useContext(LanguagesContext);
-  const languageStorage = localStorage.getItem('language')
+  const languageUserApi = DataAb?.language
+
+  const { language } = useContext(LanguagesContext);
+  const languageTransRedux = getLanguageTrans();
 
   return (
     <Fragment>
       <Translator
         from="en"
         to={
+          languageUserApi ? languageUserApi :
           language !== null
             ? language
-            : languageStorage ? languageStorage
+            : languageTransRedux ? languageTransRedux
             : DataAb?.language
             ? DataAb?.language
             : "en"
@@ -53,15 +56,13 @@ const App: React.FC = () => {
          <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
-            {/* <Route path="register" element={<Register />} /> */}
-            {/* <Route path="account" element={<Register />} /> */}
           </Route>
           <Route path="invoice" element={<Invoices />} />
           <Route path="newInvoice" element={<CreateInvoices />} />
           <Route path="detailSent/:slug" element={<DetailSent />} />
           <Route path="detailReceived/:slug" element={<DetailReceived />} />
           <Route path="createDetail/:slug" element={<CreateDetail />} />
-          <Route path="newInvoice/send" element={<SendInvoice />} />
+          <Route path="send/:invoiceId" element={<SendInvoice />} />
           <Route path="history" element={<History />} />
         </Routes>
         <ToastListener />

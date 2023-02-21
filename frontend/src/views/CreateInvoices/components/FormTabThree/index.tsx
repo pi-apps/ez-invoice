@@ -1,34 +1,33 @@
-import { AutoRenewIcon, Button, Flex, Image, Input, Text } from '@devfedeltalabs/pibridge_uikit'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Controller, useForm } from "react-hook-form"
-import ErrorMessages from "components/ErrorMessages/ErrorMessage"
-import Navbar from 'react-bootstrap/Navbar';
-import * as Yup from 'yup'
-import styled from 'styled-components'
+import { AutoRenewIcon, Button, Flex, Input, Text } from '@devfedeltalabs/pibridge_uikit';
+import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import Row from 'components/Layout/Row';
-import { useTranslation } from 'react-i18next';
-import ChooseMethod from './ChooseMethod';
+import { useContext } from 'react';
 import { AddIcon2 } from 'components/Svg';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { GetAllInvoice, UseGetAllInvoice } from 'state/invoice';
-import { useNavigate } from 'react-router-dom';
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
-import { LanguagesContext } from 'contexts/Translate';
+import { useEffect, useMemo, useState } from 'react';
 import { Translate } from "react-auto-translate";
+import { getLanguageTrans } from 'state/LanguageTrans';
+import Navbar from 'react-bootstrap/esm/Navbar';
+import styled from 'styled-components';
+import { Controller } from 'react-hook-form';
+import ChooseMethod from './ChooseMethod';
+import { getUser } from 'state/user';
 
 const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
-    const { t } = useTranslation()
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)
-
+    const [balaneDue, setBalanceDue] = useState(0)
     const [isPercent, setIsPercent] = useState(true)
     const taxValue =  Number(getValues('tax'))
     const shippingValue =  Number(getValues('shipping'))
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
+    console.log('balaneDue', balaneDue)
 
-    const languageStorage  = localStorage.getItem('language');
+    const DataAb = getUser();
+    const languageUserApi = DataAb?.language
+
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       notes: "Description of service or product",
     });
@@ -40,7 +39,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const changeTextPlaceHolderLg = async () => {
       const resSenderEmail = await GetTranslateHolder(
           listTextPlaceHolder.notes,
-          languageStorage
+          languageUserApi
         );
       setStateTextPlaceholder({
         notes: resSenderEmail,
@@ -48,12 +47,12 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     };
   
     useEffect(() => {
-      if (!languageStorage || languageStorage === 'en')     
+      if (!languageUserApi || languageUserApi === 'en')     
       return setStateTextPlaceholder({
           notes: "Description of service or product",
         });;
       changeTextPlaceHolderLg()
-    }, [languageStorage]);
+    }, [languageUserApi]);
     
     const totalPrice = (fields) => {
       return fields?.reduce((sum, i) => {
@@ -73,10 +72,9 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     
 
     const taxValuePercent = taxValue * total / 100 
-    const DiscountValuePercent = discountValue * total / 100 
+    const DiscountValuePercent = discountValue * (total + taxValuePercent) / 100 
     const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
     const isDiscount = (discountValue < total) ? discountValue : total
-    
     const totalFinal = (total) => {
       if(activeTax === 2 && isPercent === false){
         return total + taxValue + shippingValue - isDiscount
@@ -88,10 +86,12 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
         return total + taxValuePercent + shippingValue - isDiscount
       }
     } 
-
     const totalFinaly = totalFinal(total)
     const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
-    const isInvoiceIdStorage = localStorage.getItem('invoiceIdStorage')
+
+    useEffect(() => {
+      setBalanceDue(amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0)
+    },[amountPaidValue])
     
   return (
     <CsWrapperForm>
@@ -217,7 +217,8 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                                         placeholder="0.00 Pi"
                                         value={field.value}
                                         onBlur={field.onBlur}
-                                        onChange={field.onChange}
+                                        // onChange={field.onChange}
+                                        onChange={(event) => setValue("amountPaid", event.target.value)}
                                     />
                                   )}
                               />
@@ -225,20 +226,21 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                           <ErrorMessages errors={errors} name="amountPaid" />
                           </CsAmountPaid>
                     </Row>
+
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft><Translate>Balance Due</Translate></CsTextLeft>
                         <Text fontSize='14px'>{!balanceDue ? 0 : <>
                           {`${balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                         </> }</Text>
-                        
+                    </Row>
+                    <Row mt="1rem" style={{justifyContent: "space-between"}}>
+                        <Text color='#94A3B8' fontSize='10px'>Balance due = Sub total + Tax - Discount + Shipping - Amount paid </Text>
                     </Row>
                 </CsContentInfo>
             </CsFlex>
       </CsContainer>
       <CsSubTotal>
-      <Navbar.Brand>
-          <CsButtonAdd  endIcon={loadingPreview ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText><Translate>Preview</Translate> </CsText>}></CsButtonAdd>
-      </Navbar.Brand>
+        <CsButtonAdd  endIcon={loadingPreview ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText><Translate>Preview</Translate> </CsText>}></CsButtonAdd>
       </CsSubTotal>
       </CsWrapperForm>
   )

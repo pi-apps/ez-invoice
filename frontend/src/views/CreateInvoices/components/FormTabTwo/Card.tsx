@@ -1,15 +1,15 @@
 import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
-import { useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
 import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from 'hooks/TranSlateHolder'
-import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
+import { getUser } from 'state/user'
 
 const Card = ({index,item, remove, fields, register, control } ) => {
-  console.log('control' , control?._formState?.touchedFields?.items?.[0]?.name)
+  console.log('control' , control?._formState?.touchedFields?.items?.[0]?.name === true && item.name === '')
     const priceNumber = Number(item?.price)
     const quantityNumber = Number(item?.quantity)
     const handleCloseItem = () => {
@@ -18,7 +18,9 @@ const Card = ({index,item, remove, fields, register, control } ) => {
       }
     }
 
-    const languageStorage  = localStorage.getItem('language');
+    const DataAb = getUser();
+    const languageUserApi = DataAb?.language
+
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       name: "Description of service or product",
     });
@@ -30,7 +32,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     const changeTextPlaceHolderLg = async () => {
       const resSenderEmail = await GetTranslateHolder(
           listTextPlaceHolder.name,
-          languageStorage
+          languageUserApi
         );
       setStateTextPlaceholder({
         name: resSenderEmail,
@@ -38,12 +40,12 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     };
   
     useEffect(() => {
-      if (!languageStorage || languageStorage === 'en')     
+      if (!languageUserApi || languageUserApi === 'en')     
       return setStateTextPlaceholder({
           name: "Description of service or product",
         });;
       changeTextPlaceHolderLg()
-    }, [languageStorage]);
+    }, [languageUserApi]);
     
     
   const total = useMemo(() => {
@@ -94,7 +96,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                         )}
                         />
                 </WrapInput>
-                {(item.quantity === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
+                {(control?._formState?.touchedFields?.items?.[0]?.quantity === true && item.quantity === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
                   <>
                     {(Number(item.quantity) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
                   </>
@@ -117,7 +119,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                         )}
                       />
                 </WrapInput>
-                  {(item.price === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
+                  {(control?._formState?.touchedFields?.items?.[0]?.price === true && item.price === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
                   <>
                     {(Number(item.price) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
                   </>}
