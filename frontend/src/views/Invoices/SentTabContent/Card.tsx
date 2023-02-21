@@ -43,12 +43,14 @@ const Card: React.FC<Props> = ({
         <CsRow>
           <CsCol>
             <CsButton>
-              <Image
-                width={16}
-                height={16}
-                src={images}
-                alt="logo"
-              />
+              { images.length &&
+                <Image
+                  width={16}
+                  height={16}
+                  src={images}
+                  alt="logo"
+                />
+              }
             </CsButton>
           </CsCol>
           <CsCol>

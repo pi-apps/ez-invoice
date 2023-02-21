@@ -40,17 +40,20 @@ const Card: React.FC<Props> = ({
     return null
   }
   return (
-    <NavLink to={`/detailSent/${invoiceId}`}>
+    <NavLink to={`/detailReceived/${invoiceId}`}>
       <CsContainer>
         <CsRow>
           <CsCol>
             <CsButton>
-              <Image
-                width={16}
-                height={16}
-                src={images}
-                alt="logo"
-              />
+              { images.length &&
+                <Image
+                  width={16}
+                  height={16}
+                  src={images}
+                  alt="logo"
+                />
+              }
+              
             </CsButton>
           </CsCol>
           <CsCol>
