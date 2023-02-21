@@ -173,6 +173,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
                         setValue={setValue} 
                         control={control}
                         loadingPreview={loadingPreview}
+                        register={register}
                     />
         }
     }
