@@ -1,6 +1,6 @@
 require('dotenv').config()
 const Moralis = require("moralis").default;
-const html_to_pdf = require('html-pdf-node');
+const puppeteer = require('puppeteer');
 const ejs = require('ejs');
 const axios = require('axios');
 import fs from "fs";
@@ -98,25 +98,20 @@ async function generatePdf(invoice: any, language: any) {
     amountDue: invoice.amountDue,
   }
   const html = ejs.render(template, data);
-  let options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'] };
-
-  let file = { content: html };
-  const pdfBuffer = await html_to_pdf.generatePdf(file, options);
-  fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, pdfBuffer);
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+  const page = await browser.newPage();
+  await page.setContent(html);
+  const buffer = await page.pdf({ format: 'A4' });
+  await browser.close();
+  fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, buffer);
   const download = {
     filename: `${invoice.invoiceId}.pdf`,
     path: `./downloads/${invoice.invoiceId}.pdf`,
   }
   const downloadUrl = uploadToIpfs(download);
   return downloadUrl;
-  // const browser = await puppeteer.launch({
-  //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  // });
-  // const page = await browser.newPage();
-  // await page.setContent(html);
-  // const buffer = await page.pdf({ format: 'A4' });
-  // await browser.close();
-  // fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, buffer);
 }
 
 async function sendEmail(invoice: any, email: string, username: string, signature: string, language: string) {
