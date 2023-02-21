@@ -2,7 +2,7 @@ const fs = require("fs");
 const PDFDocument = require("pdfkit");
 const axios = require('axios');
 
-async function createInvoice(invoice, path) {
+async function createInvoice(invoice: any, path: any) {
   let doc = new PDFDocument({ size: "A4", margin: 50 });
 
 //   generateHeader(doc);
@@ -15,7 +15,7 @@ async function createInvoice(invoice, path) {
   await sleep(1000);
 }
 
-function generateHeader(doc) {
+function generateHeader(doc: any) {
   doc
     .fillColor("#444444")
     .fontSize(20)
@@ -27,7 +27,7 @@ function generateHeader(doc) {
     .moveDown();
 }
 
-async function generateCustomerInformation(doc, invoice) {
+async function generateCustomerInformation(doc: any, invoice: any) {
     const imageBuffer = invoice.logoUrl ? await axios.get(invoice.logoUrl, { responseType: 'arraybuffer' }) : null;
     imageBuffer ?
     doc
@@ -78,7 +78,7 @@ async function generateCustomerInformation(doc, invoice) {
   generateHr(doc, 182);
 }
 
-async function generateInvoiceTable(doc, invoice) {
+async function generateInvoiceTable(doc: any, invoice: any) {
   let i;
   const invoiceTableTop = 230;
 
@@ -180,7 +180,7 @@ async function generateInvoiceTable(doc, invoice) {
   doc.font("Helvetica");
 }
 
-function generateFooter(doc) {
+function generateFooter(doc: any) {
   doc
     .fontSize(10)
     .text(
@@ -192,13 +192,13 @@ function generateFooter(doc) {
 }
 
 function generateTableRow(
-  doc,
-  y,
-  item,
-  description,
-  unitCost,
-  quantity,
-  lineTotal
+  doc: any,
+  y: any,
+  item: any,
+  description: any,
+  unitCost: any,
+  quantity: any,
+  lineTotal: any
 ) {
   doc
     .fontSize(10)
@@ -209,7 +209,7 @@ function generateTableRow(
     .text(lineTotal, 0, y, { align: "right" });
 }
 
-function generateHr(doc, y) {
+function generateHr(doc: any, y: any) {
   doc
     .strokeColor("#aaaaaa")
     .lineWidth(1)
@@ -218,11 +218,11 @@ function generateHr(doc, y) {
     .stroke();
 }
 
-function formatCurrency(cents) {
+function formatCurrency(cents: any) {
   return cents.toFixed(2) + " Pi";
 }
 
-function formatDate(date) {
+function formatDate(date: any) {
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
@@ -231,10 +231,8 @@ function formatDate(date) {
 }
 
 // sleep
-function sleep(ms) {
+function sleep(ms: any) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-module.exports = {
-  createInvoice
-};
+export default createInvoice;
