@@ -110,7 +110,12 @@ async function generatePdf(invoice: any, language: any) {
   // var html = fs.readFileSync("template.html", "utf8");
   var options = {
     format: "A4",
-    orientation: "portrait"
+    orientation: "portrait",
+    childProcessOptions: {
+      env: {
+        OPENSSL_CONF: '/dev/null',
+      },
+    }
   };
   var document = {
     html: html,
