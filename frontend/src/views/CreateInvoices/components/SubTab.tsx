@@ -138,8 +138,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId}) => {
                 if(submitReq.status == 200){
                     toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
                     // setInvoiceid(submitReq?.data?.invoiceId)
-                    // await setInvoiceId(submitReq?.data?.invoiceId)
-                    // await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
+                    await setInvoiceId(submitReq?.data?.invoiceId)
+                    await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {

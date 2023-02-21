@@ -38,7 +38,6 @@ const CreateDetail = () => {
         setInvoiceId(items?.details?.invoiceId)
     },[items.details])
 
-    const percentTax = ( details?.subTotal && details?.tax) && details?.subTotal*details?.tax/100
     return (
         <PageFullWidth>
             <CsContainer>
@@ -117,89 +116,57 @@ const CreateDetail = () => {
                                     })}
 
                                 </CsContentBill>
-
                                 <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>
-                                                {`${(details?.subTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </CsTextRight>
+                                            <CsTextRight bold>{details?.subTotal} Pi</CsTextRight>
                                         }
-                                    </Row>
-                                    { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>Tax:</Translate> 
-                                            (
-                                            {`${(details?.tax).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}`}
-                                            {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.taxType === 1 ? 
-                                                <>
-                                                    {`${(details?.subTotal*details?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                                </>
-                                                 : 
-                                                <>
-                                                    {`${(details?.subTotal-details?.tax).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                                </>
-                                                 }</CsTextRight>
-                                        </Row>
-                                    }
-                                    { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
-                                            <CsTextRight bold>
-                                            {`${(details?.shipping).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </CsTextRight>
-                                        </Row>
-                                    }
-                                    { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>Discount:</Translate> (
-                                                {`${(details?.discount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}`}
-                                                {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.discountType === 1 ?
-                                            <>
-                                                {`${((details?.subTotal + (details?.subTotal*details?.tax/100))*details?.discount/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </>
-                                            :
-                                            <>
-                                                {`${(details?.subTotal-details?.discount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </>
-                                            }
-                                            </CsTextRight>
-                                        </Row>
-                                    }
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>
-                                                {`${(details?.total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </CsTextRight>
-                                        }
+                                        
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft><Translate>Allowances</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>-
-                                            {`-${(details?.amountPaid).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </CsTextRight>
+                                            <CsTextRight bold>-{details?.amountPaid} Pi</CsTextRight>
                                         }
                                         
                                     </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.total} Pi</CsTextRight>
+                                        }
+                                    </Row>
+                                    { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft><Translate>Tax:</Translate> ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.tax/100 : details?.subTotal-details?.tax} {details?.taxType === 1 ? "%" : "Pi"}</CsTextRight>
+                                        </Row>
+                                    }
+                                    { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
+                                            <CsTextRight bold>{details?.shipping} Pi</CsTextRight>
+                                        </Row>
+                                    }
+                                    { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.tax} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
+                                        </Row>
+                                    }
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft><Translate>Amount Due</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>
-                                                {`${(details?.amountDue).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </CsTextRight>
+                                            <CsTextRight bold>{details?.amountDue} Pi</CsTextRight>
                                         }
                                     </Row>
                                 </CsContentInfo>
