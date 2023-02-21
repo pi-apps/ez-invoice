@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import DownloadModal from "components/DownloadModal";
@@ -56,11 +57,11 @@ const Footer = ({ isActive }) => {
       style={styles.main}
     >
       <Nav.Item style={styles.navItem}>
-        <Navbar.Brand href="/history">
+        <NavLink to="/history">
           <CsButton style={{ background: "#F8F5FF" }}>
             <Translate>History</Translate>
           </CsButton>
-        </Navbar.Brand>
+        </NavLink>
       </Nav.Item>
 
       <Nav.Item style={styles.navItem}>
@@ -74,13 +75,13 @@ const Footer = ({ isActive }) => {
       </Nav.Item>
 
       <Nav.Item style={styles.navItem}>
-        <Navbar.Brand href={`/send/${invoiceId}`}>
+        <NavLink to={`/send/${invoiceId}`}>
           <CsButton
-           disabled={(isActive === 1 || isActive === 2) || !invoiceId}
+            disabled={(isActive === 1 || isActive === 2) || !invoiceId}
           >
             <Translate>Send</Translate>
           </CsButton>
-        </Navbar.Brand>
+        </NavLink>
       </Nav.Item>
     </NavCustom>
   );

@@ -25,6 +25,7 @@ export default function mountUserEndpoints(router: Router) {
                     accessToken: auth.accessToken,
                 }
             });
+            currentUser = await UsersModel.findOne({ uid: auth.user.uid });
         } else {
             const insertResult = new UsersModel({
                 username: auth.user.username,

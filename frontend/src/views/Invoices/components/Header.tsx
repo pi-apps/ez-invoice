@@ -1,31 +1,20 @@
-import React from "react";
-import PageFullWidth from "components/Layout/PageFullWidth";
-import Navbar from "react-bootstrap/Navbar";
-import styled from "styled-components";
-import Container from "components/Layout/Container";
-import { Flex, Text, Button } from "@devfedeltalabs/pibridge_uikit";
+import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { Translate } from "react-auto-translate";
-import { useDispatch } from "react-redux";
-import { axiosClient } from "config/htttp";
-import { GetAllInvoice } from "state/invoice";
+import { NavLink } from "react-router-dom";
+import styled from "styled-components";
 
 const Header = () => {
-  const dispatch = useDispatch()
-
-  const handleClickNewInvoice = async () => {
-    // dispatch(GetAllInvoice())
-  }
-
+  
   return (
     <ContainerHeader>
       <Text fontSize="24px" bold>
         <Translate>Invoices</Translate>
       </Text>
-      <Navbar.Brand href="/newInvoice">
-        <Button onClick={handleClickNewInvoice}>
+      <NavLink to="/newInvoice">
+        <Button>
           <Translate>New invoice</Translate>
         </Button>
-      </Navbar.Brand>
+      </NavLink>
     </ContainerHeader>
   );
 };
