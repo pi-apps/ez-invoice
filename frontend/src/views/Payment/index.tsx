@@ -12,7 +12,7 @@ import useToast from "hooks/useToast";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "state";
 import { fetchLoading } from "state/invoice/actions";
-import { setUser } from "state/user/actions";
+import { setUser, isLoading, accessToken } from "state/user/actions";
 import { axiosClient } from "config/htttp";
 import { AuthResult, PaymentDTO } from "components/Menu/UserMenu/type";
 import { GetDataPayment, PaymentCore } from "state/payment";
@@ -28,7 +28,7 @@ const Payment = () => {
   
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const isLoading = items?.isLoading
+    const loading = items?.isLoading
     const onIncompletePaymentFound = (payment: PaymentDTO) => {
         console.log("onIncompletePaymentFound", payment);
         return axiosClient.post("/payments/incomplete", { payment });
@@ -37,27 +37,60 @@ const Payment = () => {
         return await axiosClient.post("/user/signin", { authResult });
     };
     const signIn = async () => {
-        dispatch(fetchLoading({isLoading:true}))
-        const scopes = ["username", "payments"];
-        window.Pi.authenticate(scopes, onIncompletePaymentFound)
-          .then(async function (auth) {
-            const loginUser = await signInUser(auth);
-            if (loginUser) {
-              const userInfor = await axiosClient.get("user/info");
-              if (userInfor) {
-                dispatch(setUser(userInfor.data));
-                dispatch(fetchDataUser({userData:userInfor.data}));
-              }
-              dispatch(fetchLoading({isLoading:false}))
+        try {
+            const scopes = ["username", "payments"];
+            dispatch(isLoading({isLoading:true}))
+            const resultLogin = await  window.Pi.authenticate(scopes, onIncompletePaymentFound)
+            
+            if( resultLogin ) {
+                const loginUser = await signInUser(resultLogin);
+                
+                if (loginUser?.data.message.accessToken.length) {
+                  dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
+                  const userInfor = await axiosClient.get("user/info", {
+                    headers: {
+                      'Authorization': `${loginUser?.data?.message.accessToken}`,
+                    }
+                  });
+                  
+                  if (userInfor) {
+                    dispatch(setUser(userInfor.data));
+                  }
+                  dispatch(isLoading({isLoading:false}))
+                } else {
+                  dispatch(isLoading({isLoading:false}))
+                }
+                console.log(`Hi there! You're ready to make payments!`);
+                dispatch(isLoading({isLoading:false}))
+                toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Login successfully</Translate></Text>)
+            } else {
+              toastError('Error', <Text style={{justifyContent: 'center'}}><Translate>Somethig went wrong</Translate></Text>)
+              dispatch(isLoading({isLoading:false}))
             }
-            console.log(`Hi there! You're ready to make payments!`);
-            toastSuccess(null, <Translate>Login successfully</Translate>)
-          })
-          .catch(function (error) {
-            toastError('error', <Translate>{JSON.stringify(error)}</Translate>)
-            console.error(error);
-            dispatch(fetchLoading({isLoading:false}))
-          });
+          } catch (error) {
+            dispatch(isLoading({isLoading:false}))
+          }
+        // dispatch(fetchLoading({isLoading:true}))
+        // const scopes = ["username", "payments"];
+        // window.Pi.authenticate(scopes, onIncompletePaymentFound)
+        //   .then(async function (auth) {
+        //     const loginUser = await signInUser(auth);
+        //     if (loginUser) {
+        //       const userInfor = await axiosClient.get("user/info");
+        //       if (userInfor) {
+        //         dispatch(setUser(userInfor.data));
+        //         dispatch(fetchDataUser({userData:userInfor.data}));
+        //       }
+        //       dispatch(fetchLoading({isLoading:false}))
+        //     }
+        //     console.log(`Hi there! You're ready to make payments!`);
+        //     toastSuccess(null, <Translate>Login successfully</Translate>)
+        //   })
+        //   .catch(function (error) {
+        //     toastError('error', <Translate>{JSON.stringify(error)}</Translate>)
+        //     console.error(error);
+        //     dispatch(fetchLoading({isLoading:false}))
+        //   });
     };
     // core data payment
     PaymentCore(signature)
@@ -81,7 +114,11 @@ const Payment = () => {
         <PageFullWidth>
             <CsContainer>
                 {  dataPayment?.userData === null || dataPayment?.userData === undefined ? 
-                    <CsButton onClick={signIn} endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Login</Translate>} />
+                    <CsButton 
+                        onClick={signIn} 
+                        disabled={loading}
+                        endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Login</Translate>}
+                    />
                 :
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">

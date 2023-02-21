@@ -62,6 +62,7 @@ const App: React.FC = () => {
           <Route path="detailReceived/:slug" element={<DetailReceived />} />
           <Route path="createDetail/:slug" element={<CreateDetail />} />
           <Route path="send/:invoiceId" element={<SendInvoice />} />
+          <Route path="payment/:signature" element={<Payment />} />
           <Route path="history" element={<History />} />
         </Routes>
         <ToastListener />

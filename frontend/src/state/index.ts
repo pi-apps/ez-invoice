@@ -23,6 +23,7 @@ const store = configureStore({
     invoice,
     user,
     loginGoogle,
+    payment,
     invoiceId,
     languageTrans,
   },

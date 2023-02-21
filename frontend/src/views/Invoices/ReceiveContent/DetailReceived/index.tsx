@@ -15,8 +15,8 @@ import { getAccessToken } from 'state/user';
 const DetailSent = () => {
     const navigate = useNavigate();
     let { slug } = useParams()
-    const dataUser = getAccessToken()
-    UseGetAnInvoiceCore(slug, dataUser)
+    const accessTokenUser = getAccessToken()
+    UseGetAnInvoiceCore(slug, accessTokenUser)
     const items = GetAnInvoice()
     const details = items?.details
     function convertDate(date: any) {
