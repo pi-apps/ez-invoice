@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Navbar from "react-bootstrap/Navbar";
 import styled from "styled-components";
@@ -11,9 +11,7 @@ import { GetAllInvoice } from "state/invoice";
 
 const Header = () => {
   const dispatch = useDispatch()
-
   const handleClickNewInvoice = async () => {
-    // dispatch(GetAllInvoice())
   }
 
   return (
@@ -24,13 +22,7 @@ const Header = () => {
       <Flex width="100%" mt="8px">
         <Text color="#64748B" fontSize="14px" bold><Translate>Let’s get started with a free EzInvoice account.</Translate></Text>
       </Flex>
-      <Flex justifyContent="space-between" width="100%" style={{gap: '10px'}}>
-        <Navbar.Brand style={{width:'50%'}}>
-          <CsExport onClick={handleClickNewInvoice} marginTop="14px" width='100%'>
-            <Translate>Export</Translate>
-          </CsExport>
-        </Navbar.Brand>
-
+      <Flex justifyContent="flex-end" width="100%" style={{gap: '10px'}}>
         <Navbar.Brand href="/newInvoice" style={{width:'50%'}}>
           <Button onClick={handleClickNewInvoice} marginTop="14px" width='100%'>
             <Translate>New invoice</Translate>
