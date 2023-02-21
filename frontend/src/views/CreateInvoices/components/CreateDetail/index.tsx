@@ -13,6 +13,7 @@ import Footer from '../Footer';
 import { Translate } from "react-auto-translate";
 import { InvoiceIdContext } from 'contexts/InVoiceIdContext';
 import { useContext, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
 const CreateDetail = () => {
 
@@ -174,11 +175,11 @@ const CreateDetail = () => {
                             </WContent>
                             <WAction>
                                     <CsNavItem>
-                                        <Navbar.Brand href="/newInvoice">
+                                        <NavLink to="/newInvoice">
                                             <CsButton>
                                                 <Translate>Back</Translate>
                                             </CsButton>
-                                        </Navbar.Brand>
+                                        </NavLink>
                                     </CsNavItem>
                             </WAction>
                         </Flex>
