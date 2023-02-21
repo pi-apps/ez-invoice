@@ -99,7 +99,7 @@ async function generatePdf(invoice: any, language: any) {
     amountPaid: invoice.amountPaid,
     amountDue: invoice.amountDue,
   }
-  // const html = ejs.render(template, data);
+  const html = ejs.render(template, data);
   // const browser = await puppeteer.launch({
   //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
   // });
@@ -108,7 +108,7 @@ async function generatePdf(invoice: any, language: any) {
   // const buffer = await page.pdf({ format: 'A4' });
   // await browser.close();
   // fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, buffer);
-  var html = fs.readFileSync("./src/services/templatePDF.html", "utf8");
+  // var html = fs.readFileSync("./src/services/templatePDF.html", "utf8");
   var options = {
     format: "A4",
     orientation: "portrait",
