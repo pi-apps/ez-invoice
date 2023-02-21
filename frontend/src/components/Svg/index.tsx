@@ -13,5 +13,6 @@ export { default as DownloadIcon } from './Icons/DowloadIcon';
 export { default as DatePickerIcon } from './Icons/DatePickerIcon';
 export { default as RemoveIcon } from './Icons/RemoveIcon';
 export { default as RefreshIcon } from './Icons/RefreshIcon';
+export { default as UndefineIcon } from './Icons/UndefineIcon';
 
 export type { SvgProps } from "./types";

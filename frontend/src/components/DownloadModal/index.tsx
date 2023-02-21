@@ -101,18 +101,18 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
         }
       );
       setUrlDownload(response.data);
-      // fetch(response.data).then(response => {
-      //   console.log("response", response);
-      //     response.blob().then(blob => {
-      //         // Creating new object of PDF file
-      //         const fileURL = window.URL.createObjectURL(blob);
-      //         // Setting various property values
-      //         let alink = document.createElement('a');
-      //         alink.href = fileURL;
-      //         alink.download = `${invoiceId}.pdf`;
-      //         alink.click();
-      //     })
-      // })
+      fetch(response.data).then(response => {
+        console.log("response", response);
+          response.blob().then(blob => {
+              // Creating new object of PDF file
+              const fileURL = window.URL.createObjectURL(blob);
+              // Setting various property values
+              let alink = document.createElement('a');
+              alink.href = fileURL;
+              alink.download = `${invoiceId}.pdf`;
+              alink.click();
+          })
+      })
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);

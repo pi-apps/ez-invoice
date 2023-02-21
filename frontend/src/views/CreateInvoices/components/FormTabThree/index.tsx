@@ -18,12 +18,10 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)
     const [balaneDue, setBalanceDue] = useState(0)
-    const [isPercent, setIsPercent] = useState(true)
     const taxValue =  Number(getValues('tax'))
     const shippingValue =  Number(getValues('shipping'))
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
-    console.log('balaneDue', balaneDue)
 
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
@@ -76,13 +74,13 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
     const isDiscount = (discountValue < total) ? discountValue : total
     const totalFinal = (total) => {
-      if(activeTax === 2 && isPercent === false){
+      if(activeTax === 2 && activeDiscount === 2){
         return total + taxValue + shippingValue - isDiscount
-      } else if(activeTax === 2 && isPercent === true){
+      } else if(activeTax === 2 && activeDiscount === 1){
         return total + taxValue + shippingValue - isDiscountValuePercent
-      } else if(activeTax === 1 && isPercent === true){
+      } else if(activeTax === 1 && activeDiscount === 1){
         return total + taxValuePercent + shippingValue - isDiscountValuePercent
-      } else if(activeTax === 1 && isPercent === false){
+      } else if(activeTax === 1 && activeDiscount === 2){
         return total + taxValuePercent + shippingValue - isDiscount
       }
     } 
@@ -168,8 +166,6 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                             setTypeDiscount={setTypeDiscount} 
                             typeShipping={typeShipping} 
                             setTypeShipping={setTypeShipping}
-                            isPercent={isPercent}
-                            setIsPercent={setIsPercent}
                             errors={errors}
                         />
                     </Row>
