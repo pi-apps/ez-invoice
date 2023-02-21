@@ -101,18 +101,18 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
         }
       );
       setUrlDownload(response.data);
-      // fetch(response.data).then(response => {
-      //   console.log("response", response);
-      //     response.blob().then(blob => {
-      //         // Creating new object of PDF file
-      //         const fileURL = window.URL.createObjectURL(blob);
-      //         // Setting various property values
-      //         let alink = document.createElement('a');
-      //         alink.href = fileURL;
-      //         alink.download = `${invoiceId}.pdf`;
-      //         alink.click();
-      //     })
-      // })
+      fetch(response.data).then(response => {
+        console.log("response", response);
+          response.blob().then(blob => {
+              // Creating new object of PDF file
+              const fileURL = window.URL.createObjectURL(blob);
+              // Setting various property values
+              let alink = document.createElement('a');
+              alink.href = fileURL;
+              alink.download = `${invoiceId}.pdf`;
+              alink.click();
+          })
+      })
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
@@ -124,57 +124,57 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
     getUrlDownload()
   }, [invoiceId])
 
-  return (
-    <TranSlatorModal>
-      <Modal
-        title=""
-        onDismiss={onDismiss}
-        maxWidth="550px"
-        modalIcon={<DownLoadIcon />}
-      >
-        <Flex flexDirection="column" width="100%">
-          <Text bold fontSize="18px" width="100%" textAlign="center">
-            <Translate>Download Invoice</Translate>
-          </Text>
-          <Text width="100%" textAlign="center" color="textSubtle" mt="10px">
-            <Translate>Please choose the location for file.</Translate>
-          </Text>
+  return (<></>
+    // <TranSlatorModal>
+    //   <Modal
+    //     title=""
+    //     onDismiss={onDismiss}
+    //     maxWidth="550px"
+    //     modalIcon={<DownLoadIcon />}
+    //   >
+    //     <Flex flexDirection="column" width="100%">
+    //       <Text bold fontSize="18px" width="100%" textAlign="center">
+    //         <Translate>Download Invoice</Translate>
+    //       </Text>
+    //       <Text width="100%" textAlign="center" color="textSubtle" mt="10px">
+    //         <Translate>Please choose the location for file.</Translate>
+    //       </Text>
 
-          <Flex mt="1rem" justifyContent="space-between">
-            <LinkDownload href={urlDownload} download>
-              {urlDownload},
-              {invoiceId}
-              Hard disk
-              <CsButton
-                padding="0"
-                width="100%"
-                variant="secondary"
-                disabled={!urlDownload && isLoading}
-                onClick={() => getUrlDownload()}
-                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Hard disk</Translate>}
-              >
-              </CsButton> 
-              </LinkDownload>
+    //       <Flex mt="1rem" justifyContent="space-between">
+    //         <LinkDownload href={urlDownload} download>
+    //           {urlDownload},
+    //           {invoiceId}
+    //           Hard disk
+    //           <CsButton
+    //             padding="0"
+    //             width="100%"
+    //             variant="secondary"
+    //             disabled={!urlDownload && isLoading}
+    //             onClick={() => getUrlDownload()}
+    //             endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Hard disk</Translate>}
+    //           >
+    //           </CsButton> 
+    //           </LinkDownload>
 
-            {/* {accessTokenAuth ? (
-              <Button
-                disabled={isLoading && !urlDownload}
-                endIcon={isLoadingGGDrive ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Google Drive</Translate>}
-                padding="0"
-                width="48%"
-                onClick={() => handleOpenPicker()}
-              />
-            ) : (
-              <Button 
-                disabled={isLoading}
-                onClick={handleLoginAuthGoogle}
-                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Login Google</Translate>}
-              />
-            )} */}
-          </Flex>
-        </Flex>
-      </Modal>
-    </TranSlatorModal>
+    //         {/* {accessTokenAuth ? (
+    //           <Button
+    //             disabled={isLoading && !urlDownload}
+    //             endIcon={isLoadingGGDrive ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Google Drive</Translate>}
+    //             padding="0"
+    //             width="48%"
+    //             onClick={() => handleOpenPicker()}
+    //           />
+    //         ) : (
+    //           <Button 
+    //             disabled={isLoading}
+    //             onClick={handleLoginAuthGoogle}
+    //             endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Login Google</Translate>}
+    //           />
+    //         )} */}
+    //       </Flex>
+    //     </Flex>
+    //   </Modal>
+    // </TranSlatorModal>
   );
 };
 const CsButton = styled(Button)`

@@ -10,6 +10,38 @@ import { lang_pdf } from "./languages/lang_pdf";
 import { lang_email } from "./languages/lang_email";
 import { lang_email_success } from "./languages/lang_email_success";
 
+
+
+const { createInvoice } = require("./createInvoice.js");
+
+const invoice123 = {
+  shipping: {
+    name: "John Doe",
+    address: "1234 Main Street",
+    city: "San Francisco",
+    state: "CA",
+    country: "US",
+    postal_code: 94111
+  },
+  items: [
+    {
+      item: "TC 100",
+      description: "Toner Cartridge",
+      quantity: 2,
+      amount: 6000
+    },
+    {
+      item: "USB_EXT",
+      description: "USB Cable Extender",
+      quantity: 1,
+      amount: 2000
+    }
+  ],
+  subtotal: 8000,
+  paid: 0,
+  invoice_nr: 1234
+};
+
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
 const template = fs.readFileSync("./src/services/templatePDF.ejs", "utf8");
@@ -44,91 +76,92 @@ async function uploadToIpfs(file: any) {
 }
 
 async function generatePdf(invoice: any, language: any) {
-  let items = invoice.items;
-  for (let i = 0; i < items.length; i++) {
-    items[i].total = Number(items[i].price) * Number(items[i].quantity);
-  }
-  let lang = "";
-  for (const key in lang_pdf) {
-    lang += lang_pdf[key] + ":";
-  }
-  lang = lang.slice(0, -1);
-  if (language !== "en") {
-    lang = await translateText(lang, "en", language);
-  }
-  const langArr = lang.split(":");
-  const data = {
-    "text_title": langArr[0] || lang_pdf["text_title"],
-    "text_bill_from": langArr[1] || lang_pdf["text_bill_from"],
-    "text_bill_to": langArr[2] || lang_pdf["text_bill_to"],
-    "text_issue_date": langArr[3] || lang_pdf["text_issue_date"],
-    "text_due_date": langArr[4] || lang_pdf["text_due_date"],
-    "text_payment_terms": langArr[5] || lang_pdf["text_payment_terms"],
-    "text_po_number": langArr[6] || lang_pdf["text_po_number"],
-    "text_balance_due": langArr[7] || lang_pdf["text_balance_due"],
-    "text_item": langArr[8] || lang_pdf["text_item"],
-    "text_quantity": langArr[9] || lang_pdf["text_quantity"],
-    "text_price": langArr[10] || lang_pdf["text_price"],
-    "text_total": langArr[11] || lang_pdf["text_total"],
-    "text_subtotal": langArr[12] || lang_pdf["text_subtotal"],
-    "text_tax": langArr[13] || lang_pdf["text_tax"],
-    "text_discount": langArr[14] || lang_pdf["text_discount"],
-    "text_shipping": langArr[15] || lang_pdf["text_shipping"],
-    "text_amount_paid": langArr[16] || lang_pdf["text_amount_paid"],
-    "text_amount_due": langArr[17] || lang_pdf["text_amount_due"],
-    invoiceNumber: invoice.invoiceNumber,
-    logoUrl: invoice.logoUrl,
-    billFrom: invoice.billFrom.split("\n")[0],
-    billTo: invoice.billTo.split("\n")[0],
-    shipTo: invoice.shipTo,
-    issueDate: new Date(invoice.issueDate).toLocaleDateString("en-US"),
-    dueDate: new Date(invoice.dueDate).toLocaleDateString("en-US"),
-    paymentTerms: invoice.paymentTerms,
-    poNumber: invoice.poNumber,
-    items: items,
-    notes: invoice.notes,
-    terms: invoice.terms,
-    subTotal: invoice.subTotal,
-    tax: invoice.tax,
-    taxType: invoice.taxType,
-    discount: invoice.discount,
-    discountType: invoice.discountType,
-    shipping: invoice.shipping,
-    total: invoice.total,
-    amountPaid: invoice.amountPaid,
-    amountDue: invoice.amountDue,
-  }
-  const html = ejs.render(template, data);
-  // const browser = await puppeteer.launch({
-  //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  // });
-  // const page = await browser.newPage();
-  // await page.setContent(html);
-  // const buffer = await page.pdf({ format: 'A4' });
-  // await browser.close();
-  // fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, buffer);
-  // var html = fs.readFileSync("template.html", "utf8");
-  var options = {
-    format: "A4",
-    orientation: "portrait",
-    childProcessOptions: {
-      env: {
-        OPENSSL_CONF: '/dev/null',
-      },
-    }
-  };
-  var document = {
-    html: html,
-    data: {},
-    path: `./downloads/${invoice.invoiceId}.pdf`,
-    type: "",
-  };
-  const ress = await pdf.create(document, options)
+  // let items = invoice.items;
+  // for (let i = 0; i < items.length; i++) {
+  //   items[i].total = Number(items[i].price) * Number(items[i].quantity);
+  // }
+  // let lang = "";
+  // for (const key in lang_pdf) {
+  //   lang += lang_pdf[key] + ":";
+  // }
+  // lang = lang.slice(0, -1);
+  // if (language !== "en") {
+  //   lang = await translateText(lang, "en", language);
+  // }
+  // const langArr = lang.split(":");
+  // const data = {
+  //   "text_title": langArr[0] || lang_pdf["text_title"],
+  //   "text_bill_from": langArr[1] || lang_pdf["text_bill_from"],
+  //   "text_bill_to": langArr[2] || lang_pdf["text_bill_to"],
+  //   "text_issue_date": langArr[3] || lang_pdf["text_issue_date"],
+  //   "text_due_date": langArr[4] || lang_pdf["text_due_date"],
+  //   "text_payment_terms": langArr[5] || lang_pdf["text_payment_terms"],
+  //   "text_po_number": langArr[6] || lang_pdf["text_po_number"],
+  //   "text_balance_due": langArr[7] || lang_pdf["text_balance_due"],
+  //   "text_item": langArr[8] || lang_pdf["text_item"],
+  //   "text_quantity": langArr[9] || lang_pdf["text_quantity"],
+  //   "text_price": langArr[10] || lang_pdf["text_price"],
+  //   "text_total": langArr[11] || lang_pdf["text_total"],
+  //   "text_subtotal": langArr[12] || lang_pdf["text_subtotal"],
+  //   "text_tax": langArr[13] || lang_pdf["text_tax"],
+  //   "text_discount": langArr[14] || lang_pdf["text_discount"],
+  //   "text_shipping": langArr[15] || lang_pdf["text_shipping"],
+  //   "text_amount_paid": langArr[16] || lang_pdf["text_amount_paid"],
+  //   "text_amount_due": langArr[17] || lang_pdf["text_amount_due"],
+  //   invoiceNumber: invoice.invoiceNumber,
+  //   logoUrl: invoice.logoUrl,
+  //   billFrom: invoice.billFrom.split("\n")[0],
+  //   billTo: invoice.billTo.split("\n")[0],
+  //   shipTo: invoice.shipTo,
+  //   issueDate: new Date(invoice.issueDate).toLocaleDateString("en-US"),
+  //   dueDate: new Date(invoice.dueDate).toLocaleDateString("en-US"),
+  //   paymentTerms: invoice.paymentTerms,
+  //   poNumber: invoice.poNumber,
+  //   items: items,
+  //   notes: invoice.notes,
+  //   terms: invoice.terms,
+  //   subTotal: invoice.subTotal,
+  //   tax: invoice.tax,
+  //   taxType: invoice.taxType,
+  //   discount: invoice.discount,
+  //   discountType: invoice.discountType,
+  //   shipping: invoice.shipping,
+  //   total: invoice.total,
+  //   amountPaid: invoice.amountPaid,
+  //   amountDue: invoice.amountDue,
+  // }
+  // // const html = ejs.render(template, data);
+  // // const browser = await puppeteer.launch({
+  // //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  // // });
+  // // const page = await browser.newPage();
+  // // await page.setContent(html);
+  // // const buffer = await page.pdf({ format: 'A4' });
+  // // await browser.close();
+  // // fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, buffer);
+  // var html = fs.readFileSync("./src/services/templatePDF.html", "utf8");
+  // var options = {
+  //   format: "A4",
+  //   orientation: "portrait",
+  //   childProcessOptions: {
+  //     env: {
+  //       OPENSSL_CONF: '/dev/null',
+  //     },
+  //   }
+  // };
+  // var document = {
+  //   html: html,
+  //   data: data,
+  //   path: `./downloads/${invoice.invoiceId}.pdf`,
+  //   type: "",
+  // };
+  // const ress = await pdf.create(document, options)
+  await createInvoice(invoice, `./downloads/${invoice.invoiceId}.pdf`);
   const download = {
     filename: `${invoice.invoiceId}.pdf`,
     path: `./downloads/${invoice.invoiceId}.pdf`,
   }
-  const downloadUrl = uploadToIpfs(download);
+  const downloadUrl = await uploadToIpfs(download);
   return downloadUrl;
 }
 
