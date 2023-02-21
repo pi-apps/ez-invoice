@@ -14,12 +14,15 @@ import Row from 'react-bootstrap/Row'
 import { useDispatch } from 'react-redux'
 import { getLanguageTrans } from "state/LanguageTrans"
 import ReactImageUpload from './ReactImageUpload'
+import { getUser } from "state/user"
 
 const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate}) => {
-  const dispatch = useDispatch()
   const [checkError, setCheckError] = useState(false)
   const [getMessageError, setMessageError] = useState()
-  const languageTransRedux = getLanguageTrans();
+
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
+
   const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
     senderEmail: "Who is this invoice from? (required)",
     billFrom: "Who is this invoice from? (required)",
@@ -44,32 +47,32 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     const resSenderEmail = await GetTranslateHolder(
         listTextPlaceHolder.senderEmail,
         // language
-        languageTransRedux
+        languageUserApi
       );
       console.log('resSenderEmail', resSenderEmail)
     const resBillFrom = await GetTranslateHolder(
       listTextPlaceHolder.billFrom,
-      languageTransRedux
+      languageUserApi
     );
     const resBillTo = await GetTranslateHolder(
       listTextPlaceHolder.billTo,
-      languageTransRedux
+      languageUserApi
     );
     const resShipTo = await GetTranslateHolder(
         listTextPlaceHolder.shipTo,
-        languageTransRedux
+        languageUserApi
       );
     const resPayment = await GetTranslateHolder(
       listTextPlaceHolder.payment,
-      languageTransRedux
+      languageUserApi
     );
     const resPoNumber = await GetTranslateHolder(
       listTextPlaceHolder.poNumber,
-      languageTransRedux
+      languageUserApi
     );
     const resOption = await GetTranslateHolder(
         listTextPlaceHolder.option,
-        languageTransRedux
+        languageUserApi
       );
   
     setStateTextPlaceholder({
@@ -84,7 +87,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
   };
 
   useEffect(() => {
-    if (!languageTransRedux || languageTransRedux === 'en')     
+    if (!languageUserApi || languageUserApi === 'en')     
     return setStateTextPlaceholder({
         senderEmail: "Who is this invoice from? (required)",
         billFrom: "Who is this invoice from? (required)",
@@ -95,7 +98,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
         option: "Optional",
       });;
     changeTextPlaceHolderLg()
-  }, [languageTransRedux]);
+  }, [languageUserApi]);
 
   return (
     <CsContainer >

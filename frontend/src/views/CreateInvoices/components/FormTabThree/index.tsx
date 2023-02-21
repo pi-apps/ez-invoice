@@ -3,7 +3,6 @@ import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import Row from 'components/Layout/Row';
 import { useContext } from 'react';
 import { AddIcon2 } from 'components/Svg';
-import { LanguagesContext } from 'contexts/Translate';
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import { useEffect, useMemo, useState } from 'react';
 import { Translate } from "react-auto-translate";
@@ -12,6 +11,7 @@ import Navbar from 'react-bootstrap/esm/Navbar';
 import styled from 'styled-components';
 import { Controller } from 'react-hook-form';
 import ChooseMethod from './ChooseMethod';
+import { getUser } from 'state/user';
 
 const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
     const [typeTax, setTypeTax] = useState(true)
@@ -24,7 +24,10 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
     console.log('balaneDue', balaneDue)
-    const languageTransRedux = getLanguageTrans();
+
+    const DataAb = getUser();
+    const languageUserApi = DataAb?.language
+
     const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
       notes: "Description of service or product",
     });
@@ -36,7 +39,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const changeTextPlaceHolderLg = async () => {
       const resSenderEmail = await GetTranslateHolder(
           listTextPlaceHolder.notes,
-          languageTransRedux
+          languageUserApi
         );
       setStateTextPlaceholder({
         notes: resSenderEmail,
@@ -44,12 +47,12 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     };
   
     useEffect(() => {
-      if (!languageTransRedux || languageTransRedux === 'en')     
+      if (!languageUserApi || languageUserApi === 'en')     
       return setStateTextPlaceholder({
           notes: "Description of service or product",
         });;
       changeTextPlaceHolderLg()
-    }, [languageTransRedux]);
+    }, [languageUserApi]);
     
     const totalPrice = (fields) => {
       return fields?.reduce((sum, i) => {

@@ -11,10 +11,7 @@ import { useContext, useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import ErrorMessages from "components/ErrorMessages/ErrorMessage";
-import { LanguagesContext } from "contexts/Translate";
 import { getInvoiceId } from "state/newInvoiceId";
-import { InvoiceIdContext } from "contexts/InVoiceIdContext";
-import { getLanguageTrans } from "state/LanguageTrans";
 
 interface FormSendInvoiceTypes {
   setIsSentSuccessfully: (e) => void;
@@ -28,8 +25,9 @@ const FormSendInvoice: React.FC<
   const [isLoading, setIsLoading] = useState(false)
   const accessTokenUser = getAccessToken()
 
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
   const invoiceIdRedux = getInvoiceId();
-  const languageTransRedux = getLanguageTrans();  
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100, 'Max length is 100 characters').email('Invalid email address'),
@@ -45,7 +43,7 @@ const FormSendInvoice: React.FC<
     const dataPost = {
       invoiceId: invoiceIdRedux,
       email: data.email,
-      language: languageTransRedux ? languageTransRedux : "en",
+      language: languageUserApi ? languageUserApi : "en",
     };
 
     try {
@@ -82,7 +80,7 @@ const FormSendInvoice: React.FC<
     const resRecipientEmail= await GetTranslateHolder(
         listTextPlaceHolder.recipientEmail,
         // language
-        languageTransRedux
+        languageUserApi
       );
     setStateTextPlaceholder({
       recipientEmail: resRecipientEmail,
@@ -90,12 +88,12 @@ const FormSendInvoice: React.FC<
   };
 
   useEffect(() => {
-    if (!languageTransRedux || languageTransRedux === 'en')     
+    if (!languageUserApi || languageUserApi === 'en')     
     return setStateTextPlaceholder({
         recipientEmail: "Who is this invoice to? (required)",
       });;
     changeTextPlaceHolderLg()
-  }, [languageTransRedux]);
+  }, [languageUserApi]);
 
   return (
     <CsContainer>

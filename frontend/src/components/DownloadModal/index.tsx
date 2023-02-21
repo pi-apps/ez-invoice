@@ -14,40 +14,27 @@ import { AppDispatch } from "state";
 import { getAccessTokenAuth } from "state/googleAuth";
 import { setAccessToken } from "state/googleAuth/actions";
 import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
-import { InvoiceIdContext } from "contexts/InVoiceIdContext";
-import { LanguagesContext } from "contexts/Translate";
-import { getLanguageTrans } from "state/LanguageTrans";
 import { getInvoiceId } from "state/newInvoiceId";
+import { getAccessToken, getUser } from "state/user";
 
 interface Props {
   onDismiss?: () => void;
 }
 
 const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
+
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingGGDrive, setIsLoadingGGDrive] = useState(false);
   const [urlDownload, setUrlDownload] = useState();
   const { toastSuccess, toastError } = useToast();
 
-  // const { invoiceId, setInvoiceId } = useContext(InvoiceIdContext);
-  const { language: laguageContext } = useContext(LanguagesContext);
-  const languageTransRedux = getLanguageTrans();
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
   const invoiceId = getInvoiceId();
-  console.log('languageTransRedux', languageTransRedux);
-  console.log('getInvoiceId', invoiceId);
-
-  // language
-  const [language, setLanguage] = useState("en");
-  const getLanguage = async () => {
-    const data = await sessionStorage.getItem("language");
-    setLanguage(data);
-  };
-  useEffect(() => {
-    getLanguage();
-  }, []);
 
   const dispatch = useDispatch<AppDispatch>();
   const accessTokenAuth = getAccessTokenAuth();
+  const token = getAccessToken()
 
   const uploadFileToDrive = async (accessToken) => {
     setIsLoadingGGDrive(true)
@@ -101,12 +88,15 @@ const DownloadModal: React.FC<Props> = ({ onDismiss }) => {
   };
   const getUrlDownload = async () => {
     setIsLoading(true);
-    const sendLanguage = languageTransRedux ?? 'en'
+    const sendLanguage = languageUserApi ?? 'en'
     try {
       const response = await axiosClient.get(
-        `/invoice/download?invoiceId=${invoiceId}&language=${sendLanguage}`
+        `/invoice/download?invoiceId=${invoiceId}&language=${sendLanguage}`, {
+          headers: {
+            "Authorization": token
+          }
+        }
       );
-      console.log('response', response)
       setUrlDownload(response.data);
       setIsLoading(false);
     } catch (error) {
