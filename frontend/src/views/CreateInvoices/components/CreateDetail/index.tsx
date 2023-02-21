@@ -146,7 +146,7 @@ const CreateDetail = () => {
                                     { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.discountType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.discount}Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.discountType === 1 ? (details?.subTotal + (details?.subTotal*details?.tax/100))*details?.discount/100 : details?.subTotal-details?.discount}Pi</CsTextRight>
                                         </Row>
                                     }
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>

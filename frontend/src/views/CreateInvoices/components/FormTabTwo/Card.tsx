@@ -9,7 +9,7 @@ import { GetTranslateHolder } from 'hooks/TranSlateHolder'
 import { getUser } from 'state/user'
 
 const Card = ({index,item, remove, fields, register, control } ) => {
-  console.log('control' , control?._formState?.touchedFields?.items?.[0]?.name)
+  console.log('control' , control?._formState?.touchedFields?.items?.[0]?.name === true && item.name === '')
     const priceNumber = Number(item?.price)
     const quantityNumber = Number(item?.quantity)
     const handleCloseItem = () => {
@@ -96,7 +96,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                         )}
                         />
                 </WrapInput>
-                {(item.quantity === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
+                {(control?._formState?.touchedFields?.items?.[0]?.quantity === true && item.quantity === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
                   <>
                     {(Number(item.quantity) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
                   </>
@@ -119,7 +119,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                         )}
                       />
                 </WrapInput>
-                  {(item.price === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
+                  {(control?._formState?.touchedFields?.items?.[0]?.price === true && item.price === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
                   <>
                     {(Number(item.price) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
                   </>}

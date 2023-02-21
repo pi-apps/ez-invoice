@@ -7,10 +7,14 @@ import { Translate } from "react-auto-translate";
 
 function ReactImageUpload({images , setValue }) {
   const [ logoImg, setLogoImages] = useState([]);
+
   const onChange = (imageList, addUpdateIndex) => {
     setValue("logo",imageList[0].file);
     setLogoImages(imageList)
   };
+  const onImageDelete = () => {
+    setLogoImages([])
+  }
 
   return (
     <div>
@@ -44,6 +48,7 @@ function ReactImageUpload({images , setValue }) {
                     <CsAvatar src={logoImg[0].data_url} alt={imageName} />
                     <div className="image-item__btn-wrapper">
                       <CsButtonAdd onClick={() => onImageUpdate(index)}><CsText><Translate>Update</Translate></CsText></CsButtonAdd>
+                      <CsButtonAdd onClick={() => onImageDelete()}><CsText><Translate>Remove</Translate></CsText></CsButtonAdd>
                     </div>
                   </Flex>
             )})}

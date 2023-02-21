@@ -72,7 +72,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     
 
     const taxValuePercent = taxValue * total / 100 
-    const DiscountValuePercent = discountValue * total / 100 
+    const DiscountValuePercent = discountValue * (total + taxValuePercent) / 100 
     const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
     const isDiscount = (discountValue < total) ? discountValue : total
     const totalFinal = (total) => {
@@ -86,7 +86,6 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
         return total + taxValuePercent + shippingValue - isDiscount
       }
     } 
-
     const totalFinaly = totalFinal(total)
     const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
 
@@ -227,12 +226,15 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                           <ErrorMessages errors={errors} name="amountPaid" />
                           </CsAmountPaid>
                     </Row>
+
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft><Translate>Balance Due</Translate></CsTextLeft>
                         <Text fontSize='14px'>{!balanceDue ? 0 : <>
                           {`${balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                         </> }</Text>
-                        
+                    </Row>
+                    <Row mt="1rem" style={{justifyContent: "space-between"}}>
+                        <Text color='#94A3B8' fontSize='10px'>Balance due = Sub total + Tax - Discount + Shipping - Amount paid </Text>
                     </Row>
                 </CsContentInfo>
             </CsFlex>

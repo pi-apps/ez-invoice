@@ -89,7 +89,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
   useEffect(() => {
     if (!languageUserApi || languageUserApi === 'en')     
     return setStateTextPlaceholder({
-        senderEmail: "Who is this invoice from? (required)",
+        senderEmail: "Sender email",
         billFrom: "Who is this invoice from? (required)",
         billTo: "Who is this invoice to? (required)",
         shipTo: "Who is this invoice to? (required)",
@@ -132,7 +132,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                 
                 {/* Sender Email */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B"><Translate>Sender email</Translate></CsLabel>
+                    <CsLabel mt="1rem" color="#64748B"><Translate>Sender Email</Translate></CsLabel>
                 </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -254,10 +254,10 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                     )}
                                 />
                             </WrapInput>
-                            <ErrorMessages errors={errors} name="issueDate" />
                             {startDate === null && (
                                 <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Issue date is required</Translate></Text>
                             )}
+                            <ErrorMessages errors={errors} name="issueDate" />
                         </ContainerInput>
                     </Flex>
                     <Flex width="50%" flexDirection="column">
@@ -307,10 +307,10 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 )}
                             />
                         </WrapInput>
-                        <ErrorMessages errors={errors} name="dueDate" />
                         {startDueDate === null && (
                             <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Due date is required</Translate></Text>
                         )}
+                        <ErrorMessages errors={errors} name="dueDate" />
                     </Flex>
                     <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
