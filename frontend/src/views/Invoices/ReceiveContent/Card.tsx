@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Flex, Image, Text } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
 import Navbar from "react-bootstrap/Navbar";
+import { NavLink } from "react-router-dom";
+
 import { useParams } from "react-router-dom";
 import { Translate } from "react-auto-translate";
 
@@ -12,7 +14,7 @@ interface Props {
   billFrom:string
   amountDue:string
   paid:boolean
-  invoiceNumber:number
+  invoiceNumber:number 
 }
 
 const Card: React.FC<Props> = ({ 
@@ -38,7 +40,7 @@ const Card: React.FC<Props> = ({
     return null
   }
   return (
-    <Navbar.Brand href={`/detailSent/${invoiceId}`}>
+    <NavLink to={`/detailSent/${invoiceId}`}>
       <CsContainer>
         <CsRow>
           <CsCol>
@@ -74,7 +76,7 @@ const Card: React.FC<Props> = ({
           </CsCol>
         </CsRow>
       </CsContainer>
-    </Navbar.Brand>
+    </NavLink>
   );
 };
 const CsContainer = styled.div`

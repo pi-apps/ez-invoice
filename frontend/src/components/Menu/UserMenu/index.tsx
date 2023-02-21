@@ -18,8 +18,6 @@ const UserMenu = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const userData = getUser();
-  const { t } = useTranslation();
-
   const loading = getStatusLoading()
   
   const signIn = async () => {
@@ -27,10 +25,8 @@ const UserMenu = () => {
       const scopes = ["username", "payments"];
       dispatch(isLoading({isLoading:true}))
       const resultLogin = await  window.Pi.authenticate(scopes, onIncompletePaymentFound)
-      
       if( resultLogin ) {
           const loginUser = await signInUser(resultLogin);
-          
           if (loginUser?.data.message.accessToken.length) {
             dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
             const userInfor = await axiosClient.get("user/info", {
@@ -56,32 +52,6 @@ const UserMenu = () => {
     } catch (error) {
       dispatch(isLoading({isLoading:false}))
     }
-    
-    // window.Pi.authenticate(scopes, onIncompletePaymentFound)
-    //   .then(async function (auth) {
-        
-    //     const loginUser = await signInUser(auth);
-    //     dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
-    //     if (loginUser) {
-    //       const userInfor = await axiosClient.get("user/info", {
-    //         headers: {
-    //           'Authorization': `${loginUser?.data?.message.accessToken}`,
-    //         }
-    //       });
-    //       if (userInfor) {
-    //         dispatch(setUser(userInfor.data));
-    //       }
-    //       dispatch(isLoading({isLoading:false}))
-    //     }
-    //     console.log(`Hi there! You're ready to make payments!`);
-    //     toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Login successfully</Translate></Text>)
-    //   })
-    //   .catch(function (error) {
-    //     toastError('error', <Text style={{justifyContent: 'center'}}><Translate>{JSON.stringify(error)}</Translate></Text>)
-    //     console.error(error);
-    //     dispatch(isLoading({isLoading:false}))
-    //   });
-    // const authResult: AuthResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
   };
   const signOut = async (token:string) => {
     if( token.length ) {
@@ -116,9 +86,13 @@ const UserMenu = () => {
   return userData === null || userData === undefined ? (
     <CsButton 
       onClick={signIn} 
+      disabled={loading}
       endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Login</Translate>} />
   ) : (
-    <CsButton onClick={onPresentLogoutModal} endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Logout</Translate>} />
+    <CsButton 
+      onClick={onPresentLogoutModal} 
+      endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Logout</Translate>} 
+    />
   );
 };
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Flex, Image, Text } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
 import Navbar from "react-bootstrap/Navbar";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { Translate } from "react-auto-translate";
 
 interface Props {
@@ -38,7 +38,7 @@ const Card: React.FC<Props> = ({
     return null
   }
   return (
-    <Navbar.Brand href={`/detailSent/${invoiceId}`}>
+    <NavLink to={`/detailSent/${invoiceId}`}>
       <CsContainer>
         <CsRow>
           <CsCol>
@@ -74,7 +74,7 @@ const Card: React.FC<Props> = ({
           </CsCol>
         </CsRow>
       </CsContainer>
-    </Navbar.Brand>
+    </NavLink>
   );
 };
 const CsContainer = styled.div`
