@@ -10,6 +10,7 @@ import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
 import { Translate } from "react-auto-translate";
 import { getAccessToken } from 'state/user';
+import { Fragment } from 'react';
 
 const DetailSent = () => {
     const navigate = useNavigate();
@@ -37,14 +38,18 @@ const DetailSent = () => {
                 <Header />
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading>Invoice #{slug}</CsHeading>
+                            <CsHeading>Invoice #{details?.invoiceNumber}</CsHeading>
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                            <Fragment>
+                                                { details?.logoUrl &&
+                                                    <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                                }
+                                            </Fragment>
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>

@@ -1,15 +1,15 @@
-import { Flex, Text } from "@devfedeltalabs/pibridge_uikit";
+import { Flex, Text, AutoRenewIcon } from "@devfedeltalabs/pibridge_uikit";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { axiosClient } from "config/htttp";
 import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 import useToast from "hooks/useToast";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch } from 'state';
-import { GetAllInvoice, UseGetAllInvoice } from "state/invoice";
+import { GetAllInvoice, GetAnInvoice, UseGetAllInvoice, UseGetAnInvoiceCore } from "state/invoice";
 import { tabActiveNewInvoice } from "state/invoice/actions";
 import { setInvoiceIdRedux } from "state/newInvoiceId/actions";
 import { getAccessToken } from "state/user";
@@ -19,29 +19,32 @@ import FormTabOne from "./FormTabOne";
 import FormTabThree from "./FormTabThree";
 import FormTabTwo from "./FormTabTwo";
 interface PropsSubTab{
-    isActive:number
+    isActive:number,
+    invoiceId?:string
 }
 
-const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
-  const navigate = useNavigate();
-  const { toastSuccess, toastError } = useToast()
-  const [images, setImages] = useState([]);
-  const [activeTax, setActiveTax ] = useState<number>(1)
-  const [activeDiscount, setActiveDiscount ] = useState<number>(1)
-  const [invoiceId, setInvoiceid] = useState('')
-  const [startDate, setStartDate] = useState(new Date());
-  const [startDueDate, setStartDueDate] = useState(new Date());
-  const { setInvoiceId } = useContext(InvoiceIdContext);
+const SubTab:React.FC<PropsSubTab> = ({isActive, invoiceId=""}) => {
+    const navigate = useNavigate();
+    const { toastSuccess, toastError } = useToast()
+    const [activeTax, setActiveTax ] = useState<number>(1)
+    const [activeDiscount, setActiveDiscount ] = useState<number>(1)
+    const [startDate, setStartDate] = useState(new Date());
+    const [startDueDate, setStartDueDate] = useState(new Date());
+    const { setInvoiceId } = useContext(InvoiceIdContext);
 
     const accessToken = getAccessToken()
-
+    UseGetAnInvoiceCore(invoiceId, accessToken)
     UseGetAllInvoice(accessToken)
     
+    
+
+    const dataDefault = GetAnInvoice()
+    const itemInvoice  = dataDefault?.details
     const items = GetAllInvoice()
     const invoicelength = items?.[0]?.allInvoice?.length
     const [loadingPreview, setLoadingPreview] = useState(false)
     const dispatch = useDispatch<AppDispatch>()
-    
+
     const InitValues = {
         senderEmail: '',
         billFrom:'',
@@ -59,7 +62,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         discount:0,
         shipping:0,
         amountPaid:0,
-        logo: "",
+        logo: '',
     }
     
     const validationSchema = Yup.object().shape({
@@ -68,7 +71,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         billTo: Yup.string().required('Bill to is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         shipTo: Yup.string().max(200, 'Max length is 200 characters'),
         paymentTerms: Yup.string().max(50, 'Max length is 50 characters'),
-        // poNumber: Yup.string().required('Po number is required').max(20, 'Max length is 20 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().max(500, 'Max length is 500 characters'),
         // tax: Yup.string().matches(/[0-9]+/ , 'Please input number'),
@@ -81,11 +83,9 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         // logo: Yup.string().required('Logo is required'),
     });
 
-    // const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
     const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, mode: 'onTouched'});
-    const { errors , touchedFields, isDirty, isLoading } = formState;
     const { fields, append, remove } = useFieldArray({
         control,
         name: "items"
@@ -98,9 +98,31 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         ...watchFieldArray[index]
         };
     });
-
+    // use update default values
+    useEffect(()=>{
+        if( itemInvoice && invoiceId.length ) {
+            setValue("senderEmail", itemInvoice?.senderEmail);
+            setValue("billFrom", itemInvoice?.billFrom);
+            setValue("billTo", itemInvoice?.billTo);
+            setValue("shipTo", itemInvoice?.shipTo);
+            setValue("issueDate", new Date(itemInvoice?.issueDate));
+            setValue("dueDate", new Date(itemInvoice?.dueDate));
+            setValue("paymentTerms", itemInvoice?.paymentTerms);
+            setValue("poNumber", itemInvoice?.poNumber);
+            setValue("items", itemInvoice?.items);
+            setValue("notes", itemInvoice?.notes);
+            setValue("terms", itemInvoice?.terms);
+            setValue("tax", itemInvoice?.tax);
+            setValue("taxType", itemInvoice?.taxType);
+            setValue("discount", itemInvoice?.discount);
+            setValue("shipping", itemInvoice?.shipping);
+            setValue("amountPaid", itemInvoice?.amountPaid);
+            setValue("logo", itemInvoice?.logoUrl);
+            setStartDate(new Date(itemInvoice?.issueDate))
+            setStartDueDate(new Date(itemInvoice?.dueDate))
+        }
+    },[itemInvoice, dataDefault?.isLoading])
     const onSubmit = async data => {
-        console.log('data', data)
         setLoadingPreview(true)
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
@@ -116,13 +138,11 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             formData.append("terms", `${data.terms}`);
             formData.append("tax", `${data.tax}`);
             formData.append("taxType", `${activeTax}`);
-            // formData.append("discountType", `${activeDiscount}`);
+            formData.append("discountType", `${activeDiscount}`);
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
             formData.append("logo", data.logo);
-
-            console.log('formData', formData)
             
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {
@@ -137,7 +157,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
 
                 if(submitReq.status == 200){
                     toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
-                    setInvoiceid(submitReq?.data?.invoiceId)
                     setInvoiceId(submitReq?.data?.invoiceId)
                     dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
@@ -162,7 +181,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
 
     const renderScreens = ( isActive) => {
         if(isActive === 1){
-            return <FormTabOne startDueDate={startDueDate} setStartDueDate={setStartDueDate} startDate={startDate} setStartDate={setStartDate} invoicelength={invoicelength} images={getValues("logo")} formState={formState} setValue={setValue} control={control} />
+            return <FormTabOne startDueDate={startDueDate} setStartDueDate={setStartDueDate} startDate={startDate} setStartDate={setStartDate} invoicelength={invoicelength} images={getValues("logo")} formState={formState} setValue={setValue} control={control} getValues={getValues} />
         }
         if(isActive === 2){
             return <FormTabTwo formState={formState} controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
@@ -183,7 +202,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
         }
     }
 
-
+    
     return (
         <>
         <HeadingTab><Translate>Create Invoice</Translate></HeadingTab>
@@ -207,7 +226,13 @@ const SubTab:React.FC<PropsSubTab> = ({isActive}) => {
             </CsButton>
         </ContainerSubTab>
         <FormSubmit onSubmit={handleSubmit(onSubmit)}>
-            {renderScreens(isActive)}
+            { dataDefault?.isLoading ?
+                <Flex width="100%" justifyContent="center" mt="1rem">
+                    <AutoRenewIcon color="textDisabled" spin/>
+                </Flex>
+            :
+                renderScreens(isActive)
+            }
         </FormSubmit>
         </>
     )
