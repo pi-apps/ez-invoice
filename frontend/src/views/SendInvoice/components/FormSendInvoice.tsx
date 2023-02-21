@@ -31,6 +31,7 @@ const FormSendInvoice: React.FC<
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
   const invoiceIdRedux = getInvoiceId();
+  console.log('languageUserApi', languageUserApi)
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100, 'Max length is 100 characters').email('Invalid email address'),
@@ -46,7 +47,7 @@ const FormSendInvoice: React.FC<
     const dataPost = {
       invoiceId: slug,
       email: data.email,
-      language: slug ? slug : "en",
+      language: languageUserApi ? languageUserApi : "en",
     };
 
     try {
