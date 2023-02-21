@@ -40,7 +40,7 @@ const Card: React.FC<Props> = ({
     return null
   }
   return (
-    <NavLink to={`/detailSent/${invoiceId}`}>
+    <NavLink to={`/detailReceived/${invoiceId}`}>
       <CsContainer>
         <CsRow>
           <CsCol>

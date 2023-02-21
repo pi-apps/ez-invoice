@@ -4,16 +4,16 @@ import { AppDispatch, AppState } from "state";
 import { getInvoiceId, isFetching, isFetchError, getAnInvoice, fetchDataUser } from "./actions";
 import { fetchInvoiceId, fetchAnInvoice, fetchUser } from "./fetchData";
 
-export const PaymentCore = (signature: string) => {
+export const PaymentCore = (signature: string, token) => {
     
     const dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
       const getDataPayment = async () => {
         try {
             dispatch(isFetching({isFetching:true}));
-            const dataUser = await fetchUser()
-            const result = await fetchInvoiceId(signature);
-            const resultInvoice = await fetchAnInvoice(result?.invoiceId);
+            const dataUser = await fetchUser(token)
+            const result = await fetchInvoiceId(signature, token);
+            const resultInvoice = await fetchAnInvoice(result?.invoiceId, token);
             dispatch(fetchDataUser(dataUser));
             dispatch(getInvoiceId(result));
             dispatch(getAnInvoice(resultInvoice));
@@ -23,7 +23,7 @@ export const PaymentCore = (signature: string) => {
           dispatch(isFetchError({isError:true}));
         }
       };
-      if ( signature.length ){
+      if ( signature.length && token.length ){
         getDataPayment()
       } else {
         dispatch(isFetchError({isError:true}));

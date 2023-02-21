@@ -1,6 +1,7 @@
 import { Button, Flex, Image, Skeleton, Text } from '@devfedeltalabs/pibridge_uikit';
 import Footer from 'components/Footer';
 import { Fragment } from 'react';
+import { NavLink } from 'react-router-dom';
 import Header from 'components/Header';
 import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
@@ -170,14 +171,18 @@ const DetailSent = () => {
                             </WContent>
                             <WAction>
                                 <CsNavItem>
-                                    <CsButton onClick={()=> navigate(`/payment/${details?.signature}`)}>
-                                            Pay now
-                                    </CsButton>
+                                    <NavLink to={`/payment/${details?.signature}`}>
+                                        <CsButton onClick={()=> navigate(``)}>
+                                                Pay now
+                                        </CsButton>
+                                    </NavLink>
                                 </CsNavItem>
                                 <CsNavItem>
-                                    <CsButton onClick={()=> navigate("/invoice")}>
-                                            Back
-                                    </CsButton>
+                                    <NavLink to={`/invoice`}>
+                                        <CsButton onClick={()=> navigate("")}>
+                                                Back
+                                        </CsButton>
+                                    </NavLink>
                                 </CsNavItem>
                             </WAction>
                         </Flex>

@@ -6,7 +6,7 @@ import Row from 'components/Layout/Row';
 import PageFullWidth from "components/Layout/PageFullWidth"
 import { useParams, useNavigate } from 'react-router-dom';
 import { Translate } from "react-auto-translate";
-import { getUser } from "state/user";
+import { getAccessToken, getUser } from "state/user";
 import { GetAnInvoice } from "state/invoice";
 import useToast from "hooks/useToast";
 import { useDispatch } from "react-redux";
@@ -25,7 +25,8 @@ const Payment = () => {
     
     const items = GetAnInvoice();
     const { toastSuccess, toastError } = useToast()
-  
+    const userData = getUser()
+    const token = getAccessToken()
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const loading = items?.isLoading
@@ -70,33 +71,12 @@ const Payment = () => {
           } catch (error) {
             dispatch(isLoading({isLoading:false}))
           }
-        // dispatch(fetchLoading({isLoading:true}))
-        // const scopes = ["username", "payments"];
-        // window.Pi.authenticate(scopes, onIncompletePaymentFound)
-        //   .then(async function (auth) {
-        //     const loginUser = await signInUser(auth);
-        //     if (loginUser) {
-        //       const userInfor = await axiosClient.get("user/info");
-        //       if (userInfor) {
-        //         dispatch(setUser(userInfor.data));
-        //         dispatch(fetchDataUser({userData:userInfor.data}));
-        //       }
-        //       dispatch(fetchLoading({isLoading:false}))
-        //     }
-        //     console.log(`Hi there! You're ready to make payments!`);
-        //     toastSuccess(null, <Translate>Login successfully</Translate>)
-        //   })
-        //   .catch(function (error) {
-        //     toastError('error', <Translate>{JSON.stringify(error)}</Translate>)
-        //     console.error(error);
-        //     dispatch(fetchLoading({isLoading:false}))
-        //   });
     };
     // core data payment
-    PaymentCore(signature)
+    PaymentCore(signature, token)
     const dataPayment = GetDataPayment()
     const details = dataPayment?.details
-
+    
     function convertDate(date: any) {
         if (date) {
           const today = new Date(date)
@@ -109,11 +89,11 @@ const Payment = () => {
         }
         return <Skeleton width={60} />
     }
-    const { handlePayment, pendingPayment } = usePayment(signature) 
+    const { handlePayment, pendingPayment } = usePayment(signature, token) 
     return (
         <PageFullWidth>
             <CsContainer>
-                {  dataPayment?.userData === null || dataPayment?.userData === undefined ? 
+                {  userData === null || userData === undefined ? 
                     <CsButton 
                         onClick={signIn} 
                         disabled={loading}

@@ -14,7 +14,6 @@ const PERSISTED_KEYS: string[] = [
   "lists",
   "loginGoogle",
   "invoiceId",
-  "languageTrans",
 ];
 
 const store = configureStore({

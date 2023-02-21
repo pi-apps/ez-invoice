@@ -3,32 +3,46 @@ import { axiosClient } from 'config/htttp';
 import useToast from 'hooks/useToast';
 import { useCallback, useState } from 'react';
 import { Translate } from "react-auto-translate";
-import { payment } from './payment';
 
-export const usePayment = (signature:string) => {
+export const usePayment = (signature:string, token:string) => {
     const [ pendingPayment, setPendingPayment ] = useState(false)
     const { toastError } = useToast()
-    const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}};
+    const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Authorization': token,}};
 
     const handlePayment = useCallback(async () => {
         setPendingPayment(true)
         try {
-            const submitReqInvoiceId = await axiosClient.get(`payments/get-invoice-id/${signature}`);
+            const submitReqInvoiceId = await axiosClient.get(`payments/get-invoice-id/${signature}`, {
+                headers: {
+                    'Authorization': token,
+                }
+            });
             if(submitReqInvoiceId.status == 200){
-                const submitReq = await axiosClient.post('/payments/update-receiver', {
+                const submitReq = await axiosClient.post('/payments/update-receiver', 
+                    {
                         "invoiceId": submitReqInvoiceId?.data,
                         "signature": signature
+                    }, 
+                    {
+                        headers: {
+                            'Authorization': token,
+                        }
                     }
                 );
-                const submitReqDetails = await axiosClient.get(`invoice/detail/${submitReqInvoiceId?.data}`);
+                const submitReqDetails = await axiosClient.get(`invoice/detail/${submitReqInvoiceId?.data}`, {
+                    headers: {
+                        'Authorization': token,
+                    }
+                });
                 const invoiceId = submitReqInvoiceId?.data
+                
                 const onIncompletePaymentFound = (payment: PaymentDTO) => {
                     console.log("onIncompletePaymentFound", payment);
                     return axiosClient.post('/payments/incomplete', {payment});
                   }
                 
                 const onReadyForServerApproval = (paymentId: string) => {
-                    // console.log('invoiceId', invoiceId)
+                    console.log('invoiceId', invoiceId)
                     console.log("onReadyForServerApproval", paymentId);
                     axiosClient.post('/payments/approve', {paymentId, invoiceId}, config);
                   }
