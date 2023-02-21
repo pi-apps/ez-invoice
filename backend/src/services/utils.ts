@@ -98,7 +98,9 @@ async function generatePdf(invoice: any, language: any) {
     amountDue: invoice.amountDue,
   }
   const html = ejs.render(template, data);
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox", "--disabled-setupid-sandbox"],
+  });
   const page = await browser.newPage();
   await page.setContent(html);
   const buffer = await page.pdf({ format: 'A4' });
