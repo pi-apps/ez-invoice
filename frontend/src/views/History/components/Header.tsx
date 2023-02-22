@@ -29,7 +29,7 @@ const Header = () => {
         </Flex>
 
         <Flex width="50%">
-          <NavLink to="/newInvoice">
+          <NavLink style={{width: '100%'}} to="/newInvoice">
             <Button marginTop="14px" width='100%'>
               <Translate>New invoice</Translate>
             </Button>

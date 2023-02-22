@@ -45,6 +45,7 @@ interface WindowWithEnv extends Window {
   __ENV?: {
     backendURL: string, // REACT_APP_BACKEND_URL environment variable
     sandbox: "true" | "false", // REACT_APP_SANDBOX_SDK environment variable - string, not boolean!
+    googleApi: string, // REACT_APP_GOOGLE_API environment variable
   }
 }
 

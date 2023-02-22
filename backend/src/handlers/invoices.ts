@@ -151,8 +151,6 @@ export default function mountInvoiceEndpoints(router: Router) {
             await InvoicesModel.updateOne({ uid: currentUser.uid, invoiceId: req.query.invoiceId }, { downloadUrl: downloadUrl });
             return res.status(200).json(downloadUrl);
         } catch (error: any) {
-            console.log(error);
-            
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
         }
     });
