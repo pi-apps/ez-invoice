@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { AppDispatch } from 'state';
 import { GetAllInvoice, GetAnInvoice, UseGetAllInvoice, UseGetAnInvoiceCore } from "state/invoice";
 import { tabActiveNewInvoice } from "state/invoice/actions";
+import { GetDataPreview } from "state/preview";
 import { getDataPreview } from "state/preview/actions";
 import { getAccessToken, getUser } from "state/user";
 import styled from "styled-components";
@@ -22,24 +23,23 @@ interface PropsSubTab{
     invoiceId?:string
 }
 
-const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
+const SubTab:React.FC<PropsSubTab> = ({isActive, invoiceId}) => {
   const navigate = useNavigate();
   const { toastSuccess, toastError } = useToast()
   const [activeTax, setActiveTax ] = useState<number>(1)
   const [activeDiscount, setActiveDiscount ] = useState<number>(1)
-//   const [invoiceId, setInvoiceid] = useState('')
   const [startDate, setStartDate] = useState(new Date());
   const [startDueDate, setStartDueDate] = useState(new Date());
-//   const { setInvoiceId } = useContext(InvoiceIdContext);
 
     const accessToken = getAccessToken()
     UseGetAnInvoiceCore(invoiceId, accessToken)
     UseGetAllInvoice(accessToken)
     
     
-
+    const data = GetDataPreview()
     const dataDefault = GetAnInvoice()
     const itemInvoice  = dataDefault?.details
+    console.log('data', data)
     const items = GetAllInvoice()
     const invoicelength = items?.[0]?.allInvoice?.length
     const [loadingPreview, setLoadingPreview] = useState(false)
@@ -58,7 +58,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         notes:'',
         terms:'',
         tax: 0,
-        taxType:'',
+        taxType:1,
+        discountType:1,
         discount: 0,
         shipping: 0,
         amountPaid: 0,
@@ -98,6 +99,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         ...watchFieldArray[index]
         };
     });
+
     // use update default values
     useEffect(()=>{
         if( itemInvoice && invoiceId?.length ) {
@@ -122,6 +124,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             setStartDueDate(new Date(itemInvoice?.dueDate))
         }
     },[itemInvoice, dataDefault?.isLoading])
+
     // const onSubmit = async data => {
     //     setLoadingPreview(true)
     //     const formData = new FormData();
@@ -167,9 +170,10 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     //                 setLoadingPreview(false)
     //         }
     // }
+
     const onSubmit = async data => {
-       navigate("/preview")
-       dispatch(getDataPreview({
+        console.log('data', data)
+        await dispatch(getDataPreview({
             dataPreview: {
                 senderEmail: getValues("senderEmail"),
                 billFrom:getValues("billFrom"),
@@ -183,14 +187,16 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                 notes:getValues("notes"),
                 terms:getValues("terms"),
                 tax: getValues("tax"),
-                taxType:getValues("taxType"),
                 discount: getValues("discount"),
                 shipping: getValues("shipping"),
                 amountPaid: getValues("amountPaid"),
+                taxType: activeTax,
                 discountType: activeDiscount,
             }
-       }));
+        }));
+       navigate("/preview")
     }
+
     const handleMinusTabActive = () => {
         if(isActive > 1 && isActive <= 3){
             dispatch(tabActiveNewInvoice({isActive: isActive - 1}))

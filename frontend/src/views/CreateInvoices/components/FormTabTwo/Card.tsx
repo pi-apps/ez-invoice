@@ -234,15 +234,15 @@ const WrapInput = styled(Flex)`
   }
 `
 
-export const CsTextArea = styled.input`
+export const CsTextArea = styled.textarea`
   background: #F8F9FD;
   border: none;
   padding-left: 10px;
   border-radius: 10px;
   width: 100%;
-  height: 56px;
+  height: 100px;
   max-height: 100%;
-  min-height: 56px;
+  min-height: 100px;
   resize: unset;
   padding: 10px;
   box-shadow: none;

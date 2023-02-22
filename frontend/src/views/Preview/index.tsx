@@ -8,27 +8,30 @@ import Row from 'components/Layout/Row';
 import Nav from 'react-bootstrap/Nav';
 import { GetDataPreview } from 'state/preview';
 import styled from 'styled-components';
+import { UndefineIcon } from 'components/Svg';
 
 const Preview = () => {
     const data = GetDataPreview()
     const navigate = useNavigate();
-
     const items = data?.dataPreview
     const images = data?.images
     const listItems = data?.dataPreview.items
-    function convertDate(date: any) {
-        if (date) {
-          const today = new Date(date)
-          const dd = String(today.getDate()).padStart(2, '0')
-          const mm = String(today.getMonth() + 1).padStart(2, '0')
-          const yyyy = today.getFullYear()
-          return (
-            <CsTextRight bold>{dd}/{mm}/{yyyy}</CsTextRight>
-          )
-        }
-        return <Skeleton width={60} />
-    }
+    
+    // function convertDate(date: any) {
+    //     if (date) {
+    //       const today = new Date(date)
+    //       const dd = String(today.getDate()).padStart(2, '0')
+    //       const mm = String(today.getMonth() + 1).padStart(2, '0')
+    //       const yyyy = today.getFullYear()
+    //       return (
+    //         <CsTextRight bold>{dd}/{mm}/{yyyy}</CsTextRight>
+    //       )
+    //     }
+    //     return <Skeleton width={60} />
+    // }
+
     const totalPrice = (fields) => {
+        console.log('fields',fields )
         return fields.reduce((sum, i) => {
           if(i.price === undefined || i.quantity === undefined){
             return 0
@@ -37,35 +40,43 @@ const Preview = () => {
           }
         },0)
       }
+    
     const subTotal = useMemo(() => {
-          return totalPrice(listItems)
+        return totalPrice(listItems)
     },[listItems]);
-    // const [typeTax, setTypeTax] = useState(true)
-    // const [typeDiscount, setTypeDiscount] = useState(false)
-    // const [typeShipping, setTypeShipping] = useState(false)
-    // const [balaneDue, setBalanceDue] = useState(0)
-    const taxValue = items?.tax
-    const shippingValue =  items?.shipping
-    const discountValue =  items?.discount
-    const amountPaidValue =  items?.amountPaid
-    const taxValuePercent = taxValue * subTotal / 100 
-    const DiscountValuePercent = discountValue * (subTotal + taxValuePercent) / 100 
-    const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : subTotal
-    const isDiscount = (discountValue < subTotal) ? discountValue : subTotal
+
+
+    const taxValue = Number(items?.tax)
+    const shippingValue =  Number(items?.shipping)
+    const discountValue =  Number(items?.discount)
+    const amountPaidValue =  Number(items?.amountPaid)
+
     const activeTax = Number(items?.taxType)
     const activeDiscount = items?.discountType
+    
+    const taxValuePercent = taxValue * subTotal / 100 
+    const isTaxValue = (activeTax === 1 ) ? taxValuePercent : taxValue
+    const discountValuePercent = discountValue * (subTotal + isTaxValue) / 100 
+    
+    const isDiscountValuePercent = discountValue <= 100 ? discountValuePercent : subTotal // neu chon % discount.
+    const isDiscount = (discountValue < subTotal) ? discountValue : subTotal
+
     const totalFinal = (total) => {
         if( activeTax === 2 && activeDiscount === 2){
           return total + taxValue + shippingValue - isDiscount
         } else if(activeTax === 2 && activeDiscount === 1){
-          return total + taxValue + shippingValue - isDiscountValuePercent
+          return total + taxValue - isDiscountValuePercent + shippingValue
         } else if(activeTax === 1 && activeDiscount === 1){
           return total + taxValuePercent + shippingValue - isDiscountValuePercent
         } else if(activeTax === 1 && activeDiscount === 2){
           return total + taxValuePercent + shippingValue - isDiscount
         }
     } 
-    const totalFinaly = totalFinal(subTotal)
+    
+    const totalFinaly = useMemo(() => {
+        return totalFinal(subTotal)
+      },[activeTax]);
+      
     const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
 
     // useEffect(() => {
@@ -83,7 +94,7 @@ const Preview = () => {
                                 <CsContentInfo>
                                     <Row>
                                         { !images ?
-                                            <Skeleton width={60} />
+                                            <UndefineIcon width="30px" height="30px"/>
                                         :
                                             <Image width={59} height={57} src={images[0]?.data_url} alt='logo' />
                                         }
@@ -104,14 +115,14 @@ const Preview = () => {
                                             <CsTextRight bold>{items?.billTo}</CsTextRight>
                                         }
                                     </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                    {/* <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Date</CsTextLeft>
                                         {convertDate(items?.issueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Due date</CsTextLeft>
                                         {convertDate(items?.dueDate)}
-                                    </Row>
+                                    </Row> */}
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Payment Terms</CsTextLeft>
                                         { !items?.paymentTerms ?
@@ -128,7 +139,6 @@ const Preview = () => {
                                         :
                                             <CsTextRight bold>{items?.poNumber}</CsTextRight>
                                         }
-                                        
                                     </Row>
                                 </CsContentInfo>
                                 <CsContentBill>
@@ -178,7 +188,7 @@ const Preview = () => {
                                             <CsTextLeft>Discount: ({items?.discount} {items?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{items?.discountType === 1 ? 
                                             <>
-                                                {(subTotal && items?.discount && items?.tax) && (items?.discount*(subTotal + items?.tax)/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                                {(subTotal && items?.discount && items?.tax) && (discountValue*(subTotal + taxValue )/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> : 
                                             <>
                                                 {items?.discount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -196,23 +206,25 @@ const Preview = () => {
  
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Total</CsTextLeft>
-                                        { items ?
+                                        { (!subTotal || !items?.discount || !items?.tax || !items?.shipping) ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{subTotal && subTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{(subTotal && items?.discount && items?.tax && items?.shipping) && totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
+
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Allowances</CsTextLeft>
                                         { !items?.amountPaid ?
-                                            <Skeleton width={60} />
+                                            <CsTextRight>- 0</CsTextRight>
                                         :
                                             <CsTextRight bold>-{items?.amountPaid && items?.amountPaid.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
+
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Allowances</CsTextLeft>
-                                        { items ?
+                                        { (!subTotal || !items?.discount || !items?.tax || !items?.shipping) ?
                                             <Skeleton width={60} />
                                         :
                                             <CsTextRight bold>{balanceDue && balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
@@ -222,7 +234,7 @@ const Preview = () => {
                             </WContent>
                             <WAction>
                                 <CsNavItem>
-                                    <CsButton onClick={()=> navigate(``)}>
+                                    <CsButton onClick={()=> navigate(`/newInvoice`)}>
                                         Back
                                     </CsButton>
                                 </CsNavItem>
