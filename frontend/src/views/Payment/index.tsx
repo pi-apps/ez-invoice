@@ -1,26 +1,82 @@
-import { Button, Flex, Image, Skeleton, Text } from '@devfedeltalabs/pibridge_uikit';
+import { Text, Flex, Button, AutoRenewIcon, Skeleton, Image } from "@devfedeltalabs/pibridge_uikit";
+import styled from "styled-components";
 import Footer from 'components/Footer';
-import Header from 'components/Header';
-import Container from 'components/Layout/Container';
-import PageFullWidth from "components/Layout/PageFullWidth";
-import Row from 'components/Layout/Row';
-import { Fragment } from 'react';
-import { Translate } from "react-auto-translate";
-import { getAccessToken, getUser } from 'state/user';
-import { useEffect, useState } from 'react';
-import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import Nav from 'react-bootstrap/Nav';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
-import styled from 'styled-components';
+import Row from 'components/Layout/Row';
+import PageFullWidth from "components/Layout/PageFullWidth"
+import { useParams, useNavigate } from 'react-router-dom';
+import { Translate } from "react-auto-translate";
+import { getAccessToken, getUser } from "state/user";
+import { GetAnInvoice } from "state/invoice";
+import useToast from "hooks/useToast";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "state";
+import { fetchLoading } from "state/invoice/actions";
+import { setUser, isLoading, accessToken } from "state/user/actions";
+import { axiosClient } from "config/htttp";
+import { AuthResult, PaymentDTO } from "components/Menu/UserMenu/type";
+import { GetDataPayment, PaymentCore } from "state/payment";
+import { usePayment } from "./hook/usePayment";
+import { fetchDataUser } from "state/payment/actions";
+import { Fragment } from "react";
 
-const DetailSent = () => {
+const Payment = () => {
+    const  { signature } = useParams()
+    
+    const items = GetAnInvoice();
+    const { toastSuccess, toastError } = useToast()
+    const userData = getUser()
+    const token = getAccessToken()
     const navigate = useNavigate();
-    let { slug } = useParams()
-    const accessTokenUser = getAccessToken()
-    UseGetAnInvoiceCore(slug, accessTokenUser)
-    const items = GetAnInvoice()
-    const details = items?.details
+    const dispatch = useDispatch<AppDispatch>();
+    const loading = items?.isLoading
+    const onIncompletePaymentFound = (payment: PaymentDTO) => {
+        console.log("onIncompletePaymentFound", payment);
+        return axiosClient.post("/payments/incomplete", { payment });
+    };
+    const signInUser = async (authResult: AuthResult) => {
+        return await axiosClient.post("/user/signin", { authResult });
+    };
+    const signIn = async () => {
+        try {
+            const scopes = ["username", "payments"];
+            dispatch(isLoading({isLoading:true}))
+            const resultLogin = await  window.Pi.authenticate(scopes, onIncompletePaymentFound)
+            
+            if( resultLogin ) {
+                const loginUser = await signInUser(resultLogin);
+                
+                if (loginUser?.data.message.accessToken.length) {
+                    await dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
+                    const userInfor = await axiosClient.get("user/info", {
+                        headers: {
+                        'Authorization': `${loginUser?.data?.message.accessToken}`,
+                        }
+                    });
+                  
+                    if (userInfor) {
+                        dispatch(setUser(userInfor.data));
+                    }
+                    dispatch(isLoading({isLoading:false}))
+                } else {
+                  dispatch(isLoading({isLoading:false}))
+                }
+                console.log(`Hi there! You're ready to make payments!`);
+                dispatch(isLoading({isLoading:false}))
+                toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Login successfully</Translate></Text>)
+            } else {
+              toastError('Error', <Text style={{justifyContent: 'center'}}><Translate>Somethig went wrong</Translate></Text>)
+              dispatch(isLoading({isLoading:false}))
+            }
+          } catch (error) {
+            dispatch(isLoading({isLoading:false}))
+          }
+    };
+    // core data payment
+    PaymentCore(signature, token)
+    const dataPayment = GetDataPayment()
+    const details = dataPayment?.details
+    
     function convertDate(date: any) {
         if (date) {
           const today = new Date(date)
@@ -33,133 +89,20 @@ const DetailSent = () => {
         }
         return <Skeleton width={60} />
     }
-
-    // Trans languages
-    const userData = getUser();
-    const languageUserApi = userData?.language
-    const listText = {
-      bill_from: "Bill From",
-      bill_to: "Bill To",
-      issue_date: "Issue Date",
-      due_date: "Due Date",
-      payment_terms: "Payment Terms",
-      po_number: "PO Number",
-      item: "Item",
-      quanlity: "Quanlity",
-      unit_price: "Unit Price",
-      total: "Total",
-      subtotal: "Subtotal",
-      allowances: "Allowances",
-      tax: "Tax",
-      shipping: "Shipping",
-      discount: "Discount",
-      amount_due: "Amount Due",
-      back: "Back",
-    };
-    const [stateText, setStateText] = useState(listText);
-    const fcTransLateText = async (language) => {
-        const resBillFrom = await GetTranslateHolder(
-            listText.bill_from,
-            language
-        );
-        const resBillTo = await GetTranslateHolder(
-        listText.bill_to,
-        language
-        );
-        const resIssueDate = await GetTranslateHolder(
-        listText.issue_date,
-        language
-        );
-        const resDueDate = await GetTranslateHolder(
-        listText.due_date,
-        language
-        );
-        const resPaymentTerms = await GetTranslateHolder(
-        listText.payment_terms,
-        language
-        );
-        const resPoNumber = await GetTranslateHolder(
-        listText.po_number,
-        language
-        );
-        const resItem = await GetTranslateHolder(
-        listText.item,
-        language
-        );
-        const resQuanlity = await GetTranslateHolder(
-        listText.quanlity,
-        language
-        );
-        const resUnitPrice = await GetTranslateHolder(
-        listText.unit_price,
-        language
-        );
-        const resTotal = await GetTranslateHolder(
-        listText.total,
-        language
-        );
-        const resSubtotal = await GetTranslateHolder(
-        listText.subtotal,
-        language
-        );
-        const resAllowances = await GetTranslateHolder(
-        listText.allowances,
-        language
-        );
-        const resTax = await GetTranslateHolder(
-        listText.tax,
-        language
-        );
-        const resShipping = await GetTranslateHolder(
-        listText.shipping,
-        language
-        );
-        const resDiscount = await GetTranslateHolder(
-        listText.discount,
-        language
-        );
-        const resAmountDue = await GetTranslateHolder(
-        listText.amount_due,
-        language
-        );
-        const resBack = await GetTranslateHolder(
-            listText.back,
-            language
-            );
-        setStateText({
-            allowances: resAllowances,
-            amount_due: resAmountDue,
-            bill_from: resBillFrom,
-            bill_to: resBillTo,
-            discount: resDiscount,
-            due_date: resDueDate,
-            issue_date: resIssueDate,
-            item: resItem,
-            payment_terms: resPaymentTerms,
-            po_number: resPoNumber,
-            quanlity: resQuanlity,
-            shipping: resShipping,
-            subtotal: resSubtotal,
-            tax: resTax,
-            total: resTotal,
-            unit_price: resUnitPrice,
-            back: resBack,
-      });
-    };
-  
-    useEffect(() => {
-      if (!languageUserApi) {
-        fcTransLateText('en')
-      } else fcTransLateText(languageUserApi)
-    }, [languageUserApi]);
-    
+    const { handlePayment, pendingPayment } = usePayment(signature, token) 
     return (
         <PageFullWidth>
             <CsContainer>
-                <Header />
+                {  userData === null || userData === undefined ? 
+                    <CsButton 
+                        onClick={signIn} 
+                        disabled={loading}
+                        endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Login</Translate>}
+                    />
+                :
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading>Invoice #{details?.invoiceNumber}</CsHeading>
+                            <CsHeading><Translate>Invoice</Translate> #{details?.invoiceNumber}</CsHeading>
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
@@ -168,7 +111,7 @@ const DetailSent = () => {
                                         :
                                             <Fragment>
                                                 { details?.logoUrl &&
-                                                    <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                                    <Image width={59} height={57} src={details?.logoUrl} alt='' />
                                                 }
                                             </Fragment>
                                         }
@@ -226,8 +169,8 @@ const DetailSent = () => {
                                     {details?.items.map((item) => {
                                         return(
                                             <CsRow>
-                                            <ColFirst width="20%">{item?.name}</ColFirst>   
-                                            <Col width="20%">{item?.quantity}</Col>
+                                            <ColFirst width="20%"><Translate>{item?.name}</Translate></ColFirst>
+                                            <Col width="20%"><Translate>{item?.quantity}</Translate></Col>
                                             <Col width="20%">{item?.price}Pi</Col>
                                             <Col width="20%">{(item?.quantity)*(item?.price)}</Col>
                                         </CsRow>
@@ -237,7 +180,7 @@ const DetailSent = () => {
                                 </CsContentBill>
                                 <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Subtotal</CsTextLeft>
+                                        <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -246,7 +189,7 @@ const DetailSent = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Allowances</CsTextLeft>
+                                        <CsTextLeft><Translate>Allowances</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -255,7 +198,7 @@ const DetailSent = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Total</CsTextLeft>
+                                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -263,25 +206,25 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft>Tax: ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.tax/100 : details?.subTotal-details?.tax} {details?.taxType === 1 ? "%" : "Pi"}</CsTextRight>
                                         </Row>
                                     }
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Shipping</CsTextLeft>
+                                        <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
                                             <CsTextRight bold>{details?.shipping} Pi</CsTextRight>
                                         </Row>
                                     }
                                     { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Discount: ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                        <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.tax} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
                                         </Row>
                                     }
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Amount Due</CsTextLeft>
+                                        <CsTextLeft><Translate>Amount Due</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -290,42 +233,53 @@ const DetailSent = () => {
                                     </Row>
                                 </CsContentInfo>
                             </WContent>
-                            <WAction>
-                                <CsNavItem>
-                                    <NavLink to={`/payment/${details?.signature}`}>
-                                        <CsButton onClick={()=> navigate(``)}>
-                                                Pay now
-                                        </CsButton>
-                                    </NavLink>
-                                </CsNavItem>
-                                <CsNavItem>
-                                    <NavLink to={`/invoice`}>
-                                        <CsButton onClick={()=> navigate("")}>
-                                                Back
-                                        </CsButton>
-                                    </NavLink>
-                                </CsNavItem>
-                            </WAction>
+                            <Flex width="100%" justifyContent="center" mt="1rem">
+                                <Button 
+                                    width="100%" 
+                                    height="50px"
+                                    onClick={handlePayment}
+                                    disabled={pendingPayment}
+                                    endIcon={pendingPayment ? <AutoRenewIcon color="textDisable" spin/> : null}
+                                >
+                                    <Translate>Pay now</Translate>
+                                </Button>
+                            </Flex>
                         </Flex>
                         <Footer/>
                     </CsWrapContainer>
+                }
+                
             </CsContainer>
         </PageFullWidth>
     )
 }
 
-const CsNavItem = styled(Nav.Item)`
+export default Payment
+
+const CsContainer = styled(Flex)`
     width: 100%;
-    margin-bottom: 14px;
-`
-const WAction = styled(Flex)`
-    width: 100%;
+    flex-direction:column;
+    height: 100%;
+    justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 0 20px;
-    margin-top: 20px;
+    padding: 0px 30px;
+    @media only screen and (max-width: 600px) {
+        padding: 0px 20px;
+        min-height: 80vh;
+    }
+    @media only screen and (min-width: 768px) {
+        max-width: 600px;
+        min-height: 80vh;
+    }
 `
+const CsButton = styled(Button)`
+  width: 100%;
+  height: 50px;
+  background: #6b39f4;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0px 8px;
+`;
 
 const CsContentInfo = styled.div``
 
@@ -398,12 +352,6 @@ const CsWrapContainer = styled.div`
   height: calc(100vh - 82px - 51px);
 `
 
-const CsContainer = styled(Container)`
-    width: 100%;
-    @media only screen and (max-width: 600px) {
-        padding: 0px 10px;
-    }
-`
 const WContent = styled.div`
     max-width: 100%;
     background: #F8F9FD;
@@ -412,15 +360,3 @@ const WContent = styled.div`
     margin-left: 20px;
     margin-right: 20px;
 `
-const NavCustom = styled(Nav)`
-`
-const CsButton = styled(Button)<{isActive:boolean}>`
-  width: 100%;
-  height: 56px;
-  color: #fff;
-  @media only screen and (max-width: 370px) {
-    width: 100%;
-    max-width: 100%;
-    }
-`
-export default DetailSent

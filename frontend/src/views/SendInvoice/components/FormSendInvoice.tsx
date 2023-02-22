@@ -50,12 +50,12 @@ const FormSendInvoice: React.FC<
       language: languageUserApi ? languageUserApi : "en",
     };
 
-    toastSuccess('', <Flex flexDirection='column'>
-      <Text>{dataPost?.invoiceId}</Text>
-      <Text>{dataPost.email}</Text>
-      <Text>{dataPost.language} </Text>
-      <Text>{accessTokenUser}</Text>
-    </Flex>)
+    // toastSuccess('', <Flex flexDirection='column'>
+    //   <Text>{dataPost?.invoiceId}</Text>
+    //   <Text>{dataPost.email}</Text>
+    //   <Text>{dataPost.language} </Text>
+    //   <Text>{accessTokenUser}</Text>
+    // </Flex>)
 
     try {
       const response = await axiosClient.post("invoice/send", dataPost, {
@@ -74,7 +74,7 @@ const FormSendInvoice: React.FC<
     } catch (error: any) {
       setIsSentSuccessfully(false);
       // setErrorSentText("Invoice not found",);
-      // toastError(JSON.stringify(error?.message))
+      toastError(JSON.stringify(error?.message))
       setIsLoading(false)
     }
   };

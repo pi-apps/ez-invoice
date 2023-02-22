@@ -4,27 +4,26 @@ import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
 import Nav from 'react-bootstrap/Nav';
-import { NavLink } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import { useParams } from 'react-router-dom';
+import { getAccessToken } from 'state/user';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
 import Footer from '../Footer';
 import { Translate } from "react-auto-translate";
-import { getAccessToken, getUser } from 'state/user';
-import { Fragment, useContext, useEffect, useState } from 'react';
 import { InvoiceIdContext } from 'contexts/InVoiceIdContext';
+import { useContext, useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 
 const CreateDetail = () => {
 
     let { slug } = useParams()
-    const dataUser = getAccessToken()
+    const accessToken = getAccessToken()
+    UseGetAnInvoiceCore(slug, accessToken)
     const { setInvoiceId } = useContext(InvoiceIdContext);
-    UseGetAnInvoiceCore(slug, dataUser)
     const items = GetAnInvoice()
     const details = items?.details
-    console.log('details', details)
     function convertDate(date: any) {
         if (date) {
           const today = new Date(date)
@@ -167,11 +166,11 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <Fragment>
+                                            <>
                                                 { details?.logoUrl &&
                                                     <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
                                                 }
-                                            </Fragment>
+                                            </>
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
@@ -227,81 +226,50 @@ const CreateDetail = () => {
                                     {details?.items.map((item) => {
                                         return(
                                             <CsRow>
-                                                <ColFirst width="20%">{item?.name}</ColFirst>
-                                                <Col width="20%">{item?.quantity}</Col>
-                                                <Col width="20%">
-                                                    {`${item?.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                                </Col>
-                                                <Col width="20%">
-                                                    {`${((item?.quantity)*(item?.price)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                                </Col>
-                                            </CsRow>
+                                            <ColFirst width="20%">{item?.name}</ColFirst>
+                                            <Col width="20%">{item?.quantity}</Col>
+                                            <Col width="20%">{item?.price} Pi</Col>
+                                            <Col width="20%">{(item?.quantity)*(item?.price)}</Col>
+                                        </CsRow>
                                         )
                                     })}
 
                                 </CsContentBill>
                                 <CsContentInfo>
-                                    {/* <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>
-                                                {`${(details?.subTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </CsTextRight>
+                                            <CsTextRight bold>{details?.subTotal} Pi</CsTextRight>
                                         }
                                         
-                                    </Row> */}
+                                    </Row>
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.tax}:
-                                            (
-                                            {`${(details?.tax).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}`}
-                                            {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.taxType === 1 ? 
-                                                <>
-                                                    {`${(details?.subTotal*details?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                                </>
-                                                 : 
-                                                <>
-                                                    {`${(details?.subTotal-details?.tax).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                                </>
-                                                 }</CsTextRight>
+                                            <CsTextLeft><Translate>Tax:</Translate> ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.tax/100 : details?.tax} {details?.taxType === 1 ? "%" : "Pi"}</CsTextRight>
+                                        </Row>
+                                    }
+                                    {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.discount} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
                                         </Row>
                                     }
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.shipping}</CsTextLeft>
-                                            <CsTextRight bold>
-                                            {`${(details?.shipping).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </CsTextRight>
+                                            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
+                                            <CsTextRight bold>{details?.shipping} Pi</CsTextRight>
                                         </Row>
                                     }
-                                    { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.discount}: (
-                                                {`${(details?.discount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}`}
-                                                {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.discountType === 1 ?
-                                            <>
-                                                {`${((details?.subTotal + (details?.subTotal*details?.tax/100))*details?.discount/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </>
-                                            :
-                                            <>
-                                                {`${(details?.subTotal-details?.discount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </>
-                                            }
-                                            </CsTextRight>
-                                        </Row>
-                                    }
+ 
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.total}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>
-                                                {`${(details?.total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </CsTextRight>
+                                            <CsTextRight bold>{details?.total} Pi</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
@@ -309,23 +277,19 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>-
-                                            {`-${(details?.amountPaid).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </CsTextRight>
+                                            <CsTextRight bold>-{details?.amountPaid} Pi</CsTextRight>
                                         }
-                                        
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.amount_due}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>
-                                                {`${(details?.amountDue).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                                            </CsTextRight>
+                                            <CsTextRight bold>{details?.amountDue} Pi</CsTextRight>
                                         }
                                     </Row>
                                 </CsContentInfo>
+
                             </WContent>
                             <WAction>
                                     <CsNavItem>
@@ -337,7 +301,7 @@ const CreateDetail = () => {
                                     </CsNavItem>
                             </WAction>
                         </Flex>
-                        <Footer invoiceId={slug} isActive={3}/>
+                        <Footer isActive={3} invoiceId={details?.invoiceId} />
                     </CsWrapContainer>
             </CsContainer>
         </PageFullWidth>

@@ -24,13 +24,14 @@
     "ejs": "^3.1.8",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
-    "html-pdf-node": "^1.0.8",
     "mailcomposer": "^4.0.2",
     "mongodb": "^4.0.0",
     "mongoose": "^6.9.0",
     "moralis": "^2.13.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "pdf-creator-node": "^2.3.5",
+    "pdfkit": "^0.13.0",
     "puppeteer": "^19.6.3"
   },
   "devDependencies": {

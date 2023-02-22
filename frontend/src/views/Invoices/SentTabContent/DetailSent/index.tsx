@@ -1,18 +1,18 @@
 import { Button, Flex, Image, Skeleton, Text } from '@devfedeltalabs/pibridge_uikit';
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import { useParams, useNavigate } from 'react-router-dom';
-import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
-import styled from 'styled-components';
-import Footer from 'components/Footer';
+import { Fragment } from 'react';
 import { Translate } from "react-auto-translate";
 import { getAccessToken, getUser } from 'state/user';
 import { useEffect, useState } from 'react';
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
+import Nav from 'react-bootstrap/Nav';
+import { useNavigate, useParams } from 'react-router-dom';
+import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
+import styled from 'styled-components';
 
 const DetailSent = () => {
     const navigate = useNavigate();
@@ -160,14 +160,18 @@ const DetailSent = () => {
                 <Header />
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading><Translate>Invoice</Translate> #{slug}</CsHeading>
+                            <CsHeading><Translate>Invoice</Translate> #{details?.invoiceNumber}</CsHeading>
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                            <Fragment>
+                                                { details?.logoUrl &&
+                                                    <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
+                                                }
+                                            </Fragment>
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>

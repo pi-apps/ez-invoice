@@ -1,86 +1,46 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import { Button, Flex, useModal } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
 import Container from "components/Layout/Container";
 import HeaderMain from "components/Header";
+import { Translate } from "react-auto-translate";
+
 import HeaderHistory from "./components/Header";
 import { GetDataInvoice } from "state/invoice";
 import CardHistory from "./components/CardHistory";
 import Footer from "components/Footer";
 import DeleteModal from "components/DeleteModal";
+import { getAccessToken } from "state/user";
+import { GetHistory, UseGetAllInvoiceHistoryCore } from "state/history";
 
-const data = [
-    {
-        id: 1,
-        name: 'Pibridge',
-        price: 11.00,
-    },
-    {
-        id: 2,
-        name: 'RUN',
-        price: 11.00,
-    },
-    {
-        id: 3,
-        name: 'BAMI',
-        price: 11.00,
-    },
-    {
-        id: 4,
-        name: 'Live trade',
-        price: 11.00,
-    },
-    {
-        id: 5,
-        name: 'Pibridge',
-        price: 11.00,
-    },
-    {
-        id: 6,
-        name: 'RUN',
-        price: 11.00,
-    },
-    {
-        id: 7,
-        name: 'BAMI',
-        price: 11.00,
-    }
-]
 const History = () => {
-    const [listHistory, setListHistory] = useState(data)
     const [openDeleteModal] = useModal(<DeleteModal/>);
-    
-    const handleDeleteItem = (item) => {
-        openDeleteModal();
-        setListHistory(
-            listHistory?.filter((it) => it.id !== item)
-            )
-    }
-
-    const handleDeleteAll = () => {
-        setListHistory([])
-    }
+    const token = getAccessToken()
+  
+    UseGetAllInvoiceHistoryCore(token)
+    const dataHistory = GetHistory()
+    // console.log("listItem", listItem)
+    // console.log("token", token)
 
     return (
         <PageFullWidth>
             <CsContainer>
                 <HeaderMain/>
                 <HeaderHistory/>
-
-                {/* list item */}
-                <CsList>
-                    {listHistory?.map((item) => {
-                        return(
-                            <CardHistory item={item} handleDeleteItem={handleDeleteItem}/>
-                            )
-                    })}
-                </CsList>
-                
-                {/* delete all button */}
-                <Flex width='100%' padding='0 12px'>
-                    <CsButtonDeleteAll onClick={handleDeleteAll}>Delete all</CsButtonDeleteAll>
-                </Flex>
+                { dataHistory?.isLoading === true || dataHistory?.listItems === null ?
+                    <Flex width="100%" justifyContent="center" mt="1.5rem">
+                        <Translate>No Data</Translate>
+                    </Flex>
+                :
+                    <CsList>
+                        {dataHistory?.listItems.map((item) => {
+                            return(
+                                <CardHistory items={item} loading={dataHistory?.isLoading}/>
+                                )
+                        })}
+                    </CsList>
+                }
                 <Footer/>
             </CsContainer>
         </PageFullWidth>

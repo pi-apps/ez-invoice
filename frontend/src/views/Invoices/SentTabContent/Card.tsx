@@ -6,6 +6,7 @@ import { NavLink, useParams } from "react-router-dom";
 import { Translate } from "react-auto-translate";
 import { getUser } from "state/user";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import { UndefineIcon } from "components/Svg";
 
 interface Props {
   images:string
@@ -74,12 +75,16 @@ const Card: React.FC<Props> = ({
         <CsRow>
           <CsCol>
             <CsButton>
-              <Image
-                width={16}
-                height={16}
-                src={images}
-                alt="logo"
-              />
+              { images ?
+                <Image
+                  width={16}
+                  height={16}
+                  src={images}
+                  alt="logo"
+                />
+              :
+                <UndefineIcon width="30px" height="30px"/>
+              }
             </CsButton>
           </CsCol>
           <CsCol>

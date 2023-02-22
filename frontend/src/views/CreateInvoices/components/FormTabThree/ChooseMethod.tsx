@@ -8,7 +8,7 @@ import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from 'hooks/TranSlateHolder'
 import { getUser } from 'state/user'
 
-const ChooseMethod = ({ isPercent, setIsPercent, errors, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
+const ChooseMethod = ({ errors, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
 
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
@@ -93,8 +93,8 @@ const ChooseMethod = ({ isPercent, setIsPercent, errors, activeTax,setActiveTax,
             <ContainerInput>
                 <CsRowTax>
                     <CsRowTaxLeft>
-                        <CsButton isActive={isPercent === true ? !false : false } onClick={() => setIsPercent(true)}>%</CsButton>
-                        <CsButton isActive={isPercent  === false ? !false : false} onClick={() => setIsPercent(false)}>Pi</CsButton>
+                        <CsButton isActive={activeDiscount === 1 ? !false : false } onClick={() => setActiveDiscount(1)}>%</CsButton>
+                        <CsButton isActive={activeDiscount  === 2 ? !false : false} onClick={() => setActiveDiscount(2)}>Pi</CsButton>
                     </CsRowTaxLeft>
                     <CsRowTaxRight>
                         <WrapInput>
@@ -106,7 +106,7 @@ const ChooseMethod = ({ isPercent, setIsPercent, errors, activeTax,setActiveTax,
                                         <CsInput
                                             name="discount"
                                             onBlur={field.onBlur}
-                                            placeholder={`0.00 ${(isPercent  === true) ? '%' : 'Pi'} `}
+                                            placeholder={`0.00 ${(activeDiscount  === 1) ? '%' : 'Pi'} `}
                                             value={field.value}
                                             onChange={field.onChange}
                                         />

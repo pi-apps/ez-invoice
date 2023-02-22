@@ -1,13 +1,15 @@
 require('dotenv').config()
 const Moralis = require("moralis").default;
-const html_to_pdf = require('html-pdf-node');
+// const puppeteer = require('puppeteer');
+const pdf = require("pdf-creator-node");
 const ejs = require('ejs');
 const axios = require('axios');
 import fs from "fs";
 import sesService from "./aws-ses-service";
-import { lang_pdf} from "./languages/lang_pdf";
-import { lang_email} from "./languages/lang_email";
+import { lang_pdf } from "./languages/lang_pdf";
+import { lang_email } from "./languages/lang_email";
 import { lang_email_success } from "./languages/lang_email_success";
+// import createInvoice from "./createInvoice";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
@@ -27,13 +29,13 @@ const translateText = async (text: string, sourceLanguage: string, targetLanguag
 
 async function uploadToIpfs(file: any) {
   const uploadArray = [
-      {
-          path: file?.filename,
-          content: fs.readFileSync(file.path, {encoding: 'base64'})
-      }
+    {
+      path: file?.filename,
+      content: fs.readFileSync(file.path, { encoding: 'base64' })
+    }
   ];
   const response = await Moralis.EvmApi.ipfs.uploadFolder({
-      abi: uploadArray,
+    abi: uploadArray,
   });
   if (!file.filename.includes(".pdf")) {
     // delete file after upload
@@ -53,7 +55,7 @@ async function generatePdf(invoice: any, language: any) {
   }
   lang = lang.slice(0, -1);
   if (language !== "en") {
-    lang  = await translateText(lang, "en", language);
+    lang = await translateText(lang, "en", language);
   }
   const langArr = lang.split(":");
   const data = {
@@ -98,25 +100,38 @@ async function generatePdf(invoice: any, language: any) {
     amountDue: invoice.amountDue,
   }
   const html = ejs.render(template, data);
-  let options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'] };
-
-  let file = { content: html };
-  const pdfBuffer = await html_to_pdf.generatePdf(file, options);
-  fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, pdfBuffer);
-  const download = {
-    filename: `${invoice.invoiceId}.pdf`,
-    path: `./downloads/${invoice.invoiceId}.pdf`,
-  }
-  const downloadUrl = uploadToIpfs(download);
-  return downloadUrl;
   // const browser = await puppeteer.launch({
-  //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
   // });
   // const page = await browser.newPage();
   // await page.setContent(html);
   // const buffer = await page.pdf({ format: 'A4' });
   // await browser.close();
   // fs.writeFileSync(`./downloads/${invoice.invoiceId}.pdf`, buffer);
+  // var html = fs.readFileSync("./src/services/templatePDF.html", "utf8");
+  var options = {
+    format: "A4",
+    orientation: "portrait",
+    childProcessOptions: {
+      env: {
+        OPENSSL_CONF: '/dev/null',
+      },
+    }
+  };
+  var document = {
+    html: html,
+    data: data,
+    path: `./downloads/${invoice.invoiceId}.pdf`,
+    type: "",
+  };
+  const ress = await pdf.create(document, options)
+  // await createInvoice(invoice, `./downloads/${invoice.invoiceId}.pdf`);
+  const download = {
+    filename: `${invoice.invoiceId}.pdf`,
+    path: `./downloads/${invoice.invoiceId}.pdf`,
+  }
+  const downloadUrl = await uploadToIpfs(download);
+  return downloadUrl;
 }
 
 async function sendEmail(invoice: any, email: string, username: string, signature: string, language: string) {
@@ -126,22 +141,22 @@ async function sendEmail(invoice: any, email: string, username: string, signatur
   }
   lang = lang.slice(0, -1);
   if (language !== "en") {
-    lang  = await translateText(lang, "en", language);
+    lang = await translateText(lang, "en", language);
   }
   const langArr = lang.split(":");
   const templatePath = "send-invoice.html";
   const params = {
-      "text_new_invoice": langArr[0] || lang_email["text_new_invoice"],
-      "text_sent_invoice": langArr[1] || lang_email["text_sent_invoice"],
-      "text_invoice_no": langArr[2] || lang_email["text_invoice_no"],
-      "text_invoice_total": langArr[3] || lang_email["text_invoice_total"],
-      "text_pay": langArr[4] || lang_email["text_pay"],
-      "title": `[EZ Invoice] Invoice #${invoice.invoiceNumber}`,
-      "username": username,
-      "invoiceId": invoice.invoiceId,
-      "invoiceNumber": invoice.invoiceNumber,
-      "amountDue": invoice.amountDue,
-      "paymentUrl": `${process.env.PAYMENT_GATEWAY_URL}/${signature}`,   
+    "text_new_invoice": langArr[0] || lang_email["text_new_invoice"],
+    "text_sent_invoice": langArr[1] || lang_email["text_sent_invoice"],
+    "text_invoice_no": langArr[2] || lang_email["text_invoice_no"],
+    "text_invoice_total": langArr[3] || lang_email["text_invoice_total"],
+    "text_pay": langArr[4] || lang_email["text_pay"],
+    "title": `[EZ Invoice] Invoice #${invoice.invoiceNumber}`,
+    "username": username,
+    "invoiceId": invoice.invoiceId,
+    "invoiceNumber": invoice.invoiceNumber,
+    "amountDue": invoice.amountDue,
+    "paymentUrl": `${process.env.PAYMENT_GATEWAY_URL}/${signature}`,
   }
   // Send otp via email
   await sesService.sendEmailByTemplate(1, [email], templatePath, params);
@@ -154,22 +169,22 @@ async function sendEmailPaymentSuccess(invoice: any, email: string, username: st
   }
   lang = lang.slice(0, -1);
   if (language !== "en") {
-    lang  = await translateText(lang, "en", language);
+    lang = await translateText(lang, "en", language);
   }
   const langArr = lang.split(":");
   const templatePath = "send-invoice.html";
   const params = {
-      "text_new_invoice": langArr[0] || lang_email_success["text_new_invoice"],
-      "text_sent_invoice": langArr[1] || lang_email_success["text_sent_invoice"],
-      "text_invoice_no": langArr[2] || lang_email_success["text_invoice_no"],
-      "text_invoice_total": langArr[3] || lang_email_success["text_invoice_total"],
-      "text_pay": langArr[4] || lang_email_success["text_pay"],
-      "title": `[EZ Invoice] Invoice #${invoice.invoiceNumber}`,
-      "username": username,
-      "invoiceId": invoice.invoiceId,
-      "invoiceNumber": invoice.invoiceNumber,
-      "amountDue": invoice.amountDue,
-      "paymentUrl": `${process.env.PAYMENT_GATEWAY_URL}`,   
+    "text_new_invoice": langArr[0] || lang_email_success["text_new_invoice"],
+    "text_sent_invoice": langArr[1] || lang_email_success["text_sent_invoice"],
+    "text_invoice_no": langArr[2] || lang_email_success["text_invoice_no"],
+    "text_invoice_total": langArr[3] || lang_email_success["text_invoice_total"],
+    "text_pay": langArr[4] || lang_email_success["text_pay"],
+    "title": `[EZ Invoice] Invoice #${invoice.invoiceNumber}`,
+    "username": username,
+    "invoiceId": invoice.invoiceId,
+    "invoiceNumber": invoice.invoiceNumber,
+    "amountDue": invoice.amountDue,
+    "paymentUrl": `${process.env.PAYMENT_GATEWAY_URL}`,
   }
   // Send otp via email
   await sesService.sendEmailByTemplate(2, [email], templatePath, params);

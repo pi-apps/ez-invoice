@@ -1,4 +1,4 @@
-import { AutoRenewIcon, Button, Flex, Input, Text } from '@devfedeltalabs/pibridge_uikit';
+import { AutoRenewIcon, Button, Flex, HelpIcon, Input, Text, useTooltip } from '@devfedeltalabs/pibridge_uikit';
 import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import Row from 'components/Layout/Row';
 import { useContext } from 'react';
@@ -16,16 +16,25 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)
     const [balaneDue, setBalanceDue] = useState(0)
-    const [isPercent, setIsPercent] = useState(true)
     const taxValue =  Number(getValues('tax'))
     const shippingValue =  Number(getValues('shipping'))
     const discountValue =  Number(getValues('discount'))
     const amountPaidValue =  Number(getValues('amountPaid'))
-    console.log('balaneDue', balaneDue)
 
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
 
+    const { targetRef, tooltip, tooltipVisible } = useTooltip(
+      <Flex flexDirection="column">
+        <Text fontSize='9px'>Balance Due = Sub total + Tax - Discount + Shipping - Amount paid</Text>
+      </Flex>,
+      { placement: 'top-end', tooltipOffset: [5, 5] },
+    )
+
+    const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
+      notes: "Description of service or product",
+    });
+  
     const listTextPlaceHolder = {
       // text
       notes_t: "Notes",
@@ -133,13 +142,13 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
     const isDiscount = (discountValue < total) ? discountValue : total
     const totalFinal = (total) => {
-      if(activeTax === 2 && isPercent === false){
+      if(activeTax === 2 && activeDiscount === 2){
         return total + taxValue + shippingValue - isDiscount
-      } else if(activeTax === 2 && isPercent === true){
+      } else if(activeTax === 2 && activeDiscount === 1){
         return total + taxValue + shippingValue - isDiscountValuePercent
-      } else if(activeTax === 1 && isPercent === true){
+      } else if(activeTax === 1 && activeDiscount === 1){
         return total + taxValuePercent + shippingValue - isDiscountValuePercent
-      } else if(activeTax === 1 && isPercent === false){
+      } else if(activeTax === 1 && activeDiscount === 2){
         return total + taxValuePercent + shippingValue - isDiscount
       }
     } 
@@ -225,8 +234,6 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                             setTypeDiscount={setTypeDiscount} 
                             typeShipping={typeShipping} 
                             setTypeShipping={setTypeShipping}
-                            isPercent={isPercent}
-                            setIsPercent={setIsPercent}
                             errors={errors}
                         />
                     </Row>
@@ -285,14 +292,20 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                     </Row>
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>{stateText.balance_due_t}</CsTextLeft>
+                        <CsTextLeft>{stateText.balance_due_t}
+                        <ReferenceElement ref={targetRef}>
+                          <HelpIcon color="#94A3B8" />
+                        </ReferenceElement> 
+                        {tooltipVisible && tooltip}
+                        </CsTextLeft>
                         <Text fontSize='14px'>{!balanceDue ? 0 : <>
                           {`${balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                        </> }</Text>
+                          </> }
+                        </Text>
                     </Row>
-                    <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <Text color='#94A3B8' fontSize='10px'>{stateText.balance_due_t} = {stateText.subtotal_t} + {stateText.tax_t} - {stateText.discount_t} + {stateText.shipping_t} - {stateText.amount_paid_t} </Text>
-                    </Row>
+                    {/* <Row mt="1rem" style={{justifyContent: "space-between"}}>
+                        <Text color='#94A3B8' fontSize='10px'>Balance due = Sub total + Tax - Discount + Shipping - Amount paid </Text>
+                    </Row> */}
                 </CsContentInfo>
             </CsFlex>
       </CsContainer>
@@ -302,6 +315,17 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
       </CsWrapperForm>
   )
 }
+
+const ReferenceElement = styled.div`
+  display: inline-block;
+  align-items:baseline;
+  margin-left:5px; 
+  cursor: pointer;
+  color: text;
+  svg{
+    width: 14px;
+  }
+`
 
 const CsButtonAddTpye = styled(Button)`
   margin-left: 30px;

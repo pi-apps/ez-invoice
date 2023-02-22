@@ -37,7 +37,7 @@ const styles = {
 const NavCustom = styled(Nav)``;
 
 const Footer = ({ isActive, invoiceId }) => {
-  console.log('invoiceIdFooter', invoiceId)
+  
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<DownloadModal invoiceId={invoiceId}/>);
