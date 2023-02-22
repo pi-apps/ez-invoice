@@ -9,8 +9,7 @@ import { useTranslation } from "react-i18next";
 import { getUser } from "../../state/user";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
-
-const APIKEY_GOOGLE = process.env.APIKEY_GOOGLE
+import { HomeText } from "../../translation/translateArrayObjects";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -38,24 +37,23 @@ const Home = () => {
     });
   };
 
+  const requestTrans = async () => {
+    try {
+      const resData = await HomeText(languageUserApi);
+      console.log('resData', resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     if (!languageUserApi) {
       fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
+    } else {
+      fcTransLateText(languageUserApi)
+      requestTrans();
+    }
   }, [languageUserApi]);
-
-  interface WindowWithEnv extends Window {
-      __ENV?: {
-        backendURL: string, // REACT_APP_BACKEND_URL environment variable
-        sandbox: "true" | "false", // REACT_APP_SANDBOX_SDK environment variable - string, not boolean!
-        googleApi: string, // REACT_APP_GOOGLE_API environment variable
-      }
-  }
-  const toastAPIGOOGLE = () => {
-    const _window: WindowWithEnv = window;
-    const googleApi = _window.__ENV && _window.__ENV.googleApi;
-    toastSuccess("", <Text>{googleApi}</Text>)
-  }
 
   return (
     <PageFullWidth>
@@ -80,15 +78,6 @@ const Home = () => {
             onClick={!userData ? openLoginModal : () => navigate("/invoice")}
           >
             {stateText.start_now}
-          </Button>
-        </Flex>
-        <Flex width="100%">
-          <Button
-            mt="1.5rem"
-            width="100%"
-            onClick={() => toastAPIGOOGLE()}
-          >
-            Toast APIGOOGLE
           </Button>
         </Flex>
       </CsContainer>
