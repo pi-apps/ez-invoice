@@ -16,6 +16,8 @@ import { setAccessToken } from "state/googleAuth/actions";
 import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 import { getAccessToken, getUser } from "state/user";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import { download_text } from "translation/languages/download_text";
+import { downloadTranslate } from "translation/translateArrayObjects";
 
 interface Props {
   onDismiss?: () => void;
@@ -112,48 +114,21 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
   }, [invoiceId])
 
   // Translate
-  const listText = {
-    download_invoice: "Download Invoice",
-    choose_file: "Please copy the following link and paste it in browser to download.",
-    hard_disk: "Hard disk",
-    coppy: "Coppy",
-    coppired: "Copired",
-  };
-  const [stateText, setStateText] = useState(listText);
-  const fcTransLateText = async (language) => {
-      const resDownloadInvoice = await GetTranslateHolder(
-        listText.download_invoice,
-        language
-      );
-      const resChooseFile = await GetTranslateHolder(
-        listText.choose_file,
-        language
-      );
-      const resHardDisk = await GetTranslateHolder(
-        listText.hard_disk,
-        language
-      );
-      const resCoppy = await GetTranslateHolder(
-        listText.coppy,
-        language
-      );
-      const resCoppired = await GetTranslateHolder(
-        listText.coppired,
-        language
-      );
-      setStateText({
-      download_invoice: resDownloadInvoice,
-      choose_file: resChooseFile,
-      hard_disk: resHardDisk,
-      coppired: resCoppired,
-      coppy: resCoppy,
-    });
-  };
-
+  const [stateText, setStateText] = useState(download_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await downloadTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(download_text);
+    }
   }, [languageUserApi]);
 
   const shortUrl = (url: any) => {
@@ -197,10 +172,10 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
       >
         <Flex flexDirection="column" width="100%">
           <Text bold fontSize="18px" width="100%" textAlign="center">
-            {stateText.download_invoice}
+            {stateText.text_download_invoice}
           </Text>
           <Text width="100%" textAlign="center" color="textSubtle" mt="10px">
-            {stateText.choose_file}
+            {stateText.text_choose_file}
           </Text>
 
           <Flex mt="1rem" justifyContent="center">
@@ -208,9 +183,9 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
                 <FlexUrl position='relative'>
                   <TextUrl>{shortUrl(urlDownload)}</TextUrl>
                   <ButtonCoppy onClick={copyLinkReferralCode}>
-                    {stateText.coppy}
+                    {stateText.text_copy}
                   </ButtonCoppy>
-                  <Tooltip isTooltipDisplayed={isOpenTooltip}>{stateText.coppired}</Tooltip>
+                  <Tooltip isTooltipDisplayed={isOpenTooltip}>{stateText.text_coppied}</Tooltip>
                 </FlexUrl> :
                 <Button disabled endIcon={<AutoRenewIcon style={{margin: 0}} spin color="black"/>} />
               }
