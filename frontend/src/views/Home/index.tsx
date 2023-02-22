@@ -44,8 +44,17 @@ const Home = () => {
     } else fcTransLateText(languageUserApi)
   }, [languageUserApi]);
 
+  interface WindowWithEnv extends Window {
+      __ENV?: {
+        backendURL: string, // REACT_APP_BACKEND_URL environment variable
+        sandbox: "true" | "false", // REACT_APP_SANDBOX_SDK environment variable - string, not boolean!
+        googleApi: string, // REACT_APP_GOOGLE_API environment variable
+      }
+  }
   const toastAPIGOOGLE = () => {
-    toastSuccess("", <Text>{APIKEY_GOOGLE}</Text>)
+    const _window: WindowWithEnv = window;
+    const googleApi = _window.__ENV && _window.__ENV.googleApi;
+    toastSuccess("", <Text>{googleApi}</Text>)
   }
 
   return (
