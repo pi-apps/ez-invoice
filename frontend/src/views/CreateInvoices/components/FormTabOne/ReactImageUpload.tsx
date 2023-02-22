@@ -6,13 +6,19 @@ import styled from "styled-components";
 import { Translate } from "react-auto-translate";
 import { getUser } from "state/user";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import { AppDispatch } from "state";
+import { useDispatch } from "react-redux";
+import { getDataImages } from "state/preview/actions"
 
 function ReactImageUpload({images , setValue }) {
   const [ logoImg, setLogoImages] = useState([]);
-
+  const dispatch = useDispatch<AppDispatch>()
   const onChange = (imageList, addUpdateIndex) => {
     setValue("logo",imageList[0].file);
     setLogoImages(imageList)
+    dispatch(getDataImages(
+      { images: imageList }
+    ))
   };
   const onImageDelete = () => {
     setLogoImages([])

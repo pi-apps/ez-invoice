@@ -16,6 +16,7 @@ import UpdateInvoice from "views/UpdateInvoice"
 import Invoices from "views/Invoices";
 import History from "views/History";
 import CreateDetail from "views/CreateInvoices/components/CreateDetail";
+import Preview from "views/Preview";
 import { getUser } from "./state/user";
 import SendInvoice from "views/SendInvoice";
 import { LanguagesContext } from "contexts/Translate";
@@ -58,7 +59,8 @@ const App: React.FC = () => {
           <Route path="updateinvoice/:invoiceId" element={<UpdateInvoice />} />
           <Route path="payment/:signature" element={<Payment />} />
           <Route path="send/:slug" element={<SendInvoice />} />
-          <Route path="history" element={<History />} />
+          <Route path="history" element={<History/>} />
+          <Route path="preview" element={<Preview/>} />
         </Routes>
         <ToastListener />
     </Fragment>

@@ -105,7 +105,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
-      toastError(JSON.stringify(error?.message))
+      toastError('Error', error?.response?.data?.message)
     }
   };
 
