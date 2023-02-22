@@ -109,7 +109,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                     name={`items[${index}].name`}
                     defaultValue=""
                     render={({ field }) => (
-                        <CsTextArea 
+                        <CsTextArea
                           onChange={field.onChange} 
                           onBlur={field.onBlur} 
                           placeholder={`${stateTextPlaceholder.name}`} 
@@ -144,7 +144,6 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                     {(Number(item.quantity) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateTextPlaceholder.greater_than_0}</Text>}
                   </>
                 }
-                {/* {(item.quantity === '' || Number(item.quantity) <= 0 )&& <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text>} */}
               </ContainerInputQuantity>
 
               <ContainerInputQuantity>
@@ -215,29 +214,33 @@ const CsContent = styled(Text)`
     margin-top: 24px;
 `
 const ContainerInput = styled(Flex)`
-  flex-direction: column;
   width: 100%;
-  background-color:#F8F9FD;
+  height: auto;
   border-radius:8px;
+  flex-direction: column;
+  background-color:#F8F9FD;
 `
+
 const WrapInput = styled(Flex)`
   position: relative;
   background-color:#F8F9FD;
   border-radius: 10px;
-  height: fit-content;
+  height: auto;
   width: 100%;
   input{
     padding: 10px;
   }
 `
 
-export const CsTextArea = styled.textarea`
+export const CsTextArea = styled.input`
   background: #F8F9FD;
   border: none;
   padding-left: 10px;
   border-radius: 10px;
   width: 100%;
-  height: 100px !important;
+  height: 56px;
+  max-height: 100%;
+  min-height: 56px;
   resize: unset;
   padding: 10px;
   box-shadow: none;
@@ -246,6 +249,8 @@ export const CsTextArea = styled.textarea`
     color: #94A3B8;
     font-weight: 400;
     font-size: 12px;
+    margin-top: -40px;
+    position: absolute;
   }
   :focus:not(:disabled){
     box-shadow:none!important;

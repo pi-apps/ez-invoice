@@ -43,7 +43,7 @@ const CardHistory: React.FC<Props> = ({ items, loading }) => {
                 { loading ?
                   <Skeleton width="60px"/>
                 :
-                  <Text fontWeight={700} fontSize='12px' color='#0F172A'>        
+                  <Text style={{wordBreak: 'break-all'}} fontWeight={700} fontSize='12px' color='#0F172A'>        
                     {items?.billFrom}      
                   </Text>
                 }
@@ -52,7 +52,7 @@ const CardHistory: React.FC<Props> = ({ items, loading }) => {
             </Flex>
           </Flex>
           <CsButtonDelete role="presentation">
-            <Text fontWeight={700} fontSize='12px' color='#0F172A'>
+            <Text style={{wordBreak: 'break-all'}} fontWeight={700} fontSize='12px' color='#0F172A'>
               {Number(items?.amountDue).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Pi
             </Text>
           </CsButtonDelete>
@@ -82,6 +82,7 @@ const WrapperImg = styled.div`
 const WrapperCard = styled.div`
   background: #FFFFFF;
   width: 100%;
+  height: 100%;
   max-width: 48%;
 `
 const CsWrapCard = styled.div`

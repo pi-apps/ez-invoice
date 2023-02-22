@@ -2,6 +2,7 @@ import { Button, Flex, Image, Skeleton, Text } from '@devfedeltalabs/pibridge_ui
 import Header from 'components/Header';
 import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
+import BigNumber from 'bignumber.js';
 import Row from 'components/Layout/Row';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -159,7 +160,7 @@ const CreateDetail = () => {
                 <Header />
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading>Invoice #{slug}</CsHeading>
+                            <CsHeading>Invoice #{details?.invoiceNumber}</CsHeading>
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
@@ -228,8 +229,8 @@ const CreateDetail = () => {
                                             <CsRow>
                                             <ColFirst width="20%">{item?.name}</ColFirst>
                                             <Col width="20%">{item?.quantity}</Col>
-                                            <Col width="20%">{item?.price} Pi</Col>
-                                            <Col width="20%">{(item?.quantity)*(item?.price)}</Col>
+                                            <Col width="20%">{item?.price && item?.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
+                                            <Col width="20%">{((item?.quantity) &&(item?.price)) && ((item?.quantity)*(item?.price)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                         </CsRow>
                                         )
                                     })}
@@ -241,26 +242,38 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.subTotal} Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.subTotal && details?.subTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                         
                                     </Row>
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft><Translate>Tax:</Translate> ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.tax/100 : details?.tax} {details?.taxType === 1 ? "%" : "Pi"}</CsTextRight>
+                                            <CsTextRight bold>{details?.taxType === 1 ? <>
+                                                {(details?.subTotal && details?.tax) && (details?.subTotal*details?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                            </> : <>
+                                                {details?.tax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                            </> } Pi</CsTextRight>
                                         </Row>
                                     }
                                     {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.discount} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
+                                            <CsTextRight bold>{details?.discountType === 1 ? 
+                                            <>
+                                                {(details?.subTotal && details?.discount && details?.tax) && (details?.discount*(details?.subTotal + details?.tax)/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                            </> : 
+                                            <>
+                                                {details?.discount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                            </>
+                                            } Pi</CsTextRight>
                                         </Row>
                                     }
+                                    
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
-                                            <CsTextRight bold>{details?.shipping} Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.shipping && details?.shipping.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         </Row>
                                     }
  
@@ -269,7 +282,7 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.total} Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.total && details?.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
@@ -277,7 +290,7 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>-{details?.amountPaid} Pi</CsTextRight>
+                                            <CsTextRight bold>-{details?.amountPaid && details?.amountPaid.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
@@ -285,7 +298,7 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.amountDue} Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.amountDue && details?.amountDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
                                 </CsContentInfo>
@@ -334,11 +347,13 @@ const ColFirstth = styled(Text)`
     color: #94A3B8;
     text-transform: uppercase;
     text-align: left;
+    word-break: break-all;
 `
 const ColFirst = styled(Text)`
     font-size: 8px;
     color: #0F172A;
     text-align: left;
+    word-break: break-all;
 `
 
 const Colth = styled(Text)`
@@ -351,6 +366,7 @@ const Col = styled(Text)`
     font-size: 8px;
     color: #0F172A;
     text-align: right;
+    word-break: break-all;
 `
 const CsRowth = styled(Row)`
     align-items: center;
@@ -383,6 +399,14 @@ const CsTextRight = styled(Text)`
   font-size: 12px;
   color: #0F172A;
   font-size: 12px;
+`
+const CsTextRightTable = styled(Text)`
+  font-weight: 500;
+  font-size: 12px;
+  color: #0F172A;
+  font-size: 8px;
+  text-align: right;
+  word-break: break-all;
 `
 
 const CsWrapContainer = styled.div`
