@@ -55,7 +55,7 @@ const SentInvoiceSuccessfully: React.FC<
       <CsFlex>
         <FlexImage>
           <Image
-            src="/images/imgPi/piSuccess.png"
+            src="/images/pisuccess.png"
             alt=""
             width={120}
             height={120}

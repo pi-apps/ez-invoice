@@ -41,7 +41,7 @@ export const fetchAllInvoiceSent = async (accessToken:string): Promise<ListSent>
           const groupArrays = Object.keys(groups).map((date) => {
             return {
               date,
-              listItems: groups[date]
+              listItems: groups[date].reverse()
             };
           });
           const data = _.sortBy(groupArrays, 'date').reverse()
@@ -95,7 +95,7 @@ export const fetchAllInvoiceReceived = async (accessToken:string): Promise<ListR
           const groupArrays = Object.keys(groups).map((date) => {
             return {
               date,
-              listItems: groups[date]
+              listItems: groups[date].reverse()
             };
           });
           const data = _.sortBy(groupArrays, 'date').reverse()

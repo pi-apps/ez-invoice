@@ -10,6 +10,7 @@ import { getAccessToken, getUser } from "state/user";
 import { GetAnInvoice } from "state/invoice";
 import useToast from "hooks/useToast";
 import { useDispatch } from "react-redux";
+import { CsModalLogin } from "./CsModalLogin";
 import { AppDispatch } from "state";
 import { fetchLoading } from "state/invoice/actions";
 import { setUser, isLoading, accessToken } from "state/user/actions";
@@ -18,18 +19,18 @@ import { AuthResult, PaymentDTO } from "components/Menu/UserMenu/type";
 import { GetDataPayment, PaymentCore } from "state/payment";
 import { usePayment } from "./hook/usePayment";
 import { fetchDataUser } from "state/payment/actions";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 const Payment = () => {
     const  { signature } = useParams()
-    
+   
     const items = GetAnInvoice();
     const { toastSuccess, toastError } = useToast()
     const userData = getUser()
     const token = getAccessToken()
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const loading = items?.isLoading
+    const [ isLoading, setLoading ] = useState(false)
     const onIncompletePaymentFound = (payment: PaymentDTO) => {
         console.log("onIncompletePaymentFound", payment);
         return axiosClient.post("/payments/incomplete", { payment });
@@ -40,7 +41,7 @@ const Payment = () => {
     const signIn = async () => {
         try {
             const scopes = ["username", "payments"];
-            dispatch(isLoading({isLoading:true}))
+            setLoading(true)
             const resultLogin = await  window.Pi.authenticate(scopes, onIncompletePaymentFound)
             
             if( resultLogin ) {
@@ -57,19 +58,19 @@ const Payment = () => {
                     if (userInfor) {
                         dispatch(setUser(userInfor.data));
                     }
-                    dispatch(isLoading({isLoading:false}))
+                    setLoading(false)
                 } else {
-                  dispatch(isLoading({isLoading:false}))
+                    setLoading(false)
                 }
                 console.log(`Hi there! You're ready to make payments!`);
-                dispatch(isLoading({isLoading:false}))
+                setLoading(false)
                 toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Login successfully</Translate></Text>)
             } else {
               toastError('Error', <Text style={{justifyContent: 'center'}}><Translate>Somethig went wrong</Translate></Text>)
-              dispatch(isLoading({isLoading:false}))
+              setLoading(false)
             }
           } catch (error) {
-            dispatch(isLoading({isLoading:false}))
+            setLoading(false)
           }
     };
     // core data payment
@@ -89,16 +90,17 @@ const Payment = () => {
         }
         return <Skeleton width={60} />
     }
-    const { handlePayment, pendingPayment } = usePayment(signature, token) 
+    const { handlePayment, pendingPayment } = usePayment(signature, token, userData?.language) 
     return (
         <PageFullWidth>
             <CsContainer>
                 {  userData === null || userData === undefined ? 
-                    <CsButton 
-                        onClick={signIn} 
-                        disabled={loading}
-                        endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Login</Translate>}
-                    />
+                    // <CsButton 
+                    //     onClick={signIn} 
+                    //     disabled={loading}
+                    //     endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Login</Translate>}
+                    // />
+                    <CsModalLogin onSignIn={signIn} isLoading={isLoading}/>
                 :
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
