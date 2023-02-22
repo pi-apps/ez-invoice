@@ -36,10 +36,9 @@ export const usePayment = (signature:string, token:string) => {
                 });
                 const invoiceId = submitReqInvoiceId?.data
                 
-                const onIncompletePaymentFound = async (payment: PaymentDTO) => {
+                const onIncompletePaymentFound = (payment: PaymentDTO) => {
                     console.log("onIncompletePaymentFound", payment);
-                    const result = await axiosClient.post('/payments/incomplete', {payment}, config);
-                    toastSuccess(JSON.stringify(result?.data))
+                    return axiosClient.post('/payments/incomplete', {payment}, config);
                   }
                 
                 const onReadyForServerApproval = (paymentId: string) => {

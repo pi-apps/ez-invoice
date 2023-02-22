@@ -27,6 +27,9 @@ const UserMenu = () => {
   const listText = {
     login: "Login",
     logout: "Logout",
+    login_success: "Login successfully",
+    login_failed: "Somethig went wrong",
+    logout_success: "Logout successfully",
   };
 
   const [stateText, setStateText] = useState(listText);
@@ -40,9 +43,24 @@ const UserMenu = () => {
         listText.logout,
         language
       );
+      const resLoginSuccess = await GetTranslateHolder(
+        listText.login_success,
+        language
+      );
+      const resLoginFailed = await GetTranslateHolder(
+        listText.login_failed,
+        language
+      );
+      const resLogoutSuccess = await GetTranslateHolder(
+        listText.logout_success,
+        language
+      );
       setStateText({
       login: resLogin,
       logout: resLogout,
+      login_failed: resLoginFailed,
+      login_success: resLoginSuccess,
+      logout_success: resLogoutSuccess,
     });
   };
 
@@ -76,9 +94,9 @@ const UserMenu = () => {
           }
           console.log(`Hi there! You're ready to make payments!`);
           dispatch(isLoading({isLoading:false}))
-          toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Login successfully</Translate></Text>)
+          toastSuccess(null, <Text style={{justifyContent: 'center'}}>{stateText.login_success}</Text>)
       } else {
-        toastError('Error', <Text style={{justifyContent: 'center'}}><Translate>Somethig went wrong</Translate></Text>)
+        toastError('Error', <Text style={{justifyContent: 'center'}}>{stateText.login_failed}</Text>)
         dispatch(isLoading({isLoading:false}))
       }
     } catch (error) {
@@ -95,7 +113,7 @@ const UserMenu = () => {
       await dispatch(setUser(null));
       await dispatch(accessToken({accessToken:""}));
       await onDismis();
-      toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Logout successfully</Translate></Text>)
+      toastSuccess(null, <Text style={{justifyContent: 'center'}}>{stateText.logout_success}</Text>)
       navigate("/");
     } else {
       toastError('Error')

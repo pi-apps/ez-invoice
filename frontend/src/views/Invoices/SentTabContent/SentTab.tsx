@@ -10,6 +10,8 @@ import { GetTranslateHolder } from "hooks/TranSlateHolder";
 
 
 const SentTab = () => {
+  const userData = getUser();
+  const languageUserApi = userData?.language
   
   const dataUser = getAccessToken()
   UseGetAllInvoiceSentCore(dataUser);
@@ -22,6 +24,19 @@ const SentTab = () => {
       const mm = String(today.getMonth() + 1).padStart(2, "0");
       const yyyy = today.getFullYear();
       const selectedMonthName = MONTHS[Number(mm) - 1];
+
+      const mmtranslate = async (data) => {
+        const resNoData = await GetTranslateHolder(
+            data,
+            languageUserApi
+          );
+          return resNoData
+      };
+
+       const textMonth: any = mmtranslate(selectedMonthName)
+
+       console.log('textMonth', textMonth?.value)
+
       return (
         <CsText>
           {dd} &nbsp;{selectedMonthName} &nbsp;{yyyy}
@@ -31,8 +46,6 @@ const SentTab = () => {
     return null;
   }
 
-  const userData = getUser();
-  const languageUserApi = userData?.language
   const listText = {
     no_data: "No Data",
   };

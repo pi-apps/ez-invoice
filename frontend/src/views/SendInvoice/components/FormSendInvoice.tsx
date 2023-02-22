@@ -82,9 +82,10 @@ const FormSendInvoice: React.FC<
   // translate placeholder
 
   const listTextPlaceHolder = {
-    recipientEmail: "WRecipient email",
+    recipientEmail: "Recipient email",
     send_invoice: "Send Invoice",
     send_invoice_recipient: "Send invoice to recipient via email",
+    send: "Send",
 
   };
   const [stateText, setStateText] = useState(listTextPlaceHolder);
@@ -101,10 +102,15 @@ const FormSendInvoice: React.FC<
         listTextPlaceHolder.send_invoice_recipient,
         language
       );
+      const resSend= await GetTranslateHolder(
+        listTextPlaceHolder.send,
+        language
+      );
     setStateText({
       recipientEmail: resRecipientEmail,
       send_invoice: resSendInvoice,
       send_invoice_recipient: resSendInvoiceRecipient,
+      send: resSend,
     });
   };
 
@@ -155,10 +161,10 @@ const FormSendInvoice: React.FC<
           </Flex>
           <Flex>
             <CsButton
-              disabled={!slug}
+              disabled={!slug || isLoading}
               type="submit" 
               value="Submit" 
-              endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>{slug},{languageUserApi}</Translate>}
+              endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText>{stateText.send}</CsText>}
             />
           </Flex>
         </FormContainer>
@@ -246,5 +252,19 @@ const ErrorMessagesSent = styled.div`
   letter-spacing: 0.1;
   font-family: "Marcellus", serif;
 `;
+
+const CsText = styled(Text)`
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 165%;
+  width: 100%;
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  letter-spacing: 0.4px;
+  color: #ffffff;
+`
 
 export default FormSendInvoice;

@@ -283,7 +283,7 @@ const ButtonCoppy = styled.button`
     border-radius: 10px;
     /* width: 100px; */
     max-width: 100px;
-    height: 26px;
+    height: 30  px;
     display: flex;
     font-size: 12px;
     justify-content: center;

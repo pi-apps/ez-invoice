@@ -46,12 +46,6 @@ const App: React.FC = () => {
 
   return (
     <Fragment>
-      <Translator
-        from="en"
-        // to={languageUserApi ? languageUserApi : language ? language : "en"}
-        to="en"
-        googleApiKey="AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs"
-      >
          <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
@@ -67,7 +61,6 @@ const App: React.FC = () => {
           <Route path="history" element={<History />} />
         </Routes>
         <ToastListener />
-      </Translator>
     </Fragment>
   );
 };

@@ -1,8 +1,10 @@
 import { Button, Flex, Image, Text } from "@devfedeltalabs/pibridge_uikit";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Translate } from "react-auto-translate";
 import { useNavigate } from "react-router-dom";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import { getUser } from "state/user";
 
 interface SentSuccess {
   setIsSentSuccessfully: (e) => void;
@@ -19,6 +21,35 @@ const SentInvoiceSuccessfully: React.FC<
     navigate("/invoice")
   }
 
+  // Translate
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
+  const listTextPlaceHolder = {
+    sent_invoice_success: "Sent Invoice Successfully",
+    done: "Done",
+  };
+  const [stateText, setStateText] = useState(listTextPlaceHolder);
+  const fcTransLateText = async (language) => {
+      const resSentSuccess = await GetTranslateHolder(
+        listTextPlaceHolder.sent_invoice_success,
+        language
+      );
+      const resDone = await GetTranslateHolder(
+        listTextPlaceHolder.done,
+        language
+      );
+    setStateText({
+      done: resDone,
+      sent_invoice_success: resSentSuccess,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
+
   return (
     <CsContainer>
       <CsFlex>
@@ -32,11 +63,11 @@ const SentInvoiceSuccessfully: React.FC<
         </FlexImage>
         <FlexText>
           <TextHeader>
-            <Translate>Sent Invoice Successfully</Translate>
+            {stateText.sent_invoice_success}
           </TextHeader>
         </FlexText>
         <Flex width='100%'>
-          <CsButton onClick={handleDone}><Translate>Done</Translate></CsButton>
+          <CsButton onClick={handleDone}>{stateText.done}</CsButton>
         </Flex>
       </CsFlex>
     </CsContainer>
