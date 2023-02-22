@@ -2,11 +2,8 @@ import { PaymentDTO } from 'components/Menu/UserMenu/type';
 import { axiosClient } from 'config/htttp';
 import useToast from 'hooks/useToast';
 import { useCallback, useState } from 'react';
-import { Translate } from "react-auto-translate";
 
 export const usePayment = (signature:string, token:string) => {
-    console.log("signature", signature)
-    console.log("signature", token)
     const [ pendingPayment, setPendingPayment ] = useState(false)
     const { toastError } = useToast()
     const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Authorization': token,}};
@@ -40,7 +37,7 @@ export const usePayment = (signature:string, token:string) => {
                 
                 const onIncompletePaymentFound = (payment: PaymentDTO) => {
                     console.log("onIncompletePaymentFound", payment);
-                    return axiosClient.post('/payments/incomplete', {payment});
+                    return axiosClient.post('/payments/incomplete', {payment}, config);
                   }
                 
                 const onReadyForServerApproval = (paymentId: string) => {
@@ -56,7 +53,7 @@ export const usePayment = (signature:string, token:string) => {
                 
                 const onCancel = (paymentId: string) => {
                     console.log("onCancel", paymentId);
-                    return axiosClient.post('/payments/cancelled_payment', {paymentId});
+                    return axiosClient.post('/payments/cancelled_payment', {paymentId}, config );
                   }
                 
                 const onError = (error: Error, payment?: PaymentDTO) => {
