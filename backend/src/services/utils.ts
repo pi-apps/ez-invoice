@@ -145,18 +145,21 @@ async function sendEmail(invoice: any, email: string, username: string, signatur
   }
   const langArr = lang.split(":");
   const templatePath = "send-invoice.html";
+  const paymentUrlOptional = `${process.env.PAYMENT_URL}/${signature}`.split("://")[1];
   const params = {
     "text_new_invoice": langArr[0] || lang_email["text_new_invoice"],
     "text_sent_invoice": langArr[1] || lang_email["text_sent_invoice"],
     "text_invoice_no": langArr[2] || lang_email["text_invoice_no"],
     "text_invoice_total": langArr[3] || lang_email["text_invoice_total"],
     "text_pay": langArr[4] || lang_email["text_pay"],
+    "text_other_way": langArr[5] || lang_email_success["text_other_way"],
     "title": `[EZ Invoice] Invoice #${invoice.invoiceNumber}`,
     "username": username,
     "invoiceId": invoice.invoiceId,
     "invoiceNumber": invoice.invoiceNumber,
     "amountDue": invoice.amountDue,
     "paymentUrl": `${process.env.PAYMENT_GATEWAY_URL}/${signature}`,
+    "paymentUrlOptional": `https://${paymentUrlOptional}`,
   }
   // Send otp via email
   await sesService.sendEmailByTemplate(1, [email], templatePath, params);
@@ -172,7 +175,7 @@ async function sendEmailPaymentSuccess(invoice: any, email: string, username: st
     lang = await translateText(lang, "en", language);
   }
   const langArr = lang.split(":");
-  const templatePath = "send-invoice.html";
+  const templatePath = "send-invoice-success.html";
   const params = {
     "text_new_invoice": langArr[0] || lang_email_success["text_new_invoice"],
     "text_sent_invoice": langArr[1] || lang_email_success["text_sent_invoice"],
@@ -184,7 +187,7 @@ async function sendEmailPaymentSuccess(invoice: any, email: string, username: st
     "invoiceId": invoice.invoiceId,
     "invoiceNumber": invoice.invoiceNumber,
     "amountDue": invoice.amountDue,
-    "paymentUrl": `${process.env.PAYMENT_GATEWAY_URL}`,
+    "paymentUrl": "",
   }
   // Send otp via email
   await sesService.sendEmailByTemplate(2, [email], templatePath, params);
