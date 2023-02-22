@@ -18,7 +18,7 @@ async function init() {
 }
 
 async function sendEmailByTemplate(type: number, receivers: any, templatePath: string, params: { title: any; username: any, invoiceId: any; invoiceNumber: any; amountDue: any; paymentUrl: any;}) {
-  const fullTemplatePath = path.join(__dirname, './templates/' + templatePath);
+  const fullTemplatePath = path.join('./src/services/aws-ses-service/templates/' + templatePath);
   const content = await getContent(fullTemplatePath, params);
   const senderEmail = `EZ Invoice Admin <ezinvoice@email.pibridge.org>`;
   const attachments = type === 1 ? [
