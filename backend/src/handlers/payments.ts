@@ -115,7 +115,7 @@ export default function mountPaymentsEndpoints(router: Router) {
             const invoiceId = req.body.invoiceId;
             const paymentId = req.body.paymentId;
             // update paymentId
-            await InvoicesModel.updateOne({ invoiceId: invoiceId }, { $set: { paymentId: paymentId } })
+            await InvoicesModel.updateOne({ invoiceId: invoiceId }, { $set: { pi_payment_id: paymentId } })
             // let Pi Servers know that you're ready
             await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
             return res.status(200).json({ message: `Approved the payment ${paymentId}` });
