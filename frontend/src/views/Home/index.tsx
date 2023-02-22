@@ -1,17 +1,12 @@
-import { Button, Flex, useModal } from "@devfedeltalabs/pibridge_uikit";
+import { Button, Flex, Text, useModal } from "@devfedeltalabs/pibridge_uikit";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import styled from "styled-components";
 import ReactPlayer from "react-player";
-import { Translate } from "react-auto-translate";
 import { Link, useNavigate } from "react-router-dom";
 import LoginModal from "../../components/LoginModal";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import TranslateButton from "../../components/TranslateButton";
 import { getUser } from "../../state/user";
-import { AuthResult } from "../../components/Menu/UserMenu/type";
-import { setUser } from "../../state/user/actions";
-import { axiosClient } from "../../config/htttp";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
 
@@ -19,14 +14,33 @@ const Home = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<LoginModal />);
-  const userData = getUser();
   const { toastSuccess, toastError } = useToast();
 
-  const changeTextPlaceHolderLg = async () => {
-    const resSenderEmail = await GetTranslateHolder('dsds', 'dsdsd');
-    toastSuccess(`${resSenderEmail}`)
+  // Translate
+  const userData = getUser();
+  const languageUserApi = userData?.language
 
+  const listText = {
+    start_now: "Start now",
   };
+
+  const [stateText, setStateText] = useState(listText);
+
+  const fcTransLateText = async (language) => {
+    const resStartNow = await GetTranslateHolder(
+        listText.start_now,
+        language
+      );
+      setStateText({
+      start_now: resStartNow,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
 
   return (
     <PageFullWidth>
@@ -50,15 +64,7 @@ const Home = () => {
             width="100%"
             onClick={!userData ? openLoginModal : () => navigate("/invoice")}
           >
-            {/* <Translate>{t("start_now")}</Translate> */}
-            <Translate>Start now</Translate>
-          </Button>
-          <Button
-            mt="1.5rem"
-            width="100%"
-            onClick={() => changeTextPlaceHolderLg()}
-          >
-            <Translate>Start</Translate>
+            {stateText.start_now}
           </Button>
         </Flex>
       </CsContainer>

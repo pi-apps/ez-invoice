@@ -2,6 +2,7 @@ import { Flex, Text, AutoRenewIcon } from "@devfedeltalabs/pibridge_uikit";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { axiosClient } from "config/htttp";
 import { InvoiceIdContext } from "contexts/InVoiceIdContext";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
 import { useContext, useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
@@ -12,7 +13,7 @@ import { AppDispatch } from 'state';
 import { GetAllInvoice, GetAnInvoice, UseGetAllInvoice, UseGetAnInvoiceCore } from "state/invoice";
 import { tabActiveNewInvoice } from "state/invoice/actions";
 import { setInvoiceIdRedux } from "state/newInvoiceId/actions";
-import { getAccessToken } from "state/user";
+import { getAccessToken, getUser } from "state/user";
 import styled from "styled-components";
 import * as Yup from 'yup';
 import FormTabOne from "./FormTabOne";
@@ -205,10 +206,37 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         }
     }
 
-    
+    // transLanguage
+    const DataAb = getUser();
+    const languageUserApi = DataAb?.language
+  
+    const listTextPlaceHolder = {
+      // text
+      create_invoice: "Create Invoice",
+    };
+  
+    const [stateText, setStateText] = useState(listTextPlaceHolder);
+  
+    const fcTransLateText = async (language) => {
+        const resCreateInvoice = await GetTranslateHolder(
+          listTextPlaceHolder.create_invoice,
+          language
+        );
+      setStateText({
+        create_invoice: resCreateInvoice
+      });
+    };
+  
+    useEffect(() => {
+      if (!languageUserApi) {
+        fcTransLateText('en')
+      } else fcTransLateText(languageUserApi)
+    }, [languageUserApi]);
+
+
     return (
         <>
-        <HeadingTab><Translate>Create Invoice</Translate></HeadingTab>
+        <HeadingTab>{stateText.create_invoice}</HeadingTab>
         <ContainerSubTab>
             <CsButton isActive={isActive > 1} role="presentation" onClick={handleMinusTabActive}>
                 &lt;

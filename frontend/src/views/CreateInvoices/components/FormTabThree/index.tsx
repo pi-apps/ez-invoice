@@ -5,8 +5,6 @@ import { useContext } from 'react';
 import { AddIcon2 } from 'components/Svg';
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import { useEffect, useMemo, useState } from 'react';
-import { Translate } from "react-auto-translate";
-import { getLanguageTrans } from 'state/LanguageTrans';
 import Navbar from 'react-bootstrap/esm/Navbar';
 import styled from 'styled-components';
 import { Controller } from 'react-hook-form';
@@ -38,25 +36,88 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     });
   
     const listTextPlaceHolder = {
+      // text
+      notes_t: "Notes",
+      terms_t: "Terms",
+      subtotal_t: "Subtotal",
+      tax_t: "Tax",
+      total_t: "Total",
+      discount_t: "Discount",
+      shipping_t: "Shipping",
+      amount_paid_t: "Amount paid",
+      balance_due_t: "Balance Due",
+      preview: "Preview",
+
+      // placeholder
       notes: "Description of service or product",
     };
+
+    const [stateText, setStateText] = useState(listTextPlaceHolder);
   
-    const changeTextPlaceHolderLg = async () => {
+    const fcTransLateText = async (language) => {
       const resSenderEmail = await GetTranslateHolder(
           listTextPlaceHolder.notes,
-          languageUserApi
+          language
         );
-      setStateTextPlaceholder({
+        const resterms_t = await GetTranslateHolder(
+          listTextPlaceHolder.terms_t,
+          language
+        );
+        const resSubtotal_t = await GetTranslateHolder(
+          listTextPlaceHolder.subtotal_t,
+          language
+        );
+        const resTax_t = await GetTranslateHolder(
+          listTextPlaceHolder.tax_t,
+          language
+        );
+        const resTotal_t = await GetTranslateHolder(
+          listTextPlaceHolder.total_t,
+          language
+        );
+        const resDiscount_t = await GetTranslateHolder(
+          listTextPlaceHolder.discount_t,
+          language
+        );
+        const resShipping_t = await GetTranslateHolder(
+          listTextPlaceHolder.shipping_t,
+          language
+        );
+        const resAmountPaid_t = await GetTranslateHolder(
+          listTextPlaceHolder.amount_paid_t,
+          language
+        );
+        const resNotes_t= await GetTranslateHolder(
+          listTextPlaceHolder.notes_t,
+          language
+        );
+        const resBalance_t = await GetTranslateHolder(
+          listTextPlaceHolder.balance_due_t,
+          language
+        );
+        const resPreview_t = await GetTranslateHolder(
+          listTextPlaceHolder.preview,
+          language
+        );
+      setStateText({
         notes: resSenderEmail,
+        amount_paid_t: resAmountPaid_t,
+        balance_due_t: resBalance_t,
+        discount_t: resDiscount_t,
+        notes_t: resNotes_t,
+        shipping_t: resShipping_t,
+        subtotal_t: resSubtotal_t,
+        tax_t: resTax_t,
+        terms_t: resterms_t,
+        total_t: resTotal_t,
+        preview: resPreview_t,
       });
     };
   
     useEffect(() => {
-      if (!languageUserApi || languageUserApi === 'en')     
-      return setStateTextPlaceholder({
-          notes: "Description of service or product",
-        });;
-      changeTextPlaceHolderLg()
+      if (!languageUserApi) {
+        fcTransLateText('en')
+      } else fcTransLateText(languageUserApi)
     }, [languageUserApi]);
     
     const totalPrice = (fields) => {
@@ -104,7 +165,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
             <CsFlex>
                 {/* Notes */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B"><Translate>Notes</Translate></CsLabel>
+                    <CsLabel mt="1rem" color="#64748B">{stateText.notes_t}</CsLabel>
                 </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -117,7 +178,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                                 name="notes"
                                 // type="text"
                                 onBlur={field.onBlur}
-                                placeholder={`${stateTextPlaceholder.notes}`} 
+                                placeholder={`${stateText.notes}`} 
                                 value={field.value}
                                 onChange={field.onChange}
                             />
@@ -129,7 +190,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                 
                   {/* Terms */}
                   <Flex width='100%'>
-                    <CsLabel mt="2rem" color="#64748B"><Translate>Terms</Translate></CsLabel>
+                    <CsLabel mt="2rem" color="#64748B">{stateText.terms_t}</CsLabel>
                 </Flex>
 
                 <ContainerInput>
@@ -154,7 +215,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
 
                 <CsContentInfo>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
+                        <CsTextLeft>{stateText.subtotal_t}</CsTextLeft>
                         <CsTextRight fontSize='14px' bold>{!total ? 0 : <>
                           {total && typeof total === 'number'  ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`: '0 Pi'}
                         </>}</CsTextRight>
@@ -182,32 +243,32 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                             typeDiscount === false && (
                                 <CsButtonAddTpye onClick={() => setTypeDiscount(true)}>
                                     <CsAddIcon/>
-                                    <CsTextType><Translate>Discount</Translate></CsTextType>
+                                    <CsTextType>{stateText.discount_t}</CsTextType>
                                 </CsButtonAddTpye>
                             )
                         }
                         {typeShipping === false && (
                             <CsButtonAddTpye onClick={() => setTypeShipping(true)}>
                                 <CsAddIcon/>
-                                <CsTextType><Translate>Shipping</Translate></CsTextType>
+                                <CsTextType>{stateText.shipping_t}</CsTextType>
                             </CsButtonAddTpye>
                         )}
                         {typeTax === false && (
                             <CsButtonAddTpye onClick={() => setTypeTax(true)}>
                                 <CsAddIcon/>
-                                <CsTextType><Translate>Tax</Translate></CsTextType>
+                                <CsTextType>{stateText.tax_t}</CsTextType>
                             </CsButtonAddTpye>
                         )}
                     </Row>
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
+                        <CsTextLeft>{stateText.total_t}</CsTextLeft>
                         <CsTextRight bold>{!totalFinaly ? 0 : <>
                           {`${totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                         </> }</CsTextRight>
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft ><Translate>Amount paid</Translate></CsTextLeft>
+                        <CsTextLeft >{stateText.amount_paid_t}</CsTextLeft>
                           <CsAmountPaid>
                             <WrapInputAmountPaid>
                               <Controller
@@ -231,7 +292,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                     </Row>
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft><Translate>Balance Due</Translate>
+                        <CsTextLeft>{stateText.balance_due_t}
                         <ReferenceElement ref={targetRef}>
                           <HelpIcon color="#94A3B8" />
                         </ReferenceElement> 
@@ -249,7 +310,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
             </CsFlex>
       </CsContainer>
       <CsSubTotal>
-        <CsButtonAdd  endIcon={loadingPreview ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText><Translate>Preview</Translate> </CsText>}></CsButtonAdd>
+        <CsButtonAdd  endIcon={loadingPreview ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText>{stateText.preview} </CsText>}></CsButtonAdd>
       </CsSubTotal>
       </CsWrapperForm>
   )

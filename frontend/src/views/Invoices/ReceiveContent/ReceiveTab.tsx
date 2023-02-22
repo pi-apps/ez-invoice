@@ -1,5 +1,7 @@
 import { Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { MONTHS } from "config";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import { useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
 import { GetAnInvoice, UseGetAllInvoiceReceivedCore } from "state/invoice";
 import { getAccessToken, getUser } from "state/user";
@@ -29,6 +31,28 @@ const ReceiveTab = () => {
     return null;
   }
 
+  const userData = getUser();
+  const languageUserApi = userData?.language
+  const listText = {
+    no_data: "No Data",
+  };
+  const [stateText, setStateText] = useState(listText);
+  const fcTransLateText = async (language) => {
+    const resNoData = await GetTranslateHolder(
+        listText.no_data,
+        language
+      );
+      setStateText({
+      no_data: resNoData,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
+
   return (
     <CsWrapContainer>
       {items?.listReceived?.length && items?.isLoading === false ? (
@@ -57,7 +81,7 @@ const ReceiveTab = () => {
       ) : (
         <Flex width="100%" justifyContent="center" mt="2rem">
           <Text>
-            <Translate>No Data</Translate>
+            {stateText.no_data}
           </Text>
         </Flex>
       )}

@@ -6,14 +6,15 @@ import Row from 'components/Layout/Row';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useParams } from 'react-router-dom';
-import { getAccessToken } from 'state/user';
+import { getAccessToken, getUser } from 'state/user';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
 import Footer from '../Footer';
 import { Translate } from "react-auto-translate";
 import { InvoiceIdContext } from 'contexts/InVoiceIdContext';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 
 const CreateDetail = () => {
 
@@ -37,7 +38,120 @@ const CreateDetail = () => {
     }
     useEffect(()=> {
         setInvoiceId(items?.details?.invoiceId)
-    },[items.details])
+    },[items?.details])
+
+    // Trans language
+    const userData = getUser();
+    const languageUserApi = userData?.language
+    const listText = {
+      bill_from: "Bill From",
+      bill_to: "Bill To",
+      issue_date: "Issue Date",
+      due_date: "Due Date",
+      payment_terms: "Payment Terms",
+      po_number: "PO Number",
+      item: "Item",
+      quanlity: "Quanlity",
+      unit_price: "Unit Price",
+      total: "Total",
+      allowances: "Allowances",
+      amount_due: "Amount Due",
+      back: "Back",
+      tax: "Tax",
+      shipping: "Shipping",
+      discount: "Discount",
+    };
+    const [stateText, setStateText] = useState(listText);
+    const fcTransLateText = async (language) => {
+        const resBillFrom = await GetTranslateHolder(
+            listText.bill_from,
+            language
+        );
+        const resBillTo = await GetTranslateHolder(
+        listText.bill_to,
+        language
+        );
+        const resIssueDate = await GetTranslateHolder(
+        listText.issue_date,
+        language
+        );
+        const resDueDate = await GetTranslateHolder(
+        listText.due_date,
+        language
+        );
+        const resPaymentTerms = await GetTranslateHolder(
+        listText.payment_terms,
+        language
+        );
+        const resPoNumber = await GetTranslateHolder(
+        listText.po_number,
+        language
+        );
+        const resItem = await GetTranslateHolder(
+        listText.item,
+        language
+        );
+        const resQuanlity = await GetTranslateHolder(
+        listText.quanlity,
+        language
+        );
+        const resUnitPrice = await GetTranslateHolder(
+        listText.unit_price,
+        language
+        );
+        const resTotal = await GetTranslateHolder(
+        listText.total,
+        language
+        );
+        const resAllowances = await GetTranslateHolder(
+        listText.allowances,
+        language
+        );
+        const resAmountDue = await GetTranslateHolder(
+        listText.amount_due,
+        language
+        );
+        const resBack = await GetTranslateHolder(
+            listText.back,
+            language
+        );
+        const resTax = await GetTranslateHolder(
+            listText.tax,
+            language
+        );
+            const resShipping = await GetTranslateHolder(
+            listText.shipping,
+            language
+        );
+            const resDiscount = await GetTranslateHolder(
+            listText.discount,
+            language
+        );
+        setStateText({
+            allowances: resAllowances,
+            amount_due: resAmountDue,
+            bill_from: resBillFrom,
+            bill_to: resBillTo,
+            due_date: resDueDate,
+            issue_date: resIssueDate,
+            item: resItem,
+            payment_terms: resPaymentTerms,
+            po_number: resPoNumber,
+            quanlity: resQuanlity,
+            total: resTotal,
+            unit_price: resUnitPrice,
+            back: resBack,
+            discount: resDiscount,
+            shipping: resShipping,
+            tax: resTax,
+      });
+    };
+  
+    useEffect(() => {
+      if (!languageUserApi) {
+        fcTransLateText('en')
+      } else fcTransLateText(languageUserApi)
+    }, [languageUserApi]);
 
     return (
         <PageFullWidth>
@@ -60,7 +174,7 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Bill From</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.bill_from}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -68,7 +182,7 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Bill To</CsTextLeft>
+                                        <CsTextLeft>{stateText.bill_to}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -76,15 +190,15 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Issue Date</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.issue_date}</CsTextLeft>
                                         {convertDate(details?.issueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Due Date</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.due_date}</CsTextLeft>
                                         {convertDate(details?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Payment Terms</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.payment_terms}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -93,7 +207,7 @@ const CreateDetail = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>PO Number</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.po_number}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -104,10 +218,10 @@ const CreateDetail = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%"><Translate>item</Translate></ColFirstth>
-                                        <Colth width="20%"><Translate>quantity</Translate></Colth>
-                                        <Colth width="20%"><Translate>unit price</Translate></Colth>
-                                        <Colth width="20%"><Translate>total</Translate></Colth>
+                                        <ColFirstth width="20%">{stateText.item}</ColFirstth>
+                                        <Colth width="20%">{stateText.quanlity}</Colth>
+                                        <Colth width="20%">{stateText.unit_price}</Colth>
+                                        <Colth width="20%">{stateText.total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
                                         return(
@@ -151,7 +265,7 @@ const CreateDetail = () => {
                                     }
  
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Total</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.total}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -159,7 +273,7 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Allowances</Translate></CsTextLeft>
+                                        <CsTextLeft><Translate>{stateText.allowances}</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -167,7 +281,7 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Amount Due</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.amount_due}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -181,7 +295,7 @@ const CreateDetail = () => {
                                     <CsNavItem>
                                         <NavLink to="/newInvoice">
                                             <CsButton>
-                                                <Translate>Back</Translate>
+                                                {stateText.back}
                                             </CsButton>
                                         </NavLink>
                                     </CsNavItem>

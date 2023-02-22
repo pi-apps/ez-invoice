@@ -1,5 +1,5 @@
 import { Button, useModal } from "@devfedeltalabs/pibridge_uikit";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -10,6 +10,8 @@ import DownloadModal from "components/DownloadModal";
 import { Translate } from "react-auto-translate";
 import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 import { getInvoiceId } from "state/newInvoiceId";
+import { getUser } from "state/user";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
 
 const styles = {
   main: {
@@ -40,6 +42,44 @@ const Footer = ({ isActive, invoiceId }) => {
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<DownloadModal invoiceId={invoiceId}/>);
 
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
+
+  const listTextPlaceHolder = {
+    // text
+    histoty_t: "History",
+    download_t: "Download",
+    send_t: "Send",
+  };
+
+  const [stateText, setStateText] = useState(listTextPlaceHolder);
+
+  const fcTransLateText = async (language) => {
+      const resHistory_t = await GetTranslateHolder(
+        listTextPlaceHolder.histoty_t,
+        language
+      );
+      const resDownload_t = await GetTranslateHolder(
+        listTextPlaceHolder.download_t,
+        language
+      );
+      const resSend_t = await GetTranslateHolder(
+          listTextPlaceHolder.send_t,
+          language
+        );
+    setStateText({
+      download_t: resDownload_t,
+      histoty_t: resHistory_t,
+      send_t: resSend_t,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
+
   const handleMenu = (action) => {
     switch (action) {
       case "invoice":
@@ -50,7 +90,6 @@ const Footer = ({ isActive, invoiceId }) => {
         break;
     }
   };
-  // const invoiceId = getInvoiceId();
   return (
     <NavCustom
       activeKey="/"
@@ -60,7 +99,7 @@ const Footer = ({ isActive, invoiceId }) => {
       <Nav.Item style={styles.navItem}>
         <NavLink to="/history">
           <CsButton style={{ background: "#F8F5FF" }}>
-            <Translate>History</Translate>
+            {stateText.histoty_t}
           </CsButton>
         </NavLink>
       </Nav.Item>
@@ -70,7 +109,7 @@ const Footer = ({ isActive, invoiceId }) => {
           disabled={(isActive === 1 || isActive === 2) || !invoiceId}
           onClick={openLoginModal}
         >
-            <Translate>Download</Translate>
+            {stateText.download_t}
           </CsButtonDownload>
       </Nav.Item>
 
@@ -79,7 +118,7 @@ const Footer = ({ isActive, invoiceId }) => {
           <CsButton
             disabled={(isActive === 1 || isActive === 2) || !invoiceId}
           >
-            <Translate>Send</Translate>
+            {stateText.send_t}
           </CsButton>
         </NavLink>
       </Nav.Item>

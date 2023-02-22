@@ -7,8 +7,37 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import Card from './Card'
 import { Translate } from "react-auto-translate";
+import { getUser } from 'state/user'
 
 const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFields, remove, register, control}) => {
+
+  const userData = getUser();
+  const languageUserApi = userData?.language
+  const listText = {
+    amount_due: "Amount Due",
+    line_item: "Line item",
+  };
+  const [stateText, setStateText] = useState(listText);
+  const fcTransLateText = async (language) => {
+      const resAmountDue = await GetTranslateHolder(
+        listText.amount_due,
+        language
+      );
+      const resLineItem = await GetTranslateHolder(
+        listText.amount_due,
+        language
+      );
+      setStateText({
+      amount_due: resAmountDue,
+      line_item: resLineItem,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
  
   const totalPrice = (fields) => {
     return fields.reduce((sum, i) => {
@@ -22,6 +51,7 @@ const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFiel
     const total = useMemo(() => {
       return totalPrice(controlledFields)
     },[controlledFields]);
+    
     
   return (
     <CsWrapperForm>
@@ -38,11 +68,11 @@ const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFiel
           append({ name: "", quantity: 0, price: 0 });
         }}>
           <CsAddIcon />
-          <CsText><Translate>Line item</Translate></CsText>
+          <CsText>{stateText.line_item}</CsText>
         </CsButtonAdd>
         <hr style={{margin: '10px 0'}} />
         <Row mt="16px" style={{justifyContent: "space-between"}}>
-            <CsTextLeft><Translate>Amount Due</Translate></CsTextLeft>
+            <CsTextLeft>{stateText.amount_due}</CsTextLeft>
             <CsTextRight bold>
               {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}
               </CsTextRight>

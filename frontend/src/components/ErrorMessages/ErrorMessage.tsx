@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import { Translate } from "react-auto-translate";
+import { useEffect, useState } from "react";
+import { getUser } from "state/user";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
 
 interface Props {
   errors?: any;
@@ -8,10 +11,35 @@ interface Props {
 
 function ErrorMessages({ errors, name }: Props) {
   const logerror = errors[name];
+
+   // Translate
+   const userData = getUser();
+   const languageUserApi = userData?.language
+ 
+   const [stateText, setStateText] = useState({
+     errorText: "",
+   });
+
+   const fcTransLateText = async (language) => {
+     const resStartNow = await GetTranslateHolder(
+        logerror.message,
+        language
+       );
+       setStateText({
+        errorText: resStartNow,
+     });
+   };
+ 
+   useEffect(() => {
+     if (!languageUserApi) {
+       fcTransLateText('en')
+     } else fcTransLateText(languageUserApi)
+   }, [languageUserApi, logerror]);
+
   return (
     <ErrorMess>
-      {logerror ? <Translate>{logerror && logerror.message}</Translate> : null}
-      {/* {logerror && logerror.message} */}
+      {/* {logerror ? <Translate>{logerror && logerror.message}</Translate> : null} */}
+      {logerror && stateText.errorText}
     </ErrorMess>
   );
 }

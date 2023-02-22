@@ -6,10 +6,12 @@ import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
 import { Fragment } from 'react';
 import { Translate } from "react-auto-translate";
+import { getAccessToken, getUser } from 'state/user';
+import { useEffect, useState } from 'react';
+import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import Nav from 'react-bootstrap/Nav';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
-import { getAccessToken } from 'state/user';
 import styled from 'styled-components';
 
 const DetailSent = () => {
@@ -31,6 +33,126 @@ const DetailSent = () => {
         }
         return <Skeleton width={60} />
     }
+
+    // Trans languages
+    const userData = getUser();
+    const languageUserApi = userData?.language
+    const listText = {
+      bill_from: "Bill From",
+      bill_to: "Bill To",
+      issue_date: "Issue Date",
+      due_date: "Due Date",
+      payment_terms: "Payment Terms",
+      po_number: "PO Number",
+      item: "Item",
+      quanlity: "Quanlity",
+      unit_price: "Unit Price",
+      total: "Total",
+      subtotal: "Subtotal",
+      allowances: "Allowances",
+      tax: "Tax",
+      shipping: "Shipping",
+      discount: "Discount",
+      amount_due: "Amount Due",
+      back: "Back",
+    };
+    const [stateText, setStateText] = useState(listText);
+    const fcTransLateText = async (language) => {
+        const resBillFrom = await GetTranslateHolder(
+            listText.bill_from,
+            language
+        );
+        const resBillTo = await GetTranslateHolder(
+        listText.bill_to,
+        language
+        );
+        const resIssueDate = await GetTranslateHolder(
+        listText.issue_date,
+        language
+        );
+        const resDueDate = await GetTranslateHolder(
+        listText.due_date,
+        language
+        );
+        const resPaymentTerms = await GetTranslateHolder(
+        listText.payment_terms,
+        language
+        );
+        const resPoNumber = await GetTranslateHolder(
+        listText.po_number,
+        language
+        );
+        const resItem = await GetTranslateHolder(
+        listText.item,
+        language
+        );
+        const resQuanlity = await GetTranslateHolder(
+        listText.quanlity,
+        language
+        );
+        const resUnitPrice = await GetTranslateHolder(
+        listText.unit_price,
+        language
+        );
+        const resTotal = await GetTranslateHolder(
+        listText.total,
+        language
+        );
+        const resSubtotal = await GetTranslateHolder(
+        listText.subtotal,
+        language
+        );
+        const resAllowances = await GetTranslateHolder(
+        listText.allowances,
+        language
+        );
+        const resTax = await GetTranslateHolder(
+        listText.tax,
+        language
+        );
+        const resShipping = await GetTranslateHolder(
+        listText.shipping,
+        language
+        );
+        const resDiscount = await GetTranslateHolder(
+        listText.discount,
+        language
+        );
+        const resAmountDue = await GetTranslateHolder(
+        listText.amount_due,
+        language
+        );
+        const resBack = await GetTranslateHolder(
+            listText.back,
+            language
+            );
+        setStateText({
+            allowances: resAllowances,
+            amount_due: resAmountDue,
+            bill_from: resBillFrom,
+            bill_to: resBillTo,
+            discount: resDiscount,
+            due_date: resDueDate,
+            issue_date: resIssueDate,
+            item: resItem,
+            payment_terms: resPaymentTerms,
+            po_number: resPoNumber,
+            quanlity: resQuanlity,
+            shipping: resShipping,
+            subtotal: resSubtotal,
+            tax: resTax,
+            total: resTotal,
+            unit_price: resUnitPrice,
+            back: resBack,
+      });
+    };
+  
+    useEffect(() => {
+      if (!languageUserApi) {
+        fcTransLateText('en')
+      } else fcTransLateText(languageUserApi)
+    }, [languageUserApi]);
+    
     return (
         <PageFullWidth>
             <CsContainer>

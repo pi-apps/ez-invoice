@@ -17,6 +17,7 @@ import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 import { getInvoiceId } from "state/newInvoiceId";
 import { getAccessToken, getUser } from "state/user";
 import { AnyARecord } from "dns";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
 
 interface Props {
   onDismiss?: () => void;
@@ -101,18 +102,6 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
         }
       );
       setUrlDownload(response.data);
-      fetch(response.data).then(response => {
-        console.log("response", response);
-          response.blob().then(blob => {
-              // Creating new object of PDF file
-              const fileURL = window.URL.createObjectURL(blob);
-              // Setting various property values
-              let alink = document.createElement('a');
-              alink.href = fileURL;
-              alink.download = `${invoiceId}.pdf`;
-              alink.click();
-          })
-      })
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
@@ -124,6 +113,48 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
     getUrlDownload()
   }, [invoiceId])
 
+  // Translate
+  const listText = {
+    download_invoice: "Download Invoice",
+    choose_file: "Please choose the location for file.",
+    hard_disk: "Hard disk",
+  };
+  const [stateText, setStateText] = useState(listText);
+  const fcTransLateText = async (language) => {
+      const resDownloadInvoice = await GetTranslateHolder(
+        listText.download_invoice,
+        language
+      );
+      const resChooseFile = await GetTranslateHolder(
+        listText.choose_file,
+        language
+      );
+      const resHardDisk = await GetTranslateHolder(
+        listText.hard_disk,
+        language
+      );
+      setStateText({
+      download_invoice: resDownloadInvoice,
+      choose_file: resChooseFile,
+      hard_disk: resHardDisk,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
+
+  const shortUrl = (url: any) => {
+    const stringWalletAdrress = String(url);
+    const short = `${stringWalletAdrress.substring(
+      0,
+      15,
+    )}...${stringWalletAdrress.substring(stringWalletAdrress.length - 8)}`;
+    return short;
+  };
+
   return (
     <TranSlatorModal>
       <Modal
@@ -134,27 +165,27 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
       >
         <Flex flexDirection="column" width="100%">
           <Text bold fontSize="18px" width="100%" textAlign="center">
-            <Translate>Download Invoice</Translate>
+            {stateText.download_invoice}
           </Text>
           <Text width="100%" textAlign="center" color="textSubtle" mt="10px">
-            <Translate>Please choose the location for file.</Translate>
+            {stateText.choose_file}
           </Text>
 
-          <Flex mt="1rem" justifyContent="space-between">
-            <LinkDownload href={urlDownload} download>
-              {urlDownload},
-              {invoiceId}
-              Hard disk
+          <Flex mt="1rem" justifyContent="center">
+              <FlexUrl>
+                <TextUrl>{shortUrl(urlDownload)}</TextUrl>
+              </FlexUrl>
+            {/* <LinkDownload href={urlDownload} download>
               <CsButton
                 padding="0"
                 width="100%"
                 variant="secondary"
                 disabled={!urlDownload && isLoading}
                 onClick={() => getUrlDownload()}
-                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Hard disk</Translate>}
+                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Text>{stateText.hard_disk}</Text>}
               >
               </CsButton> 
-              </LinkDownload>
+              </LinkDownload> */}
 
             {/* {accessTokenAuth ? (
               <Button
@@ -187,8 +218,8 @@ const LinkDownload = styled.a`
   height: 48px;
 `;
 
-const CsText = styled(Text)`
-  justify-content: center;
-`
+const FlexUrl = styled(Flex)``
+
+const TextUrl = styled(Text)``
 
 export default DownloadModal;

@@ -1,9 +1,11 @@
 import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddIcon, CloseIcon } from "components/Svg";
 import ImageUploading from "react-images-uploading";
 import styled from "styled-components";
 import { Translate } from "react-auto-translate";
+import { getUser } from "state/user";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
 
 function ReactImageUpload({images , setValue }) {
   const [ logoImg, setLogoImages] = useState([]);
@@ -15,6 +17,32 @@ function ReactImageUpload({images , setValue }) {
   const onImageDelete = () => {
     setLogoImages([])
   }
+
+  const DataAb = getUser();
+  const languageUserApi = DataAb?.language
+  
+  const listTextPlaceHolder = {
+    // text normal
+    add_your_logo: 'Add your logo',
+  };
+
+  const [stateText, setStateText] = useState(listTextPlaceHolder);
+
+  const fcTransLateText = async (language) => {
+    const resAddLogo = await GetTranslateHolder(
+        listTextPlaceHolder.add_your_logo,
+        language
+      );
+    setStateText({
+        add_your_logo: resAddLogo,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+        fcTransLateText('en')
+      } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
 
   return (
     <div>
@@ -37,7 +65,7 @@ function ReactImageUpload({images , setValue }) {
                 logoImg.length === 0 && (
                     <CsButtonAdd onClick={onImageUpload}>
                         <CsAddIcon />
-                        <CsText ml="10px"><Translate>Add your logo</Translate></CsText>
+                        <CsText ml="10px">{stateText.add_your_logo}</CsText>
                     </CsButtonAdd>
                 )
             }

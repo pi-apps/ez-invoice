@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Flex, Image, Text } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink, useParams } from "react-router-dom";
 import { Translate } from "react-auto-translate";
+import { getUser } from "state/user";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import { UndefineIcon } from "components/Svg";
 
 interface Props {
@@ -25,6 +27,48 @@ const Card: React.FC<Props> = ({
   paid,
   invoiceNumber
  }) => {
+
+  function convertDate(date: any) {
+    if (date) {
+      const today = new Date(date)
+      const dd = String(today.getDate()).padStart(2, '0')
+      const mm = String(today.getMonth() + 1).padStart(2, '0')
+      const yyyy = today.getFullYear()
+      return (
+        <CsText >{dd}/{mm}/{yyyy}</CsText>
+      )
+    }
+    return null
+  }
+
+  const userData = getUser();
+  const languageUserApi = userData?.language
+  const listText = {
+    unpaid: "Unpaid",
+    paid: "paid",
+  };
+  const [stateText, setStateText] = useState(listText);
+  const fcTransLateText = async (language) => {
+      const resUnpaid = await GetTranslateHolder(
+        listText.unpaid,
+        language
+      );
+      const resPaid = await GetTranslateHolder(
+        listText.paid,
+        language
+      );
+      setStateText({
+      unpaid: resUnpaid,
+      paid: resPaid,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
+
   return (
     <NavLink to={`/detailSent/${invoiceId}`}>
       <CsContainer>
@@ -55,11 +99,11 @@ const Card: React.FC<Props> = ({
           <CsCol>
             { !paid  ? (
               <CsStaTusUnpaid>
-                <Translate>Unpaid</Translate>
+                {stateText.unpaid}
               </CsStaTusUnpaid>
             ) : (
               <CsStaTusPaid>
-                <Translate>Paid</Translate>
+                {stateText.paid}
               </CsStaTusPaid>
             )}
           </CsCol>

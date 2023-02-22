@@ -21,30 +21,68 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
 
-    const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
-      name: "Description of service or product",
-    });
-  
     const listTextPlaceHolder = {
       name: "Description of service or product",
+      item: "Item",
+      please_input_alphabet: "Please input alphabet",
+      max_character_100: "Max length is 100 characters",
+      please_input_number: "Please input number",
+      description_requeried: "Description is required",
+      greater_than_0: "Please input number greater than 0",
+      amount: "Amount",
     };
-  
-    const changeTextPlaceHolderLg = async () => {
-      const resSenderEmail = await GetTranslateHolder(
+
+    const [stateTextPlaceholder, setStateTextPlaceholder] = useState(listTextPlaceHolder);
+
+    const fcTransLateText = async (language) => {
+        const resName = await GetTranslateHolder(
           listTextPlaceHolder.name,
-          languageUserApi
+          language
+        );
+        const resItem = await GetTranslateHolder(
+          listTextPlaceHolder.item,
+          language
+        );
+        const resAlphabet = await GetTranslateHolder(
+          listTextPlaceHolder.please_input_alphabet,
+          language
+        );
+        const res100 = await GetTranslateHolder(
+          listTextPlaceHolder.max_character_100,
+          language
+        );
+        const resInputNumber = await GetTranslateHolder(
+          listTextPlaceHolder.please_input_number,
+          language
+        );
+        const resDesRequired = await GetTranslateHolder(
+          listTextPlaceHolder.description_requeried,
+          language
+        );
+        const resThan0 = await GetTranslateHolder(
+          listTextPlaceHolder.greater_than_0,
+          language
+        );
+        const resAmount = await GetTranslateHolder(
+          listTextPlaceHolder.amount,
+          language
         );
       setStateTextPlaceholder({
-        name: resSenderEmail,
+        name: resName,
+        item: resItem,
+        please_input_alphabet: resAlphabet,
+        description_requeried: resDesRequired,
+        greater_than_0: resThan0,
+        max_character_100: res100,
+        please_input_number: resInputNumber,
+        amount: resAmount,
       });
     };
   
     useEffect(() => {
-      if (!languageUserApi || languageUserApi === 'en')     
-      return setStateTextPlaceholder({
-          name: "Description of service or product",
-        });;
-      changeTextPlaceHolderLg()
+      if (!languageUserApi) {
+        fcTransLateText('en')
+      } else fcTransLateText(languageUserApi)
     }, [languageUserApi]);
     
     
@@ -56,7 +94,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     <CsWrapperCard>
         <CsHeading>
             <CsFlexHeading>
-                <CsTextHeading><Translate>Item</Translate> # {index + 1}</CsTextHeading>
+                <CsTextHeading>{stateTextPlaceholder.item} # {index + 1}</CsTextHeading>
                 <CsCloseIcon role="presentation" onClick={handleCloseItem}>
                   <CloseIcon />
                 </CsCloseIcon>
@@ -81,10 +119,10 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                   />
                 </WrapInput>
             </ContainerInput>
-            {item.name === ' ' ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input alphabet</Translate></Text> : item.name.length > 100 && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Max length is 100 characters</Translate></Text> 
+            {item.name === ' ' ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateTextPlaceholder.please_input_alphabet}</Text> : item.name.length > 100 && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateTextPlaceholder.max_character_100}</Text> 
             || 
             <>
-              {(control?._formState?.touchedFields?.items?.[0]?.name === true && item.name === '') && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Description is required</Translate></Text>}
+              {(control?._formState?.touchedFields?.items?.[0]?.name === true && item.name === '') && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateTextPlaceholder.description_requeried}</Text>}
             </>
             }
             <CsRowInput>
@@ -101,9 +139,9 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                         )}
                         />
                 </WrapInput>
-                {(control?._formState?.touchedFields?.items?.[0]?.quantity === true && item.quantity === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
+                {(control?._formState?.touchedFields?.items?.[0]?.quantity === true && item.quantity === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateTextPlaceholder.please_input_number}</Text> : 
                   <>
-                    {(Number(item.quantity) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
+                    {(Number(item.quantity) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateTextPlaceholder.greater_than_0}</Text>}
                   </>
                 }
                 {/* {(item.quantity === '' || Number(item.quantity) <= 0 )&& <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text>} */}
@@ -124,16 +162,16 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                         )}
                       />
                 </WrapInput>
-                  {(control?._formState?.touchedFields?.items?.[0]?.price === true && item.price === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number</Translate></Text> : 
+                  {(control?._formState?.touchedFields?.items?.[0]?.price === true && item.price === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateTextPlaceholder.please_input_number}</Text> : 
                   <>
-                    {(Number(item.price) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Please input number greater than 0</Translate></Text>}
+                    {(Number(item.price) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateTextPlaceholder.greater_than_0}</Text>}
                   </>}
               </ContainerInputQuantity>
             </CsRowInput>
         </CsContent>
 
         <Flex mt="24px">
-            <Cstitle><Translate>Amount: </Translate></Cstitle>
+            <Cstitle><Translate>{stateTextPlaceholder.amount}: </Translate></Cstitle>
             <CsAmount>
               {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}  
             </CsAmount>
