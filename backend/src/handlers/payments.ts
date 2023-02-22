@@ -82,7 +82,7 @@ export default function mountPaymentsEndpoints(router: Router) {
 
             // order doesn't exist 
             if (!order) {
-                return res.status(400).json({ message: "Order not found" });
+                return res.status(200).json({ message: payment });
             }
 
             // check the transaction on the Pi blockchain
