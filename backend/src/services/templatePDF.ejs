@@ -6,7 +6,8 @@
   <style>
     body {
         font-family: Arial, Helvetica, sans-serif;
-        padding: 80px;
+        font-size: 12px;
+        padding: 20px;
     }
     table, td, th {  
         border: 1px solid #ddd;
@@ -18,57 +19,73 @@
         width: 100%;
     }
     th, td {
-        padding: 10px;
+        padding: 8px;
+    }
+    .first-column {
+        width: 50%;
+        border: none;
+        padding: 6px;
+    }
+    .second-column, .third-column {
+        width: 25%;
+        border: none;
+        padding: 6px;
+        text-align: right;
     }
   </style>
   <body>
-    <div style="display: flex; flex-direction: row;">
-      <div style="flex: 1;">
-        <% if (logoUrl) { %>
-        <img src="<%= logoUrl %>" height="80px" width="80px" />
-        <% } %>
-      </div>
-      <div style="flex: 1; text-align: right;">
-        <h1 style="text-align: right;"><%= text_title %></h1>
-        <h3 style="text-align: right;">#<%= invoiceNumber %></h3>
-      </div>
-    </div>
-    <div style="display: flex; flex-direction: row;">
-      <div style="flex: 1;">
-        <div style="display: flex; flex-direction: row;">
-          <div style="flex: 1;">
-            <p><%= text_bill_from %>:</p>
-            <p style="font-weight: bold"><%= billFrom %></p>
-            <p><%= text_bill_to %>:</p>
-            <p style="font-weight: bold"><%= billTo %></p>
-          </div>
-          <div style="flex: 1; text-align: right;"></div>
-        </div>
-      </div>
-      <div style="flex: 1;">
-        <div style="display: flex; flex-direction: row;">
-          <div style="flex: 1; text-align: right;">
-            <p><%= text_issue_date %>:</p>
-            <p><%= text_due_date %>:</p>
-            <% if (paymentTerms) { %>
-              <p><%= text_payment_terms %>:</p>
+    <table style="border-collapse: collapse; border: none;">
+      <tr style="border: none; padding: 0px;">
+        <th class="first-column">
+          <% if (logoUrl) { %>
+            <img src="<%= logoUrl %>" height="80px" width="80px" />
             <% } %>
-            <% if (poNumber) { %>
-              <p><%= text_po_number %>:</p>
-            <% } %>
-            <p style="font-weight: bold"><%= text_balance_due %></p>
-          </div>
-          <div style="flex: 1; text-align: right;">
-            <p><%= issueDate %></p>
-            <p><%= dueDate %></p>
-            <p><%= paymentTerms %></p>
-            <p><%= poNumber %></p>
-            <p style="font-weight: bold"><%= amountDue %> Pi</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <table>
+        </th>
+        <th class="second-column"></th>
+        <th class="third-column">
+          <h1 style="text-align: right;"><%= text_title %></h1>
+        </th>
+      </tr>
+      <tr style="border: none; padding: 0px;">
+        <td class="first-column"></td>
+        <td class="second-column"></td>
+        <th class="third-column">
+          <h3 style="text-align: right;">#<%= invoiceNumber %></h3>
+        </th>
+      </tr>
+     </table>
+    <table style="border-collapse: collapse; border: none; margin-bottom: 10px;">
+      <tr style="border: none; padding: 0px;">
+        <th class="first-column"><%= text_bill_from %>:</th>
+        <th class="second-column"><%= text_issue_date %>:</th>
+        <th class="third-column"><%= issueDate %></th>
+      </tr>
+      <tr style="border: none; padding: 0px;">
+        <td class="first-column"><%= billFrom %></td>
+        <td class="second-column"><%= text_due_date %>:</td>
+        <td class="third-column"><%= dueDate %></td>
+      </tr>
+      <tr style="border: none; padding: 0px;">
+        <td class="first-column"><%= text_bill_to %>:</td>
+        <td class="second-column"> 
+            <%= text_payment_terms %>:
+        </td>
+        <td class="third-column"><%= paymentTerms %></td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"><%= billTo %></td>
+        <td class="second-column">
+            <%= text_po_number %>:
+        </td>
+        <td class="third-column"><%= poNumber %></td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"></td>
+        <td class="second-column"><%= text_balance_due %>:</td>
+        <td class="third-column"><%= amountDue %> Pi</td>
+      </tr>
+    </table>
+    <table style="margin-bottom: 10px;">
       <tr style="text-align: left;">
         <th style="text-transform:uppercase;"><%= text_item %></th>
         <th style="text-transform:uppercase;"><%= text_quantity %></th>
@@ -84,39 +101,78 @@
         </tr>
       <% } %>
     </table>
-    <div style="display: flex; flex-direction: row;">
-      <div style="flex: 1;">
-        </div>
-      <div style="flex: 1; text-align: right;">
-        <div style="display: flex; flex-direction: row;">
-          <div style="flex: 1; text-align: right;">
-            <p><%= text_subtotal %>:</p>
-            <% if (taxType == 1) { %>
-              <p><%= text_tax %> (<%= tax %>%):</p>
-            <% } else if (taxType == 2) { %>
-              <p><%= text_tax %>:</p>
-            <% } %>
-            <% if (discountType == 1) { %>
-              <% if (discount != 0) {%><p><%= text_discount %> (<%= discount %>%):</p><% } %>
-            <% } else if (discountType == 2) { %>
-              <% if (discount != 0) {%><p><%= text_discount %>:</p><% } %>
-            <% } %>
-            <% if (shipping != 0) {%><p><%= text_shipping %>:</p><% } %>
-            <p><%= text_total %>:</p>
-            <% if (amountPaid != 0) {%><p><%= text_amount_paid %>:</p><% } %>
-            <p><%= text_amount_due %>:</p>
-          </div>
-          <div style="flex: 1; text-align: right;">
-            <p><%= subTotal %> Pi</p>
-            <% if (taxType != 0) {%><p><%= taxType == 1 ? (subTotal * tax / 100) : tax %> Pi</p><% } %>
-            <% if (discountType == 1) { %> <% if (discount != 0) {%><p><%= ((subTotal + (subTotal * tax / 100)) * discount / 100) %> Pi</p><% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><p><%= discount %> Pi</p><% } %> <% } %>
-            <% if (shipping != 0) {%><p><%= shipping %> Pi</p><% } %>
-            <p><%= total %> Pi</p>
-            <% if (amountPaid != 0) {%><p><%= amountPaid %> Pi</p><% } %>
-            <p><%= amountDue %> Pi</p>
-          </div>
-        </div>
-        </div>
-    </div>
+    <table style="border-collapse: collapse; border: none;">
+      <tr style="border: none; padding: 0px;">
+        <th class="first-column"></th>
+        <th class="second-column">
+          <%= text_subtotal %>:
+        </th>
+        <th class="third-column">
+          <%= subTotal %> Pi
+        </th>
+      </tr>
+      <tr style="border: none; padding: 0px;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <% if (taxType == 1) { %>
+          <%= text_tax %> (<%= tax %>%):
+          <% } else if (taxType == 2) { %>
+          <%= text_tax %>:
+          <% } %>
+        </td>
+        <td class="third-column">
+          <% if (taxType != 0) {%><%= taxType == 1 ? (subTotal * tax / 100) : tax %> Pi<% } %>
+        </td>
+      </tr>
+      <tr style="border: none; padding: 0px;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <% if (discountType == 1) { %>
+            <% if (discount != 0) {%><%= text_discount %> (<%= discount %>%):<% } %>
+          <% } else if (discountType == 2) { %>
+            <% if (discount != 0) {%><%= text_discount %>:<% } %>
+          <% } %>
+        </td>
+        <td class="third-column">
+          <% if (discountType == 1) { %> <% if (discount != 0) {%><%= ((subTotal + (subTotal * tax / 100)) * discount / 100) %> Pi<% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><%= discount %> Pi<% } %> <% } %>
+        </td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <%= text_shipping %>:
+        </td>
+        <td class="third-column">
+          <%= shipping %> Pi
+        </td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <%= text_total %>:
+        </td>
+        <td class="third-column">
+          <%= total %> Pi
+        </td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <%= text_amount_paid %>:
+        </td>
+        <td class="third-column">
+          <%= amountPaid %> Pi
+        </td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <%= text_amount_due %>:
+        </td>
+        <td class="third-column">
+          <%= amountDue %> Pi
+        </td>
+      </tr>
+    </table>
   </body>
 </html>
