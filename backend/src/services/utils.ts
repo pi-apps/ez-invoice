@@ -145,6 +145,7 @@ async function sendEmail(invoice: any, email: string, username: string, signatur
   }
   const langArr = lang.split(":");
   const templatePath = "send-invoice.html";
+  const paymentUrlOptional = `${process.env.PAYMENT_URL}/${signature}`.split("://")[1];
   const params = {
     "text_new_invoice": langArr[0] || lang_email["text_new_invoice"],
     "text_sent_invoice": langArr[1] || lang_email["text_sent_invoice"],
@@ -158,6 +159,7 @@ async function sendEmail(invoice: any, email: string, username: string, signatur
     "invoiceNumber": invoice.invoiceNumber,
     "amountDue": invoice.amountDue,
     "paymentUrl": `${process.env.PAYMENT_GATEWAY_URL}/${signature}`,
+    "paymentUrlOptional": `https://${paymentUrlOptional}`,
   }
   // Send otp via email
   await sesService.sendEmailByTemplate(1, [email], templatePath, params);
