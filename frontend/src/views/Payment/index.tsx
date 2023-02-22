@@ -24,7 +24,7 @@ import BigNumber from "bignumber.js";
 
 const Payment = () => {
     const  { signature } = useParams()
-   
+    const navigate = useNavigate();
     const items = GetAnInvoice();
     const { toastSuccess, toastError } = useToast()
     const userData = getUser()
@@ -269,7 +269,7 @@ const Payment = () => {
                                     </Row>
                                 </CsContentInfo>
                             </WContent>
-                            <Flex width="100%" justifyContent="center" mt="1rem">
+                            <Flex width="100%" justifyContent="center" mt="1rem" flexDirection="column">
                                 <Button 
                                     width="100%" 
                                     height="50px"
@@ -278,6 +278,16 @@ const Payment = () => {
                                     endIcon={pendingPayment ? <AutoRenewIcon color="textDisable" spin/> : null}
                                 >
                                     <Translate>Pay now</Translate>
+                                </Button>
+                                <Button 
+                                    width="100%" 
+                                    height="50px"
+                                    onClick={()=> 
+                                        navigate('/invoice')
+                                    }
+                                    mt="1rem"
+                                >
+                                    <Translate>Back</Translate>
                                 </Button>
                             </Flex>
                         </Flex>
