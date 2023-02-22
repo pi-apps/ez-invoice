@@ -6,7 +6,7 @@ import Row from 'components/Layout/Row';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useParams } from 'react-router-dom';
-import { getAccessToken } from 'state/user';
+import { getAccessToken, getUser } from 'state/user';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
 import Footer from '../Footer';
