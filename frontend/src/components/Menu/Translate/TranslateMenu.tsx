@@ -9,6 +9,8 @@ import Langauges from './Languages.json'
 import { axiosClient } from "config/htttp";
 import { getAccessToken, getUser } from "state/user";
 import { setUser } from "state/user/actions";
+import { LanguagesContext } from "contexts/Translate";
+import useToast from "hooks/useToast";
 
 const TranslateMenu = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -19,6 +21,8 @@ const TranslateMenu = () => {
   const [nameCountryLanguage, setNameCountryLanguage] = useState(languageUserApi);
   const [isLoading, setIsLoading] = useState(false)
   const token = getAccessToken()
+  const { language, setLanguage } = useContext(LanguagesContext);
+  const { toastSuccess, toastError } = useToast();
 
 
   const changeLanguageUser = async (data) => {
@@ -78,6 +82,8 @@ const TranslateMenu = () => {
                     setNameCountryLanguage(item.name);
                     setIsShowMenu(!isShowMenu);
                     changeLanguageUser(item.code)
+                    setLanguage(item.code)
+                    // toastSuccess()
                   }}
                 >
                   {item.name}
