@@ -14,6 +14,7 @@ import Footer from '../Footer';
 import { InvoiceIdContext } from 'contexts/InVoiceIdContext';
 import { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 
 const CreateDetail = () => {
