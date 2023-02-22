@@ -10,6 +10,8 @@ import { getUser } from "../../state/user";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
 
+const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
+
 const Home = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -42,6 +44,10 @@ const Home = () => {
     } else fcTransLateText(languageUserApi)
   }, [languageUserApi]);
 
+  const toastAPIGOOGLE = () => {
+    toastSuccess("", <Text>{APIKEY_GOOGLE}</Text>)
+  }
+
   return (
     <PageFullWidth>
       <CsContainer>
@@ -65,6 +71,15 @@ const Home = () => {
             onClick={!userData ? openLoginModal : () => navigate("/invoice")}
           >
             {stateText.start_now}
+          </Button>
+        </Flex>
+        <Flex width="100%">
+          <Button
+            mt="1.5rem"
+            width="100%"
+            onClick={() => toastAPIGOOGLE()}
+          >
+            Toast APIGOOGLE
           </Button>
         </Flex>
       </CsContainer>

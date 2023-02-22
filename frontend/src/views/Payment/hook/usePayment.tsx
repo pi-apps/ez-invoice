@@ -2,15 +2,13 @@ import { PaymentDTO } from 'components/Menu/UserMenu/type';
 import { axiosClient } from 'config/htttp';
 import useToast from 'hooks/useToast';
 import { useCallback, useState } from 'react';
-import { Translate } from "react-auto-translate";
+import { useNavigate } from 'react-router-dom';
 
 export const usePayment = (signature:string, token:string) => {
-    console.log("signature", signature)
-    console.log("signature", token)
     const [ pendingPayment, setPendingPayment ] = useState(false)
-    const { toastError } = useToast()
+    const { toastError, toastSuccess } = useToast()
     const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Authorization': token,}};
-
+    const navigate = useNavigate();
     const handlePayment = useCallback(async () => {
         setPendingPayment(true)
         try {
@@ -40,7 +38,7 @@ export const usePayment = (signature:string, token:string) => {
                 
                 const onIncompletePaymentFound = (payment: PaymentDTO) => {
                     console.log("onIncompletePaymentFound", payment);
-                    return axiosClient.post('/payments/incomplete', {payment});
+                    return axiosClient.post('/payments/incomplete', {payment}, config);
                   }
                 
                 const onReadyForServerApproval = (paymentId: string) => {
@@ -49,14 +47,18 @@ export const usePayment = (signature:string, token:string) => {
                     axiosClient.post('/payments/approve', {paymentId, invoiceId}, config);
                   }
                 
-                const onReadyForServerCompletion = (paymentId: string, txid: string) => {
+                const onReadyForServerCompletion = async (paymentId: string, txid: string) => {
                     console.log("onReadyForServerCompletion", paymentId, txid);
-                    axiosClient.post('/payments/complete', {paymentId, txid}, config);
-                  }
+                    const resultComplete = await axiosClient.post('/payments/complete', {paymentId, txid}, config);
+                    if (resultComplete?.status === 200) {
+                        toastSuccess("Payment successfully")
+                        navigate('/invoice')
+                    }
+                  } 
                 
                 const onCancel = (paymentId: string) => {
                     console.log("onCancel", paymentId);
-                    return axiosClient.post('/payments/cancelled_payment', {paymentId});
+                    return axiosClient.post('/payments/cancelled_payment', {paymentId}, config );
                   }
                 
                 const onError = (error: Error, payment?: PaymentDTO) => {
