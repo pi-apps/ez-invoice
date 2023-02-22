@@ -7,7 +7,7 @@ export const GetTranslateHolder = async (dataText, language) => {
   if (language !== 'en') {
     try {
       const response = await axios.get(
-        `https://translation.googleapis.com/language/translate/v2?source=en&target=${language}&key=${APIKEY_GOOGLE}=${dataText}&format=text`, {headers: {}}
+        `https://translation.googleapis.com/language/translate/v2?source=en&target=${language}&key=AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs&q=${dataText}&format=text`, {headers: {}}
       );
       const res = response?.data?.data?.translations[0]?.translatedText;
       return res;

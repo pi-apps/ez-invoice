@@ -18,7 +18,7 @@ const TranslateMenu = () => {
   const languageUserApi = DataAb?.language
   
   const [isShowMenu, setIsShowMenu] = useState(false);
-  const [nameCountryLanguage, setNameCountryLanguage] = useState(languageUserApi);
+  const [nameCountryLanguage, setNameCountryLanguage] = useState("");
   const [isLoading, setIsLoading] = useState(false)
   const token = getAccessToken()
   const { language, setLanguage } = useContext(LanguagesContext);
@@ -47,8 +47,12 @@ const TranslateMenu = () => {
 
     useEffect(() => {
       if (languageUserApi) {
-        const found = Langauges.find(element => element.code === languageUserApi);
-        setNameCountryLanguage(found.name)
+        // const found = Langauges.find(element => element.code === languageUserApi);
+        const found1 = Langauges.filter(element => element.code === languageUserApi);
+        console.log("found1", found1[0].name);
+        
+
+        setNameCountryLanguage(found1[0].name)
       }
     }, [languageUserApi])
 
@@ -79,7 +83,9 @@ const TranslateMenu = () => {
               <FlexButtonChooseLg key={item?.index}>
                 <ButtonChooseLg
                   onClick={() => {
-                    setNameCountryLanguage(item.name);
+                    console.log("item.name", item.name);
+                    
+                    // setNameCountryLanguage(item.name);
                     setIsShowMenu(!isShowMenu);
                     changeLanguageUser(item.code)
                     setLanguage(item.code)

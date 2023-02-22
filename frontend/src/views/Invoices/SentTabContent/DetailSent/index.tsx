@@ -5,7 +5,6 @@ import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
 import { Fragment } from 'react';
-import { Translate } from "react-auto-translate";
 import { getAccessToken, getUser } from 'state/user';
 import { useEffect, useState } from 'react';
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
@@ -56,6 +55,8 @@ const DetailSent = () => {
       discount: "Discount",
       amount_due: "Amount Due",
       back: "Back",
+      invoide: "Invoice",
+      pay_now: "Pay now",
     };
     const [stateText, setStateText] = useState(listText);
     const fcTransLateText = async (language) => {
@@ -127,6 +128,14 @@ const DetailSent = () => {
             listText.back,
             language
             );
+        const resInvoice = await GetTranslateHolder(
+            listText.invoide,
+            language
+        );
+        const resPayNow = await GetTranslateHolder(
+            listText.pay_now,
+            language
+        );
         setStateText({
             allowances: resAllowances,
             amount_due: resAmountDue,
@@ -145,6 +154,8 @@ const DetailSent = () => {
             total: resTotal,
             unit_price: resUnitPrice,
             back: resBack,
+            invoide: resInvoice,
+            pay_now: resPayNow,
       });
     };
   
@@ -160,7 +171,7 @@ const DetailSent = () => {
                 <Header />
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading><Translate>Invoice</Translate> #{details?.invoiceNumber}</CsHeading>
+                            <CsHeading>{stateText.invoide} #{details?.invoiceNumber}</CsHeading>
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
@@ -227,8 +238,8 @@ const DetailSent = () => {
                                     {details?.items.map((item) => {
                                         return(
                                             <CsRow>
-                                            <ColFirst width="20%"><Translate>{item?.name}</Translate></ColFirst>
-                                            <Col width="20%"><Translate>{item?.quantity}</Translate></Col>
+                                            <ColFirst width="20%">{item?.name}</ColFirst>
+                                            <Col width="20%">{item?.quantity}</Col>
                                             <Col width="20%">{item?.price}Pi</Col>
                                             <Col width="20%">{(item?.quantity)*(item?.price)}</Col>
                                         </CsRow>
@@ -277,7 +288,7 @@ const DetailSent = () => {
                                     }
                                     { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>{stateText.discount}:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.discount}: ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.tax} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
                                         </Row>
                                     }

@@ -159,14 +159,14 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                 console.log('submitReq', submitReq)
 
                 if(submitReq.status == 200){
-                    toastSuccess('', <Text style={{justifyContent: 'center'}}><Translate>Create invoice successfully!!!</Translate></Text>);
+                    toastSuccess('', <Text style={{justifyContent: 'center'}}>{stateText.create_success}</Text>);
                     // setInvoiceid(submitReq?.data?.invoiceId)
                     await setInvoiceId(submitReq?.data?.invoiceId)
                     await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
-                    toastError('error', <Text style={{justifyContent: 'center'}}><Translate>System error!!!</Translate></Text>)
+                    toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
                     setLoadingPreview(false)
             }
     }
@@ -213,6 +213,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const listTextPlaceHolder = {
       // text
       create_invoice: "Create Invoice",
+      create_success: "Create invoice successfully!!!",
+      create_failed: "System error!!!",
     };
   
     const [stateText, setStateText] = useState(listTextPlaceHolder);
@@ -222,8 +224,18 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
           listTextPlaceHolder.create_invoice,
           language
         );
+        const resCreateSuccess = await GetTranslateHolder(
+            listTextPlaceHolder.create_success,
+            language
+          );
+          const resCreateFailed = await GetTranslateHolder(
+            listTextPlaceHolder.create_failed,
+            language
+          );
       setStateText({
-        create_invoice: resCreateInvoice
+        create_invoice: resCreateInvoice,
+        create_failed: resCreateFailed,
+        create_success: resCreateSuccess,
       });
     };
   
