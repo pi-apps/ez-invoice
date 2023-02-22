@@ -93,12 +93,12 @@ export default function mountPaymentsEndpoints(router: Router) {
             if (paymentIdOnBlock !== order.pi_payment_id) {
                 return res.status(400).json({ message: "Payment id doesn't match." });
             }
+            // let Pi Servers know that the payment is completed
+            await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
 
             // mark the order as paid
             await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { txid, paid: true } });
 
-            // let Pi Servers know that the payment is completed
-            await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
             return res.status(200).json({ message: `Handled the incomplete payment ${paymentId}` });
         } catch (error: any) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
