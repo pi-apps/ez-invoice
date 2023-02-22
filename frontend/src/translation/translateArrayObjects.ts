@@ -5,10 +5,20 @@ import { home_new } from "./languages/home_text";
 import { invoice_text } from "./languages/invoice/invoice_text";
 import { useMenu_text } from "./languages/useMenu_text";
 
+interface WindowWithEnv extends Window {
+  __ENV?: {
+    backendURL: string, // REACT_APP_BACKEND_URL environment variable
+    sandbox: "true" | "false", // REACT_APP_SANDBOX_SDK environment variable - string, not boolean!
+    googleApi: string, // REACT_APP_GOOGLE_API environment variable
+  }
+}
+
 const translateText = async (text: string, sourceLanguage: string, targetLanguage: string) => {
+  const _window: WindowWithEnv = window;
+  const googleApi = _window.__ENV && _window.__ENV.googleApi;
     try {
       const response = await axios.get(
-        `https://translation.googleapis.com/language/translate/v2?q=${text}&source=${sourceLanguage}&target=${targetLanguage}&key=AIzaSyAMjXwmyrFo2Y_OVU_JXbXyIrTCZPiFWUs`
+        `https://translation.googleapis.com/language/translate/v2?q=${text}&source=${sourceLanguage}&target=${targetLanguage}&key=${googleApi}`
       );
   
       return response.data.data.translations[0].translatedText;
