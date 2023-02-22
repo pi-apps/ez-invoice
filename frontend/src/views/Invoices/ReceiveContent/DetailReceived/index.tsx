@@ -316,13 +316,15 @@ const DetailSent = () => {
                                 </CsContentInfo>
                             </WContent>
                             <WAction>
-                                <CsNavItem>
-                                    <NavLink to={`/payment/${details?.signature}`}>
-                                        <CsButton onClick={()=> navigate(``)}>
-                                                {stateText.pay_now}
-                                        </CsButton>
-                                    </NavLink>
-                                </CsNavItem>
+                                { !details?.paid &&
+                                    <CsNavItem>
+                                        <NavLink to={`/payment/${details?.signature}`}>
+                                            <CsButton onClick={()=> navigate(``)}>
+                                                    Pay now
+                                            </CsButton>
+                                        </NavLink>
+                                    </CsNavItem>
+                                }
                                 <CsNavItem>
                                     <NavLink to={`/invoice`}>
                                         <CsButton onClick={()=> navigate("")}>
