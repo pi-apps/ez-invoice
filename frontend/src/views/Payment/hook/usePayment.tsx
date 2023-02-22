@@ -4,7 +4,7 @@ import useToast from 'hooks/useToast';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const usePayment = (signature:string, token:string) => {
+export const usePayment = (signature:string, token:string, language:string) => {
     const [ pendingPayment, setPendingPayment ] = useState(false)
     const { toastError, toastSuccess } = useToast()
     const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Authorization': token,}};
@@ -49,7 +49,7 @@ export const usePayment = (signature:string, token:string) => {
                 
                 const onReadyForServerCompletion = async (paymentId: string, txid: string) => {
                     console.log("onReadyForServerCompletion", paymentId, txid);
-                    const resultComplete = await axiosClient.post('/payments/complete', {paymentId, txid}, config);
+                    const resultComplete = await axiosClient.post('/payments/complete', {paymentId, txid, language}, config);
                     if (resultComplete?.status === 200) {
                         toastSuccess("Payment successfully")
                         navigate('/invoice')
@@ -92,7 +92,7 @@ export const usePayment = (signature:string, token:string) => {
         } finally {
             setPendingPayment(false)
         }
-    }, [signature, token])
+    }, [signature, token, language])
 
   return { handlePayment, pendingPayment }
 }
