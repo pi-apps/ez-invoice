@@ -3,3 +3,4 @@ import { PreviewType } from './type'
 
 export const getDataPreview = createAction<PreviewType>('preview/getDataPreview')
 export const getDataImages = createAction<{images: any}>('preview/getDataImages')
+export const fetchStatusPreview = createAction<{isPreview: boolean}>('preview/fetchStatusPreview')

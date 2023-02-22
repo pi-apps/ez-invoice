@@ -17,39 +17,39 @@ import ReactImageUpload from './ReactImageUpload'
 import { getUser } from "state/user"
 
 const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate, getValues}) => {
-  const [checkError, setCheckError] = useState(false)
-  const [getMessageError, setMessageError] = useState()
+    const [checkError, setCheckError] = useState(false)
+    const [getMessageError, setMessageError] = useState()
+    
+    const DataAb = getUser();
+    const languageUserApi = DataAb?.language
+    
+    const listTextPlaceHolder = {
+        // text normal
+        invoiceNumber_t: 'Invoice Number',
+        senderEmail_t: 'Sender Email',
+        billFrom_t: 'Bill From',
+        billTo_t: 'Bill To',
+        shipTo_t: 'Ship To',
+        date_t: 'Date',
+        payment_t: 'Payment',
+        dueDate_t: 'Due Date',
+        poNumber_t: 'PO Number',
 
-  const DataAb = getUser();
-  const languageUserApi = DataAb?.language
-  
-  const listTextPlaceHolder = {
-    // text normal
-    invoiceNumber_t: 'Invoice Number',
-    senderEmail_t: 'Sender Email',
-    billFrom_t: 'Bill From',
-    billTo_t: 'Bill To',
-    shipTo_t: 'Ship To',
-    date_t: 'Date',
-    payment_t: 'Payment',
-    dueDate_t: 'Due Date',
-    poNumber_t: 'PO Number',
+        // placeHolder
+        senderEmail: "Who is this invoice from? (required)",
+        billFrom: "Who is this invoice from? (required)",
+        billTo: "Who is this invoice to? (required)",
+        shipTo: "Who is this invoice to? (required)",
+        payment: "Payment",
+        poNumber: "PO Number",
+        option: "Optional",
+    };
 
-    // placeHolder
-    senderEmail: "Who is this invoice from? (required)",
-    billFrom: "Who is this invoice from? (required)",
-    billTo: "Who is this invoice to? (required)",
-    shipTo: "Who is this invoice to? (required)",
-    payment: "Payment",
-    poNumber: "PO Number",
-    option: "Optional",
-  };
-
-  const [stateText, setStateText] = useState(listTextPlaceHolder);
+    const [stateText, setStateText] = useState(listTextPlaceHolder);
 
 
 
-  const fcTransLateText = async (language) => {
+    const fcTransLateText = async (language) => {
     const resInvoiceNumber_t = await GetTranslateHolder(
         listTextPlaceHolder.invoiceNumber_t,
         language
@@ -153,14 +153,13 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                         <Controller
                             control={control}
                             name="invoicenumber"
-                            // rules={rules.invoicenumber}
                             render={({ field }) => (
                             <CsInput
                                 name="invoicenumber"
                                 type="text"
                                 readOnly
-                                placeholder={invoicelength ? invoicelength + 1 : 1}
-                                defaultValue={invoicelength ? invoicelength + 1 : 1}
+                                placeholder={Number(invoicelength) > 0 ? invoicelength + 1 : 1}
+                                defaultValue={Number(invoicelength) > 0 ? invoicelength + 1 : 1}
                             />
                             )}
                         />

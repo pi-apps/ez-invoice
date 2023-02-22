@@ -1,15 +1,17 @@
 import { createReducer } from "@reduxjs/toolkit"
-import { getDataPreview, getDataImages } from "./actions"
+import { getDataPreview, getDataImages, fetchStatusPreview } from "./actions"
 import { ItemsPreview } from "./type"
 
 interface globalStateInvoice {
     dataPreview:ItemsPreview,
-    images: any
+    images: any,
+    isPreview: boolean
 }
 
 export const initialState: globalStateInvoice = {
     dataPreview:null,
-    images: null
+    images: null,
+    isPreview: false
 }
 
 export default createReducer(initialState, (builder) =>
@@ -19,5 +21,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(getDataImages, (state, action) => {
         state.images = action.payload.images
+    })
+    .addCase(fetchStatusPreview, (state, action) => {
+        state.isPreview = action.payload.isPreview
     })
 )

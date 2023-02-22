@@ -1,4 +1,4 @@
-import { Button, useModal } from "@devfedeltalabs/pibridge_uikit";
+import { AutoRenewIcon, Button, useModal } from "@devfedeltalabs/pibridge_uikit";
 import { useContext, useEffect, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import { useTranslation } from "react-i18next";
@@ -36,8 +36,8 @@ const styles = {
 
 const NavCustom = styled(Nav)``;
 
-const Footer = ({ isActive, invoiceId }) => {
-  
+const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
+  console.log("loadingPreview", loadingPreview)
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<DownloadModal invoiceId={invoiceId}/>);
@@ -114,13 +114,14 @@ const Footer = ({ isActive, invoiceId }) => {
       </Nav.Item>
 
       <Nav.Item style={styles.navItem}>
-        <NavLink to={`/send/${invoiceId}`}>
           <CsButton
-            disabled={(isActive === 1 || isActive === 2) || !invoiceId}
+            disabled={(isActive === 1 || isActive === 2) || loadingPreview}
+            onClick={onHandleCreate}
+            endIcon={loadingPreview ? < AutoRenewIcon color="textDisabled" spin/> : null}
+
           >
-            {stateText.send_t}
+            Send
           </CsButton>
-        </NavLink>
       </Nav.Item>
     </NavCustom>
   );

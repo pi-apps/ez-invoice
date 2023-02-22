@@ -310,7 +310,9 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
             </CsFlex>
       </CsContainer>
       <CsSubTotal>
-        <CsButtonAdd  endIcon={loadingPreview ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText>{stateText.preview} </CsText>}></CsButtonAdd>
+        <CsButtonAdd>
+          <CsText>{stateText.preview} </CsText>
+        </CsButtonAdd>
       </CsSubTotal>
       </CsWrapperForm>
   )

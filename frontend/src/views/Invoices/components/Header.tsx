@@ -10,11 +10,6 @@ import styled from "styled-components";
 const Header = () => {
   const navigate = useNavigate();
 
-  const handleRefresh = () => {
-    navigate("/");
-    window.location.reload()
-  }
-
   const userData = getUser();
   const languageUserApi = userData?.language
   const listText = {
@@ -49,9 +44,6 @@ const Header = () => {
         {stateText.invoice}
       </Text>
       <Flex>
-        <Csrefresh role="presentation" onClick={handleRefresh}>
-          <RefreshIcon />
-        </Csrefresh>
         <NavLink to="/newInvoice">
           <Button>
             {stateText.new_invoice}

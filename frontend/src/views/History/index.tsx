@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import { Button, Flex, useModal } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
@@ -13,6 +13,9 @@ import Footer from "components/Footer";
 import DeleteModal from "components/DeleteModal";
 import { getAccessToken } from "state/user";
 import { GetHistory, UseGetAllInvoiceHistoryCore } from "state/history";
+import { fetchStatusPreview } from "state/preview/actions";
+import { AppDispatch } from "state";
+import { useDispatch } from "react-redux";
 
 const History = () => {
     const [openDeleteModal] = useModal(<DeleteModal/>);
@@ -20,9 +23,12 @@ const History = () => {
   
     UseGetAllInvoiceHistoryCore(token)
     const dataHistory = GetHistory()
-    // console.log("listItem", listItem)
-    // console.log("token", token)
 
+    const dispatch = useDispatch<AppDispatch>()
+    useEffect(()=> {
+        dispatch(fetchStatusPreview({isPreview: false}))
+    }, [])
+    
     return (
         <PageFullWidth>
             <CsContainer>
@@ -36,7 +42,7 @@ const History = () => {
                     <CsList>
                         {dataHistory?.listItems.map((item) => {
                             return(
-                                <CardHistory items={item} loading={dataHistory?.isLoading}/>
+                                    <CardHistory items={item} loading={dataHistory?.isLoading}/>
                                 )
                         })}
                     </CsList>

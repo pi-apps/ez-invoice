@@ -18,7 +18,6 @@ const CreateInvoices = () => {
                 <CsContainer>
                     <HeaderCreateinVoice />
                     <SubTab setInvoiceId={setInvoiceId} isActive={isActive}/>
-                    <Footer invoiceId={invoiceId} isActive={isActive}/>
                 </CsContainer>
             </PageFullWidth>
         </TranSlatorModal>

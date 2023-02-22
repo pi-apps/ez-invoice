@@ -8,6 +8,7 @@ export const fetchAllInvoiceHistory = async (accessToken:string): Promise<ListHi
         const submitReq = await axiosClient.get(`invoice/all-sent`, {
           headers: {
             'Authorization': accessToken,
+            'Access-Control-Allow-Origin': '*'
           }
         });
         const groups = submitReq?.data.reduce((groups, items) => {
@@ -18,13 +19,6 @@ export const fetchAllInvoiceHistory = async (accessToken:string): Promise<ListHi
             groups[date].push(items);
             return groups;
           }, {});
-          
-          // Edit: to add it in the array format instead
-          const groupArrays = Object.keys(groups).map((date) => {
-            return {
-              items: groups[date]
-            };
-          });
           const data = _.sortBy(submitReq?.data, 'date').reverse()
           
         return {

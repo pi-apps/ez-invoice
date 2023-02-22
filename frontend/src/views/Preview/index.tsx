@@ -40,10 +40,6 @@ const Preview = () => {
     const subTotal = useMemo(() => {
           return totalPrice(listItems)
     },[listItems]);
-    // const [typeTax, setTypeTax] = useState(true)
-    // const [typeDiscount, setTypeDiscount] = useState(false)
-    // const [typeShipping, setTypeShipping] = useState(false)
-    // const [balaneDue, setBalanceDue] = useState(0)
     const taxValue = items?.tax
     const shippingValue =  items?.shipping
     const discountValue =  items?.discount
@@ -222,7 +218,7 @@ const Preview = () => {
                             </WContent>
                             <WAction>
                                 <CsNavItem>
-                                    <CsButton onClick={()=> navigate(``)}>
+                                    <CsButton onClick={()=> navigate(-1)}>
                                         Back
                                     </CsButton>
                                 </CsNavItem>

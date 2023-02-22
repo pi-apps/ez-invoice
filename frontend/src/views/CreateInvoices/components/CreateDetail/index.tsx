@@ -165,7 +165,7 @@ const CreateDetail = () => {
         fcTransLateText('en')
       } else fcTransLateText(languageUserApi)
     }, [languageUserApi]);
-
+   
     return (
         <PageFullWidth>
             <CsContainer>
@@ -325,7 +325,7 @@ const CreateDetail = () => {
                                     </CsNavItem>
                             </WAction>
                         </Flex>
-                        <Footer isActive={3} invoiceId={details?.invoiceId} />
+                        {/* <Footer isActive={3} invoiceId={details?.invoiceId} /> */}
                     </CsWrapContainer>
             </CsContainer>
         </PageFullWidth>
