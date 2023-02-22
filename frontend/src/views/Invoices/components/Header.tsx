@@ -1,8 +1,10 @@
 import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { RefreshIcon } from "components/Svg";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import { useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
 import { NavLink, useNavigate } from "react-router-dom";
+import { getUser } from "state/user";
 import styled from "styled-components";
 
 const Header = () => {
@@ -13,10 +15,38 @@ const Header = () => {
     window.location.reload()
   }
 
+  const userData = getUser();
+  const languageUserApi = userData?.language
+  const listText = {
+    invoice: "Invoice",
+    new_invoice: "New invoice",
+  };
+  const [stateText, setStateText] = useState(listText);
+  const fcTransLateText = async (language) => {
+    const resInvoice = await GetTranslateHolder(
+        listText.invoice,
+        language
+      );
+      const resNewInvoice = await GetTranslateHolder(
+        listText.new_invoice,
+        language
+      );
+      setStateText({
+      invoice: resInvoice,
+      new_invoice: resNewInvoice,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
+
   return (
     <ContainerHeader>
       <Text fontSize="24px" bold>
-        <Translate>Invoices</Translate>
+        {stateText.invoice}
       </Text>
       <Flex>
         <Csrefresh role="presentation" onClick={handleRefresh}>
@@ -24,7 +54,7 @@ const Header = () => {
         </Csrefresh>
         <NavLink to="/newInvoice">
           <Button>
-            <Translate>New invoice</Translate>
+            {stateText.new_invoice}
           </Button>
         </NavLink>
       </Flex>

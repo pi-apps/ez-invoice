@@ -1,18 +1,58 @@
 import { Button, Flex, Input, Text } from '@devfedeltalabs/pibridge_uikit'
 import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
 import { AddIcon2, CloseIcon } from 'components/Svg'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller } from 'react-hook-form'
 import styled from 'styled-components'
 import { Translate } from "react-auto-translate";
+import { GetTranslateHolder } from 'hooks/TranSlateHolder'
+import { getUser } from 'state/user'
 
 const ChooseMethod = ({ isPercent, setIsPercent, errors, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
+
+    const DataAb = getUser();
+    const languageUserApi = DataAb?.language
+
+    const listTextPlaceHolder = {
+      // text
+      discount_t: "Discount",
+      shipping_t: "Shipping",
+      tax_t: "Tax",
+    };
+
+    const [stateText, setStateText] = useState(listTextPlaceHolder);
+  
+    const fcTransLateText = async (language) => {
+        const resDiscount_t = await GetTranslateHolder(
+          listTextPlaceHolder.discount_t,
+          language
+        );
+        const resShipping_t = await GetTranslateHolder(
+          listTextPlaceHolder.shipping_t,
+          language
+        );
+        const resTax_t = await GetTranslateHolder(
+            listTextPlaceHolder.tax_t,
+            language
+          );
+      setStateText({
+        discount_t: resDiscount_t,
+        shipping_t: resShipping_t,
+        tax_t: resTax_t,
+      });
+    };
+  
+    useEffect(() => {
+      if (!languageUserApi) {
+        fcTransLateText('en')
+      } else fcTransLateText(languageUserApi)
+    }, [languageUserApi]);
 
   return (
     <Flex flexDirection="column" width="100%">
         {typeTax === true && (
             <Flex width="100%" alignItems="center" justifyContent="space-between">
-                <CsTextLeft><Translate>Tax</Translate></CsTextLeft>
+                <CsTextLeft>{stateText.tax_t}</CsTextLeft>
                 <ContainerInput>
                     <CsRowTax>
                         <CsRowTaxLeft>
@@ -49,7 +89,7 @@ const ChooseMethod = ({ isPercent, setIsPercent, errors, activeTax,setActiveTax,
 
         {typeDiscount === true && (
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
-            <CsTextLeft><Translate>Discount</Translate></CsTextLeft>
+            <CsTextLeft>{stateText.discount_t}</CsTextLeft>
             <ContainerInput>
                 <CsRowTax>
                     <CsRowTaxLeft>
@@ -87,7 +127,7 @@ const ChooseMethod = ({ isPercent, setIsPercent, errors, activeTax,setActiveTax,
 
     {typeShipping === true && (
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
-            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
+            <CsTextLeft>{stateText.shipping_t}</CsTextLeft>
             <ContainerInput>
                 <CsRowTax>
                     <WrapInputShipping>

@@ -1,6 +1,8 @@
 import { AutoRenewIcon, Button, Text, useModal } from "@devfedeltalabs/pibridge_uikit";
 import { axiosClient } from "config/htttp";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
+import { useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -17,8 +19,38 @@ const UserMenu = () => {
   const accessTokenUser = getAccessToken()
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const userData = getUser();
   const loading = getStatusLoading()
+  
+  
+  const userData = getUser();
+  const languageUserApi = userData?.language
+  const listText = {
+    login: "Login",
+    logout: "Logout",
+  };
+
+  const [stateText, setStateText] = useState(listText);
+
+  const fcTransLateText = async (language) => {
+    const resLogin = await GetTranslateHolder(
+        listText.login,
+        language
+      );
+      const resLogout = await GetTranslateHolder(
+        listText.logout,
+        language
+      );
+      setStateText({
+      login: resLogin,
+      logout: resLogout,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
   
   const signIn = async () => {
     try {
@@ -87,11 +119,11 @@ const UserMenu = () => {
     <CsButton 
       onClick={signIn} 
       disabled={loading}
-      endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Login</Translate>} />
+      endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <CsText>{stateText.login}</CsText>} />
   ) : (
     <CsButton 
       onClick={onPresentLogoutModal} 
-      endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <Translate>Logout</Translate>} 
+      endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> : <CsText>{stateText.logout}</CsText>} 
     />
   );
 };
@@ -105,4 +137,21 @@ const CsButton = styled(Button)`
   font-size: 12px;
   font-weight: 700;
   padding: 0px 8px;
+  align-items: center;
+  justify-content: center;
 `;
+
+const CsText = styled(Text)`
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 170%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.2px;
+  color: #FFFFFF;
+  align-self: center;
+  margin-left: 0;
+`

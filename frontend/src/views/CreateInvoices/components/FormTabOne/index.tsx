@@ -22,18 +22,20 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
 
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
-
-  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
-    senderEmail: "Who is this invoice from? (required)",
-    billFrom: "Who is this invoice from? (required)",
-    billTo: "Who is this invoice to? (required)",
-    shipTo: "Who is this invoice to? (required)",
-    payment: "Payment",
-    poNumber: "PO Number",
-    option: "Optional",
-  });
-
+  
   const listTextPlaceHolder = {
+    // text normal
+    invoiceNumber_t: 'Invoice Number',
+    senderEmail_t: 'Sender Email',
+    billFrom_t: 'Bill From',
+    billTo_t: 'Bill To',
+    shipTo_t: 'Ship To',
+    date_t: 'Date',
+    payment_t: 'Payment',
+    dueDate_t: 'Due Date',
+    poNumber_t: 'PO Number',
+
+    // placeHolder
     senderEmail: "Who is this invoice from? (required)",
     billFrom: "Who is this invoice from? (required)",
     billTo: "Who is this invoice to? (required)",
@@ -43,61 +45,100 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     option: "Optional",
   };
 
-  const changeTextPlaceHolderLg = async () => {
+  const [stateText, setStateText] = useState(listTextPlaceHolder);
+
+
+
+  const fcTransLateText = async (language) => {
+    const resInvoiceNumber_t = await GetTranslateHolder(
+        listTextPlaceHolder.invoiceNumber_t,
+        language
+      );
+    const resSenderEmail_t = await GetTranslateHolder(
+      listTextPlaceHolder.senderEmail_t,
+      language
+    );
+    const resBillFrom_t = await GetTranslateHolder(
+        listTextPlaceHolder.billFrom_t,
+        language
+      );
+    const resBillTo_t = await GetTranslateHolder(
+      listTextPlaceHolder.billTo_t,
+      language
+    );
+    const resShipTo_t = await GetTranslateHolder(
+      listTextPlaceHolder.shipTo_t,
+      language
+    );
+    const resDate_t = await GetTranslateHolder(
+        listTextPlaceHolder.date_t,
+        language
+      );
+    const resPayment_t = await GetTranslateHolder(
+      listTextPlaceHolder.payment_t,
+      language
+    );
+    const resDueDate_t = await GetTranslateHolder(
+      listTextPlaceHolder.dueDate_t,
+      language
+    );
+    const resPoNumber_t = await GetTranslateHolder(
+        listTextPlaceHolder.poNumber_t,
+        language
+      );
     const resSenderEmail = await GetTranslateHolder(
         listTextPlaceHolder.senderEmail,
-        // language
-        languageUserApi
+        language
       );
-      console.log('resSenderEmail', resSenderEmail)
     const resBillFrom = await GetTranslateHolder(
       listTextPlaceHolder.billFrom,
-      languageUserApi
+      language
     );
     const resBillTo = await GetTranslateHolder(
       listTextPlaceHolder.billTo,
-      languageUserApi
+      language
     );
     const resShipTo = await GetTranslateHolder(
         listTextPlaceHolder.shipTo,
-        languageUserApi
+        language
       );
     const resPayment = await GetTranslateHolder(
       listTextPlaceHolder.payment,
-      languageUserApi
+      language
     );
     const resPoNumber = await GetTranslateHolder(
       listTextPlaceHolder.poNumber,
-      languageUserApi
+      language
     );
     const resOption = await GetTranslateHolder(
         listTextPlaceHolder.option,
-        languageUserApi
-      );
+        language
+    );
   
-    setStateTextPlaceholder({
-      senderEmail: resSenderEmail,
-      billFrom: resBillFrom,
-      billTo: resBillTo,
-      shipTo: resShipTo,
-      payment: resPayment,
-      poNumber: resPoNumber,
-      option: resOption,
+    setStateText({
+        invoiceNumber_t: resInvoiceNumber_t,
+        billFrom_t: resBillFrom_t,
+        billTo_t: resBillTo_t,
+        date_t: resDate_t,
+        dueDate_t: resDueDate_t,
+        payment_t: resPayment_t,
+        poNumber_t: resPoNumber_t,
+        senderEmail_t: resSenderEmail_t,
+        shipTo_t: resShipTo_t,
+        senderEmail: resSenderEmail,
+        billFrom: resBillFrom,
+        billTo: resBillTo,
+        shipTo: resShipTo,
+        payment: resPayment,
+        poNumber: resPoNumber,
+        option: resOption,
     });
   };
 
   useEffect(() => {
-    if (!languageUserApi || languageUserApi === 'en')     
-    return setStateTextPlaceholder({
-        senderEmail: "Sender email",
-        billFrom: "Who is this invoice from? (required)",
-        billTo: "Who is this invoice to? (required)",
-        shipTo: "Who is this invoice to? (required)",
-        payment: "Payment",
-        poNumber: "PO Number",
-        option: "Optional",
-      });;
-    changeTextPlaceHolderLg()
+    if (!languageUserApi) {
+        fcTransLateText('en')
+      } else fcTransLateText(languageUserApi)
   }, [languageUserApi]);
 
   return (
@@ -105,7 +146,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
             <CsFlex>
                 {/* Invoice number */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B"><Translate>Invoice number</Translate></CsLabel>
+                    <CsLabel mt="1rem" color="#64748B">{stateText.invoiceNumber_t}</CsLabel>
                 </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -132,7 +173,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                 
                 {/* Sender Email */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B"><Translate>Sender Email</Translate></CsLabel>
+                    <CsLabel mt="1rem" color="#64748B">{stateText.senderEmail_t}</CsLabel>
                 </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -146,7 +187,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                     // type="email"
                                     value={field.value}
                                     onBlur={field.onBlur}
-                                    placeholder={`${stateTextPlaceholder.senderEmail}`}
+                                    placeholder={`${stateText.senderEmail}`}
                                     onChange={field.onChange}
                                 />
                                 {errors.email && touchedFields.email && (
@@ -161,7 +202,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
 
                 {/* Bill From */}
                 <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B"><Translate>Bill From</Translate></CsLabel>
+                    <CsLabel mt="1rem" color="#64748B">{stateText.billFrom_t}</CsLabel>
                   </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -173,7 +214,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 name="billFrom"
                                 value={field.value}
                                 onBlur={field.onBlur}
-                                placeholder={`${stateTextPlaceholder.billFrom}`}
+                                placeholder={`${stateText.billFrom}`}
                                 onChange={field.onChange}
                             />
                             )}
@@ -184,7 +225,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
 
                 {/* Bill To */}
                   <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B"><Translate>Bill To</Translate></CsLabel>
+                    <CsLabel mt="1rem" color="#64748B">{stateText.billTo_t}</CsLabel>
                   </Flex>
                   <ContainerInput>
                     <WrapInput>
@@ -197,7 +238,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 name="billTo"
                                 value={field.value}
                                 onBlur={field.onBlur}
-                                placeholder={`${stateTextPlaceholder.billTo}`}
+                                placeholder={`${stateText.billTo}`}
                                 onChange={field.onChange}
                             />
                             )}
@@ -208,7 +249,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
 
                     {/* Ship To */}
                   <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B"><Translate>Ship To</Translate></CsLabel>
+                    <CsLabel mt="1rem" color="#64748B">{stateText.shipTo_t}</CsLabel>
                   </Flex>
                 <ContainerInput>
                     <WrapInput>
@@ -220,7 +261,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 name="shipTo"
                                 value={field.value}
                                 onBlur={field.onBlur}
-                                placeholder={`(${stateTextPlaceholder.option})`}
+                                placeholder={`(${stateText.option})`}
                                 onChange={field.onChange}
                             />
                             )}
@@ -232,7 +273,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                 <Row className="mb-1 mt-1">
                     <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B"><Translate>Date</Translate></CsLabel>
+                            <CsLabel mt="1rem" color="#64748B">{stateText.date_t}</CsLabel>
                         </Flex>
                         <ContainerInput>
                             <WrapInput>
@@ -262,7 +303,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                     </Flex>
                     <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B"><Translate>Payment</Translate></CsLabel>
+                            <CsLabel mt="1rem" color="#64748B">{stateText.payment_t}</CsLabel>
                         </Flex>
                         <ContainerInput>
                             <WrapInput>
@@ -275,7 +316,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                         name="paymentTerms"
                                         value={field.value}
                                         onBlur={field.onBlur}
-                                        placeholder={`${stateTextPlaceholder.payment}`}
+                                        placeholder={`${stateText.payment}`}
                                         onChange={field.onChange}
                                     />
                                     )}
@@ -289,7 +330,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                 <Row className="mb-1 mt-1">
                     <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B"><Translate>Due Date</Translate></CsLabel>
+                            <CsLabel mt="1rem" color="#64748B">{stateText.dueDate_t}</CsLabel>
                         </Flex>
                         <WrapInput>
                             <Controller 
@@ -314,7 +355,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                     </Flex>
                     <Flex width="50%" flexDirection="column">
                         <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B"><Translate>PO Number</Translate></CsLabel>
+                            <CsLabel mt="1rem" color="#64748B">{stateText.poNumber_t}</CsLabel>
                         </Flex>
                         <WrapInput>
                             <Controller
@@ -327,7 +368,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                     value={field.value}
                                     onBlur={field.onBlur}
                                     onChange={field.onChange}
-                                    placeholder={`${stateTextPlaceholder.poNumber}`}
+                                    placeholder={`${stateText.poNumber}`}
                                 />
                                 )}
                             />

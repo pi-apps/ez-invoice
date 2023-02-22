@@ -80,31 +80,38 @@ const FormSendInvoice: React.FC<
   };
 
   // translate placeholder
-  const [stateTextPlaceholder, setStateTextPlaceholder] = useState({
-    recipientEmail: "Recipient email",
-  });
 
   const listTextPlaceHolder = {
     recipientEmail: "WRecipient email",
-  };
+    send_invoice: "Send Invoice",
+    send_invoice_recipient: "Send invoice to recipient via email",
 
-  const changeTextPlaceHolderLg = async () => {
-    const resRecipientEmail= await GetTranslateHolder(
+  };
+  const [stateText, setStateText] = useState(listTextPlaceHolder);
+  const fcTransLateText = async (language) => {
+      const resRecipientEmail= await GetTranslateHolder(
         listTextPlaceHolder.recipientEmail,
-        // language
-        languageUserApi
+        language
       );
-    setStateTextPlaceholder({
+      const resSendInvoice= await GetTranslateHolder(
+        listTextPlaceHolder.send_invoice,
+        language
+      );
+      const resSendInvoiceRecipient= await GetTranslateHolder(
+        listTextPlaceHolder.send_invoice_recipient,
+        language
+      );
+    setStateText({
       recipientEmail: resRecipientEmail,
+      send_invoice: resSendInvoice,
+      send_invoice_recipient: resSendInvoiceRecipient,
     });
   };
 
   useEffect(() => {
-    if (!languageUserApi || languageUserApi === 'en')     
-    return setStateTextPlaceholder({
-        recipientEmail: "Recipient email",
-      });;
-    changeTextPlaceHolderLg()
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
   }, [languageUserApi]);
 
   return (
@@ -113,12 +120,12 @@ const FormSendInvoice: React.FC<
         <HeaderContainer>
           <Flex>
             <TextHeader>
-              <Translate>Send Invoice</Translate>
+              {stateText.send_invoice}
             </TextHeader>
           </Flex>
           <Flex marginTop="8px">
             <TextBody>
-              <Translate>Send invoice to recipient via email</Translate>
+              {stateText.send_invoice_recipient}
             </TextBody>
           </Flex>
         </HeaderContainer>
@@ -133,7 +140,7 @@ const FormSendInvoice: React.FC<
                   // type='email'
                   value={getValues("email")}
                   // type="email"
-                  placeholder={`${stateTextPlaceholder.recipientEmail}`}
+                  placeholder={`${stateText.recipientEmail}`}
                   onChange={(e) => {
                     field.onChange(e);
                     setErrorSentText("");

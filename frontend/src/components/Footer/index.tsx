@@ -11,6 +11,7 @@ import HomeIcon from "../Svg/Icons/Home";
 import InvoiceIcon from "../Svg/Icons/Invoice";
 import { useLocation, useNavigate } from "react-router-dom";
 import _ from "lodash";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
 
 const styles = {
   main: {
@@ -45,7 +46,35 @@ const Footer = () => {
   const location = useLocation();
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<LoginModal/>);
+
   const userData = getUser();
+  const languageUserApi = userData?.language
+  const listText = {
+    home: "Home",
+    invoice: "Invoice",
+  };
+  const [stateText, setStateText] = useState(listText);
+  const fcTransLateText = async (language) => {
+    const resHome = await GetTranslateHolder(
+        listText.home,
+        language
+      );
+      const resInvoice = await GetTranslateHolder(
+        listText.invoice,
+        language
+      );
+      setStateText({
+      home: resHome,
+      invoice: resInvoice,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
+
   const [activeTab, setActiveTab] = useState({
     home: true,
     invoice: false,
@@ -129,7 +158,7 @@ const Footer = () => {
           eventKey="home"
         >
           <HomeIcon style={styles.icon} actived={activeTab.home} />
-          <Translate>Home</Translate>
+          {stateText.home}
         </Nav.Link>
       </Nav.Item>
       <Nav.Item style={styles.navItem}>
@@ -143,7 +172,7 @@ const Footer = () => {
           eventKey="invoice"
         >
           <InvoiceIcon style={styles.icon} actived={activeTab.invoice} />
-          <Translate>Invoice</Translate>
+          {stateText.invoice}
         </Nav.Link>
       </Nav.Item>
     </NavCustom>

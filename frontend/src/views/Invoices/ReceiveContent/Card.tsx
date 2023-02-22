@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Flex, Image, Text } from "@devfedeltalabs/pibridge_uikit";
 import styled from "styled-components";
 import Navbar from "react-bootstrap/Navbar";
@@ -6,6 +6,8 @@ import { NavLink } from "react-router-dom";
 
 import { useParams } from "react-router-dom";
 import { Translate } from "react-auto-translate";
+import { getUser } from "state/user";
+import { GetTranslateHolder } from "hooks/TranSlateHolder";
 
 interface Props {
   images:string
@@ -39,6 +41,35 @@ const Card: React.FC<Props> = ({
     }
     return null
   }
+
+  const userData = getUser();
+  const languageUserApi = userData?.language
+  const listText = {
+    unpaid: "Unpaid",
+    paid: "paid",
+  };
+  const [stateText, setStateText] = useState(listText);
+  const fcTransLateText = async (language) => {
+      const resUnpaid = await GetTranslateHolder(
+        listText.unpaid,
+        language
+      );
+      const resPaid = await GetTranslateHolder(
+        listText.paid,
+        language
+      );
+      setStateText({
+      unpaid: resUnpaid,
+      paid: resPaid,
+    });
+  };
+
+  useEffect(() => {
+    if (!languageUserApi) {
+      fcTransLateText('en')
+    } else fcTransLateText(languageUserApi)
+  }, [languageUserApi]);
+
   return (
     <NavLink to={`/detailSent/${invoiceId}`}>
       <CsContainer>
@@ -65,11 +96,11 @@ const Card: React.FC<Props> = ({
           <CsCol>
             { !paid  ? (
               <CsStaTusUnpaid>
-                <Translate>Unpaid</Translate>
+                {stateText.unpaid}
               </CsStaTusUnpaid>
             ) : (
               <CsStaTusPaid>
-                <Translate>Paid</Translate>
+                {stateText.paid}
               </CsStaTusPaid>
             )}
           </CsCol>
