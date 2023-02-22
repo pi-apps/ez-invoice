@@ -373,6 +373,7 @@ const Col = styled(Text)`
     font-size: 8px;
     color: #0F172A;
     text-align: right;
+    word-break: break-all;
 `
 const CsRowth = styled(Row)`
     align-items: center;
@@ -405,6 +406,7 @@ const CsTextRight = styled(Text)`
   font-size: 12px;
   color: #0F172A;
   font-size: 12px;
+  word-break: break-all;
 `
 
 const CsWrapContainer = styled.div`
