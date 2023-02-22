@@ -263,9 +263,9 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft>{stateText.total_t}</CsTextLeft>
-                        <CsTextRight bold>{!totalFinaly ? 0 : <>
+                        <Text style={{wordBreak: 'break-all'}} fontSize='14px'>{!totalFinaly ? 0 : <>
                           {`${totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                        </> }</CsTextRight>
+                        </> }</Text>
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft >{stateText.amount_paid_t}</CsTextLeft>

@@ -24,7 +24,7 @@ const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFiel
         language
       );
       const resLineItem = await GetTranslateHolder(
-        listText.amount_due,
+        listText.line_item,
         language
       );
       setStateText({
@@ -72,7 +72,7 @@ const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFiel
         </CsButtonAdd>
         <hr style={{margin: '10px 0'}} />
         <Row mt="16px" style={{justifyContent: "space-between"}}>
-            <CsTextLeft>{stateText.amount_due}</CsTextLeft>
+            <CsTextLeft>{stateText.amount_due}:</CsTextLeft>
             <CsTextRight bold>
               {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}
               </CsTextRight>
@@ -92,6 +92,7 @@ const CsTextRight = styled(Text)`
   font-weight: 500;
   font-size: 16px;
   color: #0F172A;
+  word-break: break-all;
 `
 
 const CsAddIcon = styled(AddIcon)`

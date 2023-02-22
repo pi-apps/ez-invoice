@@ -191,10 +191,12 @@ color: #94A3B8;
 const CsAmount = styled(Text)`
     color: #0F172A;
     margin-left: 4px;
+    font-size: 14px;
+    word-break: break-all;
 `
 
 const CsTextHeading = styled(Text)`
-    font-size: 16px;
+    font-size: 14px;
     color: #64748B;
     font-weight: 700;
 `
@@ -249,8 +251,6 @@ export const CsTextArea = styled.input`
     color: #94A3B8;
     font-weight: 400;
     font-size: 12px;
-    margin-top: -40px;
-    position: absolute;
   }
   :focus:not(:disabled){
     box-shadow:none!important;
