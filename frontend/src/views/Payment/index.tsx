@@ -20,6 +20,7 @@ import { GetDataPayment, PaymentCore } from "state/payment";
 import { usePayment } from "./hook/usePayment";
 import { fetchDataUser } from "state/payment/actions";
 import { Fragment, useState } from "react";
+import BigNumber from "bignumber.js";
 
 const Payment = () => {
     const  { signature } = useParams()
@@ -27,8 +28,8 @@ const Payment = () => {
     const items = GetAnInvoice();
     const { toastSuccess, toastError } = useToast()
     const userData = getUser()
+    const [ tips, setTips ] = useState("0")
     const token = getAccessToken()
-    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const [ isLoading, setLoading ] = useState(false)
     const onIncompletePaymentFound = (payment: PaymentDTO) => {
@@ -90,7 +91,13 @@ const Payment = () => {
         }
         return <Skeleton width={60} />
     }
-    const { handlePayment, pendingPayment } = usePayment(signature, token, userData?.language) 
+    const { handlePayment, pendingPayment } = usePayment(signature, token, userData?.language, tips) 
+    // for tips 
+    const handleValueTips = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTips(event.target.value)
+    }
+    const total = tips.length > 0 ? new BigNumber(details?.amountDue).plus(new BigNumber(tips)) : new BigNumber(details?.amountDue).plus(new BigNumber(0))
+    const converTotal = new BigNumber(total).decimalPlaces(2,1) 
     return (
         <PageFullWidth>
             <CsContainer>
@@ -244,6 +251,22 @@ const Payment = () => {
                                             <CsTextRight bold>{details?.amountDue && details?.amountDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Tips</CsTextLeft>
+                                        <Flex alignItems="center" style={{gap:"10px"}} justifyContent="flex-end" background="#F8F9FD">
+                                            <CsInput
+                                                placeholder="0.00"
+                                                onChange={handleValueTips}
+                                                type="number"
+                                                value={tips}
+                                            />
+                                            <Text fontSize="12px">Pi</Text>
+                                        </Flex>
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>Total</CsTextLeft>
+                                        <CsTextRight>{Number(converTotal.toString()).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2})} Pi </CsTextRight>
+                                    </Row>
                                 </CsContentInfo>
                             </WContent>
                             <Flex width="100%" justifyContent="center" mt="1rem">
@@ -285,15 +308,6 @@ const CsContainer = styled(Flex)`
         min-height: 80vh;
     }
 `
-const CsButton = styled(Button)`
-  width: 100%;
-  height: 50px;
-  background: #6b39f4;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 0px 8px;
-`;
-
 const CsContentInfo = styled.div``
 
 const CsContentBill = styled.div`
@@ -372,4 +386,14 @@ const WContent = styled.div`
     padding: 26px 14px;
     margin-left: 20px;
     margin-right: 20px;
+`
+
+const CsInput = styled.input`
+    width: 130px;
+    border: none;
+    outline:none;
+    height: 32px;
+    font-size: 12px;
+    padding-left:12px;
+    background-color: none;
 `

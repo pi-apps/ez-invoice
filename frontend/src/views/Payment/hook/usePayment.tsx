@@ -1,10 +1,11 @@
+import BigNumber from 'bignumber.js';
 import { PaymentDTO } from 'components/Menu/UserMenu/type';
 import { axiosClient } from 'config/htttp';
 import useToast from 'hooks/useToast';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const usePayment = (signature:string, token:string, language:string) => {
+export const usePayment = (signature:string, token:string, language:string, tips:string) => {
     const [ pendingPayment, setPendingPayment ] = useState(false)
     const { toastError, toastSuccess } = useToast()
     const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Authorization': token,}};
@@ -72,7 +73,7 @@ export const usePayment = (signature:string, token:string, language:string) => {
                 const result = await window.Pi.authenticate(scopes, onIncompletePaymentFound)
                
                 if ( result ) {
-                    const amount = submitReqDetails?.data?.amountDue
+                    const amount = tips.length > 0 ? new BigNumber(submitReqDetails?.data?.amountDue).plus(new BigNumber(tips)) : new BigNumber(submitReqDetails?.data?.amountDue).plus(new BigNumber(0))
                     const memo = submitReqInvoiceId?.data
                     const paymentData = { amount, memo, metadata: {invoiceId: submitReqInvoiceId?.data} };        
                     const callbacks = {
@@ -92,7 +93,7 @@ export const usePayment = (signature:string, token:string, language:string) => {
         } finally {
             setPendingPayment(false)
         }
-    }, [signature, token, language])
+    }, [signature, token, language, tips])
 
   return { handlePayment, pendingPayment }
 }
