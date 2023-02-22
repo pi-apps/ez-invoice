@@ -17,21 +17,20 @@ const Preview = () => {
     const images = data?.images
     const listItems = data?.dataPreview.items
     
-    // function convertDate(date: any) {
-    //     if (date) {
-    //       const today = new Date(date)
-    //       const dd = String(today.getDate()).padStart(2, '0')
-    //       const mm = String(today.getMonth() + 1).padStart(2, '0')
-    //       const yyyy = today.getFullYear()
-    //       return (
-    //         <CsTextRight bold>{dd}/{mm}/{yyyy}</CsTextRight>
-    //       )
-    //     }
-    //     return <Skeleton width={60} />
-    // }
+    function convertDate(date: any) {
+        if (date) {
+          const today = new Date(date)
+          const dd = String(today.getDate()).padStart(2, '0')
+          const mm = String(today.getMonth() + 1).padStart(2, '0')
+          const yyyy = today.getFullYear()
+          return (
+            <CsTextRight bold>{dd}/{mm}/{yyyy}</CsTextRight>
+          )
+        }
+        return <Skeleton width={60} />
+    }
 
     const totalPrice = (fields) => {
-        console.log('fields',fields )
         return fields.reduce((sum, i) => {
           if(i.price === undefined || i.quantity === undefined){
             return 0
@@ -115,14 +114,14 @@ const Preview = () => {
                                             <CsTextRight bold>{items?.billTo}</CsTextRight>
                                         }
                                     </Row>
-                                    {/* <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Date</CsTextLeft>
                                         {convertDate(items?.issueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Due date</CsTextLeft>
                                         {convertDate(items?.dueDate)}
-                                    </Row> */}
+                                    </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>Payment Terms</CsTextLeft>
                                         { !items?.paymentTerms ?
@@ -179,7 +178,7 @@ const Preview = () => {
                                             </> 
                                             : 
                                             <>
-                                                {items?.tax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                                {items?.tax && taxValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> } Pi</CsTextRight>
                                         </Row>
                                     }
@@ -188,10 +187,10 @@ const Preview = () => {
                                             <CsTextLeft>Discount: ({items?.discount} {items?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{items?.discountType === 1 ? 
                                             <>
-                                                {(subTotal && items?.discount && items?.tax) && (discountValue*(subTotal + taxValue )/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                                {(subTotal && items?.discount && items?.tax) && (discountValue*(subTotal + isTaxValue )/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> : 
                                             <>
-                                                {items?.discount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                                {items?.discount && discountValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </>
                                             } Pi</CsTextRight>
                                         </Row>
@@ -200,7 +199,7 @@ const Preview = () => {
                                     { ( Number(items?.shipping) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft>Shipping</CsTextLeft>
-                                            <CsTextRight bold>{items?.shipping && items?.shipping.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{items?.shipping && shippingValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         </Row>
                                     }
  
