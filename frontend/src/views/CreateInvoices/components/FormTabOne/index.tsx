@@ -291,7 +291,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                             selected={startDate} onChange={(date:any) => {
                                                 setStartDate(date)
                                             }} />
-                                            <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('date')?.focus() }}/>
+                                            <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('issueDate')?.focus() }}/>
                                         </>
                                     )}
                                 />

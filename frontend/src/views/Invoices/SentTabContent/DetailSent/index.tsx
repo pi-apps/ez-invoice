@@ -4,6 +4,7 @@ import Header from 'components/Header';
 import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
+import { Translate } from "react-auto-translate";
 import { Fragment } from 'react';
 import { getAccessToken, getUser } from 'state/user';
 import { useEffect, useState } from 'react';
@@ -238,66 +239,78 @@ const DetailSent = () => {
                                     {details?.items.map((item) => {
                                         return(
                                             <CsRow>
-                                            <ColFirst width="20%">{item?.name}</ColFirst>
-                                            <Col width="20%">{item?.quantity}</Col>
-                                            <Col width="20%">{item?.price}Pi</Col>
-                                            <Col width="20%">{(item?.quantity)*(item?.price)}</Col>
+                                            <ColFirst width="20%"><Translate>{item?.name}</Translate></ColFirst>
+                                            <Col width="20%"><Translate>{item?.quantity}</Translate></Col>
+                                            <Col width="20%">{item?.price && item?.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
+                                            <Col width="20%">{((item?.quantity) &&(item?.price)) && ((item?.quantity)*(item?.price)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                         </CsRow>
                                         )
                                     })}
 
                                 </CsContentBill>
-                                <CsContentInfo>
+                                 <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.subtotal}</CsTextLeft>
+                                        <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.subTotal} Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.subTotal && details?.subTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                         
                                     </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.amount_due}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>-{details?.amountPaid} Pi</CsTextRight>
-                                        }
-                                        
-                                    </Row>
+                                    { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft><Translate>Tax:</Translate> ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{details?.taxType === 1 ? <>
+                                                {(details?.subTotal && details?.tax) && (details?.subTotal*details?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                            </> : <>
+                                                {details?.tax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                            </> } Pi</CsTextRight>
+                                        </Row>
+                                    }
+                                    {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{details?.discountType === 1 ? 
+                                            <>
+                                                {(details?.subTotal && details?.discount && details?.tax) && (details?.discount*(details?.subTotal + details?.tax)/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                            </> : 
+                                            <>
+                                                {details?.discount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                            </>
+                                            } Pi</CsTextRight>
+                                        </Row>
+                                    }
+                                    
+                                    { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
+                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
+                                            <CsTextRight bold>{details?.shipping && details?.shipping.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                        </Row>
+                                    }
+ 
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.total}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.total} Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.total && details?.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
-                                    { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.tax}: ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.tax/100 : details?.subTotal-details?.tax} {details?.taxType === 1 ? "%" : "Pi"}</CsTextRight>
-                                        </Row>
-                                    }
-                                    { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.shipping}</CsTextLeft>
-                                            <CsTextRight bold>{details?.shipping} Pi</CsTextRight>
-                                        </Row>
-                                    }
-                                    { ( Number(details?.discount) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.discount}: ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.taxType === 1 ? details?.subTotal*details?.discount/100 : details?.subTotal-details?.tax} {details?.discountType === 1 ? "%" : "Pi"}</CsTextRight>
-                                        </Row>
-                                    }
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft><Translate>{stateText.allowances}</Translate></CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>-{details?.amountPaid && details?.amountPaid.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                        }
+                                    </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.amount_due}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.amountDue} Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.amountDue && details?.amountDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
                                 </CsContentInfo>
