@@ -47,17 +47,17 @@ const Payment = () => {
                 const loginUser = await signInUser(resultLogin);
                 
                 if (loginUser?.data.message.accessToken.length) {
-                  dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
-                  const userInfor = await axiosClient.get("user/info", {
-                    headers: {
-                      'Authorization': `${loginUser?.data?.message.accessToken}`,
-                    }
-                  });
+                    await dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
+                    const userInfor = await axiosClient.get("user/info", {
+                        headers: {
+                        'Authorization': `${loginUser?.data?.message.accessToken}`,
+                        }
+                    });
                   
-                  if (userInfor) {
-                    dispatch(setUser(userInfor.data));
-                  }
-                  dispatch(isLoading({isLoading:false}))
+                    if (userInfor) {
+                        dispatch(setUser(userInfor.data));
+                    }
+                    dispatch(isLoading({isLoading:false}))
                 } else {
                   dispatch(isLoading({isLoading:false}))
                 }

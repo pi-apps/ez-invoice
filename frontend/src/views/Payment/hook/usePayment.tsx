@@ -5,6 +5,8 @@ import { useCallback, useState } from 'react';
 import { Translate } from "react-auto-translate";
 
 export const usePayment = (signature:string, token:string) => {
+    console.log("signature", signature)
+    console.log("signature", token)
     const [ pendingPayment, setPendingPayment ] = useState(false)
     const { toastError } = useToast()
     const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Authorization': token,}};
@@ -78,18 +80,17 @@ export const usePayment = (signature:string, token:string) => {
                         onError
                     };
                     await window.Pi.createPayment(paymentData, callbacks);
-                } 
-                // await window.Pi.createPayment(paymentData, callbacks);
-                // await payment(submitReqInvoiceId?.data, submitReqDetails?.data?.amountDue, submitReqInvoiceId?.data)                
+                }             
             } else {
-                toastError('error', <Translate>System error!!!</Translate>)
+                toastError('error', "System error!!!")
             }
         } catch (e) {
+            toastError('Error', JSON.stringify(e))
             console.log("error", e)
         } finally {
             setPendingPayment(false)
         }
-    }, [])
+    }, [signature, token])
 
   return { handlePayment, pendingPayment }
 }
