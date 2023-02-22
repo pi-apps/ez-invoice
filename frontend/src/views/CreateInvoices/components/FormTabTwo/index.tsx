@@ -129,18 +129,14 @@ const CsSubTotal = styled.div`
 const CsWrapperForm = styled.div`
 width: 100%;
 `
-const CsWrapperContent = styled.div`
-  padding: 0 24px;
-`
 
 const CsContainer = styled(Flex)`
-    height: calc(100vh - 400px);
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
+    height: 100%;
     flex-direction: column;
     overflow: scroll;
     padding: 0 24px;
     width: 100%;
+    min-height: 50vh;
 `
 
 export default FormTabTwo

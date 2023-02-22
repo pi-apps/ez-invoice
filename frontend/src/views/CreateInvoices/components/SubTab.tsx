@@ -1,18 +1,15 @@
-import { Flex, Text, AutoRenewIcon } from "@devfedeltalabs/pibridge_uikit";
+import { AutoRenewIcon, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { axiosClient } from "config/htttp";
-import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
-import { useContext, useEffect, useState } from "react";
-import { Translate } from "react-auto-translate";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch } from 'state';
 import { GetAllInvoice, GetAnInvoice, UseGetAllInvoice, UseGetAnInvoiceCore } from "state/invoice";
 import { tabActiveNewInvoice } from "state/invoice/actions";
-import { setInvoiceIdRedux } from "state/newInvoiceId/actions";
+import { getDataPreview } from "state/preview/actions";
 import { getAccessToken, getUser } from "state/user";
 import styled from "styled-components";
 import * as Yup from 'yup';
@@ -125,52 +122,75 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             setStartDueDate(new Date(itemInvoice?.dueDate))
         }
     },[itemInvoice, dataDefault?.isLoading])
-    const onSubmit = async data => {
-        setLoadingPreview(true)
-        const formData = new FormData();
-            formData.append("senderEmail", `${data.senderEmail}`);
-            formData.append("billFrom", `${data.billFrom}`);
-            formData.append("billTo", `${data.billTo}`);
-            formData.append("shipTo", `${data.shipTo}`);
-            formData.append("issueDate", `${startDate?.getTime()}`);
-            formData.append("dueDate", `${startDueDate?.getTime()}`);
-            formData.append("paymentTerms", `${data.paymentTerms}`);
-            formData.append("poNumber", `${data.poNumber}`);
-            formData.append("items", `${JSON.stringify(data.items)}`);
-            formData.append("notes", `${data.notes}`);
-            formData.append("terms", `${data.terms}`);
-            formData.append("tax", `${data.tax}`);
-            formData.append("taxType", `${activeTax}`);
-            formData.append("discountType", `${activeDiscount}`);   
-            formData.append("discount", `${data.discount}`);
-            formData.append("shipping", `${data.shipping}`);
-            formData.append("amountPaid", `${data.amountPaid}`);
-            formData.append("logo", data.logo);
+    // const onSubmit = async data => {
+    //     setLoadingPreview(true)
+    //     const formData = new FormData();
+    //         formData.append("senderEmail", `${data.senderEmail}`);
+    //         formData.append("billFrom", `${data.billFrom}`);
+    //         formData.append("billTo", `${data.billTo}`);
+    //         formData.append("shipTo", `${data.shipTo}`);
+    //         formData.append("issueDate", `${startDate?.getTime()}`);
+    //         formData.append("dueDate", `${startDueDate?.getTime()}`);
+    //         formData.append("paymentTerms", `${data.paymentTerms}`);
+    //         formData.append("poNumber", `${data.poNumber}`);
+    //         formData.append("items", `${JSON.stringify(data.items)}`);
+    //         formData.append("notes", `${data.notes}`);
+    //         formData.append("terms", `${data.terms}`);
+    //         formData.append("tax", `${data.tax}`);
+    //         formData.append("taxType", `${activeTax}`);
+    //         formData.append("discountType", `${activeDiscount}`);   
+    //         formData.append("discount", `${data.discount}`);
+    //         formData.append("shipping", `${data.shipping}`);
+    //         formData.append("amountPaid", `${data.amountPaid}`);
+    //         formData.append("logo", data.logo);
             
-            const submitReq = await axiosClient.post('/invoice/create', formData, 
-                    {
-                        headers: {
-                            'Content-Type': `multipart/form-data`,
-                            'Accept': '*',
-                            'Authorization': accessToken,
-                        }
-                    }
-                );
-                console.log('submitReq', submitReq)
+    //         const submitReq = await axiosClient.post('/invoice/create', formData, 
+    //                 {
+    //                     headers: {
+    //                         'Content-Type': `multipart/form-data`,
+    //                         'Accept': '*',
+    //                         'Authorization': accessToken,
+    //                     }
+    //                 }
+    //             );
+    //             console.log('submitReq', submitReq)
 
-                if(submitReq.status == 200){
-                    toastSuccess('', <Text style={{justifyContent: 'center'}}>{stateText.create_success}</Text>);
-                    // setInvoiceid(submitReq?.data?.invoiceId)
-                    await setInvoiceId(submitReq?.data?.invoiceId)
-                    await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
-                    navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
-                    setLoadingPreview(false)
-                }else {
-                    toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
-                    setLoadingPreview(false)
+    //             if(submitReq.status == 200){
+    //                 toastSuccess('', <Text style={{justifyContent: 'center'}}>{stateText.create_success}</Text>);
+    //                 // setInvoiceid(submitReq?.data?.invoiceId)
+    //                 await setInvoiceId(submitReq?.data?.invoiceId)
+    //                 await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
+    //                 navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
+    //                 setLoadingPreview(false)
+    //             }else {
+    //                 toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
+    //                 setLoadingPreview(false)
+    //         }
+    // }
+    const onSubmit = async data => {
+       navigate("/preview")
+       dispatch(getDataPreview({
+            dataPreview: {
+                senderEmail: getValues("senderEmail"),
+                billFrom:getValues("billFrom"),
+                billTo:getValues("billTo"),
+                shipTo:getValues("shipTo"),
+                issueDate: getValues("issueDate"),
+                dueDate: getValues("dueDate"),
+                paymentTerms:getValues("paymentTerms"),
+                poNumber:getValues("poNumber"),
+                items: getValues("items"),
+                notes:getValues("notes"),
+                terms:getValues("terms"),
+                tax: getValues("tax"),
+                taxType:getValues("taxType"),
+                discount: getValues("discount"),
+                shipping: getValues("shipping"),
+                amountPaid: getValues("amountPaid"),
+                discountType: activeDiscount,
             }
+       }));
     }
-
     const handleMinusTabActive = () => {
         if(isActive > 1 && isActive <= 3){
             dispatch(tabActiveNewInvoice({isActive: isActive - 1}))
@@ -248,35 +268,35 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
 
     return (
         <>
-        <HeadingTab>{stateText.create_invoice}</HeadingTab>
-        <ContainerSubTab>
-            <CsButton isActive={isActive > 1} role="presentation" onClick={handleMinusTabActive}>
-                &lt;
-            </CsButton>
-            <CsTab>
-                <TabButton isActive={isActive === 1} onClick={() => dispatch(tabActiveNewInvoice({isActive:1})) }>
-                    1
-                </TabButton>
-                <TabButton isActive={isActive === 2} onClick={() => dispatch(tabActiveNewInvoice({isActive:2})) }>
-                    2
-                </TabButton>
-                <TabButton isActive={isActive === 3} onClick={() => dispatch(tabActiveNewInvoice({isActive:3})) }>
-                    3
-                </TabButton>
-            </CsTab>
-            <CsButton isActive={isActive < 3} role="presentation" onClick={handlePlusTabActive}>
-                &gt;
-            </CsButton>
-        </ContainerSubTab>
-        <FormSubmit onSubmit={handleSubmit(onSubmit)}>
-            { dataDefault?.isLoading ?
-                <Flex width="100%" justifyContent="center" mt="1rem">
-                    <AutoRenewIcon color="textDisabled" spin/>
-                </Flex>
-            :
-                renderScreens(isActive)
-            }
-        </FormSubmit>
+            <HeadingTab>{stateText.create_invoice}</HeadingTab>
+            <ContainerSubTab>
+                <CsButton isActive={isActive > 1} role="presentation" onClick={handleMinusTabActive}>
+                    &lt;
+                </CsButton>
+                <CsTab>
+                    <TabButton isActive={isActive === 1} onClick={() => dispatch(tabActiveNewInvoice({isActive:1})) }>
+                        1
+                    </TabButton>
+                    <TabButton isActive={isActive === 2} onClick={() => dispatch(tabActiveNewInvoice({isActive:2})) }>
+                        2
+                    </TabButton>
+                    <TabButton isActive={isActive === 3} onClick={() => dispatch(tabActiveNewInvoice({isActive:3})) }>
+                        3
+                    </TabButton>
+                </CsTab>
+                <CsButton isActive={isActive < 3} role="presentation" onClick={handlePlusTabActive}>
+                    &gt;
+                </CsButton>
+            </ContainerSubTab>
+            <FormSubmit onSubmit={handleSubmit(onSubmit)}>
+                { dataDefault?.isLoading ?
+                    <Flex width="100%" justifyContent="center" mt="1rem">
+                        <AutoRenewIcon color="textDisabled" spin/>
+                    </Flex>
+                :
+                    renderScreens(isActive)
+                }
+            </FormSubmit>
         </>
     )
 }
