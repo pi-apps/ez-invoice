@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useMenu_text } from "translation/languages/useMenu_text";
+import { useMenuTranslate } from "translation/translateArrayObjects";
 import { AppDispatch } from "../../../state";
 import { getAccessToken, getStatusLoading, getUser } from "../../../state/user";
 import { accessToken, isLoading, setUser } from "../../../state/user/actions";
@@ -22,52 +24,24 @@ const UserMenu = () => {
   const loading = getStatusLoading()
   
   
+  // Translate
   const userData = getUser();
   const languageUserApi = userData?.language
-  const listText = {
-    login: "Login",
-    logout: "Logout",
-    login_success: "Login successfully",
-    login_failed: "Somethig went wrong",
-    logout_success: "Logout successfully",
-  };
-
-  const [stateText, setStateText] = useState(listText);
-
-  const fcTransLateText = async (language) => {
-    const resLogin = await GetTranslateHolder(
-        listText.login,
-        language
-      );
-      const resLogout = await GetTranslateHolder(
-        listText.logout,
-        language
-      );
-      const resLoginSuccess = await GetTranslateHolder(
-        listText.login_success,
-        language
-      );
-      const resLoginFailed = await GetTranslateHolder(
-        listText.login_failed,
-        language
-      );
-      const resLogoutSuccess = await GetTranslateHolder(
-        listText.logout_success,
-        language
-      );
-      setStateText({
-      login: resLogin,
-      logout: resLogout,
-      login_failed: resLoginFailed,
-      login_success: resLoginSuccess,
-      logout_success: resLogoutSuccess,
-    });
-  };
-
+  const [stateText, setStateText] = useState(useMenu_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await useMenuTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(useMenu_text);
+    }
   }, [languageUserApi]);
   
   const signIn = async () => {
@@ -94,9 +68,9 @@ const UserMenu = () => {
           }
           console.log(`Hi there! You're ready to make payments!`);
           dispatch(isLoading({isLoading:false}))
-          toastSuccess(null, <Text style={{justifyContent: 'center'}}>{stateText.login_success}</Text>)
+          toastSuccess(null, <Text style={{justifyContent: 'center'}}>{stateText.text_login_success}</Text>)
       } else {
-        toastError('Error', <Text style={{justifyContent: 'center'}}>{stateText.login_failed}</Text>)
+        toastError('Error', <Text style={{justifyContent: 'center'}}>{stateText.text_login_failed}</Text>)
         dispatch(isLoading({isLoading:false}))
       }
     } catch (error) {
@@ -113,7 +87,7 @@ const UserMenu = () => {
       await dispatch(setUser(null));
       await dispatch(accessToken({accessToken:""}));
       await onDismis();
-      toastSuccess(null, <Text style={{justifyContent: 'center'}}>{stateText.logout_success}</Text>)
+      toastSuccess(null, <Text style={{justifyContent: 'center'}}>{stateText.text_logout_success}</Text>)
       navigate("/");
     } else {
       toastError('Error')
@@ -137,11 +111,11 @@ const UserMenu = () => {
     <CsButton 
       onClick={signIn} 
       disabled={loading}
-      endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <CsText>{stateText.login}</CsText>} />
+      endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> :  <CsText>{stateText.text_login}</CsText>} />
   ) : (
     <CsButton 
       onClick={onPresentLogoutModal} 
-      endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> : <CsText>{stateText.logout}</CsText>} 
+      endIcon={loading ? <AutoRenewIcon style={{margin: 0}} spin color="textDisabled"/> : <CsText>{stateText.text_logout}</CsText>} 
     />
   );
 };

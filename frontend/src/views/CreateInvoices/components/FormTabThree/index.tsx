@@ -138,7 +138,8 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     
 
     const taxValuePercent = taxValue * total / 100 
-    const DiscountValuePercent = discountValue * (total + taxValuePercent) / 100 
+    const isTaxValue = (activeTax === 1 ) ? taxValuePercent : taxValue
+    const DiscountValuePercent = discountValue * (total + isTaxValue) / 100 
     const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
     const isDiscount = (discountValue < total) ? discountValue : total
     const totalFinal = (total) => {
@@ -281,8 +282,8 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                                         placeholder="0.00 Pi"
                                         value={field.value}
                                         onBlur={field.onBlur}
-                                        // onChange={field.onChange}
-                                        onChange={(event) => setValue("amountPaid", event.target.value)}
+                                        onChange={field.onChange}
+                                        // onChange={(event) => setValue("amountPaid", event.target.value)}
                                     />
                                   )}
                               />

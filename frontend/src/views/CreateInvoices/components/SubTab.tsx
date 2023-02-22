@@ -66,7 +66,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         notes:'',
         terms:'',
         tax: 0,
-        taxType:'',
+        taxType:1,
+        discountType:1,
         discount: 0,
         shipping: 0,
         amountPaid: 0,
@@ -98,6 +99,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         ...watchFieldArray[index]
         };
     });
+
     // use update default values
     useEffect(()=>{
         if( itemInvoice && invoiceId?.length ) {
@@ -212,10 +214,10 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                 notes:getValues("notes"),
                 terms:getValues("terms"),
                 tax: getValues("tax"),
-                taxType:getValues("taxType"),
                 discount: getValues("discount"),
                 shipping: getValues("shipping"),
                 amountPaid: getValues("amountPaid"),
+                taxType: activeTax,
                 discountType: activeDiscount,
             }
         }));
@@ -242,6 +244,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         
         navigate("/preview")
     }
+
     const handleMinusTabActive = () => {
         if(isActive > 1 && isActive <= 3){
             dispatch(tabActiveNewInvoice({isActive: isActive - 1}))

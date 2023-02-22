@@ -13,7 +13,7 @@ export interface ItemsPreview {
     notes:string,
     terms:string,
     tax: number,
-    taxType:string,
+    taxType:number,
     discount: number,
     shipping: number,
     amountPaid: number,

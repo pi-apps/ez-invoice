@@ -6,47 +6,40 @@ import { Translate } from "react-auto-translate";
 import { NavLink, useNavigate } from "react-router-dom";
 import { getUser } from "state/user";
 import styled from "styled-components";
+import { invoice_text } from "translation/languages/invoice/invoice_text";
+import { invoiceTranslate } from "translation/translateArrayObjects";
 
 const Header = () => {
   const navigate = useNavigate();
 
   const userData = getUser();
   const languageUserApi = userData?.language
-  const listText = {
-    invoice: "Invoice",
-    new_invoice: "New invoice",
-  };
-  const [stateText, setStateText] = useState(listText);
-  const fcTransLateText = async (language) => {
-    const resInvoice = await GetTranslateHolder(
-        listText.invoice,
-        language
-      );
-      const resNewInvoice = await GetTranslateHolder(
-        listText.new_invoice,
-        language
-      );
-      setStateText({
-      invoice: resInvoice,
-      new_invoice: resNewInvoice,
-    });
-  };
-
+  const [stateText, setStateText] = useState(invoice_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await invoiceTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(invoice_text);
+    }
   }, [languageUserApi]);
 
   return (
     <ContainerHeader>
       <Text fontSize="24px" bold>
-        {stateText.invoice}
+        {stateText.text_invoice}
       </Text>
       <Flex>
         <NavLink to="/newInvoice">
           <Button>
-            {stateText.new_invoice}
+            {stateText.text_new_invoice}
           </Button>
         </NavLink>
       </Flex>

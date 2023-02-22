@@ -13,6 +13,8 @@ import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import ErrorMessages from "components/ErrorMessages/ErrorMessage";
 import { getInvoiceId } from "state/newInvoiceId";
 import useToast from "hooks/useToast";
+import { download_text } from "translation/languages/download_text";
+import { downloadTranslate } from "translation/translateArrayObjects";
 
 interface FormSendInvoiceTypes {
   setIsSentSuccessfully: (e) => void;
@@ -30,8 +32,6 @@ const FormSendInvoice: React.FC<
 
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
-  const invoiceIdRedux = getInvoiceId();
-  console.log('languageUserApi', languageUserApi)
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100, 'Max length is 100 characters').email('Invalid email address'),
@@ -49,13 +49,6 @@ const FormSendInvoice: React.FC<
       email: data.email,
       language: languageUserApi ? languageUserApi : "en",
     };
-
-    // toastSuccess('', <Flex flexDirection='column'>
-    //   <Text>{dataPost?.invoiceId}</Text>
-    //   <Text>{dataPost.email}</Text>
-    //   <Text>{dataPost.language} </Text>
-    //   <Text>{accessTokenUser}</Text>
-    // </Flex>)
 
     try {
       const response = await axiosClient.post("invoice/send", dataPost, {
@@ -79,46 +72,23 @@ const FormSendInvoice: React.FC<
     }
   };
 
-  // translate placeholder
-
-  const listTextPlaceHolder = {
-    recipientEmail: "Recipient email",
-    send_invoice: "Send Invoice",
-    send_invoice_recipient: "Send invoice to recipient via email",
-    send: "Send",
-
-  };
-  const [stateText, setStateText] = useState(listTextPlaceHolder);
-  const fcTransLateText = async (language) => {
-      const resRecipientEmail= await GetTranslateHolder(
-        listTextPlaceHolder.recipientEmail,
-        language
-      );
-      const resSendInvoice= await GetTranslateHolder(
-        listTextPlaceHolder.send_invoice,
-        language
-      );
-      const resSendInvoiceRecipient= await GetTranslateHolder(
-        listTextPlaceHolder.send_invoice_recipient,
-        language
-      );
-      const resSend= await GetTranslateHolder(
-        listTextPlaceHolder.send,
-        language
-      );
-    setStateText({
-      recipientEmail: resRecipientEmail,
-      send_invoice: resSendInvoice,
-      send_invoice_recipient: resSendInvoiceRecipient,
-      send: resSend,
-    });
-  };
-
-  useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
-  }, [languageUserApi]);
+   // Translate
+   const [stateText, setStateText] = useState(download_text);
+   const requestTrans = async () => {
+     try {
+       const resData = await downloadTranslate(languageUserApi);
+       setStateText(resData)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+   useEffect(() => {
+     if (languageUserApi) {
+       requestTrans();
+     } else if (!languageUserApi) {
+       setStateText(download_text);
+     }
+   }, [languageUserApi]);
 
   return (
     <CsContainer>
@@ -126,12 +96,12 @@ const FormSendInvoice: React.FC<
         <HeaderContainer>
           <Flex>
             <TextHeader>
-              {stateText.send_invoice}
+              {stateText.text_send_invoice}
             </TextHeader>
           </Flex>
           <Flex marginTop="8px">
             <TextBody>
-              {stateText.send_invoice_recipient}
+              {stateText.text_send_invoice_recipient}
             </TextBody>
           </Flex>
         </HeaderContainer>
@@ -146,7 +116,7 @@ const FormSendInvoice: React.FC<
                   // type='email'
                   value={getValues("email")}
                   // type="email"
-                  placeholder={`${stateText.recipientEmail}`}
+                  placeholder={`${stateText.text_recipientEmail}`}
                   onChange={(e) => {
                     field.onChange(e);
                     setErrorSentText("");
@@ -164,7 +134,7 @@ const FormSendInvoice: React.FC<
               disabled={!slug || isLoading}
               type="submit" 
               value="Submit" 
-              endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText>{stateText.send}</CsText>}
+              endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText>{stateText.text_send}</CsText>}
             />
           </Flex>
         </FormContainer>

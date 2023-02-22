@@ -9,6 +9,8 @@ import { Translate } from "react-auto-translate";
 import { getUser } from "state/user";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import { UndefineIcon } from "components/Svg";
+import { invoice_text } from "translation/languages/invoice/invoice_text";
+import { invoiceTranslate } from "translation/translateArrayObjects";
 
 interface Props {
   images:string
@@ -43,32 +45,24 @@ const Card: React.FC<Props> = ({
     return null
   }
 
+  // Translate
   const userData = getUser();
   const languageUserApi = userData?.language
-  const listText = {
-    unpaid: "Unpaid",
-    paid: "paid",
-  };
-  const [stateText, setStateText] = useState(listText);
-  const fcTransLateText = async (language) => {
-      const resUnpaid = await GetTranslateHolder(
-        listText.unpaid,
-        language
-      );
-      const resPaid = await GetTranslateHolder(
-        listText.paid,
-        language
-      );
-      setStateText({
-      unpaid: resUnpaid,
-      paid: resPaid,
-    });
-  };
-
+  const [stateText, setStateText] = useState(invoice_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await invoiceTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(invoice_text);
+    }
   }, [languageUserApi]);
 
   return (
@@ -101,11 +95,11 @@ const Card: React.FC<Props> = ({
           <CsCol>
             { !paid  ? (
               <CsStaTusUnpaid>
-                {stateText.unpaid}
+                {stateText.text_unpaid}
               </CsStaTusUnpaid>
             ) : (
               <CsStaTusPaid>
-                {stateText.paid}
+                {stateText.text_paid}
               </CsStaTusPaid>
             )}
           </CsCol>
