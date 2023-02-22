@@ -10,7 +10,7 @@ import { getUser } from "../../state/user";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
 
-const APIKEY_GOOGLE = process.env.REACT_APP_APIKEY_GOOGLE
+const APIKEY_GOOGLE = process.env.APIKEY_GOOGLE
 
 const Home = () => {
   const navigate = useNavigate();
