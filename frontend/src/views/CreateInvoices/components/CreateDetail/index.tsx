@@ -256,11 +256,10 @@ const CreateDetail = () => {
                                         :
                                             <CsTextRight bold>{details?.subTotal && details?.subTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
-                                        
                                     </Row>
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.tax}({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? <>
                                                 {(details?.subTotal && details?.tax) && (details?.subTotal*details?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> : <>
@@ -269,8 +268,8 @@ const CreateDetail = () => {
                                         </Row>
                                     }
                                     {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                        <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                            <CsTextLeft>{stateText.discount}({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.discountType === 1 ? 
                                             <>
                                                 {(details?.subTotal && details?.discount && details?.tax) && (details?.discount*(details?.subTotal + details?.tax)/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -278,13 +277,14 @@ const CreateDetail = () => {
                                             <>
                                                 {details?.discount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </>
-                                            } Pi</CsTextRight>
+                                            } Pi
+                                            </CsTextRight>
                                         </Row>
                                     }
                                     
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Shipping</CsTextLeft>
+                                            <CsTextLeft>{stateText.shipping}</CsTextLeft>
                                             <CsTextRight bold>{details?.shipping && details?.shipping.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         </Row>
                                     }
@@ -314,7 +314,6 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                 </CsContentInfo>
-
                             </WContent>
                             <WAction>
                                     <CsNavItem>
