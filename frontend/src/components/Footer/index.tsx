@@ -73,7 +73,6 @@ const Footer = () => {
   const [activeTab, setActiveTab] = useState({
     home: true,
     invoice: false,
-    account: false,
   });
 
   useEffect(() => {
@@ -92,16 +91,78 @@ const Footer = () => {
           ...{
             home: false,
             invoice: true,
-            account: false,
           },
         });
         break;
-      case "/account":
+      case "/newInvoice":
         setActiveTab({
           ...{
             home: false,
-            invoice: false,
-            account: true,
+            invoice: true,
+          },
+        });
+        break;
+        case "/detailSent":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/detailReceived":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/createDetail":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/updateinvoice":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/payment":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/send":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/history":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/preview":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
           },
         });
         break;
@@ -110,7 +171,6 @@ const Footer = () => {
           ...{
             home: true,
             invoice: false,
-            account: false,
           },
         });
         break;
