@@ -144,7 +144,7 @@ export async function downloadTranslate(language: any) {
     "text_choose_file": langArr[1] || download_text["text_choose_file"],
     "text_hard_disk": langArr[2] || download_text["text_hard_disk"],
     "text_copy": langArr[3] || download_text["text_copy"],
-    "text_coppied": langArr[4] || download_text["text_coppied"],
+    "text_copied": langArr[4] || download_text["text_coppied"],
     "text_recipientEmail": langArr[5] || download_text["text_recipientEmail"],
     "text_send_invoice": langArr[6] || download_text["text_send_invoice"],
     "text_send_invoice_recipient": langArr[7] || download_text["text_send_invoice_recipient"],

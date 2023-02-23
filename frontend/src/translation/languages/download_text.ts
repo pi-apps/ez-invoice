@@ -3,7 +3,7 @@ export const download_text:any = {
     "text_choose_file": "Please copy the following link and paste it in browser to download.",
     "text_hard_disk": "Hard disk",
     "text_copy": "Copy",
-    "text_coppied": "Coppied",
+    "text_copied": "Copied",
 
     "text_recipientEmail": "Recipient email",
     "text_send_invoice": "Send Invoice",
