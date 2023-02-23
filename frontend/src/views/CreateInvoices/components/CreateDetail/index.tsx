@@ -237,7 +237,7 @@ const CreateDetail = () => {
                                     <CsNavItem>
                                         <NavLink to={`/send/${details?.invoiceId}`}>
                                             <CsButton>
-                                                Send mail
+                                                {stateText.text_send_mail}
                                             </CsButton>
                                         </NavLink>
                                     </CsNavItem>

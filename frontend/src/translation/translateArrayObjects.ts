@@ -5,6 +5,7 @@ import { footerMenu_text } from "./languages/footerMenu_text";
 import { history_text } from "./languages/history_text";
 import { home_new } from "./languages/home_text";
 import { invoice_text } from "./languages/invoice_text";
+import { payment_text } from "./languages/payment_text";
 import { previewInvoice_text } from "./languages/previewInvoice";
 import { useMenu_text } from "./languages/useMenu_text";
 
@@ -263,6 +264,39 @@ export async function historyTranslate(language: any) {
     "text_let_ezinvoice_account": langArr[2] || history_text["text_let_ezinvoice_account"],
     "text_export": langArr[3] || history_text["text_export"],
     "text_new_invoice": langArr[4] || history_text["text_new_invoice"],
+  }
+  return data;
+}
+
+export async function paymentTranslate(language: any) {
+  let lang = "";
+  for (const key in payment_text) {
+    lang += payment_text[key] + ":";
+  }
+  lang = lang.slice(0, -1);
+  if (language !== "en") {
+    lang = await translateText(lang, "en", language);
+  }
+  const langArr = lang.split(":");
+  const data = {
+    "text_bill_from": langArr[0] || payment_text["text_bill_from"],
+    "text_bill_to": langArr[1] || payment_text["text_bill_to"],
+    "text_ship_to": langArr[2] || payment_text["text_ship_to"],
+    "text_date": langArr[3] || payment_text["text_date"],
+    "text_due_date": langArr[4] || payment_text["text_due_date"],
+    "text_po_number": langArr[5] || payment_text["text_po_number"],
+    "text_subtotal": langArr[6] || payment_text["text_subtotal"],
+    "text_tax": langArr[7] || payment_text["text_tax"],
+    "text_total": langArr[8] || payment_text["text_total"],
+    "text_discount": langArr[9] || payment_text["text_discount"],
+    "text_shipping": langArr[10] || payment_text["text_shipping"],
+    "text_payment_terms": langArr[11] || payment_text["text_payment_terms"],
+    "text_allowances": langArr[12] || payment_text["text_allowances"],
+    "text_back": langArr[13] || payment_text["text_back"],
+    "text_item": langArr[14] || payment_text["text_item"],
+    "text_quanlity": langArr[15] || payment_text["text_quanlity"],
+    "text_unit_price": langArr[16] || payment_text["text_unit_price"],
+    "text_invoice": langArr[17] || payment_text["text_invoice"],
   }
   return data;
 }

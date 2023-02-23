@@ -19,8 +19,10 @@ import { AuthResult, PaymentDTO } from "components/Menu/UserMenu/type";
 import { GetDataPayment, PaymentCore } from "state/payment";
 import { usePayment } from "./hook/usePayment";
 import { fetchDataUser } from "state/payment/actions";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
+import { payment_text } from "translation/languages/payment_text";
+import { paymentTranslate } from "translation/translateArrayObjects";
 
 const Payment = () => {
     const  { signature } = useParams()
@@ -98,6 +100,27 @@ const Payment = () => {
     }
     const total = tips.length > 0 ? new BigNumber(details?.amountDue).plus(new BigNumber(tips)) : new BigNumber(details?.amountDue).plus(new BigNumber(0))
     const converTotal = new BigNumber(total).decimalPlaces(2,1) 
+
+    const DataAb = getUser();
+    const languageUserApi = DataAb?.language
+   // Translate
+   const [stateText, setStateText] = useState(payment_text);
+   const requestTrans = async () => {
+     try {
+       const resData = await paymentTranslate(languageUserApi);
+       setStateText(resData)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+   useEffect(() => {
+     if (languageUserApi) {
+       requestTrans();
+     } else if (!languageUserApi) {
+       setStateText(payment_text);
+     }
+   }, [languageUserApi]);
+
     return (
         <PageFullWidth>
             <CsContainer>
@@ -111,7 +134,7 @@ const Payment = () => {
                 :
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading><Translate>Invoice</Translate> #{details?.invoiceNumber}</CsHeading>
+                            <CsHeading>{stateText.text_invoice} #{details?.invoiceNumber}</CsHeading>
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
