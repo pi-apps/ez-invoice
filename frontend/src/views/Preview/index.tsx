@@ -234,7 +234,7 @@ const Preview = () => {
                                     </Row>
 
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_allowances}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_amount_paid}</CsTextLeft>
                                         { !items?.amountPaid ?
                                             <CsTextRight>- 0</CsTextRight>
                                         :

@@ -253,6 +253,7 @@ export async function previewInvoiceTranslate(language: any) {
     "text_quanlity": langArr[15] || previewInvoice_text["text_quanlity"],
     "text_unit_price": langArr[16] || previewInvoice_text["text_unit_price"],
     "text_amount_due": langArr[17] || previewInvoice_text["text_amount_due"],
+    "text_amount_paid": langArr[18] || previewInvoice_text["text_amount_paid"],
   }
   return data;
 }
