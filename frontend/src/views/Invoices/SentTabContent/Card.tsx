@@ -101,11 +101,11 @@ const Card: React.FC<Props> = ({
           <CsCol>
             { !paid  ? (
               <CsStaTusUnpaid>
-                {textPaid}
+                {textUnpaid}
               </CsStaTusUnpaid>
             ) : (
               <CsStaTusPaid>
-                {textUnpaid}
+                {textPaid}
               </CsStaTusPaid>
             )}
           </CsCol>

@@ -134,7 +134,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                             render={({ field }) => (
                             <CsTextArea
                                 name="terms"
-                                placeholder="1"
+                                placeholder={`${stateText.text_terms_and_conditions}`} 
                                 value={field.value}
                                 onChange={field.onChange}
                             />

@@ -19,6 +19,10 @@ interface Props {
   amountDue:string
   paid:boolean
   invoiceNumber:number 
+  onClick: () => void;
+  isOpen: boolean;
+  textPaid: string;
+  textUnpaid: string;
 }
 
 const Card: React.FC<Props> = ({ 
@@ -28,7 +32,11 @@ const Card: React.FC<Props> = ({
   billFrom,
   amountDue,
   paid,
-  invoiceNumber
+  invoiceNumber,
+  onClick,
+  isOpen,
+  textPaid,
+  textUnpaid,
  }) => {
 
   function convertDate(date: any) {
@@ -94,11 +102,11 @@ const Card: React.FC<Props> = ({
           <CsCol>
             { !paid  ? (
               <CsStaTusUnpaid>
-                {stateText.text_unpaid}
+                {textUnpaid}
               </CsStaTusUnpaid>
             ) : (
               <CsStaTusPaid>
-                {stateText.text_paid}
+                {textPaid}
               </CsStaTusPaid>
             )}
           </CsCol>
