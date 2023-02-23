@@ -10,8 +10,9 @@ import { GetDataPreview } from 'state/preview';
 import styled from 'styled-components';
 import { UndefineIcon } from 'components/Svg';
 import { createInvoice_text } from 'translation/languages/createInvoice_text';
-import { createInvoiceTranslate, previewInvoiceTranslate } from 'translation/translateArrayObjects';
+import { previewInvoiceTranslate } from 'translation/translateArrayObjects';
 import { getUser } from 'state/user';
+import { previewInvoice_text } from 'translation/languages/previewInvoice';
 
 const Preview = () => {
     const data = GetDataPreview()
@@ -88,7 +89,7 @@ const Preview = () => {
     // Translate
     const userData = getUser();
     const languageUserApi = userData?.language
-    const [stateText, setStateText] = useState(createInvoice_text);
+    const [stateText, setStateText] = useState(previewInvoice_text);
     const requestTrans = async () => {
         try {
         const resData = await previewInvoiceTranslate(languageUserApi);
@@ -101,7 +102,7 @@ const Preview = () => {
         if (languageUserApi) {
         requestTrans();
         } else if (!languageUserApi) {
-        setStateText(createInvoice_text);
+        setStateText(previewInvoice_text);
         }
     }, [languageUserApi]);
 
