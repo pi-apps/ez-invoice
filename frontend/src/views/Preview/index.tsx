@@ -65,7 +65,7 @@ const Preview = () => {
     const isTaxValue = (activeTax === 1 ) ? taxValuePercent : taxValue
     const discountValuePercent = discountValue * (subTotal + isTaxValue) / 100 
     
-    const isDiscountValuePercent = discountValue <= 100 ? discountValuePercent : subTotal // neu chon % discount.
+    const isDiscountValuePercent = discountValue <= 100 ? discountValuePercent : subTotal
     const isDiscount = (discountValue < subTotal) ? discountValue : subTotal
 
     const totalFinal = (total) => {
@@ -125,15 +125,12 @@ const Preview = () => {
     const convertAmountPaid = new BigNumber(amountPaidValue).decimalPlaces(2,1)
     const convertAmountDue = new BigNumber(balanceDue).decimalPlaces(2,1)
     
-    console.log('convertDiscountPercent', (Number(convertDiscountPercent.toString())).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,}))
-    
     return (
         <PageFullWidth>
             <CsContainer>
                 <Header />
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            {/* <CsHeading>{stateText.invoide} #{details?.invoiceNumber}</CsHeading> */}
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
@@ -176,6 +173,18 @@ const Preview = () => {
                                             <CsTextRight bold>{items?.poNumber}</CsTextRight>
                                         }
                                     </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_notes}</CsTextLeft>
+                                        { items?.notes && 
+                                            <CsTextRight bold>{items?.notes}</CsTextRight>
+                                        }
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_terms}</CsTextLeft>
+                                        { items?.terms && 
+                                            <CsTextRight bold>{items?.terms}</CsTextRight>
+                                        }
+                                    </Row>
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
@@ -201,12 +210,12 @@ const Preview = () => {
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
                                         { subTotal &&
-                                            <CsTextRight bold>{subTotal && Number(subTotalConvert.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{Number(subTotalConvert.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
                                     { ( Number(items?.tax) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.text_tax}: ({items?.tax} {Number( items?.taxType ) === 1 && "%" })</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_tax}: ({items?.tax}{Number( items?.taxType ) === 1 && "%" })</CsTextLeft>
                                             <CsTextRight bold>{Number(items?.taxType) === 1 ? 
                                             <>
                                                 {Number(convertPercentTax.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -242,7 +251,9 @@ const Preview = () => {
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_total}</CsTextLeft>
                                         { (!convertTotal) ?
-                                            <CsTextRight>0</CsTextRight>
+                                        <CsTextRight>
+                                            {Number(0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi
+                                        </CsTextRight>
                                         :
                                         <CsTextRight bold>{Number(convertTotal?.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
@@ -260,7 +271,7 @@ const Preview = () => {
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
                                         { (!balanceDue) ?
-                                            <CsTextRight>0</CsTextRight>
+                                            <CsTextRight>{Number(0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         :
                                             <CsTextRight bold>{ Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }

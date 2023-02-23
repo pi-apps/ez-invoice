@@ -126,7 +126,6 @@ const DetailSent = () => {
                                         :
                                             <CsTextRight bold>{details?.paymentTerms}</CsTextRight>
                                         }
-                                        
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_po_number}</CsTextLeft>
@@ -135,8 +134,24 @@ const DetailSent = () => {
                                         :
                                             <CsTextRight bold>{details?.poNumber}</CsTextRight>
                                         }
-                                        
                                     </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_notes}</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.notes}</CsTextRight>
+                                        }
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_terms}</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.terms}</CsTextRight>
+                                        }
+                                    </Row>
+                                    
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>

@@ -26,4 +26,6 @@ export const invoice_text:any = {
     "text_back": "Back",
     "text_pay_now": "Pay now",
     "text_amount_paid": "Amount Paid",
+    "text_notes": "Notes",
+    "text_terms": "Terms",
 }

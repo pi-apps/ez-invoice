@@ -46,7 +46,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const dataDefault = GetAnInvoice()
     const itemInvoice  = dataDefault?.details
     const items = GetAllInvoice()
-
     const activeTax = dataDefault?.isTaxPercent
     const activeDiscount = dataDefault?.isDiscountPercent
     const [ isPositive, setIsPositive ] = useState(false)
