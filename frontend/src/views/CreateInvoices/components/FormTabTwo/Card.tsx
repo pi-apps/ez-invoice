@@ -4,8 +4,6 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
-import { Translate } from "react-auto-translate";
-import { GetTranslateHolder } from 'hooks/TranSlateHolder'
 import { getUser } from 'state/user'
 import { createInvoice_text } from 'translation/languages/createInvoice_text'
 import { createInvoiceTranslate } from 'translation/translateArrayObjects'
@@ -125,7 +123,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
         </CsContent>
 
         <Flex mt="24px">
-            <Cstitle><Translate>{stateText.text_amount}: </Translate></Cstitle>
+            <Cstitle>{stateText.text_amount}:</Cstitle>
             <CsAmount>
               {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}  
             </CsAmount>

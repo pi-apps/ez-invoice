@@ -11,11 +11,13 @@ import { GetDataInvoice } from "state/invoice";
 import CardHistory from "./components/CardHistory";
 import Footer from "components/Footer";
 import DeleteModal from "components/DeleteModal";
-import { getAccessToken } from "state/user";
+import { getAccessToken, getUser } from "state/user";
 import { GetHistory, UseGetAllInvoiceHistoryCore } from "state/history";
 import { fetchStatusPreview } from "state/preview/actions";
 import { AppDispatch } from "state";
 import { useDispatch } from "react-redux";
+import { history_text } from "translation/languages/history_text";
+import { historyTranslate } from "translation/translateArrayObjects";
 
 const History = () => {
     const [openDeleteModal] = useModal(<DeleteModal/>);
@@ -28,6 +30,26 @@ const History = () => {
     useEffect(()=> {
         dispatch(fetchStatusPreview({isPreview: false}))
     }, [])
+
+    // Translate
+    const DataAb = getUser();
+    const languageUserApi = DataAb?.language
+    const [stateText, setStateText] = useState(history_text);
+    const requestTrans = async () => {
+        try {
+        const resData = await historyTranslate(languageUserApi);
+        setStateText(resData)
+        } catch (error) {
+        console.log(error)
+        }
+    }
+    useEffect(() => {
+        if (languageUserApi) {
+        requestTrans();
+        } else if (!languageUserApi) {
+        setStateText(history_text);
+        }
+    }, [languageUserApi]);
     
     return (
         <PageFullWidth>
@@ -36,7 +58,7 @@ const History = () => {
                 <HeaderHistory/>
                 { dataHistory?.isLoading === true || dataHistory?.listItems === null ?
                     <Flex width="100%" justifyContent="center" mt="1.5rem">
-                        <Translate>No Data</Translate>
+                        {stateText.text_no_data}
                     </Flex>
                 :
                     <CsList>
