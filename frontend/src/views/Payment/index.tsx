@@ -259,7 +259,7 @@ const Payment = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_allowances}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_amount_paid}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :

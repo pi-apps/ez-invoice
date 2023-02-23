@@ -124,6 +124,7 @@ export async function invoiceTranslate(language: any) {
     "text_amount_due": langArr[22] || invoice_text["text_amount_due"],
     "text_back": langArr[23] || invoice_text["text_back"],
     "text_pay_now": langArr[24] || invoice_text["text_pay_now"],
+    "text_amount_paid": langArr[25] || invoice_text["text_amount_paid"],
   }
   return data;
 }
@@ -150,6 +151,7 @@ export async function downloadTranslate(language: any) {
     "text_send": langArr[8] || download_text["text_send"],
     "text_sent_invoice_success": langArr[9] || download_text["text_sent_invoice_success"],
     "text_done": langArr[10] || download_text["text_done"],
+    "text_back":langArr[11] || download_text["text_back"],
   }
   return data;
 }
@@ -219,7 +221,7 @@ export async function createInvoiceTranslate(language: any) {
     "text_create_success": langArr[51] || createInvoice_text["text_create_success"],
     "text_create_failed": langArr[52] || createInvoice_text["text_create_failed"],
     "text_less_than_total": langArr[53] || createInvoice_text["text_less_than_total"],
-    
+    "text_less_than_subtotal_and_tax": langArr[54] || createInvoice_text["text_less_than_subtotal_and_tax"],
   }
   return data;
 }
@@ -253,6 +255,7 @@ export async function previewInvoiceTranslate(language: any) {
     "text_quanlity": langArr[15] || previewInvoice_text["text_quanlity"],
     "text_unit_price": langArr[16] || previewInvoice_text["text_unit_price"],
     "text_amount_due": langArr[17] || previewInvoice_text["text_amount_due"],
+    "text_amount_paid": langArr[18] || previewInvoice_text["text_amount_paid"],
   }
   return data;
 }
@@ -310,6 +313,7 @@ export async function paymentTranslate(language: any) {
     "text_amount_due": langArr[19] || payment_text["text_amount_due"],
     "text_tips": langArr[20] || payment_text["text_tips"],
     "text_pay_now": langArr[21] || payment_text["text_pay_now"],
+    "text_amount_paid": langArr[22] || payment_text["text_amount_paid"],
   }
   return data;
 }

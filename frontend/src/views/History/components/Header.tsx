@@ -43,7 +43,7 @@ const Header = () => {
       <Flex width="100%" mt="8px">
         <Text color="#64748B" fontSize="14px" bold>{stateText.text_let_ezinvoice_account}</Text>
       </Flex>
-      <Flex justifyContent="flex-end" width="100%" style={{gap: '10px'}}>
+      <Flex justifyContent="flex-start" width="100%" style={{gap: '10px'}}>
         {/* <Flex width="50%">
           <CsExport marginTop="14px" width='100%'>
             {stateText.text_export}

@@ -22,4 +22,5 @@ export const payment_text:any = {
     "text_amount_due": "Amount Due",
     "text_tips": "Tips",
     "text_pay_now": "Pay now",
+    "text_amount_paid": "Amount Paid",
 }

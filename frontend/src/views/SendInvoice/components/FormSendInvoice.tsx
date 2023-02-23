@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { getUser } from "state/user";
 import { getAccessToken } from "state/user";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { axiosClient } from "config/htttp";
 import { useContext, useEffect, useState } from "react";
 import { Translate } from "react-auto-translate";
@@ -89,58 +89,65 @@ const FormSendInvoice: React.FC<
        setStateText(download_text);
      }
    }, [languageUserApi]);
-
-  return (
-    <CsContainer>
-      <CsFlex>
-        <HeaderContainer>
-          <Flex>
-            <TextHeader>
-              {stateText.text_send_invoice}
-            </TextHeader>
-          </Flex>
-          <Flex marginTop="8px">
-            <TextBody>
-              {stateText.text_send_invoice_recipient}
-            </TextBody>
-          </Flex>
-        </HeaderContainer>
-        <FormContainer onSubmit={handleSubmit(handleLogin)}>
-          <Flex width="100%" marginBottom="20px" flexDirection="column">
-            <Controller
-              control={control}
-              name="email"
-              render={({ field }) => (
-                <CsInput
-                  name="email"
-                  // type='email'
-                  value={getValues("email")}
-                  // type="email"
-                  placeholder={`${stateText.text_recipientEmail}`}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setErrorSentText("");
-                  }}
-                />
-              )}
-            />
-            <ErrorMessages errors={errors} name="email" />
-            {errorSentText ? (
-              <ErrorMessagesSent><Translate>{errorSentText}</Translate></ErrorMessagesSent>
-            ) : null} 
-          </Flex>
-          <Flex>
-            <CsButton
-              disabled={!slug || isLoading}
-              type="submit" 
-              value="Submit" 
-              endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText>{stateText.text_send}</CsText>}
-            />
-          </Flex>
-        </FormContainer>
-      </CsFlex>
-    </CsContainer>
-  );
+   const navigate = useNavigate();
+    return (
+      <CsContainer>
+        <CsFlex>
+          <HeaderContainer>
+            <Flex>
+              <TextHeader>
+                {stateText.text_send_invoice}
+              </TextHeader>
+            </Flex>
+            <Flex marginTop="8px">
+              <TextBody>
+                {stateText.text_send_invoice_recipient}
+              </TextBody>
+            </Flex>
+          </HeaderContainer>
+          <FormContainer onSubmit={handleSubmit(handleLogin)}>
+            <Flex width="100%" marginBottom="20px" flexDirection="column">
+              <Controller
+                control={control}
+                name="email"
+                render={({ field }) => (
+                  <CsInput
+                    name="email"
+                    // type='email'
+                    value={getValues("email")}
+                    // type="email"
+                    placeholder={`${stateText.text_recipientEmail}`}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      setErrorSentText("");
+                    }}
+                  />
+                )}
+              />
+              <ErrorMessages errors={errors} name="email" />
+              {errorSentText ? (
+                <ErrorMessagesSent><Translate>{errorSentText}</Translate></ErrorMessagesSent>
+              ) : null} 
+            </Flex>
+            <Flex>
+              <CsButton
+                disabled={!slug || isLoading}
+                type="submit" 
+                value="Submit" 
+                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <CsText>{stateText.text_send}</CsText>}
+              />
+            </Flex>
+            <Flex width="100%" mt="1rem">
+              <CsButtonBack
+                onClick={()=> navigate(`/createDetail/${slug}`)}
+              >
+                {stateText.text_back}
+              </CsButtonBack>
+            </Flex>
+          </FormContainer>
+        </CsFlex>
+      </CsContainer>
+    );
 };
 
 const CsContainer = styled(Flex)`
@@ -224,17 +231,36 @@ const ErrorMessagesSent = styled.div`
 `;
 
 const CsText = styled(Text)`
-  font-family: "Manrope";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 165%;
-  width: 100%;
-  display: flex;
-  align-self: center;
-  justify-content: center;
-  letter-spacing: 0.4px;
-  color: #ffffff;
+    font-family: "Manrope";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 165%;
+    width: 100%;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    letter-spacing: 0.4px;
+    color: #ffffff;
 `
+const CsButtonBack = styled.div`
+    font-family: "Manrope";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 165%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.4px;
+    color: #ffffff;
+    background: #6B39F4;
+    border-radius: 10px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+`;
 
 export default FormSendInvoice;

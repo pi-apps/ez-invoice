@@ -10,7 +10,7 @@ import { getUser } from 'state/user'
 import { createInvoice_text } from 'translation/languages/createInvoice_text'
 import { createInvoiceTranslate } from 'translation/translateArrayObjects'
 
-const ChooseMethod = ({ errors, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
+const ChooseMethod = ({ iserrorWhenInputDiscount,iserrorWhenInputDiscountPercent, errors, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
 
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
@@ -73,9 +73,9 @@ const ChooseMethod = ({ errors, activeTax,setActiveTax, typeTax, typeDiscount, s
           )}  
 
           {typeDiscount === true && (
-          <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
+          <Flex alignItems="baseline" justifyContent="space-between" mt='1rem'>
               <CsTextLeft>{stateText.text_discount}</CsTextLeft>
-              <ContainerInput>
+              <ContainerInput style={{alignItems: 'flex-end'}}>
                   <CsRowTax>
                       <CsRowTaxLeft>
                           <CsButton isActive={activeDiscount === 1 ? !false : false } onClick={() => setActiveDiscount(1)}>%</CsButton>
@@ -104,10 +104,10 @@ const ChooseMethod = ({ errors, activeTax,setActiveTax, typeTax, typeDiscount, s
                           <CsCloseIcon onClick={() => { setTypeDiscount(false); setValue("discount", 0)}}>
                           <CloseIcon />
                           </CsCloseIcon>
-
                       </CsRowTaxRight>
                   </CsRowTax>
-                  <ErrorMessages errors={errors} name="discount" />
+                  {/* <ErrorMessages errors={errors} name="discount" /> */}
+                  {(iserrorWhenInputDiscount === true || iserrorWhenInputDiscountPercent === true) ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_less_than_subtotal_and_tax}</Text> : ''}
               </ContainerInput>
           </Flex>
       )}

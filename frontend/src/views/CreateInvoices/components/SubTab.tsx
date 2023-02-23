@@ -37,13 +37,14 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const [startDate, setStartDate] = useState(new Date());
     const [startDueDate, setStartDueDate] = useState(new Date());
     const [ totalFinaly, setTotalFinaly ] = useState(0)
+    const [ totalAndTax, setTotalAndTax ] = useState(0)
     const accessToken = getAccessToken()
     UseGetAnInvoiceCore(invoiceId, accessToken)
     UseGetAllInvoice(accessToken)
     const dataDefault = GetAnInvoice()
     const itemInvoice  = dataDefault?.details
     const items = GetAllInvoice()
-
+console.log('totalAndTax', totalAndTax)
     const [ invoicelength, setInvoicelength ] = useState(0)
     useEffect(()=>{
         if(items){
@@ -75,16 +76,18 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         amountPaid: 0,
         logo: "",
     }
-    
+
     const validationSchema = Yup.object().shape({
         senderEmail: Yup.string().required('Sender email is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').email('Invalid email address'),
         billFrom: Yup.string().required('Bill from is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         billTo: Yup.string().required('Bill to is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         shipTo: Yup.string().max(200, 'Max length is 200 characters'),
-        paymentTerms: Yup.string().max(50, 'Max length is 50 characters'),
+        paymentTerms: Yup.string().max(20, 'Max length is 20 characters'),
+        poNumber: Yup.string().max(20, 'Max length is 20 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().max(500, 'Max length is 500 characters'),
         amountPaid: Yup.number().max(totalFinaly).required(),
+        discount: Yup.number().max(totalAndTax).required(),
     });
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
@@ -142,7 +145,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
       } 
       useEffect(() => {
           setTotalFinaly(totalFinal(total))
-      },[taxValue, shippingValue, discountValue, amountPaidValue])
+          setTotalAndTax(total + isTaxValue)
+      },[taxValue, shippingValue, discountValue, amountPaidValue, total, activeTax])
 
     // use update default values
     useEffect(()=>{

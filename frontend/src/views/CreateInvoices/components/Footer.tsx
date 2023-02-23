@@ -99,7 +99,7 @@ const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
             endIcon={loadingPreview ? < AutoRenewIcon color="textDisabled" spin/> : null}
 
           >
-            {stateText.text_send}
+            {stateText.text_send} & {stateText.text_download}
           </CsButton>
       </Nav.Item>
     </NavCustom>
