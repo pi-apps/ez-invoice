@@ -6,7 +6,7 @@ import { Translate } from "react-auto-translate";
 import { GetAnInvoice, UseGetAllInvoiceReceivedCore } from "state/invoice";
 import { getAccessToken, getUser } from "state/user";
 import styled from "styled-components";
-import { invoice_text } from "translation/languages/invoice/invoice_text";
+import { invoice_text } from "translation/languages/invoice_text";
 import { invoiceTranslate } from "translation/translateArrayObjects";
 import Card from "./Card";
 

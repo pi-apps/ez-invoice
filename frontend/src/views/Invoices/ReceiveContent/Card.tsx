@@ -5,11 +5,10 @@ import Navbar from "react-bootstrap/Navbar";
 import { NavLink } from "react-router-dom";
 
 import { useParams } from "react-router-dom";
-import { Translate } from "react-auto-translate";
 import { getUser } from "state/user";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import { UndefineIcon } from "components/Svg";
-import { invoice_text } from "translation/languages/invoice/invoice_text";
+import { invoice_text } from "translation/languages/invoice_text";
 import { invoiceTranslate } from "translation/translateArrayObjects";
 
 interface Props {
@@ -85,7 +84,7 @@ const Card: React.FC<Props> = ({
           </CsCol>
           <CsCol>
             <CsText bold>
-              <Translate>#{invoiceNumber}</Translate> 
+              #{invoiceNumber} 
             </CsText>
           </CsCol>
           <CsColBill>

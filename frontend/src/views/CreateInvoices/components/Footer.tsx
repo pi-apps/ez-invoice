@@ -12,6 +12,8 @@ import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 import { getInvoiceId } from "state/newInvoiceId";
 import { getUser } from "state/user";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import { createInvoiceTranslate } from "translation/translateArrayObjects";
+import { createInvoice_text } from "translation/languages/createInvoice_text";
 
 const styles = {
   main: {
@@ -44,41 +46,23 @@ const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
 
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
-
-  const listTextPlaceHolder = {
-    // text
-    histoty_t: "History",
-    download_t: "Download",
-    send_t: "Send",
-  };
-
-  const [stateText, setStateText] = useState(listTextPlaceHolder);
-
-  const fcTransLateText = async (language) => {
-      const resHistory_t = await GetTranslateHolder(
-        listTextPlaceHolder.histoty_t,
-        language
-      );
-      const resDownload_t = await GetTranslateHolder(
-        listTextPlaceHolder.download_t,
-        language
-      );
-      const resSend_t = await GetTranslateHolder(
-          listTextPlaceHolder.send_t,
-          language
-        );
-    setStateText({
-      download_t: resDownload_t,
-      histoty_t: resHistory_t,
-      send_t: resSend_t,
-    });
-  };
-
-  useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
-  }, [languageUserApi]);
+   // Translate
+   const [stateText, setStateText] = useState(createInvoice_text);
+   const requestTrans = async () => {
+     try {
+       const resData = await createInvoiceTranslate(languageUserApi);
+       setStateText(resData)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+   useEffect(() => {
+     if (languageUserApi) {
+       requestTrans();
+     } else if (!languageUserApi) {
+       setStateText(createInvoice_text);
+     }
+   }, [languageUserApi]);
 
   const handleMenu = (action) => {
     switch (action) {
@@ -99,7 +83,7 @@ const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
       <Nav.Item style={styles.navItem}>
         <NavLink to="/history">
           <CsButton style={{ background: "#F8F5FF" }}>
-            {stateText.histoty_t}
+            {stateText.text_histoty}
           </CsButton>
         </NavLink>
       </Nav.Item>
@@ -109,7 +93,7 @@ const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
           disabled={(isActive === 1 || isActive === 2) || !invoiceId}
           onClick={openLoginModal}
         >
-            {stateText.download_t}
+            {stateText.text_download}
           </CsButtonDownload>
       </Nav.Item>
 
@@ -120,7 +104,7 @@ const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
             endIcon={loadingPreview ? < AutoRenewIcon color="textDisabled" spin/> : null}
 
           >
-            Send
+            {stateText.text_send}
           </CsButton>
       </Nav.Item>
     </NavCustom>

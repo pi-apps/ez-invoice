@@ -47,11 +47,7 @@ const TranslateMenu = () => {
 
     useEffect(() => {
       if (languageUserApi) {
-        // const found = Langauges.find(element => element.code === languageUserApi);
         const found1 = Langauges.filter(element => element.code === languageUserApi);
-        console.log("found1", found1[0].name);
-        
-
         setNameCountryLanguage(found1[0].name)
       }
     }, [languageUserApi])
@@ -62,7 +58,7 @@ const TranslateMenu = () => {
     <Flex position="relative">  
       <ImageContainer
         onClick={() => setIsShowMenu(!isShowMenu)}
-        endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> :
+        endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="black"/> :
          <>
             { languageUserApi && nameCountryLanguage ? (
               <TextLanguage>
@@ -83,13 +79,9 @@ const TranslateMenu = () => {
               <FlexButtonChooseLg key={item?.index}>
                 <ButtonChooseLg
                   onClick={() => {
-                    console.log("item.name", item.name);
-                    
-                    // setNameCountryLanguage(item.name);
                     setIsShowMenu(!isShowMenu);
                     changeLanguageUser(item.code)
                     setLanguage(item.code)
-                    // toastSuccess()
                   }}
                 >
                   {item.name}

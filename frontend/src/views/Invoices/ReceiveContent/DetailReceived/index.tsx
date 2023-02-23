@@ -13,7 +13,7 @@ import Nav from 'react-bootstrap/Nav';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
-import { invoice_text } from 'translation/languages/invoice/invoice_text';
+import { invoice_text } from 'translation/languages/invoice_text';
 import { invoiceTranslate } from 'translation/translateArrayObjects';
 
 const DetailSent = () => {
@@ -189,7 +189,7 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>{stateText.text_allowances}</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_allowances}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :

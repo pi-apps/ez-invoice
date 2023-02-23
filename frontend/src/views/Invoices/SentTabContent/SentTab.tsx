@@ -7,7 +7,7 @@ import Card from "./Card";
 import { MONTHS } from "../../../config/index";
 import { useEffect, useState } from "react";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
-import { invoice_text } from "translation/languages/invoice/invoice_text";
+import { invoice_text } from "translation/languages/invoice_text";
 import { invoiceTranslate } from "translation/translateArrayObjects";
 
 

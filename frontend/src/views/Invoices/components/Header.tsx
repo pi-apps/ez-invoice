@@ -6,7 +6,7 @@ import { Translate } from "react-auto-translate";
 import { NavLink, useNavigate } from "react-router-dom";
 import { getUser } from "state/user";
 import styled from "styled-components";
-import { invoice_text } from "translation/languages/invoice/invoice_text";
+import { invoice_text } from "translation/languages/invoice_text";
 import { invoiceTranslate } from "translation/translateArrayObjects";
 
 const Header = () => {
