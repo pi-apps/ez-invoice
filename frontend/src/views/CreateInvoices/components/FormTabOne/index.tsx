@@ -43,6 +43,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
         }
     }, [languageUserApi]);
     const invoiceNumber = isNaN(invoicelength) ? 1 :  Number(invoicelength)+1
+
     return (
         <CsContainer >
                 <CsFlex>
@@ -61,8 +62,6 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                     type="text"
                                     readOnly
                                     value={invoiceNumber}
-                                    // placeholder={invoiceNumber}
-                                    // defaultValue={invoiceNumber}
                                 />
                                 )}
                             />
@@ -90,7 +89,6 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                     <>
                                     <CsInput
                                         name="senderEmail"
-                                        // type="email"
                                         value={field.value}
                                         onBlur={field.onBlur}
                                         placeholder={`${stateText.text_pl_sender_email}`}
@@ -138,7 +136,6 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                             <Controller
                                 control={control}
                                 name="billTo"
-                                // rules={rules.billto}
                                 render={({ field }) => (
                                 <CsTextArea
                                     name="billTo"
@@ -186,7 +183,6 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                     <Controller 
                                         control={control}
                                         name="issueDate"
-                                        // type="text"
                                         render={({ field }) => (
                                             <>
                                                 <CsDatePicker 
@@ -242,7 +238,6 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                 <Controller 
                                     control={control}
                                     name="dueDate"
-                                    // type="text"
                                     render={({ field }) => (
                                         <>
                                             <CsDatePicker

@@ -84,11 +84,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         paymentTerms: Yup.string().max(50, 'Max length is 50 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().max(500, 'Max length is 500 characters'),
-        amountPaid: Yup.string().max(totalFinaly).required(),
-        // amountPaid: Yup.string()
-        // .when("totalFinaly", {
-        //   is: (val: number | any) => !!(val && Number(val) > 0)
-        // })
+        amountPaid: Yup.number().max(totalFinaly).required(),
     });
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
