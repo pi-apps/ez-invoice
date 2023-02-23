@@ -218,6 +218,8 @@ export async function createInvoiceTranslate(language: any) {
     "text_create_invoice": langArr[50] || createInvoice_text["text_create_invoice"],
     "text_create_success": langArr[51] || createInvoice_text["text_create_success"],
     "text_create_failed": langArr[52] || createInvoice_text["text_create_failed"],
+    "text_less_than_total": langArr[53] || createInvoice_text["text_less_than_total"],
+    
   }
   return data;
 }
@@ -250,6 +252,7 @@ export async function previewInvoiceTranslate(language: any) {
     "text_item": langArr[14] || previewInvoice_text["text_item"],
     "text_quanlity": langArr[15] || previewInvoice_text["text_quanlity"],
     "text_unit_price": langArr[16] || previewInvoice_text["text_unit_price"],
+    "text_amount_due": langArr[17] || previewInvoice_text["text_amount_due"],
   }
   return data;
 }
