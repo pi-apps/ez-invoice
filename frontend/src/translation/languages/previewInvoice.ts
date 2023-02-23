@@ -17,4 +17,5 @@ export const previewInvoice_text:any = {
     "text_item": "item",
     "text_quanlity": "quantity",
     "text_unit_price": "unit price",
+    "text_amount_due": "Amount Due",
 }

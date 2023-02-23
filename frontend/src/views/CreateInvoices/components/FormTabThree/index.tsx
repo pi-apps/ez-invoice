@@ -84,6 +84,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
       }
     } 
     const totalFinaly = totalFinal(total)
+    console.log('totalFinaly', stateText.text_less_than_total)
     const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
 
     useEffect(() => {
@@ -198,14 +199,13 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                           {`${totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                         </> }</Text>
                     </Row>
-                    <Row mt="1rem" style={{justifyContent: "space-between"}}>
+                    <Row mt="1rem" style={{justifyContent: "space-between" , alignItems: 'baseline'}}>
                         <CsTextLeft >{stateText.text_amount_paid}</CsTextLeft>
                           <CsAmountPaid>
                             <WrapInputAmountPaid>
                               <Controller
                                   control={control}
                                   name="amountPaid"
-                                  // rules={rules.invoicenumber}
                                   render={({ field }) => (
                                     <CsInput  style={{textAlign: 'right', width: '100%', padding: 0}}
                                         name="amountPaid"
@@ -213,13 +213,13 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                                         value={field.value}
                                         onBlur={field.onBlur}
                                         onChange={field.onChange}
-                                        // onChange={(event) => setValue("amountPaid", event.target.value)}
                                     />
                                   )}
                               />
                             </WrapInputAmountPaid>
-                          <ErrorMessages errors={errors} name="amountPaid" />
+                          {Number(amountPaidValue > totalFinaly) ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_less_than_total}</Text> : ''}
                           </CsAmountPaid>
+                          {/* <ErrorMessages errors={errors} name="amountPaid" /> */}
                     </Row>
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
@@ -234,9 +234,6 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                           </> }
                         </Text>
                     </Row>
-                    {/* <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <Text color='#94A3B8' fontSize='10px'>Balance due = Sub total + Tax - Discount + Shipping - Amount paid </Text>
-                    </Row> */}
                 </CsContentInfo>
             </CsFlex>
       </CsContainer>
@@ -293,7 +290,7 @@ const CsRowTaxRight = styled(Flex)`
 `
 const CsAmountPaid = styled(Flex)`
     /* background: #F8F9FD; */
-    height: fit-content;
+    /* height: fit-content; */
     border-radius: 12px;
     font-size: 12px;
     max-width: 220px;
@@ -365,7 +362,7 @@ const WrapInputAmountPaid = styled(Flex)`
   background-color:#F8F9FD;
   border-radius: 10px;
   width: 100%;
-height: 56px;
+  height: 56px;
   padding: 0px 16px;
 
   /* input{

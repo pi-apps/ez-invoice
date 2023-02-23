@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { axiosClient } from "config/htttp";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -34,14 +34,15 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const [activeDiscount, setActiveDiscount ] = useState<number>(1)
     const [startDate, setStartDate] = useState(new Date());
     const [startDueDate, setStartDueDate] = useState(new Date());
+    const [ totalFinaly, setTotalFinaly ] = useState(0)
     const accessToken = getAccessToken()
     UseGetAnInvoiceCore(invoiceId, accessToken)
     UseGetAllInvoice(accessToken)
-
+console.log('totalFinaly', totalFinaly)
     const dataDefault = GetAnInvoice()
     const itemInvoice  = dataDefault?.details
     const items = GetAllInvoice()
-    
+
     const [ invoicelength, setInvoicelength ] = useState(0)
     useEffect(()=>{
         if(items){
@@ -82,6 +83,11 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         paymentTerms: Yup.string().max(50, 'Max length is 50 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().max(500, 'Max length is 500 characters'),
+        amountPaid: Yup.string().required(),
+        // amountPaid: Yup.string()
+        // .when("totalFinaly", {
+        //   is: (val: number | any) => !!(val && Number(val) > 0)
+        // })
     });
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
@@ -99,6 +105,47 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         ...watchFieldArray[index]
         };
     });
+
+    const taxValue =  Number(getValues('tax'))
+    const shippingValue =  Number(getValues('shipping'))
+    const discountValue =  Number(getValues('discount'))
+    const amountPaidValue =  Number(getValues('amountPaid'))
+    const totalPrice = (fields) => {
+        return fields?.reduce((sum, i) => {
+          if(i.price === undefined || i.quantity === undefined){
+            return 0
+          } else{
+            return (
+              sum + i.price * i.quantity
+            )
+          }
+        },0)
+      }
+  
+      const total = useMemo(() => {
+        return totalPrice(controlledFields)
+      },[controlledFields]);
+  
+      const taxValuePercent = taxValue * total / 100 
+      const isTaxValue = (activeTax === 1 ) ? taxValuePercent : taxValue
+      const DiscountValuePercent = discountValue * (total + isTaxValue) / 100 
+      const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
+      const isDiscount = (discountValue < total) ? discountValue : total
+
+      const totalFinal = (total) => {
+        if(activeTax === 2 && activeDiscount === 2){
+          return total + taxValue + shippingValue - isDiscount
+        } else if(activeTax === 2 && activeDiscount === 1){
+          return total + taxValue + shippingValue - isDiscountValuePercent
+        } else if(activeTax === 1 && activeDiscount === 1){
+          return total + taxValuePercent + shippingValue - isDiscountValuePercent
+        } else if(activeTax === 1 && activeDiscount === 2){
+          return total + taxValuePercent + shippingValue - isDiscount
+        }
+      } 
+      useEffect(() => {
+          setTotalFinaly(totalFinal(total))
+      },[taxValue, shippingValue, discountValue, amountPaidValue])
 
     // use update default values
     useEffect(()=>{
@@ -128,7 +175,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     // for preview data
     const dataPreview = GetDataPreview()
     const dataPreviewDetails = dataPreview?.dataPreview
-    console.log('dataPreviewDetails', dataPreviewDetails)
     function setDefaultValue(dataDefault){
         setValue("senderEmail", dataDefault?.senderEmail);
         setValue("billFrom", dataDefault?.billFrom);
@@ -155,7 +201,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             setDefaultValue(dataPreviewDetails)
         }
     },[dataPreviewDetails, dataPreview?.isPreview])
-
+    console.log('getValues("amountPaid")', getValues("amountPaid"))
+    console.log('getValues("amountPaid")', getValues("amountPaid"))
     const onCreate = async data => {
         setLoadingPreview(true)
         const formData = new FormData();

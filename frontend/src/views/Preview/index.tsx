@@ -82,10 +82,6 @@ const Preview = () => {
       
     const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
 
-    // useEffect(() => {
-    //   setBalanceDue(amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0)
-    // },[amountPaidValue])
-
     // Translate
     const userData = getUser();
     const languageUserApi = userData?.language
@@ -124,17 +120,13 @@ const Preview = () => {
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_bill_from}</CsTextLeft>
-                                        { !items?.billFrom ?
-                                            <Skeleton width={60} />
-                                        :
+                                        { items?.billFrom &&
                                             <CsTextRight bold>{items?.billFrom}</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_bill_to}</CsTextLeft>
-                                        { !items?.billTo ?
-                                            <Skeleton width={60} />
-                                        :
+                                        { items?.billTo &&
                                             <CsTextRight bold>{items?.billTo}</CsTextRight>
                                         }
                                     </Row>
@@ -148,18 +140,14 @@ const Preview = () => {
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
-                                        { !items?.paymentTerms ?
-                                            <Skeleton width={60} />
-                                        :
+                                        { items?.paymentTerms &&
                                             <CsTextRight bold>{items?.paymentTerms}</CsTextRight>
                                         }
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_po_number}</CsTextLeft>
-                                        { !items?.poNumber ?
-                                            <Skeleton width={60} />
-                                        :
+                                        { items?.poNumber && 
                                             <CsTextRight bold>{items?.poNumber}</CsTextRight>
                                         }
                                     </Row>
@@ -186,9 +174,7 @@ const Preview = () => {
                                 <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
-                                        { !subTotal ?
-                                            <Skeleton width={60} />
-                                        :
+                                        { subTotal &&
                                             <CsTextRight bold>{subTotal && subTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                         
@@ -230,7 +216,7 @@ const Preview = () => {
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_total}</CsTextLeft>
                                         { (!subTotal || !items?.discount || !items?.tax || !items?.shipping) ?
-                                            <Skeleton width={60} />
+                                            <CsTextRight>0</CsTextRight>
                                         :
                                             <CsTextRight bold>{(subTotal && items?.discount && items?.tax && items?.shipping) && totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
@@ -246,9 +232,9 @@ const Preview = () => {
                                     </Row>
 
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_allowances}</CsTextLeft>
-                                        { (!subTotal || !items?.discount || !items?.tax || !items?.shipping) ?
-                                            <Skeleton width={60} />
+                                        <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
+                                        { (!totalFinaly) ?
+                                            <CsTextRight>0</CsTextRight>
                                         :
                                             <CsTextRight bold>{balanceDue && balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
