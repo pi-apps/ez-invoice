@@ -124,6 +124,7 @@ export async function invoiceTranslate(language: any) {
     "text_amount_due": langArr[22] || invoice_text["text_amount_due"],
     "text_back": langArr[23] || invoice_text["text_back"],
     "text_pay_now": langArr[24] || invoice_text["text_pay_now"],
+    "text_amount_paid": langArr[25] || invoice_text["text_amount_paid"],
   }
   return data;
 }
@@ -311,6 +312,7 @@ export async function paymentTranslate(language: any) {
     "text_amount_due": langArr[19] || payment_text["text_amount_due"],
     "text_tips": langArr[20] || payment_text["text_tips"],
     "text_pay_now": langArr[21] || payment_text["text_pay_now"],
+    "text_amount_paid": langArr[22] || payment_text["text_amount_paid"],
   }
   return data;
 }
