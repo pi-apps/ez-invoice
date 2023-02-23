@@ -31,132 +31,121 @@ const ChooseMethod = ({ errors, activeTax,setActiveTax, typeTax, typeDiscount, s
        setStateText(createInvoice_text);
      }
    }, [languageUserApi]);
+    return (
+      <Flex flexDirection="column" width="100%">
+          {typeTax === true && (
+              <Flex width="100%" alignItems="center" justifyContent="space-between">
+                  <CsTextLeft>{stateText.text_tax}</CsTextLeft>
+                  <ContainerInput>
+                      <CsRowTax>
+                          <CsRowTaxLeft>
+                              <CsButton isActive={activeTax === 1 ? !false : false } onClick={() => setActiveTax(1)}>%</CsButton>
+                              <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => setActiveTax(2)}>Pi</CsButton>
+                          </CsRowTaxLeft>
+                          <CsRowTaxRight>
+                              <WrapInput>
+                                  <Controller
+                                      control={control}
+                                      name="tax"
+                                      render={({ field }) => (
+                                          <>
+                                              <CsInput
+                                                  name="tax"
+                                                  onBlur={field.onBlur}
+                                                  placeholder={`0.00 ${(activeTax === 1) ? '%' : 'Pi'} `}
+                                                  value={field.value}
+                                                  onChange={field.onChange}
+                                                  type='number'
+                                                  min={0}
+                                              />
+                                          </>
+                                      )}
+                                  />
+                              </WrapInput>
+                              <CsCloseIcon role="presentation" onClick={() => {setTypeTax(false); setValue("tax", 0)} }>
+                                  <CloseIcon />
+                              </CsCloseIcon>
+                          </CsRowTaxRight>
+                      </CsRowTax>
+                      <ErrorMessages errors={errors} name="tax" />
+                  </ContainerInput>
+              </Flex>
+          )}  
 
-  return (
-    <Flex flexDirection="column" width="100%">
-        {typeTax === true && (
-            <Flex width="100%" alignItems="center" justifyContent="space-between">
-                <CsTextLeft>{stateText.text_tax}</CsTextLeft>
-                <ContainerInput>
-                    <CsRowTax>
-                        <CsRowTaxLeft>
-                            <CsButton isActive={activeTax === 1 ? !false : false } onClick={() => setActiveTax(1)}>%</CsButton>
-                            <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => setActiveTax(2)}>Pi</CsButton>
-                        </CsRowTaxLeft>
-                        <CsRowTaxRight>
-                            <WrapInput>
-                                <Controller
-                                    control={control}
-                                    name="tax"
-                                    render={({ field }) => (
-                                        <>
-                                            <CsInput
-                                                name="tax"
-                                                onBlur={field.onBlur}
-                                                placeholder={`0.00 ${(activeTax === 1) ? '%' : 'Pi'} `}
-                                                value={field.value}
-                                                onChange={field.onChange}
-                                            />
-                                        </>
-                                    )}
-                                />
-                            </WrapInput>
-                            <CsCloseIcon role="presentation" onClick={() => setTypeTax(false)}>
-                                <CloseIcon />
-                            </CsCloseIcon>
-                        </CsRowTaxRight>
-                    </CsRowTax>
-                    <ErrorMessages errors={errors} name="tax" />
-                </ContainerInput>
-            </Flex>
-        )}  
+          {typeDiscount === true && (
+          <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
+              <CsTextLeft>{stateText.text_discount}</CsTextLeft>
+              <ContainerInput>
+                  <CsRowTax>
+                      <CsRowTaxLeft>
+                          <CsButton isActive={activeDiscount === 1 ? !false : false } onClick={() => setActiveDiscount(1)}>%</CsButton>
+                          <CsButton isActive={activeDiscount  === 2 ? !false : false} onClick={() => setActiveDiscount(2)}>Pi</CsButton>
+                      </CsRowTaxLeft>
+                      <CsRowTaxRight>
+                          <WrapInput>
+                              <Controller
+                                  control={control}
+                                  name="discount"
+                                  render={({ field }) => (
+                                      <>
+                                          <CsInput
+                                              name="discount"
+                                              onBlur={field.onBlur}
+                                              placeholder={`0.00 ${(activeDiscount  === 1) ? '%' : 'Pi'} `}
+                                              value={field.value}
+                                              onChange={field.onChange}
+                                              type='number'
+                                              min={0}
+                                          />
+                                      </>
+                                  )}
+                              />
+                          </WrapInput>
+                          <CsCloseIcon onClick={() => { setTypeDiscount(false); setValue("discount", 0)}}>
+                          <CloseIcon />
+                          </CsCloseIcon>
 
-        {typeDiscount === true && (
-        <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
-            <CsTextLeft>{stateText.text_discount}</CsTextLeft>
-            <ContainerInput>
-                <CsRowTax>
-                    <CsRowTaxLeft>
-                        <CsButton isActive={activeDiscount === 1 ? !false : false } onClick={() => setActiveDiscount(1)}>%</CsButton>
-                        <CsButton isActive={activeDiscount  === 2 ? !false : false} onClick={() => setActiveDiscount(2)}>Pi</CsButton>
-                    </CsRowTaxLeft>
-                    <CsRowTaxRight>
-                        <WrapInput>
-                            <Controller
-                                control={control}
-                                name="discount"
-                                render={({ field }) => (
-                                    <>
-                                        <CsInput
-                                            name="discount"
-                                            onBlur={field.onBlur}
-                                            placeholder={`0.00 ${(activeDiscount  === 1) ? '%' : 'Pi'} `}
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                        />
-                                    </>
-                                )}
-                            />
-                        </WrapInput>
-                        <CsCloseIcon onClick={() => setTypeDiscount(false)}>
-                        <CloseIcon />
-                        </CsCloseIcon>
+                      </CsRowTaxRight>
+                  </CsRowTax>
+                  <ErrorMessages errors={errors} name="discount" />
+              </ContainerInput>
+          </Flex>
+      )}
 
-                    </CsRowTaxRight>
-                </CsRowTax>
-                <ErrorMessages errors={errors} name="discount" />
-            </ContainerInput>
-        </Flex>
-    )}
-
-    {typeShipping === true && (
-        <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
-            <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
-            <ContainerInput>
-                <CsRowTax>
-                    <WrapInputShipping>
-                        <Controller
-                            control={control}
-                            name="shipping"
-                            render={({ field }) => (
-                            <CsInput
-                                name="shipping"
-                                onBlur={field.onBlur}
-                                placeholder="0.00 Pi"
-                                value={field.value}
-                                onChange={field.onChange}
-                            />
-                            )}
-                        />
-                    </WrapInputShipping>
-                    <CsCloseIcon onClick={() => setTypeShipping(false)}>
-                        <CloseIcon />
-                    </CsCloseIcon>
-                    </CsRowTax>
-                <ErrorMessages errors={errors} name="shipping" />
-            </ContainerInput>
-        </Flex>
-    )}
-    </Flex>
-  )
+      {typeShipping === true && (
+          <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
+              <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
+              <ContainerInput>
+                  <CsRowTax>
+                      <WrapInputShipping>
+                          <Controller
+                              control={control}
+                              name="shipping"
+                              render={({ field }) => (
+                              <CsInput
+                                  name="shipping"
+                                  onBlur={field.onBlur}
+                                  placeholder="0.00 Pi"
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                  type='number'
+                                  min={0}
+                              />
+                              )}
+                          />
+                      </WrapInputShipping>
+                      <CsCloseIcon onClick={() => { setTypeShipping(false); setValue("shipping", 0) } }>
+                          <CloseIcon />
+                      </CsCloseIcon>
+                      </CsRowTax>
+                  <ErrorMessages errors={errors} name="shipping" />
+              </ContainerInput>
+          </Flex>
+      )}
+      </Flex>
+    )
 }
 
-const CsAddIcon = styled(AddIcon2)`
-  margin-right: 8px;
-`
-
-const CsButtonAdd = styled(Button)`
-  margin-top: 12px;
-  margin-bottom: 12px;
-  background: transparent;
-`
-
-const CsText = styled(Text)`
-  font-size: 12px;
-  color: #6B39F4;
-  font-weight: 700;
-  margin-left: 10px;
-`
 const CsCloseIcon = styled.div`
     background: transparent;
     padding: 0;

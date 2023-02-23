@@ -13,15 +13,15 @@ import { getUser } from 'state/user';
 import { createInvoice_text } from 'translation/languages/createInvoice_text';
 import { createInvoiceTranslate } from 'translation/translateArrayObjects';
 
-const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues }) => {
+const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues, watch, register }) => {
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)
     const [balaneDue, setBalanceDue] = useState(0)
-    const taxValue =  Number(getValues('tax'))
-    const shippingValue =  Number(getValues('shipping'))
-    const discountValue =  Number(getValues('discount'))
-    const amountPaidValue =  Number(getValues('amountPaid'))
+    const taxValue =  Number(watch('tax'))
+    const shippingValue =  Number(watch('shipping'))
+    const discountValue =  Number(watch('discount'))
+    const amountPaidValue =  Number(watch('amountPaid'))
 
     const DataAb = getUser();
     const languageUserApi = DataAb?.language

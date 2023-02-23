@@ -59,7 +59,7 @@ const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFiel
 
       <CsSubTotal>
         <CsButtonAdd onClick={() => {
-          append({ name: "", quantity: 0, price: 0 });
+          append({ name: "", quantity: "", price: "" });
         }}>
           <CsAddIcon />
           <CsText>{stateText.text_line_item}</CsText>

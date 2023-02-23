@@ -24,7 +24,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
-    console.log("invoicelength", invoicelength)
+    
    // Translate
     const [stateText, setStateText] = useState(createInvoice_text);
     const requestTrans = async () => {
@@ -71,7 +71,10 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                     </ContainerInput>
 
                     {/* Add your logo */}
-                    <ReactImageUpload images={images} setValue={setValue}/>
+                    <ReactImageUpload 
+                        images={images} 
+                        setValue={setValue}
+                    />
                     
                     {/* Sender Email */}
                     <Flex width='100%'>

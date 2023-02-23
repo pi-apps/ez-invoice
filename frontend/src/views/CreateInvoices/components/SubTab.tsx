@@ -38,7 +38,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const accessToken = getAccessToken()
     UseGetAnInvoiceCore(invoiceId, accessToken)
     UseGetAllInvoice(accessToken)
-console.log('totalFinaly', totalFinaly)
     const dataDefault = GetAnInvoice()
     const itemInvoice  = dataDefault?.details
     const items = GetAllInvoice()
@@ -201,11 +200,11 @@ console.log('totalFinaly', totalFinaly)
             setDefaultValue(dataPreviewDetails)
         }
     },[dataPreviewDetails, dataPreview?.isPreview])
-    console.log('getValues("amountPaid")', getValues("amountPaid"))
-    console.log('getValues("amountPaid")', getValues("amountPaid"))
+   
     const onCreate = async data => {
         setLoadingPreview(true)
-        const formData = new FormData();
+        try {
+            const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
             formData.append("billFrom", `${data.billFrom}`);
             formData.append("billTo", `${data.billTo}`);
@@ -245,6 +244,13 @@ console.log('totalFinaly', totalFinaly)
                     toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
                     setLoadingPreview(false)
             }
+        } catch (error) {
+            console.log("error", error)
+            toastError('Error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
+        } finally {
+            setLoadingPreview(false)
+        }
+        
     }
 
     const onSubmit = async data => {
@@ -322,6 +328,8 @@ console.log('totalFinaly', totalFinaly)
                         setValue={setValue} 
                         control={control}
                         loadingPreview={loadingPreview}
+                        watch={watch}
+                        register={register}
                     />
         }
     }
@@ -365,7 +373,7 @@ console.log('totalFinaly', totalFinaly)
       } else fcTransLateText(languageUserApi)
     }, [languageUserApi]);
 
-
+    
     return (
         <>
             <HeadingTab>{stateText.create_invoice}</HeadingTab>
