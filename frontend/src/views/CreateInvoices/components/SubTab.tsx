@@ -189,7 +189,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                 );
                 if(submitReq.status == 200){
                     toastSuccess('', <Text style={{justifyContent: 'center'}}>{stateText.create_success}</Text>);
-                    // setInvoiceid(submitReq?.data?.invoiceId)
                     await setInvoiceId(submitReq?.data?.invoiceId)
                     await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     await dispatch(fetchStatusPreview({isPreview: false}))
@@ -202,8 +201,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     }
 
     const onSubmit = async data => {
-        console.log('startDate', startDate)
-       await dispatch(getDataPreview({
+        await dispatch(getDataPreview({
             dataPreview: {
                 senderEmail: getValues("senderEmail"),
                 billFrom:getValues("billFrom"),
@@ -241,8 +239,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         setValue("shipping", data?.shipping);
         setValue("amountPaid", data?.amountPaid);
         setValue("logo", data?.logoUrl);
-        // setStartDate(new Date(data?.issueDate))
-        // setStartDueDate(new Date(data?.dueDate))
         await dispatch(fetchStatusPreview({isPreview: true}))
         
         navigate("/preview")
