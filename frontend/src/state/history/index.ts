@@ -25,7 +25,7 @@ export const UseGetAllInvoiceHistoryCore = (accessToken:string) => {
     if (accessToken?.length){
         getDataAllInvoiceSent();
     } else {
-      dispatch(getHistory({listItems: null,}));
+      dispatch(getHistory({listItems: null}));
     }
     
   }, [dispatch, accessToken]);

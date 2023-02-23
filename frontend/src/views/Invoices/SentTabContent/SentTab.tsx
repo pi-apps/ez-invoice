@@ -7,6 +7,8 @@ import Card from "./Card";
 import { MONTHS } from "../../../config/index";
 import { useEffect, useState } from "react";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import { invoice_text } from "translation/languages/invoice_text";
+import { invoiceTranslate } from "translation/translateArrayObjects";
 
 
 const SentTab = () => {
@@ -46,24 +48,22 @@ const SentTab = () => {
     return null;
   }
 
-  const listText = {
-    no_data: "No Data",
-  };
-  const [stateText, setStateText] = useState(listText);
-  const fcTransLateText = async (language) => {
-    const resNoData = await GetTranslateHolder(
-        listText.no_data,
-        language
-      );
-      setStateText({
-      no_data: resNoData,
-    });
-  };
-
+  // Translate
+  const [stateText, setStateText] = useState(invoice_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await invoiceTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(invoice_text);
+    }
   }, [languageUserApi]);
 
   return (
@@ -94,7 +94,7 @@ const SentTab = () => {
       ) : (
         <Flex width="100%" justifyContent="center" mt="2rem">
           <Text>
-            {stateText.no_data}
+            {stateText.text_no_data}
           </Text>
         </Flex>
       )}

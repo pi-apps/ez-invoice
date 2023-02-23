@@ -1,11 +1,9 @@
-import { Flex, Text, AutoRenewIcon } from "@devfedeltalabs/pibridge_uikit";
+import { AutoRenewIcon, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { axiosClient } from "config/htttp";
-import { InvoiceIdContext } from "contexts/InVoiceIdContext";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
-import { useContext, useEffect, useState } from "react";
-import { Translate } from "react-auto-translate";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,9 +11,13 @@ import { AppDispatch } from 'state';
 import { GetAllInvoice, GetAnInvoice, UseGetAllInvoice, UseGetAnInvoiceCore } from "state/invoice";
 import { tabActiveNewInvoice } from "state/invoice/actions";
 import { setInvoiceIdRedux } from "state/newInvoiceId/actions";
+import { GetDataPreview } from "state/preview";
+import { fetchStatusPreview } from "state/preview/actions";
+import { getDataPreview } from "state/preview/actions";
 import { getAccessToken, getUser } from "state/user";
 import styled from "styled-components";
 import * as Yup from 'yup';
+import Footer from "../components/Footer";
 import FormTabOne from "./FormTabOne";
 import FormTabThree from "./FormTabThree";
 import FormTabTwo from "./FormTabTwo";
@@ -26,28 +28,31 @@ interface PropsSubTab{
 }
 
 const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
-  const navigate = useNavigate();
-  const { toastSuccess, toastError } = useToast()
-  const [activeTax, setActiveTax ] = useState<number>(1)
-  const [activeDiscount, setActiveDiscount ] = useState<number>(1)
-//   const [invoiceId, setInvoiceid] = useState('')
-  const [startDate, setStartDate] = useState(new Date());
-  const [startDueDate, setStartDueDate] = useState(new Date());
-//   const { setInvoiceId } = useContext(InvoiceIdContext);
-
+    const navigate = useNavigate();
+    const { toastSuccess, toastError } = useToast()
+    const [activeTax, setActiveTax ] = useState<number>(1)
+    const [activeDiscount, setActiveDiscount ] = useState<number>(1)
+    const [startDate, setStartDate] = useState(new Date());
+    const [startDueDate, setStartDueDate] = useState(new Date());
     const accessToken = getAccessToken()
     UseGetAnInvoiceCore(invoiceId, accessToken)
     UseGetAllInvoice(accessToken)
-    
-    
 
     const dataDefault = GetAnInvoice()
     const itemInvoice  = dataDefault?.details
     const items = GetAllInvoice()
-    const invoicelength = items?.[0]?.allInvoice?.length
+    
+    const [ invoicelength, setInvoicelength ] = useState(0)
+    useEffect(()=>{
+        if(items){
+            setInvoicelength(items?.[0]?.allInvoice?.length)
+        } else {
+            setInvoicelength(0)
+        }
+    }, items)
     const [loadingPreview, setLoadingPreview] = useState(false)
     const dispatch = useDispatch<AppDispatch>()
-
+    
     const InitValues = {
         senderEmail: '',
         billFrom:'',
@@ -61,7 +66,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         notes:'',
         terms:'',
         tax: 0,
-        taxType:'',
+        taxType:1,
+        discountType:1,
         discount: 0,
         shipping: 0,
         amountPaid: 0,
@@ -76,14 +82,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         paymentTerms: Yup.string().max(50, 'Max length is 50 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().max(500, 'Max length is 500 characters'),
-        // tax: Yup.string().matches(/[0-9]+/ , 'Please input number'),
-        // discount: Yup.string().matches(/[0-9]+/, 'Please input number'),
-        // shipping: Yup.string().matches(/[0-9]+/, 'Please input number'),
-        // amountPaid: Yup.string().matches(/[0-9]+/, 'Please input number').matches(/^(\S+$)/g, 'Please input number'),
-        // issueDate: Yup.string().required('Issue date is required'),
-        // dueDate: Yup.string().required('Due date is required'),
-        // taxType: Yup.string().required('Tax type is required'),
-        // logo: Yup.string().required('Logo is required'),
     });
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
@@ -101,6 +99,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         ...watchFieldArray[index]
         };
     });
+
     // use update default values
     useEffect(()=>{
         if( itemInvoice && invoiceId?.length ) {
@@ -125,7 +124,39 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             setStartDueDate(new Date(itemInvoice?.dueDate))
         }
     },[itemInvoice, dataDefault?.isLoading])
-    const onSubmit = async data => {
+
+    // for preview data
+    const dataPreview = GetDataPreview()
+    const dataPreviewDetails = dataPreview?.dataPreview
+    console.log('dataPreviewDetails', dataPreviewDetails)
+    function setDefaultValue(dataDefault){
+        setValue("senderEmail", dataDefault?.senderEmail);
+        setValue("billFrom", dataDefault?.billFrom);
+        setValue("billTo", dataDefault?.billTo);
+        setValue("shipTo", dataDefault?.shipTo);
+        setValue("issueDate", new Date(dataDefault?.issueDate));
+        setValue("dueDate", new Date(dataDefault?.dueDate));
+        setValue("paymentTerms", dataDefault?.paymentTerms);
+        setValue("poNumber", dataDefault?.poNumber);
+        setValue("items", dataDefault?.items);
+        setValue("notes", dataDefault?.notes);
+        setValue("terms", dataDefault?.terms);
+        setValue("tax", dataDefault?.tax);
+        setValue("taxType", dataDefault?.taxType);
+        setValue("discount", dataDefault?.discount);
+        setValue("shipping", dataDefault?.shipping);
+        setValue("amountPaid", dataDefault?.amountPaid);
+        setValue("logo", "");
+        setStartDate(new Date(dataDefault?.issueDate))
+        setStartDueDate(new Date(dataDefault?.dueDate))
+    }
+    useEffect(()=>{
+        if( dataPreviewDetails && dataPreview?.isPreview ) {
+            setDefaultValue(dataPreviewDetails)
+        }
+    },[dataPreviewDetails, dataPreview?.isPreview])
+
+    const onCreate = async data => {
         setLoadingPreview(true)
         const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
@@ -146,7 +177,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
             formData.append("logo", data.logo);
-            
+
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {
                         headers: {
@@ -156,19 +187,65 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                         }
                     }
                 );
-                console.log('submitReq', submitReq)
-
                 if(submitReq.status == 200){
                     toastSuccess('', <Text style={{justifyContent: 'center'}}>{stateText.create_success}</Text>);
                     // setInvoiceid(submitReq?.data?.invoiceId)
                     await setInvoiceId(submitReq?.data?.invoiceId)
                     await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
+                    await dispatch(fetchStatusPreview({isPreview: false}))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
                     toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
                     setLoadingPreview(false)
             }
+    }
+
+    const onSubmit = async data => {
+        console.log('startDate', startDate)
+       await dispatch(getDataPreview({
+            dataPreview: {
+                senderEmail: getValues("senderEmail"),
+                billFrom:getValues("billFrom"),
+                billTo:getValues("billTo"),
+                shipTo:getValues("shipTo"),
+                issueDate: startDate,
+                dueDate: startDueDate,
+                paymentTerms:getValues("paymentTerms"),
+                poNumber:getValues("poNumber"),
+                items: getValues("items"),
+                notes:getValues("notes"),
+                terms:getValues("terms"),
+                tax: getValues("tax"),
+                discount: getValues("discount"),
+                shipping: getValues("shipping"),
+                amountPaid: getValues("amountPaid"),
+                taxType: activeTax,
+                discountType: activeDiscount,
+            }
+        }));
+        setValue("senderEmail", data?.senderEmail);
+        setValue("billFrom", data?.billFrom);
+        setValue("billTo", data?.billTo);
+        setValue("shipTo", data?.shipTo);
+        setValue("issueDate", startDate);
+        setValue("dueDate", startDueDate);
+        setValue("paymentTerms", data?.paymentTerms);
+        setValue("poNumber", data?.poNumber);
+        setValue("items", data?.items);
+        setValue("notes", data?.notes);
+        setValue("terms", data?.terms);
+        setValue("tax", data?.tax);
+        setValue("taxType", data?.taxType);
+        setValue("discount", data?.discount);
+        setValue("shipping", data?.shipping);
+        setValue("amountPaid", data?.amountPaid);
+        setValue("logo", data?.logoUrl);
+        // setStartDate(new Date(data?.issueDate))
+        // setStartDueDate(new Date(data?.dueDate))
+        await dispatch(fetchStatusPreview({isPreview: true}))
+        
+        navigate("/preview")
     }
 
     const handleMinusTabActive = () => {
@@ -248,35 +325,37 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
 
     return (
         <>
-        <HeadingTab>{stateText.create_invoice}</HeadingTab>
-        <ContainerSubTab>
-            <CsButton isActive={isActive > 1} role="presentation" onClick={handleMinusTabActive}>
-                &lt;
-            </CsButton>
-            <CsTab>
-                <TabButton isActive={isActive === 1} onClick={() => dispatch(tabActiveNewInvoice({isActive:1})) }>
-                    1
-                </TabButton>
-                <TabButton isActive={isActive === 2} onClick={() => dispatch(tabActiveNewInvoice({isActive:2})) }>
-                    2
-                </TabButton>
-                <TabButton isActive={isActive === 3} onClick={() => dispatch(tabActiveNewInvoice({isActive:3})) }>
-                    3
-                </TabButton>
-            </CsTab>
-            <CsButton isActive={isActive < 3} role="presentation" onClick={handlePlusTabActive}>
-                &gt;
-            </CsButton>
-        </ContainerSubTab>
-        <FormSubmit onSubmit={handleSubmit(onSubmit)}>
-            { dataDefault?.isLoading ?
-                <Flex width="100%" justifyContent="center" mt="1rem">
-                    <AutoRenewIcon color="textDisabled" spin/>
-                </Flex>
-            :
-                renderScreens(isActive)
-            }
-        </FormSubmit>
+            <HeadingTab>{stateText.create_invoice}</HeadingTab>
+            <ContainerSubTab>
+                <CsButton isActive={isActive > 1} role="presentation" onClick={handleMinusTabActive}>
+                    &lt;
+                </CsButton>
+                <CsTab>
+                    <TabButton isActive={isActive === 1} onClick={() => dispatch(tabActiveNewInvoice({isActive:1})) }>
+                        1
+                    </TabButton>
+                    <TabButton isActive={isActive === 2} onClick={() => dispatch(tabActiveNewInvoice({isActive:2})) }>
+                        2
+                    </TabButton>
+                    <TabButton isActive={isActive === 3} onClick={() => dispatch(tabActiveNewInvoice({isActive:3})) }>
+                        3
+                    </TabButton>
+                </CsTab>
+                <CsButton isActive={isActive < 3} role="presentation" onClick={handlePlusTabActive}>
+                    &gt;
+                </CsButton>
+            </ContainerSubTab>
+            <FormSubmit onSubmit={handleSubmit(onSubmit)}>
+                { 
+                    renderScreens(isActive)
+                }
+            </FormSubmit>
+            <Footer 
+                invoiceId={invoiceId} 
+                isActive={isActive} 
+                onHandleCreate={handleSubmit((d) => onCreate(d))}
+                loadingPreview={loadingPreview} 
+            />
         </>
     )
 }

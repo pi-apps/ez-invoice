@@ -5,6 +5,8 @@ import { Translate } from "react-auto-translate";
 import { useNavigate } from "react-router-dom";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import { getUser } from "state/user";
+import { download_text } from "translation/languages/download_text";
+import { downloadTranslate } from "translation/translateArrayObjects";
 
 interface SentSuccess {
   setIsSentSuccessfully: (e) => void;
@@ -24,31 +26,22 @@ const SentInvoiceSuccessfully: React.FC<
   // Translate
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
-  const listTextPlaceHolder = {
-    sent_invoice_success: "Sent Invoice Successfully",
-    done: "Done",
-  };
-  const [stateText, setStateText] = useState(listTextPlaceHolder);
-  const fcTransLateText = async (language) => {
-      const resSentSuccess = await GetTranslateHolder(
-        listTextPlaceHolder.sent_invoice_success,
-        language
-      );
-      const resDone = await GetTranslateHolder(
-        listTextPlaceHolder.done,
-        language
-      );
-    setStateText({
-      done: resDone,
-      sent_invoice_success: resSentSuccess,
-    });
-  };
-
-  useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
-  }, [languageUserApi]);
+   const [stateText, setStateText] = useState(download_text);
+   const requestTrans = async () => {
+     try {
+       const resData = await downloadTranslate(languageUserApi);
+       setStateText(resData)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+   useEffect(() => {
+     if (languageUserApi) {
+       requestTrans();
+     } else if (!languageUserApi) {
+       setStateText(download_text);
+     }
+   }, [languageUserApi]);
 
   return (
     <CsContainer>
@@ -63,11 +56,11 @@ const SentInvoiceSuccessfully: React.FC<
         </FlexImage>
         <FlexText>
           <TextHeader>
-            {stateText.sent_invoice_success}
+            {stateText.text_sent_invoice_success}
           </TextHeader>
         </FlexText>
         <Flex width='100%'>
-          <CsButton onClick={handleDone}>{stateText.done}</CsButton>
+          <CsButton onClick={handleDone}>{stateText.text_done}</CsButton>
         </Flex>
       </CsFlex>
     </CsContainer>

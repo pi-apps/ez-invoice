@@ -13,6 +13,8 @@ import Nav from 'react-bootstrap/Nav';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
 import styled from 'styled-components';
+import { invoice_text } from 'translation/languages/invoice_text';
+import { invoiceTranslate } from 'translation/translateArrayObjects';
 
 const DetailSent = () => {
     const navigate = useNavigate();
@@ -36,135 +38,25 @@ const DetailSent = () => {
         return <Skeleton width={60} />
     }
 
-    const userData = getUser();
-    const languageUserApi = userData?.language
-    const listText = {
-      bill_from: "Bill From",
-      bill_to: "Bill To",
-      issue_date: "Issue Date",
-      due_date: "Due Date",
-      payment_terms: "Payment Terms",
-      po_number: "PO Number",
-      item: "Item",
-      quanlity: "Quanlity",
-      unit_price: "Unit Price",
-      total: "Total",
-      subtotal: "Subtotal",
-      allowances: "Allowances",
-      tax: "Tax",
-      shipping: "Shipping",
-      discount: "Discount",
-      amount_due: "Amount Due",
-      back: "Back",
-      invoide: "Invoice",
-      pay_now: "Pay now",
-    };
-    const [stateText, setStateText] = useState(listText);
-    const fcTransLateText = async (language) => {
-        const resBillFrom = await GetTranslateHolder(
-            listText.bill_from,
-            language
-        );
-        const resBillTo = await GetTranslateHolder(
-        listText.bill_to,
-        language
-        );
-        const resIssueDate = await GetTranslateHolder(
-        listText.issue_date,
-        language
-        );
-        const resDueDate = await GetTranslateHolder(
-        listText.due_date,
-        language
-        );
-        const resPaymentTerms = await GetTranslateHolder(
-        listText.payment_terms,
-        language
-        );
-        const resPoNumber = await GetTranslateHolder(
-        listText.po_number,
-        language
-        );
-        const resItem = await GetTranslateHolder(
-        listText.item,
-        language
-        );
-        const resQuanlity = await GetTranslateHolder(
-        listText.quanlity,
-        language
-        );
-        const resUnitPrice = await GetTranslateHolder(
-        listText.unit_price,
-        language
-        );
-        const resTotal = await GetTranslateHolder(
-        listText.total,
-        language
-        );
-        const resSubtotal = await GetTranslateHolder(
-        listText.subtotal,
-        language
-        );
-        const resAllowances = await GetTranslateHolder(
-        listText.allowances,
-        language
-        );
-        const resTax = await GetTranslateHolder(
-        listText.tax,
-        language
-        );
-        const resShipping = await GetTranslateHolder(
-        listText.shipping,
-        language
-        );
-        const resDiscount = await GetTranslateHolder(
-        listText.discount,
-        language
-        );
-        const resAmountDue = await GetTranslateHolder(
-        listText.amount_due,
-        language
-        );
-        const resBack = await GetTranslateHolder(
-            listText.back,
-            language
-            );
-        const resInvoice = await GetTranslateHolder(
-            listText.invoide,
-            language
-        );
-        const resPayNow = await GetTranslateHolder(
-            listText.pay_now,
-            language
-        );
-        setStateText({
-            allowances: resAllowances,
-            amount_due: resAmountDue,
-            bill_from: resBillFrom,
-            bill_to: resBillTo,
-            discount: resDiscount,
-            due_date: resDueDate,
-            issue_date: resIssueDate,
-            item: resItem,
-            payment_terms: resPaymentTerms,
-            po_number: resPoNumber,
-            quanlity: resQuanlity,
-            shipping: resShipping,
-            subtotal: resSubtotal,
-            tax: resTax,
-            total: resTotal,
-            unit_price: resUnitPrice,
-            back: resBack,
-            invoide: resInvoice,
-            pay_now: resPayNow,
-      });
-    };
-  
-    useEffect(() => {
-      if (!languageUserApi) {
-        fcTransLateText('en')
-      } else fcTransLateText(languageUserApi)
-    }, [languageUserApi]);
+  // Translate
+  const userData = getUser();
+  const languageUserApi = userData?.language
+  const [stateText, setStateText] = useState(invoice_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await invoiceTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(invoice_text);
+    }
+  }, [languageUserApi]);
     
     return (
         <PageFullWidth>
@@ -172,7 +64,7 @@ const DetailSent = () => {
                 <Header />
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading>{stateText.invoide} #{details?.invoiceNumber}</CsHeading>
+                            <CsHeading>{stateText.text_invoice} #{details?.invoiceNumber}</CsHeading>
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
@@ -187,7 +79,7 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.bill_from}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_bill_from}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -195,7 +87,7 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.bill_to}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_bill_to}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -203,15 +95,15 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.issue_date}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_issue_date}</CsTextLeft>
                                         {convertDate(details?.issueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.due_date}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_due_date}</CsTextLeft>
                                         {convertDate(details?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.payment_terms}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -220,7 +112,7 @@ const DetailSent = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.po_number}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_po_number}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -231,10 +123,10 @@ const DetailSent = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%">{stateText.item}</ColFirstth>
-                                        <Colth width="20%">{stateText.quanlity}</Colth>
-                                        <Colth width="20%">{stateText.unit_price}</Colth>
-                                        <Colth width="20%">{stateText.total}</Colth>
+                                        <ColFirstth width="20%">{stateText.text_item}</ColFirstth>
+                                        <Colth width="20%">{stateText.text_quanlity}</Colth>
+                                        <Colth width="20%">{stateText.text_unit_price}</Colth>
+                                        <Colth width="20%">{stateText.text_text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
                                         return(
@@ -250,7 +142,7 @@ const DetailSent = () => {
                                 </CsContentBill>
                                  <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -260,7 +152,7 @@ const DetailSent = () => {
                                     </Row>
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>Tax:</Translate> ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_tax}: ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? <>
                                                 {(details?.subTotal && details?.tax) && (details?.subTotal*details?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> : <>
@@ -270,7 +162,7 @@ const DetailSent = () => {
                                     }
                                     {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_discount}: ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.discountType === 1 ? 
                                             <>
                                                 {(details?.subTotal && details?.discount && details?.tax) && (details?.discount*(details?.subTotal + details?.tax)/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -284,13 +176,13 @@ const DetailSent = () => {
                                     
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
+                                            <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
                                             <CsTextRight bold>{details?.shipping && details?.shipping.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         </Row>
                                     }
  
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.total}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_total}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -298,7 +190,7 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>{stateText.allowances}</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_allowances}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -306,7 +198,7 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.amount_due}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -318,7 +210,7 @@ const DetailSent = () => {
                             <WAction>
                                 <CsNavItem>
                                     <CsButton onClick={()=> navigate("/invoice")}>
-                                        {stateText.back}
+                                        {stateText.text_back}
                                     </CsButton>
                                 </CsNavItem>
                             </WAction>

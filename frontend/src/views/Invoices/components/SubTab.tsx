@@ -7,6 +7,8 @@ import { Translate } from "react-auto-translate";
 import { getUser } from "state/user";
 import { useEffect, useState } from "react";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import { invoice_text } from "translation/languages/invoice_text";
+import { invoiceTranslate } from "translation/translateArrayObjects";
 
 interface PropsSubTab {
   isSent: boolean;
@@ -14,32 +16,24 @@ interface PropsSubTab {
 
 const SubTab: React.FC<PropsSubTab> = ({ isSent }) => {
   const dispatch = useDispatch<AppDispatch>();
+  // Translate
   const userData = getUser();
   const languageUserApi = userData?.language
-  const listText = {
-    sent: "Sent",
-    received: "Received",
-  };
-  const [stateText, setStateText] = useState(listText);
-  const fcTransLateText = async (language) => {
-    const resInvoice = await GetTranslateHolder(
-        listText.sent,
-        language
-      );
-      const resNewInvoice = await GetTranslateHolder(
-        listText.received,
-        language
-      );
-      setStateText({
-      sent: resInvoice,
-      received: resNewInvoice,
-    });
-  };
-
+  const [stateText, setStateText] = useState(invoice_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await invoiceTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(invoice_text);
+    }
   }, [languageUserApi]);
   
   return (
@@ -48,13 +42,13 @@ const SubTab: React.FC<PropsSubTab> = ({ isSent }) => {
         isActive={isSent === !false}
         onClick={() => dispatch(tabActive({ isSent: true }))}
       >
-        {stateText.sent}
+        {stateText.text_sent}
       </TabButton>
       <TabButton
           isActive={isSent === false}
           onClick={() => dispatch(tabActive({ isSent: false }))}
         >
-          {stateText.received}
+          {stateText.text_received}
       </TabButton>
     </ContainerSubTab>
   );

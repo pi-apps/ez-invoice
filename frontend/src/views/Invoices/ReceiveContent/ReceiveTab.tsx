@@ -6,6 +6,8 @@ import { Translate } from "react-auto-translate";
 import { GetAnInvoice, UseGetAllInvoiceReceivedCore } from "state/invoice";
 import { getAccessToken, getUser } from "state/user";
 import styled from "styled-components";
+import { invoice_text } from "translation/languages/invoice_text";
+import { invoiceTranslate } from "translation/translateArrayObjects";
 import Card from "./Card";
 
 const ReceiveTab = () => {
@@ -30,27 +32,24 @@ const ReceiveTab = () => {
     }
     return null;
   }
-
+  // Translate
   const userData = getUser();
   const languageUserApi = userData?.language
-  const listText = {
-    no_data: "No Data",
-  };
-  const [stateText, setStateText] = useState(listText);
-  const fcTransLateText = async (language) => {
-    const resNoData = await GetTranslateHolder(
-        listText.no_data,
-        language
-      );
-      setStateText({
-      no_data: resNoData,
-    });
-  };
-
+  const [stateText, setStateText] = useState(invoice_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await invoiceTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(invoice_text);
+    }
   }, [languageUserApi]);
 
   return (
@@ -81,7 +80,7 @@ const ReceiveTab = () => {
       ) : (
         <Flex width="100%" justifyContent="center" mt="2rem">
           <Text>
-            {stateText.no_data}
+            {stateText.text_no_data}
           </Text>
         </Flex>
       )}

@@ -1,31 +1,22 @@
-import { Button, Flex, Image, Skeleton, Text } from '@devfedeltalabs/pibridge_uikit';
-import Footer from 'components/Footer';
+import { Button, Flex, Text, Skeleton, Image } from '@devfedeltalabs/pibridge_uikit';
 import Header from 'components/Header';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Fragment, useMemo, useEffect } from 'react';
 import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
-import { Fragment } from 'react';
-import { Translate } from "react-auto-translate";
-import { getAccessToken, getUser } from 'state/user';
-import { useEffect, useState } from 'react';
-import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import Nav from 'react-bootstrap/Nav';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import { GetAnInvoice, UseGetAnInvoiceCore } from 'state/invoice';
+import { GetDataPreview } from 'state/preview';
 import styled from 'styled-components';
-import { invoice_text } from 'translation/languages/invoice_text';
-import { invoiceTranslate } from 'translation/translateArrayObjects';
+import { UndefineIcon } from 'components/Svg';
 
-const DetailSent = () => {
-    const userData = getUser();
-    const languageUserApi = userData?.language
-
+const Preview = () => {
+    const data = GetDataPreview()
     const navigate = useNavigate();
-    let { slug } = useParams()
-    const accessTokenUser = getAccessToken()
-    UseGetAnInvoiceCore(slug, accessTokenUser)
-    const items = GetAnInvoice()
-    const details = items?.details
+    const items = data?.dataPreview
+    const images = data?.images
+    const listItems = data?.dataPreview.items
+    
     function convertDate(date: any) {
         if (date) {
           const today = new Date(date)
@@ -39,95 +30,124 @@ const DetailSent = () => {
         return <Skeleton width={60} />
     }
 
-   // Translate
-   const [stateText, setStateText] = useState(invoice_text);
-   const requestTrans = async () => {
-     try {
-       const resData = await invoiceTranslate(languageUserApi);
-       setStateText(resData)
-     } catch (error) {
-       console.log(error)
-     }
-   }
-   useEffect(() => {
-     if (languageUserApi) {
-       requestTrans();
-     } else if (!languageUserApi) {
-       setStateText(invoice_text);
-     }
-   }, [languageUserApi]);
+    const totalPrice = (fields) => {
+        return fields.reduce((sum, i) => {
+          if(i.price === undefined || i.quantity === undefined){
+            return 0
+          } else{
+            return sum + i.price * i.quantity
+          }
+        },0)
+      }
     
+    const subTotal = useMemo(() => {
+        return totalPrice(listItems)
+    },[listItems]);
+
+
+    const taxValue = Number(items?.tax)
+    const shippingValue =  Number(items?.shipping)
+    const discountValue =  Number(items?.discount)
+    const amountPaidValue =  Number(items?.amountPaid)
+
+    const activeTax = Number(items?.taxType)
+    const activeDiscount = items?.discountType
+    
+    const taxValuePercent = taxValue * subTotal / 100 
+    const isTaxValue = (activeTax === 1 ) ? taxValuePercent : taxValue
+    const discountValuePercent = discountValue * (subTotal + isTaxValue) / 100 
+    
+    const isDiscountValuePercent = discountValue <= 100 ? discountValuePercent : subTotal // neu chon % discount.
+    const isDiscount = (discountValue < subTotal) ? discountValue : subTotal
+
+    const totalFinal = (total) => {
+        if( activeTax === 2 && activeDiscount === 2){
+          return total + taxValue + shippingValue - isDiscount
+        } else if(activeTax === 2 && activeDiscount === 1){
+          return total + taxValue - isDiscountValuePercent + shippingValue
+        } else if(activeTax === 1 && activeDiscount === 1){
+          return total + taxValuePercent + shippingValue - isDiscountValuePercent
+        } else if(activeTax === 1 && activeDiscount === 2){
+          return total + taxValuePercent + shippingValue - isDiscount
+        }
+    } 
+    
+    const totalFinaly = useMemo(() => {
+        return totalFinal(subTotal)
+      },[activeTax]);
+      
+    const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
+
+    // useEffect(() => {
+    //   setBalanceDue(amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0)
+    // },[amountPaidValue])
+
     return (
         <PageFullWidth>
             <CsContainer>
                 <Header />
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading>{stateText.text_invoide} #{details?.invoiceNumber}</CsHeading>
+                            {/* <CsHeading>{stateText.invoide} #{details?.invoiceNumber}</CsHeading> */}
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
+                                        { !images ?
+                                            <UndefineIcon width="30px" height="30px"/>
                                         :
-                                            <Fragment>
-                                                { details?.logoUrl &&
-                                                    <Image width={59} height={57} src={details?.logoUrl} alt='logo' />
-                                                }
-                                            </Fragment>
+                                            <Image width={59} height={57} src={images[0]?.data_url} alt='logo' />
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_bill_from}</CsTextLeft>
-                                        { items?.isLoading ?
+                                        <CsTextLeft>Bill from</CsTextLeft>
+                                        { !items?.billFrom ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.billFrom}</CsTextRight>
+                                            <CsTextRight bold>{items?.billFrom}</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_bill_to}</CsTextLeft>
-                                        { items?.isLoading ?
+                                        <CsTextLeft>Bill to</CsTextLeft>
+                                        { !items?.billTo ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.billTo}</CsTextRight>
+                                            <CsTextRight bold>{items?.billTo}</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_issue_date}</CsTextLeft>
-                                        {convertDate(details?.issueDate)}
+                                        <CsTextLeft>Date</CsTextLeft>
+                                        {convertDate(items?.issueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_due_date}</CsTextLeft>
-                                        {convertDate(details?.dueDate)}
+                                        <CsTextLeft>Due date</CsTextLeft>
+                                        {convertDate(items?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
-                                        { items?.isLoading ?
+                                        <CsTextLeft>Payment Terms</CsTextLeft>
+                                        { !items?.paymentTerms ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.paymentTerms}</CsTextRight>
-                                        }
-                                        
-                                    </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_po_number}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.poNumber}</CsTextRight>
+                                            <CsTextRight bold>{items?.paymentTerms}</CsTextRight>
                                         }
                                         
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>PO Number</CsTextLeft>
+                                        { !items?.poNumber ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{items?.poNumber}</CsTextRight>
+                                        }
                                     </Row>
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%">{stateText.text_item}</ColFirstth>
-                                        <Colth width="20%">{stateText.text_quanlity}</Colth>
-                                        <Colth width="20%">{stateText.text_unit_price}</Colth>
-                                        <Colth width="20%">{stateText.text_total}</Colth>
+                                        <ColFirstth width="20%">item</ColFirstth>
+                                        <Colth width="20%">quantity</Colth>
+                                        <Colth width="20%">unit price</Colth>
+                                        <Colth width="20%">total</Colth>
                                     </CsRowth>
-                                    {details?.items.map((item) => {
+                                    {listItems.map((item) => {
                                         return(
                                             <CsRow>
                                             <ColFirst width="20%">{item?.name}</ColFirst>   
@@ -141,91 +161,84 @@ const DetailSent = () => {
                                 </CsContentBill>
                                 <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
-                                        { items?.isLoading ?
+                                        <CsTextLeft>Subtotal</CsTextLeft>
+                                        { !subTotal ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.subTotal && details?.subTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{subTotal && subTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                         
                                     </Row>
-                                    { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
+                                    { ( Number(items?.tax) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.text_tax}: ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.taxType === 1 ? <>
-                                                {(details?.subTotal && details?.tax) && (details?.subTotal*details?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
-                                            </> : <>
-                                                {details?.tax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                            <CsTextLeft>Tax: ({items?.tax} {Number( items?.taxType ) === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{Number(items?.taxType) === 1 ? 
+                                            <>
+                                                {(subTotal && items?.tax) && (subTotal*items?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                            </> 
+                                            : 
+                                            <>
+                                                {items?.tax && taxValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> } Pi</CsTextRight>
                                         </Row>
                                     }
-                                    {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
+                                    {( Number(items?.discount) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.text_discount}: ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
-                                            <CsTextRight bold>{details?.discountType === 1 ? 
+                                            <CsTextLeft>Discount: ({items?.discount} {items?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextRight bold>{items?.discountType === 1 ? 
                                             <>
-                                                {(details?.subTotal && details?.discount && details?.tax) && (details?.discount*(details?.subTotal + details?.tax)/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                                {(subTotal && items?.discount && items?.tax) && (discountValue*(subTotal + isTaxValue )/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> : 
                                             <>
-                                                {details?.discount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                                {items?.discount && discountValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </>
                                             } Pi</CsTextRight>
                                         </Row>
                                     }
                                     
-                                    { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
+                                    { ( Number(items?.shipping) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
-                                            <CsTextRight bold>{details?.shipping && details?.shipping.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextLeft>Shipping</CsTextLeft>
+                                            <CsTextRight bold>{items?.shipping && shippingValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         </Row>
                                     }
  
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_total}</CsTextLeft>
-                                        { items?.isLoading ?
+                                        <CsTextLeft>Total</CsTextLeft>
+                                        { (!subTotal || !items?.discount || !items?.tax || !items?.shipping) ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.total && details?.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{(subTotal && items?.discount && items?.tax && items?.shipping) && totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
+
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_allowances}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
+                                        <CsTextLeft>Allowances</CsTextLeft>
+                                        { !items?.amountPaid ?
+                                            <CsTextRight>- 0</CsTextRight>
                                         :
-                                            <CsTextRight bold>-{details?.amountPaid && details?.amountPaid.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>-{items?.amountPaid && items?.amountPaid.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
+
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
-                                        { items?.isLoading ?
+                                        <CsTextLeft>Allowances</CsTextLeft>
+                                        { (!subTotal || !items?.discount || !items?.tax || !items?.shipping) ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.amountDue && details?.amountDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{balanceDue && balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
                                 </CsContentInfo>
                             </WContent>
                             <WAction>
-                                { !details?.paid &&
-                                    <CsNavItem>
-                                        <NavLink to={`/payment/${details?.signature}`}>
-                                            <CsButton onClick={()=> navigate(``)}>
-                                                {stateText.text_pay_now}
-                                            </CsButton>
-                                        </NavLink>
-                                    </CsNavItem>
-                                }
                                 <CsNavItem>
-                                    <NavLink to={`/invoice`}>
-                                        <CsButton onClick={()=> navigate("")}>
-                                                {stateText.text_back}
-                                        </CsButton>
-                                    </NavLink>
+                                    <CsButton onClick={()=> navigate(`/newInvoice`)}>
+                                        Back
+                                    </CsButton>
                                 </CsNavItem>
                             </WAction>
                         </Flex>
-                        <Footer/>
                     </CsWrapContainer>
             </CsContainer>
         </PageFullWidth>
@@ -341,4 +354,4 @@ const CsButton = styled(Button)<{isActive:boolean}>`
     max-width: 100%;
     }
 `
-export default DetailSent
+export default Preview

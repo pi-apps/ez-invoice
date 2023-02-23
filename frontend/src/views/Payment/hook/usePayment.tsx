@@ -87,8 +87,8 @@ export const usePayment = (signature:string, token:string, language:string, tips
             } else {
                 toastError('error', "System error!!!")
             }
-        } catch (e) {
-            toastError('Error', JSON.stringify(e))
+        } catch (e:any) {
+            toastError('Error', e?.response?.data?.message)
             console.log("error", e)
         } finally {
             setPendingPayment(false)

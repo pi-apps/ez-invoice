@@ -26,6 +26,7 @@ export const fetchAllInvoiceSent = async (accessToken:string): Promise<ListSent>
         const submitReq = await axiosClient.get(`invoice/all-sent`, {
           headers: {
             'Authorization': accessToken,
+            'Access-Control-Allow-Origin': '*'
           }
         });
         const groups = submitReq?.data.reduce((groups, items) => {
@@ -61,6 +62,7 @@ export const fetchAllInvoice = async (accessToken:string): Promise<AllInvoice> =
       const submitReq = await axiosClient.get(`invoice/all-sent`, {
         headers: {
           'Authorization': accessToken,
+          'Access-Control-Allow-Origin': '*'
         }
       });
         const dataAllIvoice = submitReq?.data

@@ -6,13 +6,21 @@ import styled from "styled-components";
 import { Translate } from "react-auto-translate";
 import { getUser } from "state/user";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import { AppDispatch } from "state";
+import { useDispatch } from "react-redux";
+import { getDataImages } from "state/preview/actions"
+import { createInvoice_text } from "translation/languages/createInvoice_text";
+import { createInvoiceTranslate } from "translation/translateArrayObjects";
 
 function ReactImageUpload({images , setValue }) {
   const [ logoImg, setLogoImages] = useState([]);
-
+  const dispatch = useDispatch<AppDispatch>()
   const onChange = (imageList, addUpdateIndex) => {
     setValue("logo",imageList[0].file);
     setLogoImages(imageList)
+    dispatch(getDataImages(
+      { images: imageList }
+    ))
   };
   const onImageDelete = () => {
     setLogoImages([])
@@ -20,29 +28,23 @@ function ReactImageUpload({images , setValue }) {
 
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
-  
-  const listTextPlaceHolder = {
-    // text normal
-    add_your_logo: 'Add your logo',
-  };
-
-  const [stateText, setStateText] = useState(listTextPlaceHolder);
-
-  const fcTransLateText = async (language) => {
-    const resAddLogo = await GetTranslateHolder(
-        listTextPlaceHolder.add_your_logo,
-        language
-      );
-    setStateText({
-        add_your_logo: resAddLogo,
-    });
-  };
-
-  useEffect(() => {
-    if (!languageUserApi) {
-        fcTransLateText('en')
-      } else fcTransLateText(languageUserApi)
-  }, [languageUserApi]);
+   // Translate
+   const [stateText, setStateText] = useState(createInvoice_text);
+   const requestTrans = async () => {
+     try {
+       const resData = await createInvoiceTranslate(languageUserApi);
+       setStateText(resData)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+   useEffect(() => {
+     if (languageUserApi) {
+       requestTrans();
+     } else if (!languageUserApi) {
+       setStateText(createInvoice_text);
+     }
+   }, [languageUserApi]);
 
   return (
     <div>
@@ -65,7 +67,7 @@ function ReactImageUpload({images , setValue }) {
                 logoImg.length === 0 && (
                     <CsButtonAdd onClick={onImageUpload}>
                         <CsAddIcon />
-                        <CsText ml="10px">{stateText.add_your_logo}</CsText>
+                        <CsText ml="10px">{stateText.text_add_your_logo}</CsText>
                     </CsButtonAdd>
                 )
             }
@@ -79,7 +81,7 @@ function ReactImageUpload({images , setValue }) {
                     </Flex>
 
                     <div className="image-item__btn-wrapper" style={{display: 'flex', gap: '10px'}}>
-                      <CsButtonAdd onClick={() => onImageUpdate(index)}><CsText><Translate>Update</Translate></CsText>
+                      <CsButtonAdd onClick={() => onImageUpdate(index)}><CsText>{stateText.text_update}</CsText>
                       </CsButtonAdd>
                     </div>
                   </Flex>

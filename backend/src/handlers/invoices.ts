@@ -43,6 +43,9 @@ export default function mountInvoiceEndpoints(router: Router) {
             const total = new BigNumber(amountAfterTax).minus(amountDiscount).plus(shipping);
             const amountPaid = req.body.amountPaid;
             const amountDue = new BigNumber(total).minus(amountPaid);
+            if (amountDue.isLessThanOrEqualTo(0)) {
+                return res.status(400).json({ error: 'invalid', message: "Amount due must be greater than 0" });
+            }
             const invoice: any = {
                 invoiceId: `EZ_${Date.now()}`,
                 invoiceNumber: numOfInvoices + 1,

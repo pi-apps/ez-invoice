@@ -20,7 +20,6 @@ const UpdateInvoices = () => {
                 <CsContainer>
                     <HeaderCreateinVoice />
                     <SubTab setInvoiceId={setInvoice} isActive={isActive} invoiceId={invoiceId}/>
-                    <Footer invoiceId={invoice} isActive={isActive}/>
                 </CsContainer>
             </PageFullWidth>
         </TranSlatorModal>

@@ -16,6 +16,8 @@ import { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
+import { createInvoice_text } from 'translation/languages/createInvoice_text';
+import { createInvoiceTranslate } from 'translation/translateArrayObjects';
 
 const CreateDetail = () => {
 
@@ -64,108 +66,24 @@ const CreateDetail = () => {
       subtotal: "Subtotal",
       invoice: "Invoice",
     };
-    const [stateText, setStateText] = useState(listText);
-    const fcTransLateText = async (language) => {
-        const resBillFrom = await GetTranslateHolder(
-            listText.bill_from,
-            language
-        );
-        const resBillTo = await GetTranslateHolder(
-        listText.bill_to,
-        language
-        );
-        const resIssueDate = await GetTranslateHolder(
-        listText.issue_date,
-        language
-        );
-        const resDueDate = await GetTranslateHolder(
-        listText.due_date,
-        language
-        );
-        const resPaymentTerms = await GetTranslateHolder(
-        listText.payment_terms,
-        language
-        );
-        const resPoNumber = await GetTranslateHolder(
-        listText.po_number,
-        language
-        );
-        const resItem = await GetTranslateHolder(
-        listText.item,
-        language
-        );
-        const resQuanlity = await GetTranslateHolder(
-        listText.quanlity,
-        language
-        );
-        const resUnitPrice = await GetTranslateHolder(
-        listText.unit_price,
-        language
-        );
-        const resTotal = await GetTranslateHolder(
-        listText.total,
-        language
-        );
-        const resAllowances = await GetTranslateHolder(
-        listText.allowances,
-        language
-        );
-        const resAmountDue = await GetTranslateHolder(
-        listText.amount_due,
-        language
-        );
-        const resBack = await GetTranslateHolder(
-            listText.back,
-            language
-        );
-        const resTax = await GetTranslateHolder(
-            listText.tax,
-            language
-        );
-        const resShipping = await GetTranslateHolder(
-            listText.shipping,
-            language
-        );
-        const resDiscount = await GetTranslateHolder(
-            listText.discount,
-            language
-        );
-        const resSubtotal = await GetTranslateHolder(
-            listText.subtotal,
-            language
-        );
-        const resInvoice = await GetTranslateHolder(
-            listText.invoice,
-            language
-        );
-        setStateText({
-            allowances: resAllowances,
-            amount_due: resAmountDue,
-            bill_from: resBillFrom,
-            bill_to: resBillTo,
-            due_date: resDueDate,
-            issue_date: resIssueDate,
-            item: resItem,
-            payment_terms: resPaymentTerms,
-            po_number: resPoNumber,
-            quanlity: resQuanlity,
-            total: resTotal,
-            unit_price: resUnitPrice,
-            back: resBack,
-            discount: resDiscount,
-            shipping: resShipping,
-            tax: resTax,
-            invoice: resInvoice,
-            subtotal: resSubtotal,
-      });
-    };
-  
-    useEffect(() => {
-      if (!languageUserApi) {
-        fcTransLateText('en')
-      } else fcTransLateText(languageUserApi)
-    }, [languageUserApi]);
-
+   // Translate
+   const [stateText, setStateText] = useState(createInvoice_text);
+   const requestTrans = async () => {
+     try {
+       const resData = await createInvoiceTranslate(languageUserApi);
+       setStateText(resData)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+   useEffect(() => {
+     if (languageUserApi) {
+       requestTrans();
+     } else if (!languageUserApi) {
+       setStateText(createInvoice_text);
+     }
+   }, [languageUserApi]);
+   
     return (
         <PageFullWidth>
             <CsContainer>
@@ -187,7 +105,7 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.bill_from}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_bill_from}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -195,7 +113,7 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.bill_to}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_bill_to}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -203,11 +121,11 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.issue_date}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_issue_date}</CsTextLeft>
                                         {convertDate(details?.issueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.due_date}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_due_date}</CsTextLeft>
                                         {convertDate(details?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
@@ -220,7 +138,7 @@ const CreateDetail = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.po_number}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_po_number}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -231,10 +149,10 @@ const CreateDetail = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%">{stateText.item}</ColFirstth>
-                                        <Colth width="20%">{stateText.quanlity}</Colth>
-                                        <Colth width="20%">{stateText.unit_price}</Colth>
-                                        <Colth width="20%">{stateText.total}</Colth>
+                                        <ColFirstth width="20%">{stateText.text_item}</ColFirstth>
+                                        <Colth width="20%">{stateText.text_quanlity}</Colth>
+                                        <Colth width="20%">{stateText.text_unit_price}</Colth>
+                                        <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
                                         return(
@@ -250,7 +168,7 @@ const CreateDetail = () => {
                                 </CsContentBill>
                                 <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.subtotal}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -259,7 +177,7 @@ const CreateDetail = () => {
                                     </Row>
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.tax}({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_tax}({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? <>
                                                 {(details?.subTotal && details?.tax) && (details?.subTotal*details?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> : <>
@@ -269,7 +187,7 @@ const CreateDetail = () => {
                                     }
                                     {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.discount}({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_discount}({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.discountType === 1 ? 
                                             <>
                                                 {(details?.subTotal && details?.discount && details?.tax) && (details?.discount*(details?.subTotal + details?.tax)/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -284,13 +202,13 @@ const CreateDetail = () => {
                                     
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.shipping}</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
                                             <CsTextRight bold>{details?.shipping && details?.shipping.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         </Row>
                                     }
  
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.total}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_total}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -298,7 +216,7 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.allowances}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_allowances}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -306,7 +224,7 @@ const CreateDetail = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.amount_due}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -317,15 +235,21 @@ const CreateDetail = () => {
                             </WContent>
                             <WAction>
                                     <CsNavItem>
+                                        <NavLink to={`/send/${details?.invoiceId}`}>
+                                            <CsButton>
+                                                Send mail
+                                            </CsButton>
+                                        </NavLink>
+                                    </CsNavItem>
+                                    <CsNavItem>
                                         <NavLink to="/newInvoice">
                                             <CsButton>
-                                                {stateText.back}
+                                                {stateText.text_back}
                                             </CsButton>
                                         </NavLink>
                                     </CsNavItem>
                             </WAction>
                         </Flex>
-                        <Footer isActive={3} invoiceId={details?.invoiceId} />
                     </CsWrapContainer>
             </CsContainer>
         </PageFullWidth>

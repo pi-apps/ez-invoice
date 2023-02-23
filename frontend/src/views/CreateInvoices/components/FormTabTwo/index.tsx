@@ -8,36 +8,30 @@ import styled from 'styled-components'
 import Card from './Card'
 import { Translate } from "react-auto-translate";
 import { getUser } from 'state/user'
+import { createInvoice_text } from 'translation/languages/createInvoice_text'
+import { createInvoiceTranslate } from 'translation/translateArrayObjects'
 
 const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFields, remove, register, control}) => {
 
   const userData = getUser();
   const languageUserApi = userData?.language
-  const listText = {
-    amount_due: "Amount Due",
-    line_item: "Line item",
-  };
-  const [stateText, setStateText] = useState(listText);
-  const fcTransLateText = async (language) => {
-      const resAmountDue = await GetTranslateHolder(
-        listText.amount_due,
-        language
-      );
-      const resLineItem = await GetTranslateHolder(
-        listText.line_item,
-        language
-      );
-      setStateText({
-      amount_due: resAmountDue,
-      line_item: resLineItem,
-    });
-  };
-
-  useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
-  }, [languageUserApi]);
+   // Translate
+   const [stateText, setStateText] = useState(createInvoice_text);
+   const requestTrans = async () => {
+     try {
+       const resData = await createInvoiceTranslate(languageUserApi);
+       setStateText(resData)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+   useEffect(() => {
+     if (languageUserApi) {
+       requestTrans();
+     } else if (!languageUserApi) {
+       setStateText(createInvoice_text);
+     }
+   }, [languageUserApi]);
  
   const totalPrice = (fields) => {
     return fields.reduce((sum, i) => {
@@ -68,11 +62,11 @@ const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFiel
           append({ name: "", quantity: 0, price: 0 });
         }}>
           <CsAddIcon />
-          <CsText>{stateText.line_item}</CsText>
+          <CsText>{stateText.text_line_item}</CsText>
         </CsButtonAdd>
         <hr style={{margin: '10px 0'}} />
         <Row mt="16px" style={{justifyContent: "space-between"}}>
-            <CsTextLeft>{stateText.amount_due}:</CsTextLeft>
+            <CsTextLeft>{stateText.text_amount_due}:</CsTextLeft>
             <CsTextRight bold>
               {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}
               </CsTextRight>
@@ -129,18 +123,14 @@ const CsSubTotal = styled.div`
 const CsWrapperForm = styled.div`
 width: 100%;
 `
-const CsWrapperContent = styled.div`
-  padding: 0 24px;
-`
 
 const CsContainer = styled(Flex)`
-    height: calc(100vh - 400px);
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
+    height: 100%;
     flex-direction: column;
     overflow: scroll;
     padding: 0 24px;
     width: 100%;
+    min-height: 50vh;
 `
 
 export default FormTabTwo

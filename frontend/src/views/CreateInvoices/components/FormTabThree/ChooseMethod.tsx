@@ -7,52 +7,36 @@ import styled from 'styled-components'
 import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from 'hooks/TranSlateHolder'
 import { getUser } from 'state/user'
+import { createInvoice_text } from 'translation/languages/createInvoice_text'
+import { createInvoiceTranslate } from 'translation/translateArrayObjects'
 
 const ChooseMethod = ({ errors, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
 
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
-
-    const listTextPlaceHolder = {
-      // text
-      discount_t: "Discount",
-      shipping_t: "Shipping",
-      tax_t: "Tax",
-    };
-
-    const [stateText, setStateText] = useState(listTextPlaceHolder);
-  
-    const fcTransLateText = async (language) => {
-        const resDiscount_t = await GetTranslateHolder(
-          listTextPlaceHolder.discount_t,
-          language
-        );
-        const resShipping_t = await GetTranslateHolder(
-          listTextPlaceHolder.shipping_t,
-          language
-        );
-        const resTax_t = await GetTranslateHolder(
-            listTextPlaceHolder.tax_t,
-            language
-          );
-      setStateText({
-        discount_t: resDiscount_t,
-        shipping_t: resShipping_t,
-        tax_t: resTax_t,
-      });
-    };
-  
-    useEffect(() => {
-      if (!languageUserApi) {
-        fcTransLateText('en')
-      } else fcTransLateText(languageUserApi)
-    }, [languageUserApi]);
+   // Translate
+   const [stateText, setStateText] = useState(createInvoice_text);
+   const requestTrans = async () => {
+     try {
+       const resData = await createInvoiceTranslate(languageUserApi);
+       setStateText(resData)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+   useEffect(() => {
+     if (languageUserApi) {
+       requestTrans();
+     } else if (!languageUserApi) {
+       setStateText(createInvoice_text);
+     }
+   }, [languageUserApi]);
 
   return (
     <Flex flexDirection="column" width="100%">
         {typeTax === true && (
             <Flex width="100%" alignItems="center" justifyContent="space-between">
-                <CsTextLeft>{stateText.tax_t}</CsTextLeft>
+                <CsTextLeft>{stateText.text_tax}</CsTextLeft>
                 <ContainerInput>
                     <CsRowTax>
                         <CsRowTaxLeft>
@@ -89,7 +73,7 @@ const ChooseMethod = ({ errors, activeTax,setActiveTax, typeTax, typeDiscount, s
 
         {typeDiscount === true && (
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
-            <CsTextLeft>{stateText.discount_t}</CsTextLeft>
+            <CsTextLeft>{stateText.text_discount}</CsTextLeft>
             <ContainerInput>
                 <CsRowTax>
                     <CsRowTaxLeft>
@@ -127,7 +111,7 @@ const ChooseMethod = ({ errors, activeTax,setActiveTax, typeTax, typeDiscount, s
 
     {typeShipping === true && (
         <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
-            <CsTextLeft>{stateText.shipping_t}</CsTextLeft>
+            <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
             <ContainerInput>
                 <CsRowTax>
                     <WrapInputShipping>

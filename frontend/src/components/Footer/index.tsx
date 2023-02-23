@@ -12,6 +12,8 @@ import InvoiceIcon from "../Svg/Icons/Invoice";
 import { useLocation, useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
+import { footerMenu_text } from "translation/languages/footerMenu_text";
+import { FooterMenuTranslate } from "translation/translateArrayObjects";
 
 const styles = {
   main: {
@@ -47,38 +49,30 @@ const Footer = () => {
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<LoginModal/>);
 
+
+  // Translate
   const userData = getUser();
   const languageUserApi = userData?.language
-  const listText = {
-    home: "Home",
-    invoice: "Invoice",
-  };
-  const [stateText, setStateText] = useState(listText);
-  const fcTransLateText = async (language) => {
-    const resHome = await GetTranslateHolder(
-        listText.home,
-        language
-      );
-      const resInvoice = await GetTranslateHolder(
-        listText.invoice,
-        language
-      );
-      setStateText({
-      home: resHome,
-      invoice: resInvoice,
-    });
-  };
-
+  const [stateText, setStateText] = useState(footerMenu_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await FooterMenuTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    if (!languageUserApi) {
-      fcTransLateText('en')
-    } else fcTransLateText(languageUserApi)
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(footerMenu_text);
+    }
   }, [languageUserApi]);
 
   const [activeTab, setActiveTab] = useState({
     home: true,
     invoice: false,
-    account: false,
   });
 
   useEffect(() => {
@@ -97,16 +91,78 @@ const Footer = () => {
           ...{
             home: false,
             invoice: true,
-            account: false,
           },
         });
         break;
-      case "/account":
+      case "/newInvoice":
         setActiveTab({
           ...{
             home: false,
-            invoice: false,
-            account: true,
+            invoice: true,
+          },
+        });
+        break;
+        case "/detailSent":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/detailReceived":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/createDetail":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/updateinvoice":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/payment":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/send":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/history":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+        break;
+        case "/preview":
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
           },
         });
         break;
@@ -115,7 +171,6 @@ const Footer = () => {
           ...{
             home: true,
             invoice: false,
-            account: false,
           },
         });
         break;
@@ -158,7 +213,7 @@ const Footer = () => {
           eventKey="home"
         >
           <HomeIcon style={styles.icon} actived={activeTab.home} />
-          {stateText.home}
+          {stateText.text_home}
         </Nav.Link>
       </Nav.Item>
       <Nav.Item style={styles.navItem}>
@@ -172,7 +227,7 @@ const Footer = () => {
           eventKey="invoice"
         >
           <InvoiceIcon style={styles.icon} actived={activeTab.invoice} />
-          {stateText.invoice}
+          {stateText.text_invoice}
         </Nav.Link>
       </Nav.Item>
     </NavCustom>
