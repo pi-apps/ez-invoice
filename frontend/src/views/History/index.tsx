@@ -18,6 +18,7 @@ import { AppDispatch } from "state";
 import { useDispatch } from "react-redux";
 import { history_text } from "translation/languages/history_text";
 import { historyTranslate } from "translation/translateArrayObjects";
+import { getActiveDiscount, getActiveTax } from "state/invoice/actions";
 
 const History = () => {
     const [openDeleteModal] = useModal(<DeleteModal/>);
@@ -32,6 +33,8 @@ const History = () => {
         dispatch(getDataImages(
             { images: null }
         ))
+        dispatch(getActiveDiscount({ isDiscountPercent:1 }))
+        dispatch(getActiveTax({ isTaxPercent:1 }))
     }, [])
 
     // Translate

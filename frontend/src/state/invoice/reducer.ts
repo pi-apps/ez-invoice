@@ -1,5 +1,16 @@
 import { createReducer } from "@reduxjs/toolkit"
-import { tabActive, tabActiveNewInvoice, getAnInvoice, fetchLoading, fetchFailure, getAllInvoiceSent, getAllInvoiceReceived, getAllInvoiceAll } from "./actions"
+import { 
+    tabActive, 
+    tabActiveNewInvoice, 
+    getAnInvoice, 
+    fetchLoading, 
+    fetchFailure, 
+    getAllInvoiceSent, 
+    getAllInvoiceReceived, 
+    getAllInvoiceAll,
+    getActiveTax,
+    getActiveDiscount
+} from "./actions"
 import { ItemsDetails, ListSent, ListSentItems } from "./types"
 
 interface globalStateInvoice {
@@ -10,7 +21,9 @@ interface globalStateInvoice {
     isLoading:boolean,
     isFailure:boolean,
     listSent: ListSentItems[],
-    listReceived: ListSentItems[]
+    listReceived: ListSentItems[],
+    isTaxPercent:number,
+    isDiscountPercent:number
 }
 
 export const initialState: globalStateInvoice = {
@@ -21,7 +34,9 @@ export const initialState: globalStateInvoice = {
     isLoading:false,
     isFailure:false,
     listSent: null,
-    listReceived: null
+    listReceived: null,
+    isTaxPercent:1,
+    isDiscountPercent:1
 }
 
 export default createReducer(initialState, (builder) =>
@@ -49,5 +64,11 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(getAllInvoiceAll, (state, action) => {
         state.allInvoice = action.payload.allInvoice
+    })
+    .addCase(getActiveTax, (state, action) => {
+        state.isTaxPercent = action.payload.isTaxPercent
+    })
+    .addCase(getActiveDiscount, (state, action) => {
+        state.isDiscountPercent = action.payload.isDiscountPercent
     })
 )

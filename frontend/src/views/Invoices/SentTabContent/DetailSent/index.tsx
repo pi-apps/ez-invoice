@@ -147,7 +147,7 @@ const DetailSent = () => {
                                             <ColFirst width="20%"><Translate>{item?.name}</Translate></ColFirst>
                                             <Col width="20%"><Translate>{item?.quantity}</Translate></Col>
                                             <Col width="20%">{item?.price && item?.price.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
-                                            <Col width="20%">{((item?.quantity) &&(item?.price)) && ((item?.quantity)*(item?.price)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
+                                            <Col width="20%">{((item?.quantity) &&(item?.price)) && ((item?.quantity)*(item?.price)).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                         </CsRow>
                                         )
                                     })}

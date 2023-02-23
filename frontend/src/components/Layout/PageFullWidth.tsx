@@ -7,8 +7,8 @@ const PageMeta = () => {
     <MetaTags>
      <title>EZ Invoice</title>
       <meta property="og:title" content="EZ Invoice" />
-      <meta property="og:description" content="EZ Invoice" />
-      <meta property="og:image" content="https://pibridge.org/wp-content/uploads/2022/09/Preview.png" />
+      <meta property="og:description" content="The easiest way to do invoicing" />
+      <meta property="og:image" content="https://ipfs.moralis.io:2053/ipfs/QmYQ19pa3dWr3JSFbSVTPRTVBXEdiKcTpMTMCRNrjvn1NW/73ddc551ac93fba3dcee8bb3483dcd54" />
     </MetaTags>
   )
 }

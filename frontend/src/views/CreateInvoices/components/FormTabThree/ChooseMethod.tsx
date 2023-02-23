@@ -9,13 +9,32 @@ import { GetTranslateHolder } from 'hooks/TranSlateHolder'
 import { getUser } from 'state/user'
 import { createInvoice_text } from 'translation/languages/createInvoice_text'
 import { createInvoiceTranslate } from 'translation/translateArrayObjects'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
+import { getActiveDiscount, getActiveTax } from 'state/invoice/actions'
 
-const ChooseMethod = ({ iserrorWhenInputDiscount,iserrorWhenInputDiscountPercent, errors, activeTax,setActiveTax, typeTax, typeDiscount, setTypeTax, setTypeDiscount, activeDiscount, setActiveDiscount , typeShipping, setTypeShipping, control, setValue }) => {
+const ChooseMethod = ({ 
+    iserrorWhenInputDiscount,
+    iserrorWhenInputDiscountPercent, 
+    errors,
+    activeTax,
+    typeTax, 
+    typeDiscount, 
+    setTypeTax, 
+    setTypeDiscount, 
+    activeDiscount, 
+    typeShipping, 
+    setTypeShipping, 
+    control, 
+    setValue,
+    isMaxDiscount,
+}) => {
 
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
    // Translate
    const [stateText, setStateText] = useState(createInvoice_text);
+   const dispatch = useDispatch<AppDispatch>()
    const requestTrans = async () => {
      try {
        const resData = await createInvoiceTranslate(languageUserApi);
@@ -39,8 +58,8 @@ const ChooseMethod = ({ iserrorWhenInputDiscount,iserrorWhenInputDiscountPercent
                   <ContainerInput>
                       <CsRowTax>
                           <CsRowTaxLeft>
-                              <CsButton isActive={activeTax === 1 ? !false : false } onClick={() => setActiveTax(1)}>%</CsButton>
-                              <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => setActiveTax(2)}>Pi</CsButton>
+                              <CsButton isActive={activeTax === 1 ? !false : false } onClick={() => dispatch(getActiveTax({ isTaxPercent:1 }))}>%</CsButton>
+                              <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => dispatch(getActiveTax({ isTaxPercent:2 }))}>Pi</CsButton>
                           </CsRowTaxLeft>
                           <CsRowTaxRight>
                               <WrapInput>
@@ -78,8 +97,8 @@ const ChooseMethod = ({ iserrorWhenInputDiscount,iserrorWhenInputDiscountPercent
               <ContainerInput style={{alignItems: 'flex-end'}}>
                   <CsRowTax>
                       <CsRowTaxLeft>
-                          <CsButton isActive={activeDiscount === 1 ? !false : false } onClick={() => setActiveDiscount(1)}>%</CsButton>
-                          <CsButton isActive={activeDiscount  === 2 ? !false : false} onClick={() => setActiveDiscount(2)}>Pi</CsButton>
+                          <CsButton isActive={activeDiscount === 1 ? !false : false } onClick={() => dispatch(getActiveDiscount({ isDiscountPercent:1 })) }>%</CsButton>
+                          <CsButton isActive={activeDiscount  === 2 ? !false : false} onClick={() => dispatch(getActiveDiscount({ isDiscountPercent:2 })) }>Pi</CsButton>
                       </CsRowTaxLeft>
                       <CsRowTaxRight>
                           <WrapInput>
@@ -107,7 +126,7 @@ const ChooseMethod = ({ iserrorWhenInputDiscount,iserrorWhenInputDiscountPercent
                       </CsRowTaxRight>
                   </CsRowTax>
                   {/* <ErrorMessages errors={errors} name="discount" /> */}
-                  {(iserrorWhenInputDiscount === true || iserrorWhenInputDiscountPercent === true) ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_less_than_subtotal_and_tax}</Text> : ''}
+                  {isMaxDiscount ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_less_than_subtotal_and_tax}</Text> : ''}
               </ContainerInput>
           </Flex>
       )}
