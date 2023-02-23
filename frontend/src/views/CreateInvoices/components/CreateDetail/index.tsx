@@ -90,7 +90,7 @@ const CreateDetail = () => {
     const convertShipping = new BigNumber(details?.shipping).decimalPlaces(2,1)
     const converAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
     const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
-    console.log("details?.discountType", details)
+    
     return (
         <PageFullWidth>
             <CsContainer>

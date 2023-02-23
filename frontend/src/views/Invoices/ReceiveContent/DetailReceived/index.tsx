@@ -17,7 +17,7 @@ import styled from 'styled-components';
 import { invoice_text } from 'translation/languages/invoice_text';
 import { invoiceTranslate } from 'translation/translateArrayObjects';
 
-const DetailSent = () => {
+const DetailReceived = () => {
     const userData = getUser();
     const languageUserApi = userData?.language
 
@@ -27,7 +27,7 @@ const DetailSent = () => {
     UseGetAnInvoiceCore(slug, accessTokenUser)
     const items = GetAnInvoice()
     const details = items?.details
-    console.log('details', details)
+    
 
     function convertDate(date: any) {
         if (date) {
@@ -60,18 +60,17 @@ const DetailSent = () => {
      }
    }, [languageUserApi]);
     
-   const taxValuePercent = details?.tax * details?.subTotal / 100 
-   const isTaxValue = (details.taxType === 1 ) ? taxValuePercent : details?.tax
-
-   const subTotal = new BigNumber(details?.subTotal).decimalPlaces(2,1)
-   const convertPercentTax = new BigNumber(details?.subTotal*isTaxValue/100).decimalPlaces(2,1)
-   const convertTax = new BigNumber(details?.tax).decimalPlaces(2,1)
-   const convertDiscount = new BigNumber(details?.discount).decimalPlaces(2,1)
-   const convertDiscountPercent = new BigNumber(details?.discount*(details?.subTotal + details?.tax)/100).decimalPlaces(2,1)
-   const convertShipping = new BigNumber(details?.shipping).decimalPlaces(2,1)
-   const convertTotal = new BigNumber(details?.total).decimalPlaces(2,1)
-   const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
-   const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
+    const taxValuePercent = details?.tax * details?.subTotal / 100 
+    const isTaxValue = details?.taxType === 1  ? taxValuePercent : details?.tax
+    const subTotal = new BigNumber(details?.subTotal).decimalPlaces(2,1)
+    const convertPercentTax = new BigNumber(details?.subTotal*isTaxValue/100).decimalPlaces(2,1)
+    const convertTax = new BigNumber(details?.tax).decimalPlaces(2,1)
+    const convertDiscount = new BigNumber(details?.discount).decimalPlaces(2,1)
+    const convertDiscountPercent = new BigNumber(details?.discount*(details?.subTotal + details?.tax)/100).decimalPlaces(2,1)
+    const convertShipping = new BigNumber(details?.shipping).decimalPlaces(2,1)
+    const convertTotal = new BigNumber(details?.total).decimalPlaces(2,1)
+    const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
+    const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
    
 //    console.log('isTaxValue',item?.price)
 
@@ -379,4 +378,4 @@ const CsButton = styled(Button)<{isActive:boolean}>`
     max-width: 100%;
     }
 `
-export default DetailSent
+export default DetailReceived

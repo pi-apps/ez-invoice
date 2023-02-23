@@ -69,7 +69,6 @@ const DetailSent = () => {
     const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
     const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
     
-    console.log('convertTax', details?.amountDue)
 
     return (
         <PageFullWidth>
