@@ -18,6 +18,10 @@ interface Props {
   amountDue:string
   paid:boolean,
   invoiceNumber:number
+  onClick: () => void;
+  isOpen: boolean;
+  textPaid: string;
+  textUnpaid: string;
 }
 
 const Card: React.FC<Props> = ({ 
@@ -27,7 +31,11 @@ const Card: React.FC<Props> = ({
   billTo,
   amountDue,
   paid,
-  invoiceNumber
+  invoiceNumber,
+  onClick,
+  isOpen,
+  textPaid,
+  textUnpaid,
  }) => {
 
   function convertDate(date: any) {
@@ -56,15 +64,15 @@ const Card: React.FC<Props> = ({
     }
   }
   useEffect(() => {
-    if (languageUserApi) {
+    if (languageUserApi && isOpen) {
       requestTrans();
     } else if (!languageUserApi) {
       setStateText(invoice_text);
     }
-  }, [languageUserApi]);
+  }, [languageUserApi, isOpen]);
 
   return (
-    <NavLink to={`/detailSent/${invoiceId}`}>
+    <NavLink to={`/detailSent/${invoiceId}`} onClick={onClick}>
       <CsContainer>
         <CsRow>
           <CsCol>
@@ -93,11 +101,11 @@ const Card: React.FC<Props> = ({
           <CsCol>
             { !paid  ? (
               <CsStaTusUnpaid>
-                {stateText.text_unpaid}
+                {textPaid}
               </CsStaTusUnpaid>
             ) : (
               <CsStaTusPaid>
-                {stateText.text_paid}
+                {textUnpaid}
               </CsStaTusPaid>
             )}
           </CsCol>

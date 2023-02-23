@@ -120,6 +120,8 @@ export default function mountPaymentsEndpoints(router: Router) {
             await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
             return res.status(200).json({ message: `Approved the payment ${paymentId}` });
         } catch (error: any) {
+            console.log(error);
+            
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
         }
     });

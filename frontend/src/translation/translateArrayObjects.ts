@@ -80,6 +80,9 @@ export async function useMenuTranslate(language: any) {
     "text_login_success": langArr[2] || useMenu_text["text_login_success"],
     "text_login_failed": langArr[3] || useMenu_text["text_login_failed"],
     "text_logout_success": langArr[4] || useMenu_text["text_logout_success"],
+    "text_are_your_sure_logout": langArr[5] || useMenu_text["text_are_your_sure_logout"],
+    "text_cancel": langArr[6] || useMenu_text["text_cancel"],
+    "text_confirm": langArr[7] || useMenu_text["text_confirm"],
   }
   return data;
 }
@@ -212,6 +215,9 @@ export async function createInvoiceTranslate(language: any) {
     "text_back": langArr[47] || createInvoice_text["text_back"],
     "text_invoice": langArr[48] || createInvoice_text["text_invoice"],
     "text_send_mail": langArr[49] || createInvoice_text["text_send_mail"],
+    "text_create_invoice": langArr[50] || createInvoice_text["text_create_invoice"],
+    "text_create_success": langArr[51] || createInvoice_text["text_create_success"],
+    "text_create_failed": langArr[52] || createInvoice_text["text_create_failed"],
   }
   return data;
 }
@@ -297,6 +303,10 @@ export async function paymentTranslate(language: any) {
     "text_quanlity": langArr[15] || payment_text["text_quanlity"],
     "text_unit_price": langArr[16] || payment_text["text_unit_price"],
     "text_invoice": langArr[17] || payment_text["text_invoice"],
+    "text_issue_date": langArr[18] || payment_text["text_issue_date"],
+    "text_amount_due": langArr[19] || payment_text["text_amount_due"],
+    "text_tips": langArr[20] || payment_text["text_tips"],
+    "text_pay_now": langArr[21] || payment_text["text_pay_now"],
   }
   return data;
 }

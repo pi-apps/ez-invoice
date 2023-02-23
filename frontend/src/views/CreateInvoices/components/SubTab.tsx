@@ -16,6 +16,8 @@ import { fetchStatusPreview } from "state/preview/actions";
 import { getDataPreview } from "state/preview/actions";
 import { getAccessToken, getUser } from "state/user";
 import styled from "styled-components";
+import { createInvoice_text } from "translation/languages/createInvoice_text";
+import { createInvoiceTranslate } from "translation/translateArrayObjects";
 import * as Yup from 'yup';
 import Footer from "../components/Footer";
 import FormTabOne from "./FormTabOne";
@@ -188,14 +190,14 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                     }
                 );
                 if(submitReq.status == 200){
-                    toastSuccess('', <Text style={{justifyContent: 'center'}}>{stateText.create_success}</Text>);
+                    toastSuccess('', <Text style={{justifyContent: 'center'}}>{stateText.text_create_success}</Text>);
                     await setInvoiceId(submitReq?.data?.invoiceId)
                     await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     await dispatch(fetchStatusPreview({isPreview: false}))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
-                    toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
+                    toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
                     setLoadingPreview(false)
             }
     }
@@ -282,46 +284,27 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     // transLanguage
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
-  
-    const listTextPlaceHolder = {
-      // text
-      create_invoice: "Create Invoice",
-      create_success: "Create invoice successfully!!!",
-      create_failed: "System error!!!",
-    };
-  
-    const [stateText, setStateText] = useState(listTextPlaceHolder);
-  
-    const fcTransLateText = async (language) => {
-        const resCreateInvoice = await GetTranslateHolder(
-          listTextPlaceHolder.create_invoice,
-          language
-        );
-        const resCreateSuccess = await GetTranslateHolder(
-            listTextPlaceHolder.create_success,
-            language
-          );
-          const resCreateFailed = await GetTranslateHolder(
-            listTextPlaceHolder.create_failed,
-            language
-          );
-      setStateText({
-        create_invoice: resCreateInvoice,
-        create_failed: resCreateFailed,
-        create_success: resCreateSuccess,
-      });
-    };
-  
-    useEffect(() => {
-      if (!languageUserApi) {
-        fcTransLateText('en')
-      } else fcTransLateText(languageUserApi)
-    }, [languageUserApi]);
+  const [stateText, setStateText] = useState(createInvoice_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await createInvoiceTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(createInvoice_text);
+    }
+  }, [languageUserApi]);
 
 
     return (
         <>
-            <HeadingTab>{stateText.create_invoice}</HeadingTab>
+            <HeadingTab>{stateText.text_create_invoice}</HeadingTab>
             <ContainerSubTab>
                 <CsButton isActive={isActive > 1} role="presentation" onClick={handleMinusTabActive}>
                     &lt;
