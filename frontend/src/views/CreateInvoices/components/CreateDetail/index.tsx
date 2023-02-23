@@ -235,6 +235,13 @@ const CreateDetail = () => {
                             </WContent>
                             <WAction>
                                     <CsNavItem>
+                                        <NavLink to={`/send/${details?.invoiceId}`}>
+                                            <CsButton>
+                                                Send mail
+                                            </CsButton>
+                                        </NavLink>
+                                    </CsNavItem>
+                                    <CsNavItem>
                                         <NavLink to="/newInvoice">
                                             <CsButton>
                                                 {stateText.text_back}
@@ -243,7 +250,6 @@ const CreateDetail = () => {
                                     </CsNavItem>
                             </WAction>
                         </Flex>
-                        {/* <Footer isActive={3} invoiceId={details?.invoiceId} /> */}
                     </CsWrapContainer>
             </CsContainer>
         </PageFullWidth>

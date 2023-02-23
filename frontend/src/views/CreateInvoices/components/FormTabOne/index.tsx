@@ -24,265 +24,266 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
     
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
-    
+    console.log("invoicelength", invoicelength)
    // Translate
-   const [stateText, setStateText] = useState(createInvoice_text);
-   const requestTrans = async () => {
-     try {
-       const resData = await createInvoiceTranslate(languageUserApi);
-       setStateText(resData)
-     } catch (error) {
-       console.log(error)
-     }
-   }
-   useEffect(() => {
-     if (languageUserApi) {
-       requestTrans();
-     } else if (!languageUserApi) {
-       setStateText(createInvoice_text);
-     }
-   }, [languageUserApi]);
-
-  return (
-    <CsContainer >
-            <CsFlex>
-                {/* Invoice number */}
-                <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">{stateText.text_invoice_number}</CsLabel>
-                </Flex>
-                <ContainerInput>
-                    <WrapInput>
-                        <Controller
-                            control={control}
-                            name="invoicenumber"
-                            render={({ field }) => (
-                            <CsInput
-                                name="invoicenumber"
-                                type="text"
-                                readOnly
-                                placeholder={Number(invoicelength) > 0 ? invoicelength + 1 : 1}
-                                defaultValue={Number(invoicelength) > 0 ? invoicelength + 1 : 1}
-                            />
-                            )}
-                        />
-                    </WrapInput>
-                    <ErrorMessages errors={errors} name="invoicenumber" />
-                </ContainerInput>
-
-                {/* Add your logo */}
-                <ReactImageUpload images={images} setValue={setValue}/>
-                
-                {/* Sender Email */}
-                <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">{stateText.text_sender_email}</CsLabel>
-                </Flex>
-                <ContainerInput>
-                    <WrapInput>
-                        <Controller
-                            control={control}
-                            name="senderEmail"
-                            defaultValue={getValues("senderEmail")}
-                            render={({ field }) => (
-                                <>
-                                <CsInput
-                                    name="senderEmail"
-                                    // type="email"
-                                    value={field.value}
-                                    onBlur={field.onBlur}
-                                    placeholder={`${stateText.text_pl_sender_email}`}
-                                    onChange={field.onChange}
-                                />
-                                {errors.email && touchedFields.email && (
-                                    <span>{errors.email.message}</span>
-                                )}
-                                </>
-                            )}
-                        />
-                    </WrapInput>
-                    <ErrorMessages errors={errors} name="senderEmail" />
-                </ContainerInput>
-
-                {/* Bill From */}
-                <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">{stateText.text_bill_from}</CsLabel>
-                  </Flex>
-                <ContainerInput>
-                    <WrapInput>
-                        <Controller
-                            control={control}
-                            name="billFrom"
-                            render={({ field }) => (
-                            <CsTextArea
-                                name="billFrom"
-                                value={field.value}
-                                onBlur={field.onBlur}
-                                placeholder={`${stateText.text_pl_bill_from}`}
-                                onChange={field.onChange}
-                            />
-                            )}
-                        />
-                    </WrapInput>
-                    <ErrorMessages errors={errors} name="billFrom" />
-                </ContainerInput>
-
-                {/* Bill To */}
-                  <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">{stateText.text_bill_to}</CsLabel>
-                  </Flex>
-                  <ContainerInput>
-                    <WrapInput>
-                        <Controller
-                            control={control}
-                            name="billTo"
-                            // rules={rules.billto}
-                            render={({ field }) => (
-                            <CsTextArea
-                                name="billTo"
-                                value={field.value}
-                                onBlur={field.onBlur}
-                                placeholder={`${stateText.text_pl_bill_to}`}
-                                onChange={field.onChange}
-                            />
-                            )}
-                        />
-                    </WrapInput>
-                    <ErrorMessages errors={errors} name="billTo" />
-                </ContainerInput>
-
-                    {/* Ship To */}
-                  <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">{stateText.text_ship_to}</CsLabel>
-                  </Flex>
-                <ContainerInput>
-                    <WrapInput>
-                        <Controller
-                            control={control}
-                            name="shipTo"
-                            render={({ field }) => (
-                            <CsTextArea
-                                name="shipTo"
-                                value={field.value}
-                                onBlur={field.onBlur}
-                                placeholder={`(${stateText.text_pl_option})`}
-                                onChange={field.onChange}
-                            />
-                            )}
-                        />
-                    </WrapInput>
-                    <ErrorMessages errors={errors} name="shipTo" />
-                </ContainerInput>
-
-                <Row className="mb-1 mt-1">
-                    <Flex width="50%" flexDirection="column">
-                        <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">{stateText.text_date}</CsLabel>
-                        </Flex>
-                        <ContainerInput>
-                            <WrapInput>
-                                <Controller 
-                                    control={control}
-                                    name="issueDate"
-                                    // type="text"
-                                    render={({ field }) => (
-                                        <>
-                                            <CsDatePicker 
-                                            id="issueDate"
-                                            value={field.value}
-                                            onBlur={field.onBlur}
-                                            selected={startDate} onChange={(date:any) => {
-                                                setStartDate(date)
-                                            }} />
-                                            <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('issueDate')?.focus() }}/>
-                                        </>
-                                    )}
-                                />
-                            </WrapInput>
-                            {startDate === null && (
-                                <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Issue date is required</Translate></Text>
-                            )}
-                            <ErrorMessages errors={errors} name="issueDate" />
-                        </ContainerInput>
+    const [stateText, setStateText] = useState(createInvoice_text);
+    const requestTrans = async () => {
+        try {
+        const resData = await createInvoiceTranslate(languageUserApi);
+        setStateText(resData)
+        } catch (error) {
+        console.log(error)
+        }
+    }
+    useEffect(() => {
+        if (languageUserApi) {
+        requestTrans();
+        } else if (!languageUserApi) {
+        setStateText(createInvoice_text);
+        }
+    }, [languageUserApi]);
+    const invoiceNumber = isNaN(invoicelength) ? 1 :  Number(invoicelength)+1
+    return (
+        <CsContainer >
+                <CsFlex>
+                    {/* Invoice number */}
+                    <Flex width='100%'>
+                        <CsLabel mt="1rem" color="#64748B">{stateText.text_invoice_number}</CsLabel>
                     </Flex>
-                    <Flex width="50%" flexDirection="column">
-                        <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">{stateText.text_payment}</CsLabel>
-                        </Flex>
-                        <ContainerInput>
-                            <WrapInput>
-                                <Controller
-                                    control={control}
-                                    name="paymentTerms"
-                                    render={({ field }) => (
-                                    <CsInput
-                                        type="text"
-                                        name="paymentTerms"
-                                        value={field.value}
-                                        onBlur={field.onBlur}
-                                        placeholder={`${stateText.text_pl_payment}`}
-                                        onChange={field.onChange}
-                                    />
-                                    )}
-                                />
-                            </WrapInput>
-                            <ErrorMessages errors={errors} name="paymentTerms" />
-                        </ContainerInput>
-                    </Flex>
-                </Row>
-
-                <Row className="mb-1 mt-1">
-                    <Flex width="50%" flexDirection="column">
-                        <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">{stateText.text_due_date}</CsLabel>
-                        </Flex>
+                    <ContainerInput>
                         <WrapInput>
-                            <Controller 
+                            <Controller
                                 control={control}
-                                name="dueDate"
-                                // type="text"
+                                name="invoicenumber"
+                                render={({ field }) => (
+                                <CsInput
+                                    name="invoicenumber"
+                                    type="text"
+                                    readOnly
+                                    value={invoiceNumber}
+                                    // placeholder={invoiceNumber}
+                                    // defaultValue={invoiceNumber}
+                                />
+                                )}
+                            />
+                        </WrapInput>
+                        <ErrorMessages errors={errors} name="invoicenumber" />
+                    </ContainerInput>
+
+                    {/* Add your logo */}
+                    <ReactImageUpload images={images} setValue={setValue}/>
+                    
+                    {/* Sender Email */}
+                    <Flex width='100%'>
+                        <CsLabel mt="1rem" color="#64748B">{stateText.text_sender_email}</CsLabel>
+                    </Flex>
+                    <ContainerInput>
+                        <WrapInput>
+                            <Controller
+                                control={control}
+                                name="senderEmail"
+                                defaultValue={getValues("senderEmail")}
                                 render={({ field }) => (
                                     <>
-                                        <CsDatePicker
-                                        id="dueDate"
+                                    <CsInput
+                                        name="senderEmail"
+                                        // type="email"
                                         value={field.value}
-                                        selected={startDueDate} onChange={(date:any) => setStartDueDate(date)} />
-                                        <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('dueDate')?.focus() }}/>
+                                        onBlur={field.onBlur}
+                                        placeholder={`${stateText.text_pl_sender_email}`}
+                                        onChange={field.onChange}
+                                    />
+                                    {errors.email && touchedFields.email && (
+                                        <span>{errors.email.message}</span>
+                                    )}
                                     </>
                                 )}
                             />
                         </WrapInput>
-                        {startDueDate === null && (
-                            <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Due date is required</Translate></Text>
-                        )}
-                        <ErrorMessages errors={errors} name="dueDate" />
+                        <ErrorMessages errors={errors} name="senderEmail" />
+                    </ContainerInput>
+
+                    {/* Bill From */}
+                    <Flex width='100%'>
+                        <CsLabel mt="1rem" color="#64748B">{stateText.text_bill_from}</CsLabel>
                     </Flex>
-                    <Flex width="50%" flexDirection="column">
-                        <Flex width='100%'>
-                            <CsLabel mt="1rem" color="#64748B">{stateText.text_po_number}</CsLabel>
-                        </Flex>
+                    <ContainerInput>
                         <WrapInput>
                             <Controller
                                 control={control}
-                                name="poNumber"
+                                name="billFrom"
                                 render={({ field }) => (
-                                <CsInput
-                                    type="text"
-                                    name="poNumber"
+                                <CsTextArea
+                                    name="billFrom"
                                     value={field.value}
                                     onBlur={field.onBlur}
+                                    placeholder={`${stateText.text_pl_bill_from}`}
                                     onChange={field.onChange}
-                                    placeholder={`${stateText.text_pl_po_number}`}
                                 />
                                 )}
                             />
                         </WrapInput>
-                    <ErrorMessages errors={errors} name="poNumber" />
+                        <ErrorMessages errors={errors} name="billFrom" />
+                    </ContainerInput>
+
+                    {/* Bill To */}
+                    <Flex width='100%'>
+                        <CsLabel mt="1rem" color="#64748B">{stateText.text_bill_to}</CsLabel>
                     </Flex>
-                </Row>
-                { checkError === true && 
-                    <CustomMessageError>{getMessageError}</CustomMessageError> 
-                }
-            </CsFlex>
-    </CsContainer>
+                    <ContainerInput>
+                        <WrapInput>
+                            <Controller
+                                control={control}
+                                name="billTo"
+                                // rules={rules.billto}
+                                render={({ field }) => (
+                                <CsTextArea
+                                    name="billTo"
+                                    value={field.value}
+                                    onBlur={field.onBlur}
+                                    placeholder={`${stateText.text_pl_bill_to}`}
+                                    onChange={field.onChange}
+                                />
+                                )}
+                            />
+                        </WrapInput>
+                        <ErrorMessages errors={errors} name="billTo" />
+                    </ContainerInput>
+
+                        {/* Ship To */}
+                    <Flex width='100%'>
+                        <CsLabel mt="1rem" color="#64748B">{stateText.text_ship_to}</CsLabel>
+                    </Flex>
+                    <ContainerInput>
+                        <WrapInput>
+                            <Controller
+                                control={control}
+                                name="shipTo"
+                                render={({ field }) => (
+                                <CsTextArea
+                                    name="shipTo"
+                                    value={field.value}
+                                    onBlur={field.onBlur}
+                                    placeholder={`(${stateText.text_pl_option})`}
+                                    onChange={field.onChange}
+                                />
+                                )}
+                            />
+                        </WrapInput>
+                        <ErrorMessages errors={errors} name="shipTo" />
+                    </ContainerInput>
+
+                    <Row className="mb-1 mt-1">
+                        <Flex width="50%" flexDirection="column">
+                            <Flex width='100%'>
+                                <CsLabel mt="1rem" color="#64748B">{stateText.text_date}</CsLabel>
+                            </Flex>
+                            <ContainerInput>
+                                <WrapInput>
+                                    <Controller 
+                                        control={control}
+                                        name="issueDate"
+                                        // type="text"
+                                        render={({ field }) => (
+                                            <>
+                                                <CsDatePicker 
+                                                id="issueDate"
+                                                value={field.value}
+                                                onBlur={field.onBlur}
+                                                selected={startDate} onChange={(date:any) => {
+                                                    setStartDate(date)
+                                                }} />
+                                                <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('issueDate')?.focus() }}/>
+                                            </>
+                                        )}
+                                    />
+                                </WrapInput>
+                                {startDate === null && (
+                                    <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Issue date is required</Translate></Text>
+                                )}
+                                <ErrorMessages errors={errors} name="issueDate" />
+                            </ContainerInput>
+                        </Flex>
+                        <Flex width="50%" flexDirection="column">
+                            <Flex width='100%'>
+                                <CsLabel mt="1rem" color="#64748B">{stateText.text_payment}</CsLabel>
+                            </Flex>
+                            <ContainerInput>
+                                <WrapInput>
+                                    <Controller
+                                        control={control}
+                                        name="paymentTerms"
+                                        render={({ field }) => (
+                                        <CsInput
+                                            type="text"
+                                            name="paymentTerms"
+                                            value={field.value}
+                                            onBlur={field.onBlur}
+                                            placeholder={`${stateText.text_pl_payment}`}
+                                            onChange={field.onChange}
+                                        />
+                                        )}
+                                    />
+                                </WrapInput>
+                                <ErrorMessages errors={errors} name="paymentTerms" />
+                            </ContainerInput>
+                        </Flex>
+                    </Row>
+
+                    <Row className="mb-1 mt-1">
+                        <Flex width="50%" flexDirection="column">
+                            <Flex width='100%'>
+                                <CsLabel mt="1rem" color="#64748B">{stateText.text_due_date}</CsLabel>
+                            </Flex>
+                            <WrapInput>
+                                <Controller 
+                                    control={control}
+                                    name="dueDate"
+                                    // type="text"
+                                    render={({ field }) => (
+                                        <>
+                                            <CsDatePicker
+                                            id="dueDate"
+                                            value={field.value}
+                                            selected={startDueDate} onChange={(date:any) => setStartDueDate(date)} />
+                                            <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('dueDate')?.focus() }}/>
+                                        </>
+                                    )}
+                                />
+                            </WrapInput>
+                            {startDueDate === null && (
+                                <Text mt='6px' color='#ff592c' fontSize='12px'><Translate>Due date is required</Translate></Text>
+                            )}
+                            <ErrorMessages errors={errors} name="dueDate" />
+                        </Flex>
+                        <Flex width="50%" flexDirection="column">
+                            <Flex width='100%'>
+                                <CsLabel mt="1rem" color="#64748B">{stateText.text_po_number}</CsLabel>
+                            </Flex>
+                            <WrapInput>
+                                <Controller
+                                    control={control}
+                                    name="poNumber"
+                                    render={({ field }) => (
+                                    <CsInput
+                                        type="text"
+                                        name="poNumber"
+                                        value={field.value}
+                                        onBlur={field.onBlur}
+                                        onChange={field.onChange}
+                                        placeholder={`${stateText.text_pl_po_number}`}
+                                    />
+                                    )}
+                                />
+                            </WrapInput>
+                        <ErrorMessages errors={errors} name="poNumber" />
+                        </Flex>
+                    </Row>
+                    { checkError === true && 
+                        <CustomMessageError>{getMessageError}</CustomMessageError> 
+                    }
+                </CsFlex>
+        </CsContainer>
   )
 }
 
