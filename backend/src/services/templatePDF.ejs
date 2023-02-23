@@ -14,6 +14,9 @@
         text-align: left;
         font-size: 12px;
     }
+    th {
+      font-weight: normal;
+    }
     table {
         border-collapse: collapse;
         width: 100%;
@@ -32,24 +35,33 @@
         padding: 6px;
         text-align: right;
     }
+    .first-column-2 {
+        width: 50%;
+        border: none;
+        padding: 6px;
+    }
+    .second-column-2 {
+        width: 50%;
+        border: none;
+        padding: 6px;
+        text-align: right;
+    }
   </style>
   <body>
     <table style="border-collapse: collapse; border: none;">
       <tr style="border: none; padding: 0px;">
-        <th class="first-column">
+        <th class="first-column-2">
           <% if (logoUrl) { %>
             <img src="<%= logoUrl %>" height="80px" width="80px" />
             <% } %>
         </th>
-        <th class="second-column"></th>
-        <th class="third-column">
+        <th class="second-column-2">
           <h1 style="text-align: right;"><%= text_title %></h1>
         </th>
       </tr>
       <tr style="border: none; padding: 0px;">
-        <td class="first-column"></td>
-        <td class="second-column"></td>
-        <th class="third-column">
+        <td class="first-column-2"></td>
+        <th class="second-column-2">
           <h3 style="text-align: right;">#<%= invoiceNumber %></h3>
         </th>
       </tr>
@@ -61,9 +73,9 @@
         <th class="third-column"><%= issueDate %></th>
       </tr>
       <tr style="border: none; padding: 0px;">
-        <td class="first-column"><%= billFrom %></td>
-        <td class="second-column"><%= text_due_date %>:</td>
-        <td class="third-column"><%= dueDate %></td>
+        <td class="first-column" style="font-weight:bold;"><%= billFrom %></td>
+        <td class="second-column" style="font-weight:bold;"><%= text_due_date %>:</td>
+        <td class="third-column" style="font-weight:bold;"><%= dueDate %></td>
       </tr>
       <tr style="border: none; padding: 0px;">
         <td class="first-column"><%= text_bill_to %>:</td>
@@ -73,7 +85,7 @@
         <td class="third-column"><%= paymentTerms %></td>
       </tr>
       <tr style="border: none;">
-        <td class="first-column"><%= billTo %></td>
+        <td class="first-column" style="font-weight:bold;"><%= billTo %></td>
         <td class="second-column">
             <%= text_po_number %>:
         </td>
@@ -166,10 +178,10 @@
       </tr>
       <tr style="border: none;">
         <td class="first-column"></td>
-        <td class="second-column">
+        <td class="second-column" style="font-weight:bold;">
           <%= text_amount_due %>:
         </td>
-        <td class="third-column">
+        <td class="third-column" style="font-weight:bold;">
           <%= amountDue %> Pi
         </td>
       </tr>
