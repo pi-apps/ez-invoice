@@ -17,5 +17,9 @@ export const payment_text:any = {
     "text_item": "item",
     "text_quanlity": "quantity",
     "text_unit_price": "unit price",
-    "text_invoice": "Invoice"
+    "text_invoice": "Invoice",
+    "text_issue_date": "Issue Date",
+    "text_amount_due": "Amount Due",
+    "text_tips": "Tips",
+    "text_pay_now": "Pay now",
 }

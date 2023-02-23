@@ -52,6 +52,9 @@ export const createInvoice_text:any = {
        "text_back": "Back",
        "text_invoice": "Invoice",
        "text_send_mail":"Send mail",
+       "text_create_invoice": "Create Invoice",
+       "text_create_success": "Create invoice successfully!!!",
+       "text_create_failed": "System error!!!",
        
        "text_less_than_total":"Please input number less than total"
 }

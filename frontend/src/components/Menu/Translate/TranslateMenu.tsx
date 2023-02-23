@@ -22,8 +22,6 @@ const TranslateMenu = () => {
   const [isLoading, setIsLoading] = useState(false)
   const token = getAccessToken()
   const { language, setLanguage } = useContext(LanguagesContext);
-  const { toastSuccess, toastError } = useToast();
-
 
   const changeLanguageUser = async (data) => {
     setIsLoading(true)
@@ -36,7 +34,6 @@ const TranslateMenu = () => {
           "Authorization": token
         }
       })
-      console.log('resChange', res?.data)
       dispatch(setUser(res?.data));
       setIsLoading(false)
     } catch (error) {
@@ -51,8 +48,6 @@ const TranslateMenu = () => {
         setNameCountryLanguage(found1[0].name)
       }
     }, [languageUserApi])
-
-    console.log('nameCountryLanguage', nameCountryLanguage)
 
   return (
     <Flex position="relative">  
