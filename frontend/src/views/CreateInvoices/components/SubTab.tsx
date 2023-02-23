@@ -44,7 +44,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const dataDefault = GetAnInvoice()
     const itemInvoice  = dataDefault?.details
     const items = GetAllInvoice()
-console.log('totalAndTax', totalAndTax)
+    console.log('totalAndTax', totalAndTax)
     const [ invoicelength, setInvoicelength ] = useState(0)
     useEffect(()=>{
         if(items){

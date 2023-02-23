@@ -85,6 +85,8 @@ const CreateDetail = () => {
         }
     }, [languageUserApi]);
     const [openLoginModal] = useModal(<DownloadModal invoiceId={details?.invoiceId}/>);
+    const converTotal = new BigNumber(details?.total).decimalPlaces(2,1)
+    const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
     return (
         <PageFullWidth>
             <CsContainer>
@@ -156,12 +158,14 @@ const CreateDetail = () => {
                                         <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
+                                        const convertPrice = new BigNumber(item?.price).decimalPlaces(2,1)
+                                        const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(2,1)
                                         return(
                                             <CsRow>
                                             <ColFirst width="20%">{item?.name}</ColFirst>
                                             <Col width="20%">{item?.quantity}</Col>
-                                            <Col width="20%">{item?.price && item?.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
-                                            <Col width="20%">{((item?.quantity) &&(item?.price)) && ((item?.quantity)*(item?.price)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
+                                            <Col width="20%">{Number(convertPrice.toString()).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
+                                            <Col width="20%">{Number(convertTotal.toString()).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                         </CsRow>
                                         )
                                     })}
@@ -213,7 +217,7 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.total && details?.total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{Number(converTotal.toString()).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
@@ -229,7 +233,7 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.amountDue && details?.amountDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{Number(convertAmountDue.toString()).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
                                 </CsContentInfo>

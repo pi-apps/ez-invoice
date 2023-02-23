@@ -12,6 +12,7 @@ import ChooseMethod from './ChooseMethod';
 import { getUser } from 'state/user';
 import { createInvoice_text } from 'translation/languages/createInvoice_text';
 import { createInvoiceTranslate } from 'translation/translateArrayObjects';
+import BigNumber from 'bignumber.js';
 
 const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues, watch, register }) => {
     const [typeTax, setTypeTax] = useState(true)
@@ -86,6 +87,8 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     } 
     const totalFinaly = totalFinal(total)
     const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
+    const converTotal = new BigNumber(totalFinaly).decimalPlaces(2,1)
+    const convertAmountDue = new BigNumber(balanceDue).decimalPlaces(2,1)
 
     useEffect(() => {
       setBalanceDue(amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0)
@@ -199,7 +202,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <CsTextLeft>{stateText.text_total}</CsTextLeft>
                         <Text style={{wordBreak: 'break-all'}} fontSize='14px'>{!totalFinaly ? 0 : <>
-                          {`${totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
+                          {`${Number(converTotal.toString()).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                         </> }</Text>
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between" , alignItems: 'baseline'}}>
@@ -232,7 +235,7 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                         {tooltipVisible && tooltip}
                         </CsTextLeft>
                         <Text fontSize='14px'>{!balanceDue ? 0 : <>
-                          {`${balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
+                          {`${Number(convertAmountDue.toString()).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                           </> }
                         </Text>
                     </Row>
