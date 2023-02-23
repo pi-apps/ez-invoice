@@ -43,6 +43,7 @@ const FormTabThree = ({
     // const isPositive = new BigNumber(watch('tax')).isLessThan(0) || new BigNumber(watch('shipping')).isLessThan(0) || new BigNumber(watch('discount')).isLessThan(0) || new BigNumber(watch('amountPaid')).isLessThan(0)
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
+    
    // Translate
    const [stateText, setStateText] = useState(createInvoice_text);
    const requestTrans = async () => {
@@ -116,8 +117,11 @@ const FormTabThree = ({
         return total + taxValuePercent + shippingValue - isDiscount
       }
     } 
+
     const totalFinaly = totalFinal(total)
+    
     const balanceDue = totalFinaly - amountPaidValue
+
     const converTotal = new BigNumber(totalFinaly).decimalPlaces(2,1)
     const convertAmountDue = new BigNumber(balanceDue).decimalPlaces(2,1)
 
@@ -125,12 +129,13 @@ const FormTabThree = ({
     
     // for discount 
     useEffect(() => {
-      if( Number(balanceDue) <= 0 ){
+      const discount = activeDiscount === 1 ? isDiscountValuePercent : isDiscount
+      if( Number(balanceDue) <= 0 && total < discount ){
         setDiscount(true)
       } else {
         setDiscount(false)
       }
-    },[balanceDue])
+    },[balanceDue, isDiscountValuePercent, isDiscount, activeDiscount, isTaxValue, total])
 
     // for amount paid
     useEffect(() => {
@@ -251,7 +256,7 @@ const FormTabThree = ({
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
                           <CsTextLeft>{stateText.text_total}</CsTextLeft>
                           <Text style={{wordBreak: 'break-all'}} fontSize='14px'>{!totalFinaly ? 0 : <>
-                            {`${totalFinaly.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
+                            {`${Number(converTotal.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                           </> }</Text>
                       </Row>
                       <Row mt="1rem" style={{justifyContent: "space-between" , alignItems: 'baseline'}}>
@@ -289,7 +294,7 @@ const FormTabThree = ({
                               0 
                             : 
                               <>
-                                {`${balanceDue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
+                                {`${Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
                               </> 
                             }
                           </Text>

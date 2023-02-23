@@ -28,6 +28,7 @@ const CreateDetail = () => {
         const { setInvoiceId } = useContext(InvoiceIdContext);
         const items = GetAnInvoice()
         const details = items?.details
+        console.log('details', details)
         function convertDate(date: any) {
             if (date) {
             const today = new Date(date)
@@ -86,8 +87,10 @@ const CreateDetail = () => {
     }, [languageUserApi]);
     const [openLoginModal] = useModal(<DownloadModal invoiceId={details?.invoiceId}/>);
     const converTotal = new BigNumber(details?.total).decimalPlaces(2,1)
+    const convertShipping = new BigNumber(details?.shipping).decimalPlaces(2,1)
+    const converAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
     const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
-    console.log("details?.discountType", details)
+    
     return (
         <PageFullWidth>
             <CsContainer>
@@ -150,6 +153,22 @@ const CreateDetail = () => {
                                         }
                                         
                                     </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_notes}</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.notes}</CsTextRight>
+                                        }
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_terms}</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.terms}</CsTextRight>
+                                        }
+                                    </Row>
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
@@ -209,7 +228,7 @@ const CreateDetail = () => {
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
-                                            <CsTextRight bold>{details?.shipping && details?.shipping.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{Number(convertShipping.toString()).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         </Row>
                                     }
  
@@ -226,7 +245,7 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>-{details?.amountPaid && details?.amountPaid.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                            <CsTextRight bold>-{Number(converAmountPaid.toString()).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>

@@ -125,6 +125,8 @@ export async function invoiceTranslate(language: any) {
     "text_back": langArr[23] || invoice_text["text_back"],
     "text_pay_now": langArr[24] || invoice_text["text_pay_now"],
     "text_amount_paid": langArr[25] || invoice_text["text_amount_paid"],
+    "text_notes": langArr[26] || invoice_text["text_notes"],
+    "text_terms": langArr[27] || invoice_text["text_terms"],
   }
   return data;
 }
@@ -257,6 +259,8 @@ export async function previewInvoiceTranslate(language: any) {
     "text_unit_price": langArr[16] || previewInvoice_text["text_unit_price"],
     "text_amount_due": langArr[17] || previewInvoice_text["text_amount_due"],
     "text_amount_paid": langArr[18] || previewInvoice_text["text_amount_paid"],
+    "text_notes": langArr[19] || previewInvoice_text["text_notes"],
+    "text_terms": langArr[20] || previewInvoice_text["text_terms"],
   }
   return data;
 }

@@ -6,6 +6,8 @@ import Row from 'components/Layout/Row';
 import PageFullWidth from "components/Layout/PageFullWidth"
 import { useParams, useNavigate } from 'react-router-dom';
 import { Translate } from "react-auto-translate";
+import Header from 'components/Header';
+
 import { getAccessToken, getUser } from "state/user";
 import { GetAnInvoice } from "state/invoice";
 import useToast from "hooks/useToast";
@@ -96,7 +98,13 @@ const Payment = () => {
     const { handlePayment, pendingPayment } = usePayment(signature, token, userData?.language, tips) 
     // for tips 
     const handleValueTips = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setTips(event.target.value)
+        const evt = event.target.value
+        if( Number(evt) < 0 ) {
+            setTips("0")
+        } else {
+            setTips(event.target.value)
+        }
+        
     }
     const total = tips.length > 0 ? new BigNumber(details?.amountDue).plus(new BigNumber(tips)) : new BigNumber(details?.amountDue).plus(new BigNumber(0))
     const converTotal = new BigNumber(total).decimalPlaces(2,1) 
@@ -124,6 +132,7 @@ const Payment = () => {
     return (
         <PageFullWidth>
             <CsContainer>
+                <Header/>
                 {  userData === null || userData === undefined ? 
                     // <CsButton 
                     //     onClick={signIn} 
