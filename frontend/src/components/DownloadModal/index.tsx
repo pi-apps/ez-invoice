@@ -133,7 +133,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
                     <Button onClick={copyLinkReferralCode}>
                       {stateText.text_copy}
                     </Button>
-                    <Tooltip isTooltipDisplayed={isOpenTooltip}>{stateText.text_coppied}</Tooltip>
+                    <Tooltip isTooltipDisplayed={isOpenTooltip}>{stateText.text_copied}</Tooltip>
                   </Flex>
                   
                 </FlexUrl> :

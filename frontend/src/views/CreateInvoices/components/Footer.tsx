@@ -34,7 +34,15 @@ const styles = {
 
 const NavCustom = styled(Nav)``;
 
-const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
+const Footer = ({ 
+  isActive, 
+  invoiceId, 
+  onHandleCreate, 
+  loadingPreview,
+  isMaxDiscount,
+  isMaxAmountPaid,
+  isPositive,
+}) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<DownloadModal invoiceId={invoiceId}/>);
@@ -94,7 +102,7 @@ const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
 
       <Nav.Item style={styles.navItem}>
           <CsButton
-            disabled={(isActive === 1 || isActive === 2) || loadingPreview}
+            disabled={(isActive === 1 || isActive === 2) || loadingPreview || isMaxDiscount || isMaxAmountPaid || isPositive}
             onClick={onHandleCreate}
             endIcon={loadingPreview ? < AutoRenewIcon color="textDisabled" spin/> : null}
 

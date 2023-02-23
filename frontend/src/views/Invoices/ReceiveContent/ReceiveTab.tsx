@@ -11,6 +11,7 @@ import { invoiceTranslate } from "translation/translateArrayObjects";
 import Card from "./Card";
 
 const ReceiveTab = () => {
+  const [isOpen, setIsOpen] = useState(false);
   
   const dataUser = getAccessToken()
   UseGetAllInvoiceReceivedCore(dataUser);
@@ -63,6 +64,10 @@ const ReceiveTab = () => {
                 {items?.listItems.map((data, index) => {
                   return (
                     <Card
+                      isOpen={isOpen}
+                      textPaid={stateText.text_paid}
+                      textUnpaid={stateText.text_unpaid}
+                      onClick={() => setIsOpen(!isOpen)}
                       images={data?.logoUrl}
                       invoiceId={data?.invoiceId}
                       create={data?.createAt}

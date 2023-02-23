@@ -123,7 +123,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
         <Flex mt="24px">
             <Cstitle>{stateText.text_amount}:</Cstitle>
             <CsAmount>
-              {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}  
+              {total && typeof total === 'number' ? `${total.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}  
             </CsAmount>
         </Flex>
   </CsWrapperCard>
