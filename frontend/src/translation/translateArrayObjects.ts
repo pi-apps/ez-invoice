@@ -150,6 +150,7 @@ export async function downloadTranslate(language: any) {
     "text_send": langArr[8] || download_text["text_send"],
     "text_sent_invoice_success": langArr[9] || download_text["text_sent_invoice_success"],
     "text_done": langArr[10] || download_text["text_done"],
+    "text_back":langArr[11] || download_text["text_back"],
   }
   return data;
 }

@@ -7,6 +7,7 @@ import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import { getUser } from "state/user";
 import { download_text } from "translation/languages/download_text";
 import { downloadTranslate } from "translation/translateArrayObjects";
+import { useParams } from 'react-router-dom';
 
 interface SentSuccess {
   setIsSentSuccessfully: (e) => void;
@@ -17,7 +18,6 @@ const SentInvoiceSuccessfully: React.FC<
 > = ({ setIsSentSuccessfully }) => {
 
   const navigate = useNavigate();
-
   const handleDone = () => {
     setIsSentSuccessfully(false) 
     navigate("/invoice")

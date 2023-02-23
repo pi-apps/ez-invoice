@@ -11,4 +11,5 @@ export const download_text:any = {
     "text_send": "Send",
     "text_sent_invoice_success": "Sent Invoice Successfully",
     "text_done": "Done",
+    "text_back":"Back"
 }
