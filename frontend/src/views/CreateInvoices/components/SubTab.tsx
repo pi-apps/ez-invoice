@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { axiosClient } from "config/htttp";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,8 @@ import { fetchStatusPreview } from "state/preview/actions";
 import { getDataPreview } from "state/preview/actions";
 import { getAccessToken, getUser } from "state/user";
 import styled from "styled-components";
+import { createInvoice_text } from "translation/languages/createInvoice_text";
+import { createInvoiceTranslate } from "translation/translateArrayObjects";
 import * as Yup from 'yup';
 import Footer from "../components/Footer";
 import FormTabOne from "./FormTabOne";
@@ -34,14 +36,14 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const [activeDiscount, setActiveDiscount ] = useState<number>(1)
     const [startDate, setStartDate] = useState(new Date());
     const [startDueDate, setStartDueDate] = useState(new Date());
+    const [ totalFinaly, setTotalFinaly ] = useState(0)
     const accessToken = getAccessToken()
     UseGetAnInvoiceCore(invoiceId, accessToken)
     UseGetAllInvoice(accessToken)
-
     const dataDefault = GetAnInvoice()
     const itemInvoice  = dataDefault?.details
     const items = GetAllInvoice()
-    
+
     const [ invoicelength, setInvoicelength ] = useState(0)
     useEffect(()=>{
         if(items){
@@ -82,6 +84,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         paymentTerms: Yup.string().max(50, 'Max length is 50 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().max(500, 'Max length is 500 characters'),
+        amountPaid: Yup.number().max(totalFinaly).required(),
     });
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
@@ -99,6 +102,47 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         ...watchFieldArray[index]
         };
     });
+
+    const taxValue =  Number(getValues('tax'))
+    const shippingValue =  Number(getValues('shipping'))
+    const discountValue =  Number(getValues('discount'))
+    const amountPaidValue =  Number(getValues('amountPaid'))
+    const totalPrice = (fields) => {
+        return fields?.reduce((sum, i) => {
+          if(i.price === undefined || i.quantity === undefined){
+            return 0
+          } else{
+            return (
+              sum + i.price * i.quantity
+            )
+          }
+        },0)
+      }
+  
+      const total = useMemo(() => {
+        return totalPrice(controlledFields)
+      },[controlledFields]);
+  
+      const taxValuePercent = taxValue * total / 100 
+      const isTaxValue = (activeTax === 1 ) ? taxValuePercent : taxValue
+      const DiscountValuePercent = discountValue * (total + isTaxValue) / 100 
+      const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
+      const isDiscount = (discountValue < total) ? discountValue : total
+
+      const totalFinal = (total) => {
+        if(activeTax === 2 && activeDiscount === 2){
+          return total + taxValue + shippingValue - isDiscount
+        } else if(activeTax === 2 && activeDiscount === 1){
+          return total + taxValue + shippingValue - isDiscountValuePercent
+        } else if(activeTax === 1 && activeDiscount === 1){
+          return total + taxValuePercent + shippingValue - isDiscountValuePercent
+        } else if(activeTax === 1 && activeDiscount === 2){
+          return total + taxValuePercent + shippingValue - isDiscount
+        }
+      } 
+      useEffect(() => {
+          setTotalFinaly(totalFinal(total))
+      },[taxValue, shippingValue, discountValue, amountPaidValue])
 
     // use update default values
     useEffect(()=>{
@@ -128,7 +172,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     // for preview data
     const dataPreview = GetDataPreview()
     const dataPreviewDetails = dataPreview?.dataPreview
-    console.log('dataPreviewDetails', dataPreviewDetails)
     function setDefaultValue(dataDefault){
         setValue("senderEmail", dataDefault?.senderEmail);
         setValue("billFrom", dataDefault?.billFrom);
@@ -155,10 +198,11 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             setDefaultValue(dataPreviewDetails)
         }
     },[dataPreviewDetails, dataPreview?.isPreview])
-
+   
     const onCreate = async data => {
         setLoadingPreview(true)
-        const formData = new FormData();
+        try {
+            const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
             formData.append("billFrom", `${data.billFrom}`);
             formData.append("billTo", `${data.billTo}`);
@@ -188,22 +232,27 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                     }
                 );
                 if(submitReq.status == 200){
-                    toastSuccess('', <Text style={{justifyContent: 'center'}}>{stateText.create_success}</Text>);
-                    // setInvoiceid(submitReq?.data?.invoiceId)
+                    toastSuccess('', <Text style={{justifyContent: 'center'}}>{stateText.text_create_success}</Text>);
                     await setInvoiceId(submitReq?.data?.invoiceId)
                     await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
                     await dispatch(fetchStatusPreview({isPreview: false}))
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
-                    toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
+                    toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
                     setLoadingPreview(false)
             }
+        } catch (error) {
+            console.log("error", error)
+            toastError('Error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
+        } finally {
+            setLoadingPreview(false)
+        }
+        
     }
 
     const onSubmit = async data => {
-        console.log('startDate', startDate)
-       await dispatch(getDataPreview({
+        await dispatch(getDataPreview({
             dataPreview: {
                 senderEmail: getValues("senderEmail"),
                 billFrom:getValues("billFrom"),
@@ -241,8 +290,6 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         setValue("shipping", data?.shipping);
         setValue("amountPaid", data?.amountPaid);
         setValue("logo", data?.logoUrl);
-        // setStartDate(new Date(data?.issueDate))
-        // setStartDueDate(new Date(data?.dueDate))
         await dispatch(fetchStatusPreview({isPreview: true}))
         
         navigate("/preview")
@@ -279,6 +326,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                         setValue={setValue} 
                         control={control}
                         loadingPreview={loadingPreview}
+                        watch={watch}
+                        register={register}
                     />
         }
     }
@@ -286,46 +335,27 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     // transLanguage
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
-  
-    const listTextPlaceHolder = {
-      // text
-      create_invoice: "Create Invoice",
-      create_success: "Create invoice successfully!!!",
-      create_failed: "System error!!!",
-    };
-  
-    const [stateText, setStateText] = useState(listTextPlaceHolder);
-  
-    const fcTransLateText = async (language) => {
-        const resCreateInvoice = await GetTranslateHolder(
-          listTextPlaceHolder.create_invoice,
-          language
-        );
-        const resCreateSuccess = await GetTranslateHolder(
-            listTextPlaceHolder.create_success,
-            language
-          );
-          const resCreateFailed = await GetTranslateHolder(
-            listTextPlaceHolder.create_failed,
-            language
-          );
-      setStateText({
-        create_invoice: resCreateInvoice,
-        create_failed: resCreateFailed,
-        create_success: resCreateSuccess,
-      });
-    };
-  
-    useEffect(() => {
-      if (!languageUserApi) {
-        fcTransLateText('en')
-      } else fcTransLateText(languageUserApi)
-    }, [languageUserApi]);
+  const [stateText, setStateText] = useState(createInvoice_text);
+  const requestTrans = async () => {
+    try {
+      const resData = await createInvoiceTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(createInvoice_text);
+    }
+  }, [languageUserApi]);
 
-
+    
     return (
         <>
-            <HeadingTab>{stateText.create_invoice}</HeadingTab>
+            <HeadingTab>{stateText.text_create_invoice}</HeadingTab>
             <ContainerSubTab>
                 <CsButton isActive={isActive > 1} role="presentation" onClick={handleMinusTabActive}>
                     &lt;

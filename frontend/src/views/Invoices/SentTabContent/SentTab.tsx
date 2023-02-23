@@ -12,6 +12,8 @@ import { invoiceTranslate } from "translation/translateArrayObjects";
 
 
 const SentTab = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const userData = getUser();
   const languageUserApi = userData?.language
   
@@ -26,18 +28,6 @@ const SentTab = () => {
       const mm = String(today.getMonth() + 1).padStart(2, "0");
       const yyyy = today.getFullYear();
       const selectedMonthName = MONTHS[Number(mm) - 1];
-
-      const mmtranslate = async (data) => {
-        const resNoData = await GetTranslateHolder(
-            data,
-            languageUserApi
-          );
-          return resNoData
-      };
-
-       const textMonth: any = mmtranslate(selectedMonthName)
-
-       console.log('textMonth', textMonth?.value)
 
       return (
         <CsText>
@@ -77,6 +67,10 @@ const SentTab = () => {
                 {items?.listItems.map((data, index) => {
                   return (
                     <Card
+                      textPaid={stateText.text_paid}
+                      textUnpaid={stateText.text_unpaid}
+                      isOpen={isOpen}
+                      onClick={() => setIsOpen(!isOpen)}
                       images={data?.logoUrl}
                       invoiceId={data?.invoiceId}
                       create={data?.createAt}

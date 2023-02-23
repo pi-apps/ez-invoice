@@ -19,8 +19,10 @@ import { AuthResult, PaymentDTO } from "components/Menu/UserMenu/type";
 import { GetDataPayment, PaymentCore } from "state/payment";
 import { usePayment } from "./hook/usePayment";
 import { fetchDataUser } from "state/payment/actions";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
+import { payment_text } from "translation/languages/payment_text";
+import { paymentTranslate } from "translation/translateArrayObjects";
 
 const Payment = () => {
     const  { signature } = useParams()
@@ -98,6 +100,27 @@ const Payment = () => {
     }
     const total = tips.length > 0 ? new BigNumber(details?.amountDue).plus(new BigNumber(tips)) : new BigNumber(details?.amountDue).plus(new BigNumber(0))
     const converTotal = new BigNumber(total).decimalPlaces(2,1) 
+
+    const DataAb = getUser();
+    const languageUserApi = DataAb?.language
+   // Translate
+   const [stateText, setStateText] = useState(payment_text);
+   const requestTrans = async () => {
+     try {
+       const resData = await paymentTranslate(languageUserApi);
+       setStateText(resData)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+   useEffect(() => {
+     if (languageUserApi) {
+       requestTrans();
+     } else if (!languageUserApi) {
+       setStateText(payment_text);
+     }
+   }, [languageUserApi]);
+
     return (
         <PageFullWidth>
             <CsContainer>
@@ -111,7 +134,7 @@ const Payment = () => {
                 :
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading><Translate>Invoice</Translate> #{details?.invoiceNumber}</CsHeading>
+                            <CsHeading>{stateText.text_invoice} #{details?.invoiceNumber}</CsHeading>
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
@@ -126,7 +149,7 @@ const Payment = () => {
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Bill From</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_bill_from}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -134,7 +157,7 @@ const Payment = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Bill To</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_bill_to}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -142,15 +165,15 @@ const Payment = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Issue Date</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_issue_date}</CsTextLeft>
                                         {convertDate(details?.issueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Due Date</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_due_date}</CsTextLeft>
                                         {convertDate(details?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Payment Terms</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -159,7 +182,7 @@ const Payment = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>PO Number</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_po_number}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -170,16 +193,16 @@ const Payment = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%"><Translate>item</Translate></ColFirstth>
-                                        <Colth width="20%"><Translate>quantity</Translate></Colth>
-                                        <Colth width="20%"><Translate>unit price</Translate></Colth>
-                                        <Colth width="20%"><Translate>total</Translate></Colth>
+                                        <ColFirstth width="20%">{stateText.text_item}</ColFirstth>
+                                        <Colth width="20%">{stateText.text_quanlity}</Colth>
+                                        <Colth width="20%">{stateText.text_unit_price}</Colth>
+                                        <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
                                         return(
                                             <CsRow>
-                                            <ColFirst width="20%"><Translate>{item?.name}</Translate></ColFirst>
-                                            <Col width="20%"><Translate>{item?.quantity}</Translate></Col>
+                                            <ColFirst width="20%">{item?.name}</ColFirst>
+                                            <Col width="20%">{item?.quantity}</Col>
                                             <Col width="20%">{item?.price && (item?.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                             <Col width="20%">{((item?.quantity) &&(item?.price)) && ((item?.quantity)*(item?.price)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                         </CsRow>
@@ -189,7 +212,7 @@ const Payment = () => {
                                 </CsContentBill>
                                 <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Subtotal</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -198,7 +221,7 @@ const Payment = () => {
                                     </Row>
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>Tax:</Translate> ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_tax}: ({details?.tax} {details?.taxType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? <>
                                                 {(details?.subTotal && details?.tax) && (details?.subTotal*details?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> : <>
@@ -208,7 +231,7 @@ const Payment = () => {
                                     }
                                     {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>Discount:</Translate> ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_discount}: ({details?.discount} {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{details?.discountType === 1 ? 
                                             <>
                                                 {(details?.subTotal && details?.discount && details?.tax) && (details?.discount*(details?.subTotal + details?.tax)/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -222,13 +245,13 @@ const Payment = () => {
                                     
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft><Translate>Shipping</Translate></CsTextLeft>
+                                            <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
                                             <CsTextRight bold>{details?.shipping && details?.shipping.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         </Row>
                                     }
  
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Total</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_total}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -236,7 +259,7 @@ const Payment = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft><Translate>Allowances</Translate></CsTextLeft>
+                                        <CsTextLeft>{stateText.text_allowances}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -244,7 +267,7 @@ const Payment = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Amount Due</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -252,7 +275,7 @@ const Payment = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Tips</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_tips}</CsTextLeft>
                                         <Flex alignItems="center" style={{gap:"10px"}} justifyContent="flex-end" background="#F8F9FD">
                                             <CsInput
                                                 placeholder="0.00"
@@ -264,7 +287,7 @@ const Payment = () => {
                                         </Flex>
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Total</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_total}</CsTextLeft>
                                         <CsTextRight>{Number(converTotal.toString()).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2})} Pi </CsTextRight>
                                     </Row>
                                 </CsContentInfo>
@@ -277,7 +300,7 @@ const Payment = () => {
                                     disabled={pendingPayment}
                                     endIcon={pendingPayment ? <AutoRenewIcon color="textDisable" spin/> : null}
                                 >
-                                    <Translate>Pay now</Translate>
+                                    {stateText.text_pay_now}
                                 </Button>
                                 <Button 
                                     width="100%" 
@@ -287,7 +310,7 @@ const Payment = () => {
                                     }
                                     mt="1rem"
                                 >
-                                    <Translate>Back</Translate>
+                                    {stateText.text_back}
                                 </Button>
                             </Flex>
                         </Flex>

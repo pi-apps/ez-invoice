@@ -1,20 +1,21 @@
-import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
-import { useEffect, useState } from "react";
-import { AddIcon, CloseIcon } from "components/Svg";
+import { AddIcon, CloseIcon, Flex, Text } from "@devfedeltalabs/pibridge_uikit";
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import ImageUploading from "react-images-uploading";
-import styled from "styled-components";
-import { Translate } from "react-auto-translate";
-import { getUser } from "state/user";
-import { GetTranslateHolder } from "hooks/TranSlateHolder";
-import { AppDispatch } from "state";
 import { useDispatch } from "react-redux";
-import { getDataImages } from "state/preview/actions"
+import { AppDispatch } from "state";
+import { getDataImages } from "state/preview/actions";
+import { getUser } from "state/user";
+import styled from "styled-components";
 import { createInvoice_text } from "translation/languages/createInvoice_text";
 import { createInvoiceTranslate } from "translation/translateArrayObjects";
+
+import "../styles";
 
 function ReactImageUpload({images , setValue }) {
   const [ logoImg, setLogoImages] = useState([]);
   const dispatch = useDispatch<AppDispatch>()
+  const maxNumber = 69;
   const onChange = (imageList, addUpdateIndex) => {
     setValue("logo",imageList[0].file);
     setLogoImages(imageList)
@@ -24,74 +25,78 @@ function ReactImageUpload({images , setValue }) {
   };
   const onImageDelete = () => {
     setLogoImages([])
+    dispatch(getDataImages(
+      { images: null }
+    ))
   }
-
+  // translate 
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
-   // Translate
-   const [stateText, setStateText] = useState(createInvoice_text);
+  const [stateText, setStateText] = useState(createInvoice_text);
    const requestTrans = async () => {
-     try {
-       const resData = await createInvoiceTranslate(languageUserApi);
-       setStateText(resData)
-     } catch (error) {
-       console.log(error)
-     }
-   }
-   useEffect(() => {
-     if (languageUserApi) {
-       requestTrans();
-     } else if (!languageUserApi) {
-       setStateText(createInvoice_text);
-     }
-   }, [languageUserApi]);
+    try {
+      const resData = await createInvoiceTranslate(languageUserApi);
+      setStateText(resData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    if (languageUserApi) {
+      requestTrans();
+    } else if (!languageUserApi) {
+      setStateText(createInvoice_text);
+    }
+  }, [languageUserApi]);
 
   return (
     <div>
       <ImageUploading
-        value={images}
+        multiple
+        value={logoImg}
         onChange={onChange}
+        maxNumber={maxNumber}
         dataURLKey="data_url"
-        acceptType={['jpg','png']}
+        // acceptType={["png"]}
       >
         {({
           imageList,
           onImageUpload,
+          onImageRemoveAll,
           onImageUpdate,
           onImageRemove,
           isDragging,
           dragProps
         }) => (
-          <div>
-            {
-                logoImg.length === 0 && (
-                    <CsButtonAdd onClick={onImageUpload}>
-                        <CsAddIcon />
-                        <CsText ml="10px">{stateText.text_add_your_logo}</CsText>
-                    </CsButtonAdd>
-                )
+          // write your building UI
+          <div className="upload__image-wrapper">
+            { imageList?.length === 0 &&
+              <CsButtonAdd onClick={onImageUpload} {...dragProps}>
+                  <CsAddIcon color="white" />
+                  <CsText ml="10px">{stateText.text_add_your_logo}</CsText>
+              </CsButtonAdd>
             }
-            {logoImg.map((image, index) => {
-                const imageName = logoImg[0].file?.name
-                return(
-                  <Flex mt='1rem' key={index} alignItems="center">
-                    <Flex position='relative'>
-                      <CsAvatar src={logoImg[0].data_url} alt={imageName} />
-                      <CsButtonClose onClick={() => onImageDelete()}><CloseIcon/></CsButtonClose>
-                    </Flex>
+            { imageList.length > 0 &&
+              <Flex mt='1rem'alignItems="center" style={{gap:"15px"}}>
+                <Flex position='relative'>
+                  <CsAvatar src={imageList[0].data_url} alt="logo" />
+                  <CsButtonClose onClick={() => onImageDelete()}><CloseIcon/></CsButtonClose>
+                </Flex>
 
-                    <div className="image-item__btn-wrapper" style={{display: 'flex', gap: '10px'}}>
-                      <CsButtonAdd onClick={() => onImageUpdate(index)}><CsText>{stateText.text_update}</CsText>
-                      </CsButtonAdd>
-                    </div>
-                  </Flex>
-            )})}
+                <div className="image-item__btn-wrapper" style={{display: 'flex', gap: '10px'}}>
+                  <CsButtonAdd onClick={() => onImageUpdate(0)}><CsText>{stateText.text_update}</CsText>
+                  </CsButtonAdd>
+                </div>
+              </Flex>
+            }
           </div>
         )}
       </ImageUploading>
     </div>
   );
 }
+
+export default ReactImageUpload
 
 const CsAvatar = styled.img`
     width: 60px;
@@ -129,8 +134,8 @@ const CsButtonClose = styled.div`
   border-radius: 50%;
   background: #fff;
   padding: 4px;
-  right: 9px;
-  top: 0px;
+  right: -9px;
+  top: -10px;
   border: 1px solid transparent;
   &:hover{
     border: 1px solid #4949491a;
@@ -144,6 +149,4 @@ const CsText = styled(Text)`
   font-size: 12px;
   color: #FFFFFF;
   font-weight: 700;
-  /* margin-left: 10px; */
 `
-export default ReactImageUpload

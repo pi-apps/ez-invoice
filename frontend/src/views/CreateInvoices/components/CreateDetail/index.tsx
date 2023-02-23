@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Skeleton, Text } from '@devfedeltalabs/pibridge_uikit';
+import { Button, Flex, Image, Skeleton, Text, useModal } from '@devfedeltalabs/pibridge_uikit';
 import Header from 'components/Header';
 import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
@@ -18,72 +18,73 @@ import { Translate } from "react-auto-translate";
 import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import { createInvoice_text } from 'translation/languages/createInvoice_text';
 import { createInvoiceTranslate } from 'translation/translateArrayObjects';
+import DownloadModal from 'components/DownloadModal';
 
 const CreateDetail = () => {
 
-    let { slug } = useParams()
-    const accessToken = getAccessToken()
-    UseGetAnInvoiceCore(slug, accessToken)
-    const { setInvoiceId } = useContext(InvoiceIdContext);
-    const items = GetAnInvoice()
-    const details = items?.details
-    function convertDate(date: any) {
-        if (date) {
-          const today = new Date(date)
-          const dd = String(today.getDate()).padStart(2, '0')
-          const mm = String(today.getMonth() + 1).padStart(2, '0')
-          const yyyy = today.getFullYear()
-          return (
-            <CsTextRight bold>{dd}/{mm}/{yyyy}</CsTextRight>
-          )
+        let { slug } = useParams()
+        const accessToken = getAccessToken()
+        UseGetAnInvoiceCore(slug, accessToken)
+        const { setInvoiceId } = useContext(InvoiceIdContext);
+        const items = GetAnInvoice()
+        const details = items?.details
+        function convertDate(date: any) {
+            if (date) {
+            const today = new Date(date)
+            const dd = String(today.getDate()).padStart(2, '0')
+            const mm = String(today.getMonth() + 1).padStart(2, '0')
+            const yyyy = today.getFullYear()
+            return (
+                <CsTextRight bold>{dd}/{mm}/{yyyy}</CsTextRight>
+            )
+            }
+            return <Skeleton width={60} />
         }
-        return <Skeleton width={60} />
-    }
-    useEffect(()=> {
-        setInvoiceId(items?.details?.invoiceId)
-    },[items?.details])
+        useEffect(()=> {
+            setInvoiceId(items?.details?.invoiceId)
+        },[items?.details])
 
-    // Trans language
-    const userData = getUser();
-    const languageUserApi = userData?.language
-    const listText = {
-      bill_from: "Bill From",
-      bill_to: "Bill To",
-      issue_date: "Issue Date",
-      due_date: "Due Date",
-      payment_terms: "Payment Terms",
-      po_number: "PO Number",
-      item: "Item",
-      quanlity: "Quanlity",
-      unit_price: "Unit Price",
-      total: "Total",
-      allowances: "Allowances",
-      amount_due: "Amount Due",
-      back: "Back",
-      tax: "Tax",
-      shipping: "Shipping",
-      discount: "Discount",
-      subtotal: "Subtotal",
-      invoice: "Invoice",
-    };
-   // Translate
-   const [stateText, setStateText] = useState(createInvoice_text);
-   const requestTrans = async () => {
-     try {
-       const resData = await createInvoiceTranslate(languageUserApi);
-       setStateText(resData)
-     } catch (error) {
-       console.log(error)
-     }
-   }
-   useEffect(() => {
-     if (languageUserApi) {
-       requestTrans();
-     } else if (!languageUserApi) {
-       setStateText(createInvoice_text);
-     }
-   }, [languageUserApi]);
-   
+        // Trans language
+        const userData = getUser();
+        const languageUserApi = userData?.language
+        const listText = {
+        bill_from: "Bill From",
+        bill_to: "Bill To",
+        issue_date: "Issue Date",
+        due_date: "Due Date",
+        payment_terms: "Payment Terms",
+        po_number: "PO Number",
+        item: "Item",
+        quanlity: "Quanlity",
+        unit_price: "Unit Price",
+        total: "Total",
+        allowances: "Allowances",
+        amount_due: "Amount Due",
+        back: "Back",
+        tax: "Tax",
+        shipping: "Shipping",
+        discount: "Discount",
+        subtotal: "Subtotal",
+        invoice: "Invoice",
+        };
+    // Translate
+    const [stateText, setStateText] = useState(createInvoice_text);
+    const requestTrans = async () => {
+        try {
+        const resData = await createInvoiceTranslate(languageUserApi);
+        setStateText(resData)
+        } catch (error) {
+        console.log(error)
+        }
+    }
+    useEffect(() => {
+        if (languageUserApi) {
+        requestTrans();
+        } else if (!languageUserApi) {
+        setStateText(createInvoice_text);
+        }
+    }, [languageUserApi]);
+    const [openLoginModal] = useModal(<DownloadModal invoiceId={details?.invoiceId}/>);
     return (
         <PageFullWidth>
             <CsContainer>
@@ -129,7 +130,7 @@ const CreateDetail = () => {
                                         {convertDate(details?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.payment_terms}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
@@ -237,16 +238,14 @@ const CreateDetail = () => {
                                     <CsNavItem>
                                         <NavLink to={`/send/${details?.invoiceId}`}>
                                             <CsButton>
-                                                Send mail
+                                                {stateText.text_send_mail}
                                             </CsButton>
                                         </NavLink>
                                     </CsNavItem>
                                     <CsNavItem>
-                                        <NavLink to="/newInvoice">
-                                            <CsButton>
-                                                {stateText.text_back}
-                                            </CsButton>
-                                        </NavLink>
+                                        <CsButton onClick={openLoginModal}>
+                                            {stateText.text_download}
+                                        </CsButton>
                                     </CsNavItem>
                             </WAction>
                         </Flex>
