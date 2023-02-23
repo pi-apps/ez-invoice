@@ -66,7 +66,7 @@ const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFiel
         </CsButtonAdd>
         <hr style={{margin: '10px 0'}} />
         <Row mt="16px" style={{justifyContent: "space-between"}}>
-            <CsTextLeft>{stateText.text_amount_due}:</CsTextLeft>
+            <CsTextLeft>{stateText.text_subtotal}:</CsTextLeft>
             <CsTextRight bold>
               {total && typeof total === 'number' ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}
               </CsTextRight>
