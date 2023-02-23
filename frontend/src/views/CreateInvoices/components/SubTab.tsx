@@ -128,6 +128,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     // for preview data
     const dataPreview = GetDataPreview()
     const dataPreviewDetails = dataPreview?.dataPreview
+    console.log('dataPreviewDetails', dataPreviewDetails)
     function setDefaultValue(dataDefault){
         setValue("senderEmail", dataDefault?.senderEmail);
         setValue("billFrom", dataDefault?.billFrom);
@@ -199,15 +200,17 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                     setLoadingPreview(false)
             }
     }
+
     const onSubmit = async data => {
+        console.log('startDate', startDate)
        await dispatch(getDataPreview({
             dataPreview: {
                 senderEmail: getValues("senderEmail"),
                 billFrom:getValues("billFrom"),
                 billTo:getValues("billTo"),
                 shipTo:getValues("shipTo"),
-                issueDate: getValues("issueDate"),
-                dueDate: getValues("dueDate"),
+                issueDate: startDate,
+                dueDate: startDueDate,
                 paymentTerms:getValues("paymentTerms"),
                 poNumber:getValues("poNumber"),
                 items: getValues("items"),
@@ -225,8 +228,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         setValue("billFrom", data?.billFrom);
         setValue("billTo", data?.billTo);
         setValue("shipTo", data?.shipTo);
-        setValue("issueDate", new Date(data?.issueDate));
-        setValue("dueDate", new Date(data?.dueDate));
+        setValue("issueDate", startDate);
+        setValue("dueDate", startDueDate);
         setValue("paymentTerms", data?.paymentTerms);
         setValue("poNumber", data?.poNumber);
         setValue("items", data?.items);
@@ -238,8 +241,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         setValue("shipping", data?.shipping);
         setValue("amountPaid", data?.amountPaid);
         setValue("logo", data?.logoUrl);
-        setStartDate(new Date(data?.issueDate))
-        setStartDueDate(new Date(data?.dueDate))
+        // setStartDate(new Date(data?.issueDate))
+        // setStartDueDate(new Date(data?.dueDate))
         await dispatch(fetchStatusPreview({isPreview: true}))
         
         navigate("/preview")
