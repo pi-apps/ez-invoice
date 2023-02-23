@@ -2,6 +2,7 @@ import axios from "axios";
 import { createInvoice_text } from "./languages/createInvoice_text";
 import { download_text } from "./languages/download_text";
 import { footerMenu_text } from "./languages/footerMenu_text";
+import { history_text } from "./languages/history_text";
 import { home_new } from "./languages/home_text";
 import { invoice_text } from "./languages/invoice_text";
 import { useMenu_text } from "./languages/useMenu_text";
@@ -208,6 +209,56 @@ export async function createInvoiceTranslate(language: any) {
     "text_allowances": langArr[46] || createInvoice_text["text_allowances"],
     "text_back": langArr[47] || createInvoice_text["text_back"],
     "text_invoice": langArr[48] || createInvoice_text["text_invoice"],
+    "text_send_mail": langArr[49] || createInvoice_text["text_send_mail"],
+  }
+  return data;
+}
+
+export async function previewInvoiceTranslate(language: any) {
+  let lang = "";
+  for (const key in createInvoice_text) {
+    lang += createInvoice_text[key] + ":";
+  }
+  lang = lang.slice(0, -1);
+  if (language !== "en") {
+    lang = await translateText(lang, "en", language);
+  }
+  const langArr = lang.split(":");
+  const data = {
+    "text_bill_from": langArr[0] || createInvoice_text["text_bill_from"],
+    "text_bill_to": langArr[1] || createInvoice_text["text_bill_to"],
+    "text_ship_to": langArr[2] || createInvoice_text["text_ship_to"],
+    "text_date": langArr[3] || createInvoice_text["text_date"],
+    "text_due_date": langArr[4] || createInvoice_text["text_due_date"],
+    "text_po_number": langArr[5] || createInvoice_text["text_po_number"],
+    "text_subtotal": langArr[6] || createInvoice_text["text_subtotal"],
+    "text_tax": langArr[7] || createInvoice_text["text_tax"],
+    "text_total": langArr[8] || createInvoice_text["text_total"],
+    "text_discount": langArr[9] || createInvoice_text["text_discount"],
+    "text_shipping": langArr[10] || createInvoice_text["text_shipping"],
+    "text_payment_terms": langArr[11] || createInvoice_text["text_payment_terms"],
+    "text_allowances": langArr[12] || createInvoice_text["text_allowances"],
+    "text_back": langArr[13] || createInvoice_text["text_back"],
+  }
+  return data;
+}
+
+export async function historyTranslate(language: any) {
+  let lang = "";
+  for (const key in history_text) {
+    lang += history_text[key] + ":";
+  }
+  lang = lang.slice(0, -1);
+  if (language !== "en") {
+    lang = await translateText(lang, "en", language);
+  }
+  const langArr = lang.split(":");
+  const data = {
+    "text_no_data": langArr[0] || history_text["text_no_data"],
+    "text_history": langArr[1] || history_text["text_history"],
+    "text_let_ezinvoice_account": langArr[2] || history_text["text_let_ezinvoice_account"],
+    "text_export": langArr[3] || history_text["text_export"],
+    "text_new_invoice": langArr[4] || history_text["text_new_invoice"],
   }
   return data;
 }

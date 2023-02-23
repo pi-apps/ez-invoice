@@ -1,7 +1,7 @@
 import { Button, Flex, Text, Skeleton, Image } from '@devfedeltalabs/pibridge_uikit';
 import Header from 'components/Header';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Fragment, useMemo, useEffect } from 'react';
+import { Fragment, useMemo, useEffect, useState } from 'react';
 import Container from 'components/Layout/Container';
 import PageFullWidth from "components/Layout/PageFullWidth";
 import Row from 'components/Layout/Row';
@@ -9,6 +9,9 @@ import Nav from 'react-bootstrap/Nav';
 import { GetDataPreview } from 'state/preview';
 import styled from 'styled-components';
 import { UndefineIcon } from 'components/Svg';
+import { createInvoice_text } from 'translation/languages/createInvoice_text';
+import { createInvoiceTranslate, previewInvoiceTranslate } from 'translation/translateArrayObjects';
+import { getUser } from 'state/user';
 
 const Preview = () => {
     const data = GetDataPreview()
@@ -82,6 +85,26 @@ const Preview = () => {
     //   setBalanceDue(amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0)
     // },[amountPaidValue])
 
+    // Translate
+    const userData = getUser();
+    const languageUserApi = userData?.language
+    const [stateText, setStateText] = useState(createInvoice_text);
+    const requestTrans = async () => {
+        try {
+        const resData = await previewInvoiceTranslate(languageUserApi);
+        setStateText(resData)
+        } catch (error) {
+        console.log(error)
+        }
+    }
+    useEffect(() => {
+        if (languageUserApi) {
+        requestTrans();
+        } else if (!languageUserApi) {
+        setStateText(createInvoice_text);
+        }
+    }, [languageUserApi]);
+
     return (
         <PageFullWidth>
             <CsContainer>
@@ -99,7 +122,7 @@ const Preview = () => {
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Bill from</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_bill_from}</CsTextLeft>
                                         { !items?.billFrom ?
                                             <Skeleton width={60} />
                                         :
@@ -107,7 +130,7 @@ const Preview = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Bill to</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_bill_to}</CsTextLeft>
                                         { !items?.billTo ?
                                             <Skeleton width={60} />
                                         :
@@ -115,15 +138,15 @@ const Preview = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Date</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_date}</CsTextLeft>
                                         {convertDate(items?.issueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Due date</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_due_date}</CsTextLeft>
                                         {convertDate(items?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Payment Terms</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
                                         { !items?.paymentTerms ?
                                             <Skeleton width={60} />
                                         :
@@ -132,7 +155,7 @@ const Preview = () => {
                                         
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>PO Number</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_po_number}</CsTextLeft>
                                         { !items?.poNumber ?
                                             <Skeleton width={60} />
                                         :
@@ -142,10 +165,10 @@ const Preview = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%">item</ColFirstth>
-                                        <Colth width="20%">quantity</Colth>
-                                        <Colth width="20%">unit price</Colth>
-                                        <Colth width="20%">total</Colth>
+                                        <ColFirstth width="20%">{stateText.text_item}</ColFirstth>
+                                        <Colth width="20%">{stateText.text_quanlity}</Colth>
+                                        <Colth width="20%">{stateText.text_unit_price}</Colth>
+                                        <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {listItems.map((item) => {
                                         return(
@@ -161,7 +184,7 @@ const Preview = () => {
                                 </CsContentBill>
                                 <CsContentInfo>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Subtotal</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
                                         { !subTotal ?
                                             <Skeleton width={60} />
                                         :
@@ -171,7 +194,7 @@ const Preview = () => {
                                     </Row>
                                     { ( Number(items?.tax) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Tax: ({items?.tax} {Number( items?.taxType ) === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_tax}: ({items?.tax} {Number( items?.taxType ) === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{Number(items?.taxType) === 1 ? 
                                             <>
                                                 {(subTotal && items?.tax) && (subTotal*items?.tax/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -184,7 +207,7 @@ const Preview = () => {
                                     }
                                     {( Number(items?.discount) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Discount: ({items?.discount} {items?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_discount}: ({items?.discount} {items?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
                                             <CsTextRight bold>{items?.discountType === 1 ? 
                                             <>
                                                 {(subTotal && items?.discount && items?.tax) && (discountValue*(subTotal + isTaxValue )/100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -198,13 +221,13 @@ const Preview = () => {
                                     
                                     { ( Number(items?.shipping) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>Shipping</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
                                             <CsTextRight bold>{items?.shipping && shippingValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         </Row>
                                     }
  
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Total</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_total}</CsTextLeft>
                                         { (!subTotal || !items?.discount || !items?.tax || !items?.shipping) ?
                                             <Skeleton width={60} />
                                         :
@@ -213,7 +236,7 @@ const Preview = () => {
                                     </Row>
 
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Allowances</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_allowances}</CsTextLeft>
                                         { !items?.amountPaid ?
                                             <CsTextRight>- 0</CsTextRight>
                                         :
@@ -222,7 +245,7 @@ const Preview = () => {
                                     </Row>
 
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>Allowances</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_allowances}</CsTextLeft>
                                         { (!subTotal || !items?.discount || !items?.tax || !items?.shipping) ?
                                             <Skeleton width={60} />
                                         :
@@ -234,7 +257,7 @@ const Preview = () => {
                             <WAction>
                                 <CsNavItem>
                                     <CsButton onClick={()=> navigate(`/newInvoice`)}>
-                                        Back
+                                        {stateText.text_back}
                                     </CsButton>
                                 </CsNavItem>
                             </WAction>

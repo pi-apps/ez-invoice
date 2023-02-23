@@ -51,5 +51,5 @@ export const createInvoice_text:any = {
        "text_allowances": "Allowances",
        "text_back": "Back",
        "text_invoice": "Invoice",
-       "send_mail":"Send mail"
+       "text_send_mail":"Send mail"
 }
