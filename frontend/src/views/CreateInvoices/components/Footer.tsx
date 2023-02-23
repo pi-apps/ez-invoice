@@ -1,19 +1,13 @@
 import { AutoRenewIcon, Button, useModal } from "@devfedeltalabs/pibridge_uikit";
-import { useContext, useEffect, useState } from "react";
+import DownloadModal from "components/DownloadModal";
+import { useEffect, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
-import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import Navbar from "react-bootstrap/Navbar";
-import DownloadModal from "components/DownloadModal";
-import { Translate } from "react-auto-translate";
-import { InvoiceIdContext } from "contexts/InVoiceIdContext";
-import { getInvoiceId } from "state/newInvoiceId";
+import { NavLink, useNavigate } from "react-router-dom";
 import { getUser } from "state/user";
-import { GetTranslateHolder } from "hooks/TranSlateHolder";
-import { createInvoiceTranslate } from "translation/translateArrayObjects";
+import styled from "styled-components";
 import { createInvoice_text } from "translation/languages/createInvoice_text";
+import { createInvoiceTranslate } from "translation/translateArrayObjects";
 
 const styles = {
   main: {
@@ -26,7 +20,9 @@ const styles = {
     position: "fixed",
     background: "#fff",
   },
-  navItem: {},
+  navItem: {
+    width: "48%",
+  },
   icon: {
     marginBottom: "20px",
   },
@@ -39,7 +35,6 @@ const styles = {
 const NavCustom = styled(Nav)``;
 
 const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
-  console.log("loadingPreview", loadingPreview)
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<DownloadModal invoiceId={invoiceId}/>);
@@ -88,14 +83,14 @@ const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
         </NavLink>
       </Nav.Item>
 
-      <Nav.Item style={styles.navItem}>
+      {/* <Nav.Item style={styles.navItem}>
         <CsButtonDownload 
           disabled={(isActive === 1 || isActive === 2) || !invoiceId}
           onClick={openLoginModal}
         >
             {stateText.text_download}
           </CsButtonDownload>
-      </Nav.Item>
+      </Nav.Item> */}
 
       <Nav.Item style={styles.navItem}>
           <CsButton
@@ -111,7 +106,7 @@ const Footer = ({ isActive, invoiceId, onHandleCreate, loadingPreview }) => {
   );
 };
 const CsButton = styled(Button)<{ isActive: boolean }>`
-    width: 101px;
+    width: 100%;
     height: 48px;
     background: ${({ isActive }) => (isActive ? "#6B39F4" : "#F8F5FF")};
     color: #6b39f4;

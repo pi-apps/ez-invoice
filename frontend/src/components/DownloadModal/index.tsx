@@ -1,23 +1,18 @@
 import { AutoRenewIcon, Button, Flex, Modal, Text } from "@devfedeltalabs/pibridge_uikit";
 import DownLoadIcon from "components/Svg/Icons/DowloadIcon";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import axios from "axios";
-import { Translate } from "react-auto-translate";
 
 // Component
-import { axiosClient } from "../../config/htttp";
-import { SignInWithGoogle } from "firebase.config";
+import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 import useToast from "hooks/useToast";
 import { AppDispatch } from "state";
 import { getAccessTokenAuth } from "state/googleAuth";
-import { setAccessToken } from "state/googleAuth/actions";
-import TranSlatorModal from "components/TranSlatorModal/TranSlatorModal";
 import { getAccessToken, getUser } from "state/user";
-import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import { download_text } from "translation/languages/download_text";
 import { downloadTranslate } from "translation/translateArrayObjects";
+import { axiosClient } from "../../config/htttp";
 
 interface Props {
   onDismiss?: () => void;
@@ -40,56 +35,7 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
   const accessTokenAuth = getAccessTokenAuth();
   const token = getAccessToken()
 
-  const uploadFileToDrive = async (accessToken) => {
-    setIsLoadingGGDrive(true)
-    try {
-      const response1 = await fetch(
-        `${urlDownload}`
-      );
-      const pdfData = await response1.arrayBuffer();
-      const pdfByteArray = new Uint8Array(pdfData);
 
-      const response = await axios({
-        url: "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable",
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        data: {
-          name: `${invoiceId}`,
-          mimeType: "application/pdf",
-        },
-      });
-      const location = response.headers.location;
-      await axios({
-        url: location,
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/pdf",
-          "Content-Length": `${pdfByteArray.length}`,
-        },
-        data: pdfByteArray,
-      });
-      setIsLoadingGGDrive(false)
-      toastSuccess(null, <Text style={{justifyContent: 'center'}}><Translate>Upload Success</Translate></Text>);
-    } catch (error) {
-      setIsLoadingGGDrive(false)
-      dispatch(setAccessToken(''));
-      toastError(null, <Text style={{justifyContent: 'center'}}><Translate>Upload Failed, Your google account has expired, please login again!</Translate></Text>);
-    }
-  };
-
-  // Sign Firebase
-  const handleLoginAuthGoogle = async () => {
-    const res = await SignInWithGoogle();
-    dispatch(setAccessToken(res));
-  };
-
-  const handleOpenPicker = async () => {
-    await uploadFileToDrive(accessTokenAuth);
-  };
   const getUrlDownload = async () => {
     setIsLoading(true);
     const sendLanguage = languageUserApi ?? 'en'
@@ -167,7 +113,8 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
       <Modal
         title=""
         onDismiss={onDismiss}
-        maxWidth="550px"
+        maxWidth="350px"
+        width="100%"
         modalIcon={<DownLoadIcon />}
       >
         <Flex flexDirection="column" width="100%">
@@ -178,60 +125,26 @@ const DownloadModal: React.FC<Props> = ({ onDismiss, invoiceId }) => {
             {stateText.text_choose_file}
           </Text>
 
-          <Flex mt="1rem" justifyContent="center">
+          <Flex mt="1rem" justifyContent="center" width="100%" style={{gap:'15px'}} flexDirection="column">
               {urlDownload ? 
-                <FlexUrl position='relative'>
+                <FlexUrl width="100%" style={{gap:'15px'}} flexDirection="column" justifyContent="center" alignItems="center">
                   <TextUrl>{shortUrl(urlDownload)}</TextUrl>
-                  <ButtonCoppy onClick={copyLinkReferralCode}>
-                    {stateText.text_copy}
-                  </ButtonCoppy>
-                  <Tooltip isTooltipDisplayed={isOpenTooltip}>{stateText.text_coppied}</Tooltip>
+                  <Flex position="relative" width="100%" justifyContent="center">
+                    <Button onClick={copyLinkReferralCode}>
+                      {stateText.text_copy}
+                    </Button>
+                    <Tooltip isTooltipDisplayed={isOpenTooltip}>{stateText.text_coppied}</Tooltip>
+                  </Flex>
+                  
                 </FlexUrl> :
                 <Button disabled endIcon={<AutoRenewIcon style={{margin: 0}} spin color="black"/>} />
               }
-
-            {/* <LinkDownload href={urlDownload} download>
-              <CsButton
-                padding="0"
-                width="100%"
-                variant="secondary"
-                disabled={!urlDownload && isLoading}
-                onClick={() => getUrlDownload()}
-                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Text>{stateText.hard_disk}</Text>}
-              >
-              </CsButton> 
-              </LinkDownload> */}
-
-            {/* {accessTokenAuth ? (
-              <Button
-                disabled={isLoading && !urlDownload}
-                endIcon={isLoadingGGDrive ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Google Drive</Translate>}
-                padding="0"
-                width="48%"
-                onClick={() => handleOpenPicker()}
-              />
-            ) : (
-              <Button 
-                disabled={isLoading}
-                onClick={handleLoginAuthGoogle}
-                endIcon={isLoading ? <AutoRenewIcon style={{margin: 0}} spin color="#fff"/> : <Translate>Login Google</Translate>}
-              />
-            )} */}
           </Flex>
         </Flex>
       </Modal>
     </TranSlatorModal>
   );
 };
-const CsButton = styled(Button)`
-  color: #6b39f4;
-`;
-
-const LinkDownload = styled.a`
-  color: #6b39f4;
-  width: 48%;
-  height: 48px;
-`;
 
 const FlexUrl = styled(Flex)``
 
@@ -242,30 +155,15 @@ const TextUrl = styled(Text)`
 const Tooltip = styled.div<{ isTooltipDisplayed?: boolean }>`
   display: ${({ isTooltipDisplayed }) => (isTooltipDisplayed ? 'inline-block' : 'none')};
   position: absolute;
-  padding: 8px;
-  top: -35px;
-  right: -15px;
+  padding: 12px 24px;
+  top: -45px;
+  right: -5px;
   text-align: center;
   background-color: white;
   color: ${({ theme }) => theme.colors.text};
-  border-radius: 16px;
-  width: 100px;
+  border-radius: 8px;
+  width: auto;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
-`
-
-const ButtonCoppy = styled.button`
-    background: #6B39F4;
-    border-radius: 10px;
-    /* width: 100px; */
-    max-width: 100px;
-    height: 30  px;
-    display: flex;
-    font-size: 12px;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    color: white;
-    text-transform: uppercase;
 `
 
 export default DownloadModal;
