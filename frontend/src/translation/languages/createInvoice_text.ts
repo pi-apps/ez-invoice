@@ -10,7 +10,7 @@ export const createInvoice_text:any = {
        "text_po_number": "PO Number",
        "text_amount_due": "Amount Due",
        "text_line_item": "Line item",
-       "text_pl_sender_email": "Who is this invoice from? (required)",
+       "text_pl_sender_email": "Sender Email",
        "text_pl_bill_from": "Who is this invoice from? (required)",
        "text_pl_bill_to": "Who is this invoice to? (required)",
        "text_pl_ship_to": "Who is this invoice to? (required)",
