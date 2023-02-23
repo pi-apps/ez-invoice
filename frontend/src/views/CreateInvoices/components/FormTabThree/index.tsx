@@ -71,7 +71,8 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
     const isTaxValue = (activeTax === 1 ) ? taxValuePercent : taxValue
     const DiscountValuePercent = discountValue * (total + isTaxValue) / 100 
     const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
-    const isDiscount = (discountValue < total) ? discountValue : total
+    const isDiscount = (discountValue < (total + isTaxValue)) ? discountValue : (total + isTaxValue)
+
     const totalFinal = (total) => {
       if(activeTax === 2 && activeDiscount === 2){
         return total + taxValue + shippingValue - isDiscount
@@ -84,13 +85,13 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
       }
     } 
     const totalFinaly = totalFinal(total)
-    console.log('totalFinaly', stateText.text_less_than_total)
     const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
 
     useEffect(() => {
       setBalanceDue(amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0)
     },[amountPaidValue])
-    
+    const iserrorWhenInputDiscount = ( activeDiscount === 2 && (discountValue > (total + isTaxValue)))
+    const iserrorWhenInputDiscountPercent = ( activeDiscount === 1 && (discountValue > 100))
   return (
     <CsWrapperForm>
       <CsContainer>
@@ -154,6 +155,8 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                     </Row>
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>
                         <ChooseMethod 
+                            iserrorWhenInputDiscountPercent={iserrorWhenInputDiscountPercent}
+                            iserrorWhenInputDiscount={iserrorWhenInputDiscount}
                             setActiveDiscount={setActiveDiscount} 
                             activeDiscount={activeDiscount} 
                             activeTax={activeTax} 
@@ -219,7 +222,6 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
                             </WrapInputAmountPaid>
                           {Number(amountPaidValue > totalFinaly) ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_less_than_total}</Text> : ''}
                           </CsAmountPaid>
-                          {/* <ErrorMessages errors={errors} name="amountPaid" /> */}
                     </Row>
 
                     <Row mt="1rem" style={{justifyContent: "space-between"}}>

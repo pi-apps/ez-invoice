@@ -9,7 +9,6 @@ import { createInvoice_text } from 'translation/languages/createInvoice_text'
 import { createInvoiceTranslate } from 'translation/translateArrayObjects'
 
 const Card = ({index,item, remove, fields, register, control } ) => {
-  console.log('control' , control?._formState?.touchedFields?.items?.[0]?.name === true && item.name === '')
     const priceNumber = Number(item?.price)
     const quantityNumber = Number(item?.quantity)
     const handleCloseItem = () => {
@@ -53,7 +52,6 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                 </CsCloseIcon>
             </CsFlexHeading>
         </CsHeading>
-        {/* <input {...register(`items.${index}.price` as const)} />; */}
         <CsContent>
             <ContainerInput>
                 <WrapInput>
@@ -72,8 +70,8 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                   />
                 </WrapInput>
             </ContainerInput>
-            {item.name === ' ' ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_please_input_alphabet}</Text> : item.name.length > 100 && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_max_character_100}</Text> 
-            || 
+            {(item.name.split(' ').length >= 2 && !item.name.trim()) ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_please_input_alphabet}</Text> : (item.name.length > 100) && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_max_character_100}</Text> 
+            ||
             <>
               {(control?._formState?.touchedFields?.items?.[0]?.name === true && item.name === '') && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_description_requeried}</Text>}
             </>

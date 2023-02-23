@@ -221,6 +221,7 @@ export async function createInvoiceTranslate(language: any) {
     "text_create_success": langArr[51] || createInvoice_text["text_create_success"],
     "text_create_failed": langArr[52] || createInvoice_text["text_create_failed"],
     "text_less_than_total": langArr[53] || createInvoice_text["text_less_than_total"],
+    "text_less_than_subtotal_and_tax": langArr[54] || createInvoice_text["text_less_than_subtotal_and_tax"],
   }
   return data;
 }

@@ -56,5 +56,6 @@ export const createInvoice_text:any = {
        "text_create_success": "Create invoice successfully!!!",
        "text_create_failed": "System error!!!",
        
-       "text_less_than_total":"Please input number less than total"
+       "text_less_than_total":"Please input number less than total",
+       "text_less_than_subtotal_and_tax":"Please input number less than (subtotal+tax)"
 }
