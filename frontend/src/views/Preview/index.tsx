@@ -13,6 +13,9 @@ import { createInvoice_text } from 'translation/languages/createInvoice_text';
 import { previewInvoiceTranslate } from 'translation/translateArrayObjects';
 import { getUser } from 'state/user';
 import { previewInvoice_text } from 'translation/languages/previewInvoice';
+import { AppDispatch } from 'state';
+import { useDispatch } from 'react-redux';
+import { getDataImages } from 'state/preview/actions';
 
 const Preview = () => {
     const data = GetDataPreview()
@@ -101,7 +104,15 @@ const Preview = () => {
         setStateText(previewInvoice_text);
         }
     }, [languageUserApi]);
+    
+    const dispatch = useDispatch<AppDispatch>()
 
+    async function handleClick() {
+        await dispatch(getDataImages(
+            { images: null }
+        ))
+        navigate(`/newInvoice`)
+    }
     return (
         <PageFullWidth>
             <CsContainer>
@@ -243,7 +254,7 @@ const Preview = () => {
                             </WContent>
                             <WAction>
                                 <CsNavItem>
-                                    <CsButton onClick={()=> navigate(`/newInvoice`)}>
+                                    <CsButton onClick={handleClick}>
                                         {stateText.text_back}
                                     </CsButton>
                                 </CsNavItem>

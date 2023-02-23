@@ -44,7 +44,7 @@ const CardHistory: React.FC<Props> = ({ items, loading }) => {
                   <Skeleton width="60px"/>
                 :
                   <Text style={{wordBreak: 'break-all'}} fontWeight={700} fontSize='12px' color='#0F172A'>        
-                    {items?.billFrom}      
+                    {items?.billTo}      
                   </Text>
                 }
               
@@ -52,7 +52,7 @@ const CardHistory: React.FC<Props> = ({ items, loading }) => {
             </Flex>
           </Flex>
           <CsButtonDelete role="presentation">
-            <Text style={{wordBreak: 'break-all'}} fontWeight={700} fontSize='12px' color='#0F172A'>
+            <Text style={{wordBreak: 'break-all'}} fontWeight={700} fontSize='12px' color='#0F172A' width="100%" textAlign="center">
               { Number(items?.amountDue) > 0 ? Number(items?.amountDue).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0} Pi
             </Text>
           </CsButtonDelete>

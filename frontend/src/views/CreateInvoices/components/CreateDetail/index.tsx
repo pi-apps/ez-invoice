@@ -130,7 +130,7 @@ const CreateDetail = () => {
                                         {convertDate(details?.dueDate)}
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.payment_terms}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :

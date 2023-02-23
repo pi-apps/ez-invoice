@@ -13,7 +13,7 @@ import Footer from "components/Footer";
 import DeleteModal from "components/DeleteModal";
 import { getAccessToken, getUser } from "state/user";
 import { GetHistory, UseGetAllInvoiceHistoryCore } from "state/history";
-import { fetchStatusPreview } from "state/preview/actions";
+import { fetchStatusPreview, getDataImages } from "state/preview/actions";
 import { AppDispatch } from "state";
 import { useDispatch } from "react-redux";
 import { history_text } from "translation/languages/history_text";
@@ -29,6 +29,9 @@ const History = () => {
     const dispatch = useDispatch<AppDispatch>()
     useEffect(()=> {
         dispatch(fetchStatusPreview({isPreview: false}))
+        dispatch(getDataImages(
+            { images: null }
+        ))
     }, [])
 
     // Translate
