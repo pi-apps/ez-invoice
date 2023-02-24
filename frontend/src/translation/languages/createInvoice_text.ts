@@ -56,4 +56,7 @@ export const createInvoice_text:any = {
        "text_less_than_subtotal_and_tax":"Invalid amount",
        "text_terms_and_conditions": "Terms and conditions - late fees, payment methods, delivery schedule",
        "text_error": "Error",
+
+       "text_payment_term": "Payment Term",
+       "text_pl_payment_term": "Payment Term",
 }

@@ -68,7 +68,7 @@ const DetailSent = () => {
     const convertTotal = new BigNumber(details?.total).decimalPlaces(2,1)
     const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
     const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
-    
+    const convertTips = new BigNumber(details?.tip).decimalPlaces(2,1)
 
     return (
         <PageFullWidth>
@@ -230,6 +230,14 @@ const DetailSent = () => {
                                             <Skeleton width={60} />
                                         :
                                             <CsTextRight bold>-{details?.amountPaid && Number(convertAmountPaid.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                        }
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_tips}</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.tip &&  Number(convertTips.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>

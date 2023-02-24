@@ -127,6 +127,7 @@ export async function invoiceTranslate(language: any) {
     "text_amount_paid": langArr[25] || invoice_text["text_amount_paid"],
     "text_notes": langArr[26] || invoice_text["text_notes"],
     "text_terms": langArr[27] || invoice_text["text_terms"],
+    "text_tips": langArr[28] || invoice_text["text_tips"],
   }
   return data;
 }
