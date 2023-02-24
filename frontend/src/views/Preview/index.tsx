@@ -61,31 +61,6 @@ const Preview = () => {
     const activeTax = Number(items?.taxType)
     const activeDiscount = items?.discountType
     
-    const taxValuePercent = taxValue * subTotal / 100 
-    const isTaxValue = (activeTax === 1 ) ? taxValuePercent : taxValue
-    const discountValuePercent = discountValue * (subTotal + isTaxValue) / 100 
-    
-    const isDiscountValuePercent = discountValue <= 100 ? discountValuePercent : subTotal
-    const isDiscount = (discountValue < subTotal) ? discountValue : (subTotal + isTaxValue)
-
-    const totalFinal = (total) => {
-        if( activeTax === 2 && activeDiscount === 2){
-          return total + taxValue + shippingValue - isDiscount
-        } else if(activeTax === 2 && activeDiscount === 1){
-          return total + taxValue - isDiscountValuePercent + shippingValue
-        } else if(activeTax === 1 && activeDiscount === 1){
-          return total + taxValuePercent + shippingValue - isDiscountValuePercent
-        } else if(activeTax === 1 && activeDiscount === 2){
-          return total + taxValuePercent + shippingValue - isDiscount
-        }
-    } 
-    
-    const totalFinaly = useMemo(() => {
-        return totalFinal(subTotal)
-      },[activeTax]);
-      
-    const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
-
     // Translate
     const userData = getUser();
     const languageUserApi = userData?.language
@@ -109,21 +84,47 @@ const Preview = () => {
     const dispatch = useDispatch<AppDispatch>()
 
     async function handleClick() {
-        // await dispatch(getDataImages(
-        //     { images: null }
-        // ))
         navigate(`/newInvoice`)
     }
 
+    // Calculate the total amount due
+    const [ taxAmount, setTaxAmount ] = useState("0")
+    const [ disCountAmount, setDisCountAmout ] = useState("0")    
+    // for tax amount
+    
+    useEffect(()=>{
+      if(Number(activeTax) === 1){
+        const taxAmount = new BigNumber(subTotal).multipliedBy(taxValue).dividedBy(100).toString()
+        setTaxAmount(taxAmount)
+      } else {
+        setTaxAmount(taxValue.toString())
+      }
+    },[ subTotal, activeTax, taxValue ])
+    // for tax discount
+    useEffect(()=>{
+      if(Number(activeDiscount) === 1){
+        const disCountAmount = new BigNumber(subTotal).multipliedBy(discountValue).dividedBy(100).toString()
+        setDisCountAmout(disCountAmount)
+      } else {
+        setDisCountAmout(discountValue.toString())
+      }
+    },[ subTotal, activeDiscount, discountValue ])
+
+    // for total
+    const total = useMemo(() => {
+      return new BigNumber(subTotal).plus(taxAmount).minus(disCountAmount).plus(shippingValue).toString()
+    },[subTotal, taxAmount, disCountAmount, shippingValue, activeDiscount, activeTax ]);
+
+    const amountDue = useMemo(() => {
+      return new BigNumber(total).minus(amountPaidValue).toString()
+    },[total, amountPaidValue, activeDiscount, activeTax ]);
+
+    const converTotal = new BigNumber(total).decimalPlaces(2,1)
+    const convertAmountDue = new BigNumber(amountDue).decimalPlaces(2,1)
+
     const subTotalConvert = new BigNumber(subTotal).decimalPlaces(2,1)
-    const convertPercentTax = new BigNumber(subTotal*taxValue/100).decimalPlaces(2,1)
-    const convertTax = new BigNumber(taxValue).decimalPlaces(2,1)
-    const convertDiscount = new BigNumber(discountValue).decimalPlaces(2,1)
-    const convertDiscountPercent = new BigNumber(discountValue*(subTotal + isTaxValue)/100).decimalPlaces(2,1)
     const convertShipping = new BigNumber(shippingValue).decimalPlaces(2,1)
-    const convertTotal = new BigNumber(totalFinaly).decimalPlaces(2,1)
     const convertAmountPaid = new BigNumber(amountPaidValue).decimalPlaces(2,1)
-    const convertAmountDue = new BigNumber(balanceDue).decimalPlaces(2,1)
     
     return (
         <PageFullWidth>
@@ -218,11 +219,11 @@ const Preview = () => {
                                             <CsTextLeft>{stateText.text_tax}: ({items?.tax}{Number( items?.taxType ) === 1 && "%" })</CsTextLeft>
                                             <CsTextRight bold>{Number(items?.taxType) === 1 ? 
                                             <>
-                                                {Number(convertPercentTax.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                                {Number(taxAmount.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> 
                                             : 
                                             <>
-                                                {Number(convertTax.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                                {Number(taxAmount.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> } Pi</CsTextRight>
                                         </Row>
                                     }
@@ -232,10 +233,10 @@ const Preview = () => {
                                             <CsTextLeft>{stateText.text_discount}: ({items?.discount}{items?.discountType === 1 && "%"})</CsTextLeft>
                                             <CsTextRight bold>{items?.discountType === 1 ? 
                                             <>
-                                                {(Number(convertDiscountPercent.toString())).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                                {(Number(disCountAmount.toString())).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </> : 
                                             <>
-                                                {Number(convertDiscount.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
+                                                {Number(disCountAmount.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
                                             </>
                                             } Pi</CsTextRight>
                                         </Row>
@@ -250,12 +251,12 @@ const Preview = () => {
  
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_total}</CsTextLeft>
-                                        { (!convertTotal) ?
+                                        { Number(subTotal) <= 0 ?
                                         <CsTextRight>
                                             {Number(0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi
                                         </CsTextRight>
                                         :
-                                        <CsTextRight bold>{Number(convertTotal?.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                        <CsTextRight bold>{Number(converTotal?.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
 
@@ -270,7 +271,7 @@ const Preview = () => {
 
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
-                                        { (!balanceDue) ?
+                                        { Number(amountDue) < 0 ?
                                             <CsTextRight>{Number(0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         :
                                             <CsTextRight bold>{ Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>

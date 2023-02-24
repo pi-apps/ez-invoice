@@ -73,7 +73,6 @@ const ChooseMethod = ({
                                                   value={field.value}
                                                   onChange={field.onChange}
                                                   type='number'
-                                                  min={0}
                                               />
                                           </>
                                       )}
@@ -148,7 +147,7 @@ const ChooseMethod = ({
                               )}
                           />
                       </WrapInputShipping>
-                      <CsCloseIcon onClick={() => { setTypeShipping(false); setValue("shipping", 0) } }>
+                      <CsCloseIcon onClick={() => { setTypeShipping(false); setValue("shipping", "0") } }>
                           <CloseIcon />
                       </CsCloseIcon>
                       </CsRowTax>
