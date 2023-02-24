@@ -182,11 +182,11 @@ const DetailSent = () => {
 
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.text_tax}: (
+                                            <CsTextLeft>{stateText.text_tax}: 
                                                 {details?.taxType === 1 && <>
-                                                    {Number(convertTax.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}%
+                                                    ({Number(convertTax.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}%)
                                                 </>
-                                                })
+                                                }
                                             </CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? <>
                                                 {(details?.subTotal && details?.tax) && Number(convertPercentTax.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -198,10 +198,10 @@ const DetailSent = () => {
 
                                     {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.text_discount}: (
+                                            <CsTextLeft>{stateText.text_discount}
                                             {details?.discountType === 1 && <>
-                                                {Number(convertDiscount.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}%
-                                            </>})</CsTextLeft>
+                                                ({Number(convertDiscount.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}%)
+                                            </>}</CsTextLeft>
                                             <CsTextRight bold>{details?.discountType === 1 ? 
                                             <>
                                                 {Number(convertDiscountPercent.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
