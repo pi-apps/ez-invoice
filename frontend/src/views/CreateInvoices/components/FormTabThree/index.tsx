@@ -318,7 +318,7 @@ const ReferenceElement = styled.div`
   cursor: pointer;
   color: text;
   svg{
-    width: 14px;
+    width: 16px;
   }
 `
 
