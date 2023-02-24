@@ -9,7 +9,7 @@ import utils from "../services/utils";
 
 // DO NOT expose these values to public
 const apiKey = process.env.PI_API_KEY || "";
-const walletPrivateSeed = process.env.SEED_PI || "" // starts with S
+const walletPrivateSeed = process.env.SEED_PI || "";
 const pi = new PiNetwork(apiKey, walletPrivateSeed);
 
 export default function mountPaymentsEndpoints(router: Router) {
@@ -181,16 +181,16 @@ export default function mountPaymentsEndpoints(router: Router) {
     // get detail a payment
     router.get('/detail/:paymentId', async (req, res) => {
         try {
-            const userInfo = await AuthenUser(req.headers.authorization);
-            if (!userInfo) {
-                return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
-            }
+            // const userInfo = await AuthenUser(req.headers.authorization);
+            // if (!userInfo) {
+            //     return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+            // }
             const paymentId = req.params.paymentId;
-            // Check exist in database
-            const invoice = await InvoicesModel.findOne({ pi_payment_id: paymentId });
-            if (!invoice) {
-                return res.status(400).json({ message: "Invoice not found" });
-            }
+            // // Check exist in database
+            // const invoice = await InvoicesModel.findOne({ pi_payment_id: paymentId });
+            // if (!invoice) {
+            //     return res.status(400).json({ message: "Invoice not found" });
+            // }
             const payment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
             return res.status(200).json({ message: payment.data });
         } catch (error: any) {
@@ -217,6 +217,7 @@ export default function mountPaymentsEndpoints(router: Router) {
             const paymentId = await pi.createPayment(paymentData);
             const txid = await pi.submitPayment(paymentId);
             const completedPayment = await pi.completePayment(paymentId, txid);
+            return completedPayment;
         } catch (error: any) {
             throw new Error(error.message);
         } 

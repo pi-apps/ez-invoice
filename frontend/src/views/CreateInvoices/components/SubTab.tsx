@@ -98,7 +98,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
-    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, mode: 'onTouched'});
+    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, reValidateMode: 'onSubmit'});
     const { fields, append, remove } = useFieldArray({
         control,
         name: "items"
@@ -230,7 +230,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
-            formData.append("logo", images[0]?.file);
+            formData.append("logo", images?.length ? images[0]?.file : "");
 
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {

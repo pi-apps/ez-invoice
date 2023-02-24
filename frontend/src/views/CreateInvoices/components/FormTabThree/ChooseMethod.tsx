@@ -82,7 +82,6 @@ const ChooseMethod = ({
                                                   value={field.value}
                                                   onChange={field.onChange}
                                                   type='number'
-                                                  min={0}
                                               />
                                           </>
                                       )}
@@ -106,7 +105,7 @@ const ChooseMethod = ({
                 </ReferenceElement> 
                 {tooltipVisible && tooltip}
               </CsTextLeft>
-              <ContainerInput style={{alignItems: 'flex-end'}}>
+              <ContainerInput>
                   <CsRowTax>
                       <CsRowTaxLeft>
                           <CsButton isActive={activeDiscount === 1 ? !false : false } onClick={() => dispatch(getActiveDiscount({ isDiscountPercent:1 })) }>%</CsButton>
@@ -162,7 +161,7 @@ const ChooseMethod = ({
                               )}
                           />
                       </WrapInputShipping>
-                      <CsCloseIcon onClick={() => { setTypeShipping(false); setValue("shipping", 0) } }>
+                      <CsCloseIcon onClick={() => { setTypeShipping(false); setValue("shipping", "0") } }>
                           <CloseIcon />
                       </CsCloseIcon>
                       </CsRowTax>
