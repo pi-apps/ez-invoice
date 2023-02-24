@@ -59,4 +59,7 @@ export const createInvoice_text:any = {
 
        "text_payment_term": "Payment Term",
        "text_pl_payment_term": "Payment Term",
+       "text_previous": "Previous",
+       "text_next": "Next",
+       "text_discount_before_tax": "Discount before tax",
 }

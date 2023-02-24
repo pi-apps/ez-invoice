@@ -76,7 +76,7 @@ const FormTabThree = ({
    
     }, [watch('tax'), watch('shipping'), watch('discount'), watch('amountPaid')]);
 
-   const { targetRef, tooltip, tooltipVisible } = useTooltip(
+  const { targetRef, tooltip, tooltipVisible } = useTooltip(
     <Flex flexDirection="column">
       <Text fontSize='9px'>{stateText.text_balance_due} = {stateText.text_subtotal} + {stateText.text_tax} - {stateText.text_discount} + {stateText.text_shipping} - {stateText.text_amount_paid}</Text>
     </Flex>,
@@ -317,8 +317,9 @@ const ReferenceElement = styled.div`
   margin-left:5px; 
   cursor: pointer;
   color: text;
+  transform: translateY(-1px);
   svg{
-    width: 16px;
+    width: 17px;
   }
 `
 

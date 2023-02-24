@@ -151,16 +151,16 @@ const DetailSent = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%">{stateText.text_item}</ColFirstth>
-                                        <Colth width="20%">{stateText.text_quanlity}</Colth>
+                                        <ColFirstth width="50%">{stateText.text_item}</ColFirstth>
+                                        <Colth width="10%">{stateText.text_quanlity}</Colth>
                                         <Colth width="20%">{stateText.text_unit_price}</Colth>
                                         <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
                                         return(
                                             <CsRow>
-                                            <ColFirst width="20%"><Translate>{item?.name}</Translate></ColFirst>
-                                            <Col width="20%"><Translate>{item?.quantity}</Translate></Col>
+                                            <ColFirst width="50%"><Translate>{item?.name}</Translate></ColFirst>
+                                            <Col width="10%"><Translate>{item?.quantity}</Translate></Col>
                                             <Col width="20%">{item?.price && item?.price.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                             <Col width="20%">{((item?.quantity) &&(item?.price)) && ((item?.quantity)*(item?.price)).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                         </CsRow>

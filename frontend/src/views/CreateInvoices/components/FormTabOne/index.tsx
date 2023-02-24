@@ -17,11 +17,13 @@ import ReactImageUpload from './ReactImageUpload'
 import { getUser } from "state/user"
 import { createInvoice_text } from "translation/languages/createInvoice_text"
 import { createInvoiceTranslate, downloadTranslate } from "translation/translateArrayObjects"
+import { AppDispatch } from "state"
+import { tabActiveNewInvoice } from "state/invoice/actions"
 
-const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate, getValues}) => {
+const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate, getValues}) => {
     const [checkError, setCheckError] = useState(false)
     const [getMessageError, setMessageError] = useState()
-    
+    const dispatch = useDispatch<AppDispatch>()
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
     
@@ -43,6 +45,18 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
         }
     }, [languageUserApi]);
     const invoiceNumber = isNaN(invoicelength) ? 1 :  Number(invoicelength)+1
+
+    const handleMinusTabActive = () => {
+        if(isActive > 1 && isActive <= 3){
+            dispatch(tabActiveNewInvoice({isActive: isActive - 1}))
+        }
+    }
+
+    const handlePlusTabActive = () => {
+        if( 1 <= isActive && isActive < 3 ){
+            dispatch(tabActiveNewInvoice({isActive: isActive + 1}))
+        }
+    }
 
     return (
         <CsContainer >
@@ -205,7 +219,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                         </Flex>
                         <Flex width="50%" flexDirection="column">
                             <Flex width='100%'>
-                                <CsLabel mt="1rem" color="#64748B">{stateText.text_payment}</CsLabel>
+                                <CsLabel mt="1rem" color="#64748B">{stateText.text_payment_terms}</CsLabel>
                             </Flex>
                             <ContainerInput>
                                 <WrapInput>
@@ -218,7 +232,7 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                                             name="paymentTerms"
                                             value={field.value}
                                             onBlur={field.onBlur}
-                                            placeholder={`${stateText.text_pl_payment}`}
+                                            placeholder={`${stateText.text_payment_terms}`}
                                             onChange={field.onChange}
                                         />
                                         )}
@@ -280,10 +294,60 @@ const FormTabOne = ({formState:{errors, touchedFields}, control, setValue, image
                     { checkError === true && 
                         <CustomMessageError>{getMessageError}</CustomMessageError> 
                     }
+                <ContainerSubTab>
+                    <CsButton isActive={isActive < 3} role="presentation" onClick={handlePlusTabActive}>
+                        {stateText.text_next}
+                    </CsButton>
+                </ContainerSubTab>
                 </CsFlex>
         </CsContainer>
   )
 }
+
+const TabButton = styled(Flex)<{isActive:boolean}>`
+    cursor: pointer;
+    justify-content:center;
+    align-items:center;
+    height: 29px;
+    width: 29px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50%;
+    margin: 0 5px;
+    color: ${({ isActive }) => isActive ? "#FFFFFF" : '#94A3B8'};
+    background: ${({ isActive }) => isActive ? "#6B39F4" : '#F8F9FD'};
+`
+const CsTab = styled(Flex)`
+    width: fit-content;
+    align-items: center;
+`
+const ContainerSubTab = styled(Flex)`
+    width:100%;
+    flex-direction:row;
+    justify-content:flex-end;
+    align-items:center;
+    margin-top:1rem;
+    margin-bottom:1rem;
+`
+const CsButton = styled.div<{isActive:boolean}>`
+    cursor: ${({ isActive }) => isActive ? "pointer" : "default"};
+    color: ${({ isActive }) => isActive ? "#F8F9FD" : '#94A3B8'};
+    background: #6B39F4;
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    min-width: 100px;
+    text-align: center;
+    &:hover{
+        color: ${({ isActive }) => isActive && "#F8F9FD" };
+    }
+    &:active{
+        transform: translateY(1px);
+        color: #F8F9FD;
+    }
+`
 
 const CsDatePicker = styled(DatePicker)`
     background: #F8F9FD;
