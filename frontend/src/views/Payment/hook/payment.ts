@@ -35,7 +35,7 @@ export const onError = (error: Error, payment?: PaymentDTO) => {
 
 export const payment = async (memo: string, amount: number, invoiceId:string) => {
     localStorage.setItem("invoiceId", invoiceId)
-    const scopes = ["username", "payments"];
+    const scopes = ["username", "payments", "wallet_address"];
     const result = await window.Pi.authenticate(scopes, onIncompletePaymentFound)
     
     if ( result ) {

@@ -13,6 +13,7 @@ import { getUser } from 'state/user';
 import { createInvoice_text } from 'translation/languages/createInvoice_text';
 import { createInvoiceTranslate } from 'translation/translateArrayObjects';
 import BigNumber from 'bignumber.js';
+import NumberFormat from 'react-number-format';
 
 const FormTabThree = ({
   loadingPreview, 
@@ -36,10 +37,10 @@ const FormTabThree = ({
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)
     const [balaneDue, setBalanceDue] = useState(0)
-    const taxValue = new BigNumber(watch('tax')).isLessThan(0) ? 0 : Number(watch('tax'))
-    const shippingValue = new BigNumber(watch('shipping')).isLessThan(0) ? 0 : Number(watch('shipping'))
-    const discountValue = new BigNumber(watch('discount')).isLessThan(0) ? 0 : Number(watch('discount'))
-    const amountPaidValue = new BigNumber(watch('amountPaid')).isLessThan(0) ? 0 : Number(watch('amountPaid'))
+    const taxValue = Number(watch('tax'))
+    const shippingValue = Number(watch('shipping'))
+    const discountValue = Number(watch('discount')) 
+    const amountPaidValue = Number(watch('amountPaid'))
     // const isPositive = new BigNumber(watch('tax')).isLessThan(0) || new BigNumber(watch('shipping')).isLessThan(0) || new BigNumber(watch('discount')).isLessThan(0) || new BigNumber(watch('amountPaid')).isLessThan(0)
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
@@ -95,61 +96,65 @@ const FormTabThree = ({
       },0)
     }
 
-    const total = useMemo(() => {
+    const subTotal = useMemo(() => {
       return totalPrice(controlledFields)
     },[controlledFields]);
+
+    // Calculate the total amount due
+    const [ taxAmount, setTaxAmount ] = useState("0")
+    const [ disCountAmount, setDisCountAmout ] = useState("0")    
+    // for tax amount
     
-
-    const taxValuePercent = taxValue * total / 100 
-    const isTaxValue = (activeTax === 1 ) ? taxValuePercent : taxValue
-    const DiscountValuePercent = discountValue * (total + isTaxValue) / 100 
-    const isDiscountValuePercent = discountValue <= 100 ? DiscountValuePercent : total
-    const isDiscount = (discountValue < (total + isTaxValue)) ? discountValue : (total + isTaxValue)
-
-    const totalFinal = (total) => {
-      if(activeTax === 2 && activeDiscount === 2){
-        return total + taxValue + shippingValue - isDiscount
-      } else if(activeTax === 2 && activeDiscount === 1){
-        return total + taxValue + shippingValue - isDiscountValuePercent
-      } else if(activeTax === 1 && activeDiscount === 1){
-        return total + taxValuePercent + shippingValue - isDiscountValuePercent
-      } else if(activeTax === 1 && activeDiscount === 2){
-        return total + taxValuePercent + shippingValue - isDiscount
+    useEffect(()=>{
+      if(Number(activeTax) === 1){
+        const taxAmount = new BigNumber(subTotal).multipliedBy(taxValue).dividedBy(100).toString()
+        setTaxAmount(taxAmount)
+      } else {
+        setTaxAmount(taxValue.toString())
       }
-    } 
+    },[ subTotal, activeTax, taxValue ])
+    // for tax discount
+    useEffect(()=>{
+      if(Number(activeDiscount) === 1){
+        const disCountAmount = new BigNumber(subTotal).multipliedBy(discountValue).dividedBy(100).toString()
+        setDisCountAmout(disCountAmount)
+      } else {
+        setDisCountAmout(discountValue.toString())
+      }
+    },[ subTotal, activeDiscount, discountValue ])
 
-    const totalFinaly = totalFinal(total)
-    
-    const balanceDue = totalFinaly - amountPaidValue
+    // for total
+    const total = useMemo(() => {
+      return new BigNumber(subTotal).plus(taxAmount).minus(disCountAmount).plus(shippingValue).toString()
+    },[subTotal, taxAmount, disCountAmount, shippingValue, activeDiscount, activeTax ]);
 
-    const converTotal = new BigNumber(totalFinaly).decimalPlaces(2,1)
-    const convertAmountDue = new BigNumber(balanceDue).decimalPlaces(2,1)
+    const amountDue = useMemo(() => {
+      return new BigNumber(total).minus(amountPaidValue).toString()
+    },[total, amountPaidValue, activeDiscount, activeTax ]);
 
-    
-    
-    // // for discount 
-    // useEffect(() => {
-    //   const discount = activeDiscount === 1 ? isDiscountValuePercent : isDiscount
-    //   if( Number(balanceDue) <= 0 && total < discount ){
-    //     setDiscount(true)
-    //   } else {
-    //     setDiscount(false)
-    //   }
-    // },[balanceDue, isDiscountValuePercent, isDiscount, activeDiscount, isTaxValue, total])
+    // for check error discount 
+    useEffect(()=>{
+      if ( new BigNumber(activeDiscount).isEqualTo(1) && new BigNumber(discountValue).isGreaterThan("100")) {
+          setDiscount(true)
+      } else if ( discountValue < 0 || Number(total) <= 0){
+        setDiscount(true)
+      } else {
+        setDiscount(false)
+      }
+    },[ discountValue, total, activeDiscount, activeTax ])
 
-    // for amount paid
-    useEffect(() => {
-      if( new BigNumber(amountPaidValue).isGreaterThan(totalFinaly) ){
+    // for check error balance due
+    useEffect(()=>{
+      if( new BigNumber(amountPaidValue).isGreaterThanOrEqualTo(total)){
         setIsMaxAmountPaid(true)
       } else {
         setIsMaxAmountPaid(false)
       }
-    },[amountPaidValue, totalFinaly])
+    },[ amountPaidValue, total ])
 
-
-    const iserrorWhenInputDiscount = ( activeDiscount === 2 && (discountValue > (total + isTaxValue)))
-    const iserrorWhenInputDiscountPercent = ( activeDiscount === 1 && (discountValue > 100))
-
+    const converTotal = new BigNumber(total).decimalPlaces(2,1)
+    const convertAmountDue = new BigNumber(amountDue).decimalPlaces(2,1)
+    // end
     return (
       <CsWrapperForm>
         <CsContainer>
@@ -207,9 +212,11 @@ const FormTabThree = ({
                   <CsContentInfo>
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
                           <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
-                          <CsTextRight fontSize='14px' bold>{!total ? 0 : <>
-                            {total && typeof total === 'number'  ? `${total.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`: '0 Pi'}
-                          </>}</CsTextRight>
+                          { Number(subTotal) < 0 ?
+                              "0.00 Pi"
+                          :
+                              `${Number(subTotal).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`
+                          }
                       </Row>
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
                           <ChooseMethod 
@@ -253,9 +260,14 @@ const FormTabThree = ({
 
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
                           <CsTextLeft>{stateText.text_total}</CsTextLeft>
-                          <Text style={{wordBreak: 'break-all'}} fontSize='14px'>{!totalFinaly ? 0 : <>
-                            {`${Number(converTotal.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                          </> }</Text>
+                          <Text style={{wordBreak: 'break-all'}} fontSize='14px'>
+                            { Number(total) < 0 ?
+                              "0.00 Pi"
+                            :
+                              Number(converTotal.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})
+                            }
+
+                          </Text>
                       </Row>
                       <Row mt="1rem" style={{justifyContent: "space-between" , alignItems: 'baseline'}}>
                           <CsTextLeft >{stateText.text_amount_paid}</CsTextLeft>
@@ -288,8 +300,8 @@ const FormTabThree = ({
                           {tooltipVisible && tooltip}
                           </CsTextLeft>
                           <Text fontSize='14px'>
-                            {new BigNumber(balanceDue).isLessThanOrEqualTo(0) ? 
-                              0 
+                            {new BigNumber(amountDue).isLessThanOrEqualTo(0) ? 
+                                "0.00 Pi"
                             : 
                               <>
                                 {`${Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}

@@ -136,7 +136,6 @@ const ChooseMethod = ({
                           </CsCloseIcon>
                       </CsRowTaxRight>
                   </CsRowTax>
-                  {/* <ErrorMessages errors={errors} name="discount" /> */}
                   {isMaxDiscount ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_less_than_subtotal_and_tax}</Text> : ''}
               </ContainerInput>
           </Flex>

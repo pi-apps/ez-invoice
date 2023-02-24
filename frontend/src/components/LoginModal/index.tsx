@@ -21,7 +21,7 @@ const LoginModal: React.FC<Props> = ({ onDismiss }) => {
   const { toastSuccess, toastError } = useToast()
   const signIn = async () => {
     try {
-      const scopes = ["username", "payments"];
+      const scopes = ["username", "payments", "wallet_address"];
       dispatch(isLoading({isLoading:true}))
       const resultLogin = await  window.Pi.authenticate(scopes, onIncompletePaymentFound)
       if( resultLogin ) {
