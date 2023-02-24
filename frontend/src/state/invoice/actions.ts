@@ -10,3 +10,5 @@ export const fetchFailure = createAction<{isFailure:boolean}>('details/fetchFail
 export const getAllInvoiceAll = createAction<AllInvoice>('invoice/getAllInvoiceAll')
 export const getAllInvoiceSent = createAction<ListSent>('details/getAllInvoiceSent')
 export const getAllInvoiceReceived = createAction<ListReceived>('details/getAllInvoiceReceived')
+export const getActiveTax = createAction<{isTaxPercent:number}>('details/getActiveTax')
+export const getActiveDiscount = createAction<{isDiscountPercent:number}>('details/getActiveDiscount')

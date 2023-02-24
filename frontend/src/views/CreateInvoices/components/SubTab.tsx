@@ -9,12 +9,13 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch } from 'state';
 import { GetAllInvoice, GetAnInvoice, UseGetAllInvoice, UseGetAnInvoiceCore } from "state/invoice";
-import { tabActiveNewInvoice } from "state/invoice/actions";
+import { tabActiveNewInvoice, getActiveDiscount, getActiveTax } from "state/invoice/actions";
 import { setInvoiceIdRedux } from "state/newInvoiceId/actions";
 import { GetDataPreview } from "state/preview";
-import { fetchStatusPreview } from "state/preview/actions";
+import { fetchStatusPreview, getDataImages } from "state/preview/actions";
 import { getDataPreview } from "state/preview/actions";
 import { getAccessToken, getUser } from "state/user";
+
 import styled from "styled-components";
 import { createInvoice_text } from "translation/languages/createInvoice_text";
 import { createInvoiceTranslate } from "translation/translateArrayObjects";
@@ -32,19 +33,26 @@ interface PropsSubTab{
 const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const navigate = useNavigate();
     const { toastSuccess, toastError } = useToast()
-    const [activeTax, setActiveTax ] = useState<number>(1)
-    const [activeDiscount, setActiveDiscount ] = useState<number>(1)
+    
     const [startDate, setStartDate] = useState(new Date());
     const [startDueDate, setStartDueDate] = useState(new Date());
     const [ totalFinaly, setTotalFinaly ] = useState(0)
     const [ totalAndTax, setTotalAndTax ] = useState(0)
+    const [ isMaxDiscount, setDiscount ] = useState(false)
+    const [ isMaxAmountPaid, setIsMaxAmountPaid ] = useState(false)
     const accessToken = getAccessToken()
     UseGetAnInvoiceCore(invoiceId, accessToken)
     UseGetAllInvoice(accessToken)
     const dataDefault = GetAnInvoice()
+    const data = GetDataPreview()
+    const images = data?.images
+    
     const itemInvoice  = dataDefault?.details
     const items = GetAllInvoice()
-console.log('totalAndTax', totalAndTax)
+    const activeTax = dataDefault?.isTaxPercent
+    const activeDiscount = dataDefault?.isDiscountPercent
+    const [ isPositive, setIsPositive ] = useState(false)
+
     const [ invoicelength, setInvoicelength ] = useState(0)
     useEffect(()=>{
         if(items){
@@ -86,8 +94,6 @@ console.log('totalAndTax', totalAndTax)
         poNumber: Yup.string().max(20, 'Max length is 20 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().max(500, 'Max length is 500 characters'),
-        amountPaid: Yup.number().max(totalFinaly).required(),
-        discount: Yup.number().max(totalAndTax).required(),
     });
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
@@ -224,7 +230,7 @@ console.log('totalAndTax', totalAndTax)
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
-            formData.append("logo", data.logo);
+            formData.append("logo", images[0]?.file);
 
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {
@@ -250,10 +256,15 @@ console.log('totalAndTax', totalAndTax)
             toastError(stateText.text_error, <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
         } finally {
             setLoadingPreview(false)
+            dispatch(getActiveDiscount({ isDiscountPercent:1 }))
+            dispatch(getActiveTax({ isTaxPercent:1 }))
+            dispatch(getDataImages(
+                { images: null }
+            ))
         }
         
     }
-
+    
     const onSubmit = async data => {
         await dispatch(getDataPreview({
             dataPreview: {
@@ -312,7 +323,18 @@ console.log('totalAndTax', totalAndTax)
 
     const renderScreens = ( isActive) => {
         if(isActive === 1){
-            return <FormTabOne startDueDate={startDueDate} setStartDueDate={setStartDueDate} startDate={startDate} setStartDate={setStartDate} invoicelength={invoicelength} images={getValues("logo")} formState={formState} setValue={setValue} control={control} getValues={getValues} />
+            return <FormTabOne 
+                startDueDate={startDueDate} 
+                setStartDueDate={setStartDueDate} 
+                startDate={startDate} 
+                setStartDate={setStartDate} 
+                invoicelength={invoicelength} 
+                images={images} 
+                formState={formState} 
+                setValue={setValue} 
+                control={control} 
+                getValues={getValues} 
+            />
         }
         if(isActive === 2){
             return <FormTabTwo formState={formState} controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
@@ -322,15 +344,19 @@ console.log('totalAndTax', totalAndTax)
                         controlledFields={controlledFields} 
                         getValues={getValues} fields={fields} 
                         activeDiscount={activeDiscount} 
-                        setActiveDiscount={setActiveDiscount} 
                         activeTax={activeTax} 
-                        setActiveTax={setActiveTax} 
                         formState={formState} 
                         setValue={setValue} 
                         control={control}
                         loadingPreview={loadingPreview}
                         watch={watch}
                         register={register}
+                        isMaxDiscount={isMaxDiscount}
+                        setDiscount={setDiscount}
+                        isMaxAmountPaid={isMaxAmountPaid}
+                        setIsMaxAmountPaid={setIsMaxAmountPaid}
+                        isPositive={isPositive}
+                        setIsPositive={setIsPositive}
                     />
         }
     }
@@ -388,6 +414,9 @@ console.log('totalAndTax', totalAndTax)
                 isActive={isActive} 
                 onHandleCreate={handleSubmit((d) => onCreate(d))}
                 loadingPreview={loadingPreview} 
+                isMaxDiscount={isMaxDiscount}
+                isMaxAmountPaid={isMaxAmountPaid}
+                isPositive={isPositive}
             />
         </>
     )

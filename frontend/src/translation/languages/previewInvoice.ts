@@ -19,4 +19,6 @@ export const previewInvoice_text:any = {
     "text_unit_price": "unit price",
     "text_amount_due": "Amount Due",
     "text_amount_paid": "Amount Paid",
+    "text_notes": "Notes",
+    "text_terms": "Terms",
 }

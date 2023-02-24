@@ -11,12 +11,15 @@ import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import useToast from "hooks/useToast";
 import { HomeText } from "../../translation/translateArrayObjects";
 import { home_new } from "translation/languages/home_text";
+import { tabActiveNewInvoice } from "state/invoice/actions";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "state";
 
 const Home = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [openLoginModal] = useModal(<LoginModal />);
-
+  const dispatch = useDispatch<AppDispatch>()
   // Translate
   const userData = getUser();
   const languageUserApi = userData?.language
@@ -38,7 +41,10 @@ const Home = () => {
       setStateText(home_new);
     }
   }, [languageUserApi]);
-
+  async function handleClick() {
+    await dispatch(tabActiveNewInvoice({isActive:1}))
+    navigate("/newInvoice") 
+  }
   return (
     <PageFullWidth>
       <CsContainer>
@@ -56,13 +62,24 @@ const Home = () => {
         </CsCardVideo>
         {/* <TranslateButton /> */}
         <Flex width="100%">
-          <Button
-            mt="1.5rem"
-            width="100%"
-            onClick={!userData ? openLoginModal : () => navigate("/invoice")}
-          >
-            {stateText.text_start_now}
-          </Button>
+          { !userData ?
+              <Button
+                mt="1.5rem"
+                width="100%"
+                onClick={openLoginModal}
+              >
+                {stateText.text_start_now}
+              </Button>
+          :
+            <Button
+              mt="1.5rem"
+              width="100%"
+              onClick={handleClick}
+            >
+              {stateText.text_start_now}
+            </Button>
+          }
+         
         </Flex>
       </CsContainer>
     </PageFullWidth>
@@ -104,7 +121,3 @@ const ContainerPlayVideo = styled(Flex)`
   border-radius: 8px;
   overflow: hidden;
 `;
-
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}

@@ -12,19 +12,38 @@ import ChooseMethod from './ChooseMethod';
 import { getUser } from 'state/user';
 import { createInvoice_text } from 'translation/languages/createInvoice_text';
 import { createInvoiceTranslate } from 'translation/translateArrayObjects';
+import BigNumber from 'bignumber.js';
 
-const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fields, control, setValue, activeTax, setActiveTax, activeDiscount, setActiveDiscount, getValues, watch, register }) => {
+const FormTabThree = ({
+  loadingPreview, 
+  controlledFields, 
+  formState:{errors}, 
+  fields, control, 
+  setValue, 
+  activeTax, 
+  activeDiscount, 
+  getValues, 
+  watch,
+  register,
+  isMaxDiscount,
+  setDiscount,
+  isMaxAmountPaid,
+  setIsMaxAmountPaid,
+  isPositive,
+  setIsPositive
+}) => {
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
     const [typeShipping, setTypeShipping] = useState(false)
     const [balaneDue, setBalanceDue] = useState(0)
-    const taxValue =  Number(watch('tax'))
-    const shippingValue =  Number(watch('shipping'))
-    const discountValue =  Number(watch('discount'))
-    const amountPaidValue =  Number(watch('amountPaid'))
-
+    const taxValue = new BigNumber(watch('tax')).isLessThan(0) ? 0 : Number(watch('tax'))
+    const shippingValue = new BigNumber(watch('shipping')).isLessThan(0) ? 0 : Number(watch('shipping'))
+    const discountValue = new BigNumber(watch('discount')).isLessThan(0) ? 0 : Number(watch('discount'))
+    const amountPaidValue = new BigNumber(watch('amountPaid')).isLessThan(0) ? 0 : Number(watch('amountPaid'))
+    // const isPositive = new BigNumber(watch('tax')).isLessThan(0) || new BigNumber(watch('shipping')).isLessThan(0) || new BigNumber(watch('discount')).isLessThan(0) || new BigNumber(watch('amountPaid')).isLessThan(0)
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
+    
    // Translate
    const [stateText, setStateText] = useState(createInvoice_text);
    const requestTrans = async () => {
@@ -42,6 +61,20 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
        setStateText(createInvoice_text);
      }
    }, [languageUserApi]);
+  //  for check Positive
+    useEffect(() => {
+      const tax = watch('tax')
+      const shipping = watch('shipping')
+      const discount = watch('discount')
+      const amountPaid = watch('amountPaid')
+      if ( new BigNumber(shipping).isLessThan(0) || new BigNumber(tax).isLessThan(0) || new BigNumber(discount).isLessThan(0) || new BigNumber(amountPaid).isLessThan(0) ) {
+        setIsPositive(true)
+      } else {
+        setIsPositive(false)
+      }
+   
+   
+    }, [watch('tax'), watch('shipping'), watch('discount'), watch('amountPaid')]);
 
    const { targetRef, tooltip, tooltipVisible } = useTooltip(
     <Flex flexDirection="column">
@@ -84,168 +117,198 @@ const FormTabThree = ({loadingPreview, controlledFields, formState:{errors}, fie
         return total + taxValuePercent + shippingValue - isDiscount
       }
     } 
-    const totalFinaly = totalFinal(total)
-    const balanceDue = amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0
 
+    const totalFinaly = totalFinal(total)
+    
+    const balanceDue = totalFinaly - amountPaidValue
+
+    const converTotal = new BigNumber(totalFinaly).decimalPlaces(2,1)
+    const convertAmountDue = new BigNumber(balanceDue).decimalPlaces(2,1)
+
+    
+    
+    // // for discount 
+    // useEffect(() => {
+    //   const discount = activeDiscount === 1 ? isDiscountValuePercent : isDiscount
+    //   if( Number(balanceDue) <= 0 && total < discount ){
+    //     setDiscount(true)
+    //   } else {
+    //     setDiscount(false)
+    //   }
+    // },[balanceDue, isDiscountValuePercent, isDiscount, activeDiscount, isTaxValue, total])
+
+    // for amount paid
     useEffect(() => {
-      setBalanceDue(amountPaidValue < totalFinaly ? totalFinaly - amountPaidValue : 0)
-    },[amountPaidValue])
+      if( new BigNumber(amountPaidValue).isGreaterThan(totalFinaly) ){
+        setIsMaxAmountPaid(true)
+      } else {
+        setIsMaxAmountPaid(false)
+      }
+    },[amountPaidValue, totalFinaly])
+
+
     const iserrorWhenInputDiscount = ( activeDiscount === 2 && (discountValue > (total + isTaxValue)))
     const iserrorWhenInputDiscountPercent = ( activeDiscount === 1 && (discountValue > 100))
-  return (
-    <CsWrapperForm>
-      <CsContainer>
-            <CsFlex>
-                {/* Notes */}
-                <Flex width='100%'>
-                    <CsLabel mt="1rem" color="#64748B">{stateText.text_notes}</CsLabel>
-                </Flex>
-                <ContainerInput>
-                    <WrapInput>
-                        <Controller
-                            control={control}
-                            name="notes"
-                            // rules={rules.invoicenumber}
-                            render={({ field }) => (
-                            <CsTextArea
-                                name="notes"
-                                // type="text"
-                                onBlur={field.onBlur}
-                                placeholder={`${stateText.text_pl_notes}`} 
-                                value={field.value}
-                                onChange={field.onChange}
-                            />
-                            )}
-                        />
-                    </WrapInput>
-                    <ErrorMessages errors={errors} name="notes" />
-                </ContainerInput>
-                
-                  {/* Terms */}
+
+    return (
+      <CsWrapperForm>
+        <CsContainer>
+              <CsFlex>
+                  {/* Notes */}
                   <Flex width='100%'>
-                    <CsLabel mt="2rem" color="#64748B">{stateText.text_terms}</CsLabel>
-                </Flex>
-
-                <ContainerInput>
-                    <WrapInput>
-                        <Controller
-                            control={control}
-                            name="terms"
-                            render={({ field }) => (
-                            <CsTextArea
-                                name="terms"
-                                placeholder={`${stateText.text_terms_and_conditions}`} 
-                                value={field.value}
-                                onChange={field.onChange}
-                            />
-                            )}
-                        />
-                    </WrapInput>
-                    <ErrorMessages errors={errors} name="terms" />
-                </ContainerInput>
-
-                <hr style={{marginTop: '2rem'}}/>
-
-                <CsContentInfo>
-                    <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
-                        <CsTextRight fontSize='14px' bold>{!total ? 0 : <>
-                          {total && typeof total === 'number'  ? `${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`: '0 Pi'}
-                        </>}</CsTextRight>
-                    </Row>
-                    <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <ChooseMethod 
-                            iserrorWhenInputDiscountPercent={iserrorWhenInputDiscountPercent}
-                            iserrorWhenInputDiscount={iserrorWhenInputDiscount}
-                            setActiveDiscount={setActiveDiscount} 
-                            activeDiscount={activeDiscount} 
-                            activeTax={activeTax} 
-                            setActiveTax={setActiveTax} 
-                            control={control} 
-                            setValue={setValue} 
-                            typeTax={typeTax}
-                            typeDiscount={typeDiscount}
-                            setTypeTax={setTypeTax} 
-                            setTypeDiscount={setTypeDiscount} 
-                            typeShipping={typeShipping} 
-                            setTypeShipping={setTypeShipping}
-                            errors={errors}
-                        />
-                    </Row>
-
-                    <Row mt="1rem" style={{justifyContent: "flex-end"}}>
-                        {
-                            typeDiscount === false && (
-                                <CsButtonAddTpye onClick={() => setTypeDiscount(true)}>
-                                    <CsAddIcon/>
-                                    <CsTextType>{stateText.text_discount}</CsTextType>
-                                </CsButtonAddTpye>
-                            )
-                        }
-                        {typeShipping === false && (
-                            <CsButtonAddTpye onClick={() => setTypeShipping(true)}>
-                                <CsAddIcon/>
-                                <CsTextType>{stateText.text_shipping}</CsTextType>
-                            </CsButtonAddTpye>
-                        )}
-                        {typeTax === false && (
-                            <CsButtonAddTpye onClick={() => setTypeTax(true)}>
-                                <CsAddIcon/>
-                                <CsTextType>{stateText.text_tax}</CsTextType>
-                            </CsButtonAddTpye>
-                        )}
-                    </Row>
-
-                    <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>{stateText.text_total}</CsTextLeft>
-                        <Text style={{wordBreak: 'break-all'}} fontSize='14px'>{!totalFinaly ? 0 : <>
-                          {`${totalFinaly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                        </> }</Text>
-                    </Row>
-                    <Row mt="1rem" style={{justifyContent: "space-between" , alignItems: 'baseline'}}>
-                        <CsTextLeft >{stateText.text_amount_paid}</CsTextLeft>
-                          <CsAmountPaid>
-                            <WrapInputAmountPaid>
-                              <Controller
-                                  control={control}
-                                  name="amountPaid"
-                                  render={({ field }) => (
-                                    <CsInput  style={{textAlign: 'right', width: '100%', padding: 0}}
-                                        name="amountPaid"
-                                        placeholder="0.00 Pi"
-                                        value={field.value}
-                                        onBlur={field.onBlur}
-                                        onChange={field.onChange}
-                                    />
-                                  )}
+                      <CsLabel mt="1rem" color="#64748B">{stateText.text_notes}</CsLabel>
+                  </Flex>
+                  <ContainerInput>
+                      <WrapInput>
+                          <Controller
+                              control={control}
+                              name="notes"
+                              // rules={rules.invoicenumber}
+                              render={({ field }) => (
+                              <CsTextArea
+                                  name="notes"
+                                  // type="text"
+                                  onBlur={field.onBlur}
+                                  placeholder={`${stateText.text_pl_notes}`} 
+                                  value={field.value}
+                                  onChange={field.onChange}
                               />
-                            </WrapInputAmountPaid>
-                          {Number(amountPaidValue > totalFinaly) ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_less_than_total}</Text> : ''}
-                          </CsAmountPaid>
-                    </Row>
+                              )}
+                          />
+                      </WrapInput>
+                      <ErrorMessages errors={errors} name="notes" />
+                  </ContainerInput>
+                  
+                    {/* Terms */}
+                    <Flex width='100%'>
+                      <CsLabel mt="2rem" color="#64748B">{stateText.text_terms}</CsLabel>
+                  </Flex>
 
-                    <Row mt="1rem" style={{justifyContent: "space-between"}}>
-                        <CsTextLeft>{stateText.text_balance_due}
-                        <ReferenceElement ref={targetRef}>
-                          <HelpIcon color="#94A3B8" />
-                        </ReferenceElement> 
-                        {tooltipVisible && tooltip}
-                        </CsTextLeft>
-                        <Text fontSize='14px'>{!balanceDue ? 0 : <>
-                          {`${balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
-                          </> }
-                        </Text>
-                    </Row>
-                </CsContentInfo>
-            </CsFlex>
-      </CsContainer>
-      <CsSubTotal>
-        <CsButtonAdd>
-          <CsText>{stateText.text_preview} </CsText>
-        </CsButtonAdd>
-      </CsSubTotal>
-      </CsWrapperForm>
-  )
+                  <ContainerInput>
+                      <WrapInput>
+                          <Controller
+                              control={control}
+                              name="terms"
+                              render={({ field }) => (
+                              <CsTextArea
+                                  name="terms"
+                                  placeholder={`${stateText.text_terms_and_conditions}`} 
+                                  value={field.value}
+                                  onChange={field.onChange}
+                              />
+                              )}
+                          />
+                      </WrapInput>
+                      <ErrorMessages errors={errors} name="terms" />
+                  </ContainerInput>
+
+                  <hr style={{marginTop: '2rem'}}/>
+
+                  <CsContentInfo>
+                      <Row mt="1rem" style={{justifyContent: "space-between"}}>
+                          <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
+                          <CsTextRight fontSize='14px' bold>{!total ? 0 : <>
+                            {total && typeof total === 'number'  ? `${total.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`: '0 Pi'}
+                          </>}</CsTextRight>
+                      </Row>
+                      <Row mt="1rem" style={{justifyContent: "space-between"}}>
+                          <ChooseMethod 
+                              activeDiscount={activeDiscount} 
+                              activeTax={activeTax} 
+                              control={control} 
+                              setValue={setValue} 
+                              typeTax={typeTax}
+                              typeDiscount={typeDiscount}
+                              setTypeTax={setTypeTax} 
+                              setTypeDiscount={setTypeDiscount} 
+                              typeShipping={typeShipping} 
+                              setTypeShipping={setTypeShipping}
+                              errors={errors}
+                              isMaxDiscount={isMaxDiscount}
+                          />
+                      </Row>
+
+                      <Row mt="1rem" style={{justifyContent: "flex-end"}}>
+                          {
+                              typeDiscount === false && (
+                                  <CsButtonAddTpye onClick={() => setTypeDiscount(true)}>
+                                      <CsAddIcon/>
+                                      <CsTextType>{stateText.text_discount}</CsTextType>
+                                  </CsButtonAddTpye>
+                              )
+                          }
+                          {typeShipping === false && (
+                              <CsButtonAddTpye onClick={() => setTypeShipping(true)}>
+                                  <CsAddIcon/>
+                                  <CsTextType>{stateText.text_shipping}</CsTextType>
+                              </CsButtonAddTpye>
+                          )}
+                          {typeTax === false && (
+                              <CsButtonAddTpye onClick={() => setTypeTax(true)}>
+                                  <CsAddIcon/>
+                                  <CsTextType>{stateText.text_tax}</CsTextType>
+                              </CsButtonAddTpye>
+                          )}
+                      </Row>
+
+                      <Row mt="1rem" style={{justifyContent: "space-between"}}>
+                          <CsTextLeft>{stateText.text_total}</CsTextLeft>
+                          <Text style={{wordBreak: 'break-all'}} fontSize='14px'>{!totalFinaly ? 0 : <>
+                            {`${Number(converTotal.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
+                          </> }</Text>
+                      </Row>
+                      <Row mt="1rem" style={{justifyContent: "space-between" , alignItems: 'baseline'}}>
+                          <CsTextLeft >{stateText.text_amount_paid}</CsTextLeft>
+                            <CsAmountPaid>
+                              <WrapInputAmountPaid>
+                                <Controller
+                                    control={control}
+                                    name="amountPaid"
+                                    render={({ field }) => (
+                                      <CsInput  style={{textAlign: 'right', width: '100%', padding: 0}}
+                                          name="amountPaid"
+                                          placeholder="0.00 Pi"
+                                          value={field.value}
+                                          onBlur={field.onBlur}
+                                          onChange={field.onChange}
+                                          type="number"
+                                      />
+                                    )}
+                                />
+                              </WrapInputAmountPaid>
+                            {isMaxAmountPaid ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_less_than_total}</Text> : ''}
+                            </CsAmountPaid>
+                      </Row>
+
+                      <Row mt="1rem" style={{justifyContent: "space-between"}}>
+                          <CsTextLeft>{stateText.text_balance_due}
+                          <ReferenceElement ref={targetRef}>
+                            <HelpIcon color="#94A3B8" />
+                          </ReferenceElement> 
+                          {tooltipVisible && tooltip}
+                          </CsTextLeft>
+                          <Text fontSize='14px'>
+                            {new BigNumber(balanceDue).isLessThanOrEqualTo(0) ? 
+                              0 
+                            : 
+                              <>
+                                {`${Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
+                              </> 
+                            }
+                          </Text>
+                      </Row>
+                  </CsContentInfo>
+              </CsFlex>
+        </CsContainer>
+        <CsSubTotal>
+          <CsButtonAdd
+            disabled={isMaxDiscount || isMaxAmountPaid || isPositive}
+          >
+            <CsText>{stateText.text_preview} </CsText>
+          </CsButtonAdd>
+        </CsSubTotal>
+        </CsWrapperForm>
+    )
 }
 
 const ReferenceElement = styled.div`
