@@ -14,7 +14,7 @@ export const invoice_text:any = {
     "text_payment_terms": "Payment Terms",
     "text_po_number": "PO Number",
     "text_item": "Item",
-    "text_quanlity": "Quanlity",
+    "text_quanlity": "Quantity",
     "text_unit_price": "Unit Price",
     "text_total": "Total",
     "text_subtotal": "Subtotal",
@@ -29,4 +29,5 @@ export const invoice_text:any = {
     "text_notes": "Notes",
     "text_terms": "Terms",
     "text_tips": "Tips",
+    "text_total_incl_tips": "Total (incl. Tips)",
 }

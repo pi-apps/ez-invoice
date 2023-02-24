@@ -13,6 +13,7 @@
   "dependencies": {
     "@types/connect-mongo": "^3.1.3",
     "@types/cookie-parser": "^1.4.2",
+    "@types/eventsource": "1.1.10",
     "@types/express-session": "^1.17.5",
     "aws-sdk": "^2.1312.0",
     "axios": "^0.21.1",

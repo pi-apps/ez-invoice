@@ -105,7 +105,7 @@ const ChooseMethod = ({
                 </ReferenceElement> 
                 {tooltipVisible && tooltip}
               </CsTextLeft>
-              <ContainerInput style={{alignItems: 'flex-end'}}>
+              <ContainerInput>
                   <CsRowTax>
                       <CsRowTaxLeft>
                           <CsButton isActive={activeDiscount === 1 ? !false : false } onClick={() => dispatch(getActiveDiscount({ isDiscountPercent:1 })) }>%</CsButton>

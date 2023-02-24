@@ -27,4 +27,5 @@ export const payment_text:any = {
     "text_error": "Error",
     "text_system_error": "System error",
     "text_payment_success": "Payment successfully",
+    "text_total_incl_tips": "Total (incl. Tips)",
 }
