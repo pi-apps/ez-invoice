@@ -215,7 +215,7 @@ const FormTabThree = ({
                           { Number(subTotal) < 0 ?
                               "0.00 Pi"
                           :
-                              `${Number(subTotal).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`
+                              `${Number(subTotal).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi`
                           }
                       </Row>
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
@@ -264,7 +264,7 @@ const FormTabThree = ({
                             { Number(total) < 0 ?
                               "0.00 Pi"
                             :
-                              Number(converTotal.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})
+                              Number(converTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})
                             }
 
                           </Text>
@@ -301,10 +301,10 @@ const FormTabThree = ({
                           </CsTextLeft>
                           <Text fontSize='14px'>
                             {new BigNumber(amountDue).isLessThanOrEqualTo(0) ? 
-                                "0.00 Pi"
+                                "0.0000 Pi"
                             : 
                               <>
-                                {`${Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi`}
+                                {`${Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi`}
                               </> 
                             }
                           </Text>
