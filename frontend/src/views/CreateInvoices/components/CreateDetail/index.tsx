@@ -172,8 +172,8 @@ const CreateDetail = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%">{stateText.text_item}</ColFirstth>
-                                        <Colth width="20%">{stateText.text_quanlity}</Colth>
+                                        <ColFirstth width="50%">{stateText.text_item}</ColFirstth>
+                                        <Colth width="10%">{stateText.text_quanlity}</Colth>
                                         <Colth width="20%">{stateText.text_unit_price}</Colth>
                                         <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
@@ -182,8 +182,8 @@ const CreateDetail = () => {
                                         const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(2,1)
                                         return(
                                             <CsRow>
-                                            <ColFirst width="20%">{item?.name}</ColFirst>
-                                            <Col width="20%">{item?.quantity}</Col>
+                                            <ColFirst width="50%">{item?.name}</ColFirst>
+                                            <Col width="10%">{item?.quantity}</Col>
                                             <Col width="20%">{Number(convertPrice.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                             <Col width="20%">{Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                         </CsRow>

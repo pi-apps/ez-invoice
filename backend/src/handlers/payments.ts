@@ -217,7 +217,6 @@ export default function mountPaymentsEndpoints(router: Router) {
             const paymentId = await pi.createPayment(paymentData);
             const txid = await pi.submitPayment(paymentId);
             const completedPayment = await pi.completePayment(paymentId, txid);
-            console.log(completedPayment);
         } catch (error: any) {
             throw new Error(error.message);
         } 

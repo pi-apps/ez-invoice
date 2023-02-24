@@ -52,17 +52,6 @@ export const usePayment = (signature:string, token:string, language:string, tips
                 }
             });
             if(submitReqInvoiceId.status == 200){
-                const submitReq = await axiosClient.post('/payments/update-receiver', 
-                    {
-                        "invoiceId": submitReqInvoiceId?.data,
-                        "signature": signature
-                    }, 
-                    {
-                        headers: {
-                            'Authorization': token,
-                        }
-                    }
-                );
                 const submitReqDetails = await axiosClient.get(`invoice/detail/${submitReqInvoiceId?.data}`, {
                     headers: {
                         'Authorization': token,

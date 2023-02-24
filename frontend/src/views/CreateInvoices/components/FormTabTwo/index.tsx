@@ -10,8 +10,19 @@ import { Translate } from "react-auto-translate";
 import { getUser } from 'state/user'
 import { createInvoice_text } from 'translation/languages/createInvoice_text'
 import { createInvoiceTranslate } from 'translation/translateArrayObjects'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
+import { tabActiveNewInvoice } from 'state/invoice/actions'
 
-const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFields, remove, register, control}) => {
+const FormTabTwo = ({
+  isActive, 
+  formState: {errors, touchedFields}, 
+  append, 
+  controlledFields, 
+  remove, 
+  register, 
+  control }) => {
+  const dispatch = useDispatch<AppDispatch>()
 
   const userData = getUser();
   const languageUserApi = userData?.language
@@ -42,10 +53,21 @@ const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFiel
       }
     },0)
   }
-    const total = useMemo(() => {
+
+  const total = useMemo(() => {
       return totalPrice(controlledFields)
     },[controlledFields]);
-    
+    const handleMinusTabActive = () => {
+      if(isActive > 1 && isActive <= 3){
+          dispatch(tabActiveNewInvoice({isActive: isActive - 1}))
+      }
+  }
+
+  const handlePlusTabActive = () => {
+      if( 1 <= isActive && isActive < 3 ){
+          dispatch(tabActiveNewInvoice({isActive: isActive + 1}))
+      }
+  }
     
   return (
     <CsWrapperForm>
@@ -72,9 +94,65 @@ const FormTabTwo = ({ formState: {errors, touchedFields}, append, controlledFiel
               </CsTextRight>
         </Row>
       </CsSubTotal>
+      <ContainerSubTab>
+                <CsButton isActive={isActive > 1} role="presentation" onClick={handleMinusTabActive}>
+                  {stateText.text_previous}
+                </CsButton>
+
+                <CsButton isActive={isActive < 3} role="presentation" onClick={handlePlusTabActive}>
+                  {stateText.text_next}
+                </CsButton>
+            </ContainerSubTab>
       </CsWrapperForm>
   )
 }
+
+const TabButton = styled(Flex)<{isActive:boolean}>`
+    cursor: pointer;
+    justify-content:center;
+    align-items:center;
+    height: 29px;
+    width: 29px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50%;
+    margin: 0 5px;
+    color: ${({ isActive }) => isActive ? "#FFFFFF" : '#94A3B8'};
+    background: ${({ isActive }) => isActive ? "#6B39F4" : '#F8F9FD'};
+`
+const CsTab = styled(Flex)`
+    width: fit-content;
+    align-items: center;
+`
+const ContainerSubTab = styled(Flex)`
+    width:100%;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:1rem;
+    margin-bottom:1rem;
+    padding: 0 24px
+`
+
+const CsButton = styled.div<{isActive:boolean}>`
+    cursor: ${({ isActive }) => isActive ? "pointer" : "default"};
+    color: ${({ isActive }) => isActive ? "#F8F9FD" : '#94A3B8'};
+    background:#6B39F4;
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 100px;
+    text-align: center;
+    &:hover{
+        color: ${({ isActive }) => isActive && "#F8F9FD" };
+    }
+    &:active{
+      transform: translateY(1px);
+        color: #F8F9FD;
+    }
+`
 
 const CsTextLeft = styled(Text)`
   font-weight: 500;

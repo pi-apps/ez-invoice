@@ -1,4 +1,4 @@
-import { Button, Flex, Input, Text } from '@devfedeltalabs/pibridge_uikit'
+import { Button, Flex, HelpIcon, Input, Text, useTooltip } from '@devfedeltalabs/pibridge_uikit'
 import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
 import { AddIcon2, CloseIcon } from 'components/Svg'
 import React, { useEffect, useState } from 'react'
@@ -48,6 +48,15 @@ const ChooseMethod = ({
        setStateText(createInvoice_text);
      }
    }, [languageUserApi]);
+
+
+    const { targetRef, tooltip, tooltipVisible } = useTooltip(
+        <Flex flexDirection="column">
+        <Text fontSize='9px'>{stateText.text_discount_before_tax}</Text>
+        </Flex>,
+        { placement: 'top-end', tooltipOffset: [5, 5] },
+    )
+
     return (
       <Flex flexDirection="column" width="100%">
           {typeTax === true && (
@@ -91,7 +100,12 @@ const ChooseMethod = ({
 
           {typeDiscount === true && (
           <Flex alignItems="baseline" justifyContent="space-between" mt='1rem'>
-              <CsTextLeft>{stateText.text_discount}</CsTextLeft>
+              <CsTextLeft>{stateText.text_discount}
+                <ReferenceElement ref={targetRef}>
+                    <HelpIcon color="#94A3B8" />
+                </ReferenceElement> 
+                {tooltipVisible && tooltip}
+              </CsTextLeft>
               <ContainerInput style={{alignItems: 'flex-end'}}>
                   <CsRowTax>
                       <CsRowTaxLeft>
@@ -122,7 +136,6 @@ const ChooseMethod = ({
                           </CsCloseIcon>
                       </CsRowTaxRight>
                   </CsRowTax>
-                  {/* <ErrorMessages errors={errors} name="discount" /> */}
                   {isMaxDiscount ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_less_than_subtotal_and_tax}</Text> : ''}
               </ContainerInput>
           </Flex>
@@ -161,6 +174,17 @@ const ChooseMethod = ({
     )
 }
 
+const ReferenceElement = styled.div`
+  display: inline-block;
+  align-items:baseline;
+  margin-left:4px; 
+  cursor: pointer;
+  color: text;
+  transform: translateY(-1px);
+  svg{
+    width: 17px;
+  }
+`
 const CsCloseIcon = styled.div`
     background: transparent;
     padding: 0;
