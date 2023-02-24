@@ -14,8 +14,6 @@ import { AppDispatch } from 'state'
 import { getActiveDiscount, getActiveTax } from 'state/invoice/actions'
 
 const ChooseMethod = ({ 
-    iserrorWhenInputDiscount,
-    iserrorWhenInputDiscountPercent, 
     errors,
     activeTax,
     typeTax, 

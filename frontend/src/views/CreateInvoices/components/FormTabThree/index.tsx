@@ -127,15 +127,15 @@ const FormTabThree = ({
 
     
     
-    // for discount 
-    useEffect(() => {
-      const discount = activeDiscount === 1 ? isDiscountValuePercent : isDiscount
-      if( Number(balanceDue) <= 0 && total < discount ){
-        setDiscount(true)
-      } else {
-        setDiscount(false)
-      }
-    },[balanceDue, isDiscountValuePercent, isDiscount, activeDiscount, isTaxValue, total])
+    // // for discount 
+    // useEffect(() => {
+    //   const discount = activeDiscount === 1 ? isDiscountValuePercent : isDiscount
+    //   if( Number(balanceDue) <= 0 && total < discount ){
+    //     setDiscount(true)
+    //   } else {
+    //     setDiscount(false)
+    //   }
+    // },[balanceDue, isDiscountValuePercent, isDiscount, activeDiscount, isTaxValue, total])
 
     // for amount paid
     useEffect(() => {
@@ -213,8 +213,6 @@ const FormTabThree = ({
                       </Row>
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
                           <ChooseMethod 
-                              iserrorWhenInputDiscountPercent={iserrorWhenInputDiscountPercent}
-                              iserrorWhenInputDiscount={iserrorWhenInputDiscount}
                               activeDiscount={activeDiscount} 
                               activeTax={activeTax} 
                               control={control} 
