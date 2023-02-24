@@ -109,9 +109,9 @@ const Preview = () => {
     const dispatch = useDispatch<AppDispatch>()
 
     async function handleClick() {
-        await dispatch(getDataImages(
-            { images: null }
-        ))
+        // await dispatch(getDataImages(
+        //     { images: null }
+        // ))
         navigate(`/newInvoice`)
     }
 

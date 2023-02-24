@@ -13,22 +13,21 @@ import { createInvoiceTranslate } from "translation/translateArrayObjects";
 import "../styles";
 
 function ReactImageUpload({images , setValue }) {
-  const [ logoImg, setLogoImages] = useState([]);
+  
   const dispatch = useDispatch<AppDispatch>()
   const maxNumber = 69;
   const onChange = (imageList, addUpdateIndex) => {
     setValue("logo",imageList[0].file);
-    setLogoImages(imageList)
     dispatch(getDataImages(
-      { images: imageList }
+      { images: imageList } 
     ))
   };
   const onImageDelete = () => {
-    setLogoImages([])
     dispatch(getDataImages(
       { images: null }
     ))
   }
+
   // translate 
   const DataAb = getUser();
   const languageUserApi = DataAb?.language
@@ -53,11 +52,10 @@ function ReactImageUpload({images , setValue }) {
     <div>
       <ImageUploading
         multiple
-        value={logoImg}
+        value={images}
         onChange={onChange}
         maxNumber={maxNumber}
         dataURLKey="data_url"
-        // acceptType={["png"]}
       >
         {({
           imageList,
@@ -70,13 +68,13 @@ function ReactImageUpload({images , setValue }) {
         }) => (
           // write your building UI
           <div className="upload__image-wrapper">
-            { imageList?.length === 0 &&
+            { ( images?.length === 0 || images === null ) &&
               <CsButtonAdd onClick={onImageUpload} {...dragProps}>
                   <CsAddIcon color="white" />
                   <CsText ml="10px">{stateText.text_add_your_logo}</CsText>
               </CsButtonAdd>
             }
-            { imageList.length > 0 &&
+            { ( images?.length > 0 || images !== null ) &&
               <Flex mt='1rem'alignItems="center" style={{gap:"15px"}}>
                 <Flex position='relative'>
                   <CsAvatar src={imageList[0].data_url} alt="logo" />
@@ -84,7 +82,7 @@ function ReactImageUpload({images , setValue }) {
                 </Flex>
 
                 <div className="image-item__btn-wrapper" style={{display: 'flex', gap: '10px'}}>
-                  <CsButtonAdd onClick={() => onImageUpdate(0)}><CsText>{stateText.text_update}</CsText>
+                  <CsButtonAdd onClick={() => onImageUpdate(0) }><CsText>{stateText.text_update}</CsText>
                   </CsButtonAdd>
                 </div>
               </Flex>

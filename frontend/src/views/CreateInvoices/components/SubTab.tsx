@@ -12,7 +12,7 @@ import { GetAllInvoice, GetAnInvoice, UseGetAllInvoice, UseGetAnInvoiceCore } fr
 import { tabActiveNewInvoice, getActiveDiscount, getActiveTax } from "state/invoice/actions";
 import { setInvoiceIdRedux } from "state/newInvoiceId/actions";
 import { GetDataPreview } from "state/preview";
-import { fetchStatusPreview } from "state/preview/actions";
+import { fetchStatusPreview, getDataImages } from "state/preview/actions";
 import { getDataPreview } from "state/preview/actions";
 import { getAccessToken, getUser } from "state/user";
 
@@ -44,13 +44,14 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     UseGetAnInvoiceCore(invoiceId, accessToken)
     UseGetAllInvoice(accessToken)
     const dataDefault = GetAnInvoice()
+    const data = GetDataPreview()
+    const images = data?.images
+    
     const itemInvoice  = dataDefault?.details
     const items = GetAllInvoice()
     const activeTax = dataDefault?.isTaxPercent
     const activeDiscount = dataDefault?.isDiscountPercent
     const [ isPositive, setIsPositive ] = useState(false)
-    // const [activeTax, setActiveTax ] = useState<number>(1)
-    // const [activeDiscount, setActiveDiscount ] = useState<number>(1)
 
     const [ invoicelength, setInvoicelength ] = useState(0)
     useEffect(()=>{
@@ -229,7 +230,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
-            formData.append("logo", data.logo);
+            formData.append("logo", images[0]?.file);
 
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {
@@ -258,10 +259,13 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             setLoadingPreview(false)
             dispatch(getActiveDiscount({ isDiscountPercent:1 }))
             dispatch(getActiveTax({ isTaxPercent:1 }))
+            dispatch(getDataImages(
+                { images: null }
+            ))
         }
         
     }
-
+    
     const onSubmit = async data => {
         await dispatch(getDataPreview({
             dataPreview: {
@@ -320,7 +324,18 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
 
     const renderScreens = ( isActive) => {
         if(isActive === 1){
-            return <FormTabOne startDueDate={startDueDate} setStartDueDate={setStartDueDate} startDate={startDate} setStartDate={setStartDate} invoicelength={invoicelength} images={getValues("logo")} formState={formState} setValue={setValue} control={control} getValues={getValues} />
+            return <FormTabOne 
+                startDueDate={startDueDate} 
+                setStartDueDate={setStartDueDate} 
+                startDate={startDate} 
+                setStartDate={setStartDate} 
+                invoicelength={invoicelength} 
+                images={images} 
+                formState={formState} 
+                setValue={setValue} 
+                control={control} 
+                getValues={getValues} 
+            />
         }
         if(isActive === 2){
             return <FormTabTwo formState={formState} controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
