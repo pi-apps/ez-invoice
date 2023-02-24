@@ -8,6 +8,8 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch } from 'state';
+import { GetHistory } from "state/history";
+import { fectchChangeImgHistory, getImageFileHistory } from "state/history/actions";
 import { GetAllInvoice, GetAnInvoice, UseGetAllInvoice, UseGetAnInvoiceCore } from "state/invoice";
 import { tabActiveNewInvoice, getActiveDiscount, getActiveTax } from "state/invoice/actions";
 import { setInvoiceIdRedux } from "state/newInvoiceId/actions";
@@ -31,9 +33,10 @@ interface PropsSubTab{
 }
 
 const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
+    console.log('invoiceId', invoiceId)
     const navigate = useNavigate();
     const { toastSuccess, toastError } = useToast()
-    
+    const dataHistory = GetHistory()
     const [startDate, setStartDate] = useState(new Date());
     const [startDueDate, setStartDueDate] = useState(new Date());
     const [ totalFinaly, setTotalFinaly ] = useState(0)
@@ -98,7 +101,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
-    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, reValidateMode: 'onSubmit'});
+    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, reValidateMode:"onSubmit"});
     const { fields, append, remove } = useFieldArray({
         control,
         name: "items"
@@ -156,7 +159,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
 
     // use update default values
     useEffect(()=>{
-        if( itemInvoice && invoiceId?.length ) {
+        if( itemInvoice && invoiceId?.length && dataPreview?.isPreview === false ) {
             setValue("senderEmail", itemInvoice?.senderEmail);
             setValue("billFrom", itemInvoice?.billFrom);
             setValue("billTo", itemInvoice?.billTo);
@@ -208,9 +211,27 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             setDefaultValue(dataPreviewDetails)
         }
     },[dataPreviewDetails, dataPreview?.isPreview])
-   
+    
     const onCreate = async data => {
         setLoadingPreview(true)
+        function renderImages(){
+            if( itemInvoice?.logoUrl?.length ){
+                if( dataHistory?.isChangeImgHistory === true && images !== null ) {
+                    return images[0]?.file
+                } else if(dataHistory?.isChangeImgHistory === true && images === null) {
+                    return ""
+                } else {
+                    return dataHistory?.imageFile
+                }
+            } else {
+                if(images?.length>0){
+                    return images[0]?.file
+                } else {
+                    return ""
+                }
+            }
+        }
+        
         try {
             const formData = new FormData();
             formData.append("senderEmail", `${data.senderEmail}`);
@@ -230,7 +251,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
-            formData.append("logo", images?.length ? images[0]?.file : "");
+            formData.append("logo", renderImages());
 
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {
@@ -243,9 +264,17 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                 );
                 if(submitReq.status == 200){
                     toastSuccess('', <Text style={{justifyContent: 'center'}}>{stateText.text_create_success}</Text>);
-                    await setInvoiceId(submitReq?.data?.invoiceId)
-                    await dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
-                    await dispatch(fetchStatusPreview({isPreview: false}))
+                    setInvoiceId(submitReq?.data?.invoiceId)
+                    dispatch(setInvoiceIdRedux(submitReq?.data?.invoiceId))
+                    dispatch(fetchStatusPreview({isPreview: false}))
+                    dispatch(getActiveDiscount({ isDiscountPercent:1 }))
+                    dispatch(getActiveTax({ isTaxPercent:1 }))
+                    dispatch(getDataPreview({dataPreview:null}))
+                    dispatch(getDataImages(
+                        { images: null }
+                    ))
+                    dispatch(getImageFileHistory({ imageFile: null }));
+                    dispatch(fectchChangeImgHistory({ isChangeImgHistory: false })); 
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
@@ -258,11 +287,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             toastError(stateText.text_error, <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
         } finally {
             setLoadingPreview(false)
-            dispatch(getActiveDiscount({ isDiscountPercent:1 }))
-            dispatch(getActiveTax({ isTaxPercent:1 }))
-            dispatch(getDataImages(
-                { images: null }
-            ))
+            
         }
         
     }
@@ -287,6 +312,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                 amountPaid: getValues("amountPaid"),
                 taxType: activeTax,
                 discountType: activeDiscount,
+                invoiceId: itemInvoice?.invoiceId,
+                logoUrl:itemInvoice?.logoUrl
             }
         }));
         setValue("senderEmail", data?.senderEmail);
@@ -310,7 +337,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         
         navigate("/preview")
     }
-
+    
     const handleMinusTabActive = () => {
         if(isActive > 1 && isActive <= 3){
             dispatch(tabActiveNewInvoice({isActive: isActive - 1}))
@@ -337,6 +364,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                 setValue={setValue} 
                 control={control} 
                 getValues={getValues} 
+                imagesInvoice={itemInvoice?.logoUrl}
             />
         }
         if(isActive === 2){

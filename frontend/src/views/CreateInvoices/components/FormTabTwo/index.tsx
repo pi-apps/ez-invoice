@@ -90,7 +90,7 @@ const FormTabTwo = ({
         <Row mt="16px" style={{justifyContent: "space-between"}}>
             <CsTextLeft>{stateText.text_subtotal}:</CsTextLeft>
             <CsTextRight bold>
-              {total && typeof total === 'number' ? `${total.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi` : '0 Pi'}
+              {total && typeof total === 'number' ? `${total.toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi` : '0 Pi'}
               </CsTextRight>
         </Row>
       </CsSubTotal>

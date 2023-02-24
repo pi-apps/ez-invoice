@@ -4,6 +4,8 @@ import ReactDOM from "react-dom";
 import ImageUploading from "react-images-uploading";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "state";
+import { GetHistory } from "state/history";
+import { fectchChangeImgHistory, getImageFileHistory } from "state/history/actions";
 import { getDataImages } from "state/preview/actions";
 import { getUser } from "state/user";
 import styled from "styled-components";
@@ -12,12 +14,25 @@ import { createInvoiceTranslate } from "translation/translateArrayObjects";
 
 import "../styles";
 
-function ReactImageUpload({images , setValue }) {
-  
+function ReactImageUploadForHistory({images , setValue, imagesInvoice }) {
+  const history = GetHistory()
   const dispatch = useDispatch<AppDispatch>()
+  useEffect(()=>{
+    async function convertImage() {
+      const url = imagesInvoice
+      const fileName = 'logo.png'
+      const response =  await fetch(url)
+      const blob = await response.blob()
+      const file = new File([blob], fileName)
+      dispatch(getImageFileHistory({ imageFile: file }))
+    }
+    if( imagesInvoice?.length ) {
+      convertImage()
+    }
+  },[imagesInvoice])
+
   const maxNumber = 69;
   const onChange = (imageList, addUpdateIndex) => {
-    setValue("logo",imageList[0].file);
     dispatch(getDataImages(
       { images: imageList } 
     ))
@@ -26,7 +41,9 @@ function ReactImageUpload({images , setValue }) {
     dispatch(getDataImages(
       { images: null }
     ))
+    dispatch(fectchChangeImgHistory({ isChangeImgHistory: true })); 
   }
+  
 
   // translate 
   const DataAb = getUser();
@@ -40,7 +57,6 @@ function ReactImageUpload({images , setValue }) {
       console.log(error)
     }
   }
-
   useEffect(() => {
     if (languageUserApi) {
       requestTrans();
@@ -69,24 +85,40 @@ function ReactImageUpload({images , setValue }) {
         }) => (
           // write your building UI
           <div className="upload__image-wrapper">
-            { ( images?.length === 0 || images === null ) &&
+            { (  history?.isChangeImgHistory === true && ( images?.length === 0 || images === null ) ) &&
               <CsButtonAdd onClick={onImageUpload} {...dragProps}>
                   <CsAddIcon color="white" />
                   <CsText ml="10px">{stateText.text_add_your_logo}</CsText>
               </CsButtonAdd>
             }
-            { ( images?.length > 0 || images !== null ) &&
+            { ( images?.length > 0 || images !== null && history?.isChangeImgHistory === false ) &&
               <Flex mt='1rem'alignItems="center" style={{gap:"15px"}}>
                 <Flex position='relative'>
                   <CsAvatar src={imageList[0].data_url} alt="logo" />
-                  <CsButtonClose onClick={() => onImageDelete()}><CloseIcon/></CsButtonClose>
+                  <CsButtonClose onClick={() => { dispatch(fectchChangeImgHistory({ isChangeImgHistory: true })); onImageDelete() } }><CloseIcon/></CsButtonClose>
                 </Flex>
 
                 <div className="image-item__btn-wrapper" style={{display: 'flex', gap: '10px'}}>
-                  <CsButtonAdd onClick={() => onImageUpdate(0) }><CsText>{stateText.text_update}</CsText>
+                  <CsButtonAdd 
+                      onClick={()=> {onImageUpdate(0); dispatch(fectchChangeImgHistory({ isChangeImgHistory: true }))}}
+                     >
+                      <CsText>{stateText.text_update}</CsText>
                   </CsButtonAdd>
                 </div>
               </Flex>
+            }
+            { ( imagesInvoice.length > 0 && history?.isChangeImgHistory === false ) &&
+                <Flex mt='1rem'alignItems="center" style={{gap:"15px"}}>
+                  <Flex position='relative'>
+                    <CsAvatar src={imagesInvoice} alt="logo" />
+                    <CsButtonClose onClick={() => { dispatch(fectchChangeImgHistory({ isChangeImgHistory: true })); onImageDelete() } }><CloseIcon/></CsButtonClose>
+                  </Flex>
+
+                  <div className="image-item__btn-wrapper" style={{display: 'flex', gap: '10px'}}>
+                    <CsButtonAdd onClick={() => { onImageUpdate(0); dispatch(fectchChangeImgHistory({ isChangeImgHistory: true }))}}><CsText>{stateText.text_update}</CsText>
+                    </CsButtonAdd>
+                  </div>
+                </Flex>
             }
           </div>
         )}
@@ -95,7 +127,7 @@ function ReactImageUpload({images , setValue }) {
   );
 }
 
-export default ReactImageUpload
+export default ReactImageUploadForHistory
 
 const CsAvatar = styled.img`
     width: 60px;

@@ -17,7 +17,9 @@ export interface ItemsPreview {
     discount: number,
     shipping: number,
     amountPaid: number,
-    discountType:number
+    discountType:number,
+    invoiceId:string|null,
+    logoUrl:string|null
 }
 
 export interface PreviewType {
