@@ -69,6 +69,7 @@ const DetailSent = () => {
     const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
     const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
     const convertTips = new BigNumber(details?.tip).decimalPlaces(2,1)
+    const convertTotalAmountDueTips = new BigNumber(details?.amountDue).plus(details?.tip).decimalPlaces(2,1)
 
     return (
         <PageFullWidth>
@@ -248,6 +249,14 @@ const DetailSent = () => {
                                             <CsTextRight bold>{details?.amountDue &&  Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_amount_due} + {stateText.text_tips}</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.amountDue &&  Number(convertTotalAmountDueTips.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                        }
+                                    </Row>  
                                 </CsContentInfo>
                             </WContent>
                             <WAction>
