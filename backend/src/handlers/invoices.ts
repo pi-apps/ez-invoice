@@ -24,9 +24,9 @@ export default function mountInvoiceEndpoints(router: Router) {
             }
 
             const items = JSON.parse(req.body.items);
-            let subTotal = 0;
+            let subTotal = new BigNumber(0);
             for (let i = 0; i < items.length; i++) {
-                subTotal += items[i].price * items[i].quantity;
+                subTotal = subTotal.plus(items[i].price * items[i].quantity);
             }
             const tax = req.body.tax;
             const taxType = req.body.taxType;
@@ -34,12 +34,8 @@ export default function mountInvoiceEndpoints(router: Router) {
             const discountType = req.body.discountType;
             const shipping = req.body.shipping;
             const amountTax = taxType == 1 ? new BigNumber(subTotal).multipliedBy(tax).dividedBy(100) : new BigNumber(tax);
-            const amountAfterTax = new BigNumber(subTotal).plus(amountTax);
-            console.log("amountAfterTax", amountAfterTax);
-            
-            const amountDiscount = discountType == 1 ? new BigNumber(amountAfterTax).multipliedBy(discount).dividedBy(100) : new BigNumber(discount);
-            console.log("amountDiscount", amountDiscount);
-            
+            const amountAfterTax = new BigNumber(subTotal).plus(amountTax);            
+            const amountDiscount = discountType == 1 ? new BigNumber(amountAfterTax).multipliedBy(discount).dividedBy(100) : new BigNumber(discount);            
             const total = new BigNumber(amountAfterTax).minus(amountDiscount).plus(shipping);
             const amountPaid = req.body.amountPaid;
             const amountDue = new BigNumber(total).minus(amountPaid);
