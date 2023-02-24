@@ -66,7 +66,7 @@ const Preview = () => {
     const discountValuePercent = discountValue * (subTotal + isTaxValue) / 100 
     
     const isDiscountValuePercent = discountValue <= 100 ? discountValuePercent : subTotal
-    const isDiscount = (discountValue < subTotal) ? discountValue : subTotal
+    const isDiscount = (discountValue < subTotal) ? discountValue : (subTotal + isTaxValue)
 
     const totalFinal = (total) => {
         if( activeTax === 2 && activeDiscount === 2){
