@@ -1,10 +1,16 @@
 import axios from "axios";
+import PiNetwork from 'pi-backend';
 import { Router } from "express";
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
 import { AuthenUser } from "../services/authen";
 import InvoicesModel from "../models/invoices";
 import utils from "../services/utils";
+
+// DO NOT expose these values to public
+const apiKey = process.env.PI_API_KEY || "";
+const walletPrivateSeed = process.env.SEED_PI || "" // starts with S
+const pi = new PiNetwork(apiKey, walletPrivateSeed);
 
 export default function mountPaymentsEndpoints(router: Router) {
     // payment deep link in email
@@ -137,17 +143,22 @@ export default function mountPaymentsEndpoints(router: Router) {
             const language = req.body.language;
             const paymentId = req.body.paymentId;
             const txid = req.body.txid;
-            const invoice = await InvoicesModel.findOneAndUpdate({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true } });
+            const payment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
+            const invoice = await InvoicesModel.findOneAndUpdate({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true, tip: payment.data?.metadata?.tip } });
             if (!invoice) {
                 return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
             }
             // let Pi server know that the payment is completed
             await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
+            // create a payment from server to user
+            await createPayment(invoice.invoiceId, payment.data?.amount, invoice.receiverId);
             // send mail if the payment is completed
             const senderEmail = invoice.senderEmail;
             await utils.sendEmailPaymentSuccess(invoice, senderEmail, currentUser.username, language);
             return res.status(200).json({ message: `Completed the payment ${paymentId}` });
         } catch (error: any) {
+            console.log(error);
+            
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
         }
     });
@@ -166,7 +177,7 @@ export default function mountPaymentsEndpoints(router: Router) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
         }
     })
-
+    
     // get detail a payment
     router.get('/detail/:paymentId', async (req, res) => {
         try {
@@ -181,9 +192,33 @@ export default function mountPaymentsEndpoints(router: Router) {
                 return res.status(400).json({ message: "Invoice not found" });
             }
             const payment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
-            return res.status(200).json({ payment });
+            return res.status(200).json({ message: payment.data });
         } catch (error: any) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
         }
     });
+    router.post('/create_payment', async (req, res) => {
+        try {
+            await createPayment(req.body.invoiceId, req.body.amount, req.body.uid);
+            return res.status(200).json({ message: "Created payment" });
+        } catch (error: any) {
+            return res.status(500).json({ error: 'internal_server_error', message: error.message });
+        }
+    });
+    // Create a payment (A2U):
+    async function createPayment(invoiceId: any, amount: any, uid: string) {
+        try {
+            const paymentData = {
+                "amount": amount,
+                "memo": invoiceId,
+                "metadata": {"invoiceId": invoiceId},
+                "uid": uid
+            }
+            const paymentId = await pi.createPayment(paymentData);
+            const txid = await pi.submitPayment(paymentId);
+            const completedPayment = await pi.completePayment(paymentId, txid);
+        } catch (error: any) {
+            throw new Error(error.message);
+        } 
+    }
 }

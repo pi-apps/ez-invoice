@@ -37,26 +37,16 @@ const Header = () => {
 
   return (
     <ContainerHeader>
-      <Flex width="100%">
-        <Text fontSize="24px" bold>{stateText.text_history}</Text>
-      </Flex>
-      <Flex width="100%" mt="8px">
-        <Text color="#64748B" fontSize="14px" bold>{stateText.text_let_ezinvoice_account}</Text>
-      </Flex>
-      <Flex justifyContent="flex-start" width="100%" style={{gap: '10px'}}>
-        {/* <Flex width="50%">
-          <CsExport marginTop="14px" width='100%'>
-            {stateText.text_export}
-          </CsExport>
-        </Flex> */}
-
-        <Flex width="50%">
-          <NavLink style={{width: '100%'}} to="/newInvoice">
-            <Button marginTop="14px" width='100%'>
-              {stateText.text_new_invoice}
-            </Button>
-          </NavLink>
+      <Flex mt='1rem' width="100%" justifyContent='space-between' alignItems='center'>
+        <Flex flexDirection='column'>
+          <Text fontSize="24px" bold>{stateText.text_history}</Text>
+          <Text color="#64748B" fontSize="14px" bold>{stateText.text_let_ezinvoice_account}</Text>
         </Flex>
+        <NavLink style={{width: '140px'}} to="/newInvoice">
+          <Button width='100%' style={{fontSize: '14px'}}>
+            {stateText.text_new_invoice}
+          </Button>
+        </NavLink>
       </Flex>
     </ContainerHeader>
   );

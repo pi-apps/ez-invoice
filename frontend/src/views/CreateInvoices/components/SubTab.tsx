@@ -98,7 +98,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
-    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, mode: 'onTouched'});
+    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, reValidateMode: 'onSubmit'});
     const { fields, append, remove } = useFieldArray({
         control,
         name: "items"
@@ -230,7 +230,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             formData.append("discount", `${data.discount}`);
             formData.append("shipping", `${data.shipping}`);
             formData.append("amountPaid", `${data.amountPaid}`);
-            formData.append("logo", images[0]?.file);
+            formData.append("logo", images?.length ? images[0]?.file : "");
 
             const submitReq = await axiosClient.post('/invoice/create', formData, 
                     {
@@ -249,12 +249,13 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
-                    toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
+                    toastError(stateText.text_error, <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
                     setLoadingPreview(false)
             }
         } catch (error) {
-            console.log("error", error)
-            toastError('Error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
+            console.log(error);
+            
+            toastError(stateText.text_error, <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
         } finally {
             setLoadingPreview(false)
             dispatch(getActiveDiscount({ isDiscountPercent:1 }))
@@ -325,6 +326,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const renderScreens = ( isActive) => {
         if(isActive === 1){
             return <FormTabOne 
+                isActive={isActive}
                 startDueDate={startDueDate} 
                 setStartDueDate={setStartDueDate} 
                 startDate={startDate} 
@@ -338,7 +340,14 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             />
         }
         if(isActive === 2){
-            return <FormTabTwo formState={formState} controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
+            return <FormTabTwo 
+            isActive={isActive}
+            formState={formState} 
+            controlledFields={controlledFields} 
+            append={append} 
+            remove={remove} 
+            register={register} 
+            control={control} />
         }
         if(isActive === 3){
             return <FormTabThree 

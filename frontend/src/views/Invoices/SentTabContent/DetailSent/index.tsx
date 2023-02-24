@@ -68,7 +68,8 @@ const DetailSent = () => {
     const convertTotal = new BigNumber(details?.total).decimalPlaces(2,1)
     const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
     const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
-    
+    const convertTips = new BigNumber(details?.tip).decimalPlaces(2,1)
+    const convertTotalAmountDueTips = new BigNumber(details?.amountDue).plus(details?.tip).decimalPlaces(2,1)
 
     return (
         <PageFullWidth>
@@ -151,16 +152,16 @@ const DetailSent = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%">{stateText.text_item}</ColFirstth>
-                                        <Colth width="20%">{stateText.text_quanlity}</Colth>
+                                        <ColFirstth width="50%">{stateText.text_item}</ColFirstth>
+                                        <Colth width="10%">{stateText.text_quanlity}</Colth>
                                         <Colth width="20%">{stateText.text_unit_price}</Colth>
-                                        <Colth width="20%">{stateText.text_text_total}</Colth>
+                                        <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
                                         return(
                                             <CsRow>
-                                            <ColFirst width="20%"><Translate>{item?.name}</Translate></ColFirst>
-                                            <Col width="20%"><Translate>{item?.quantity}</Translate></Col>
+                                            <ColFirst width="50%"><Translate>{item?.name}</Translate></ColFirst>
+                                            <Col width="10%"><Translate>{item?.quantity}</Translate></Col>
                                             <Col width="20%">{item?.price && item?.price.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                             <Col width="20%">{((item?.quantity) &&(item?.price)) && ((item?.quantity)*(item?.price)).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                         </CsRow>
@@ -180,10 +181,12 @@ const DetailSent = () => {
                                     </Row>
 
                                     { ( Number(details?.tax) > 0 && items?.isLoading === false ) &&
-                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft>{stateText.text_tax}: (
-                                                {Number(convertTax.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
-                                                {details?.taxType === 1 ? "%" : "Pi"})
+                                                {details?.taxType === 1 && <>
+                                                    {Number(convertTax.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}%
+                                                </>
+                                                })
                                             </CsTextLeft>
                                             <CsTextRight bold>{details?.taxType === 1 ? <>
                                                 {(details?.subTotal && details?.tax) && Number(convertPercentTax.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -196,8 +199,9 @@ const DetailSent = () => {
                                     {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft>{stateText.text_discount}: (
-                                            {Number(convertDiscount.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
-                                            {details?.discountType === 1 ? "%" : "Pi"})</CsTextLeft>
+                                            {details?.discountType === 1 && <>
+                                                {Number(convertDiscount.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}%
+                                            </>})</CsTextLeft>
                                             <CsTextRight bold>{details?.discountType === 1 ? 
                                             <>
                                                 {Number(convertDiscountPercent.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -233,6 +237,14 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_tips}</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.tip &&  Number(convertTips.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                        }
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
@@ -240,6 +252,14 @@ const DetailSent = () => {
                                             <CsTextRight bold>{details?.amountDue &&  Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_amount_due} + {stateText.text_tips}</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.amountDue &&  Number(convertTotalAmountDueTips.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                        }
+                                    </Row>  
                                 </CsContentInfo>
                             </WContent>
                             <WAction>

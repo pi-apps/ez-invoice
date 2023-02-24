@@ -127,6 +127,7 @@ export async function invoiceTranslate(language: any) {
     "text_amount_paid": langArr[25] || invoice_text["text_amount_paid"],
     "text_notes": langArr[26] || invoice_text["text_notes"],
     "text_terms": langArr[27] || invoice_text["text_terms"],
+    "text_tips": langArr[28] || invoice_text["text_tips"],
   }
   return data;
 }
@@ -225,6 +226,12 @@ export async function createInvoiceTranslate(language: any) {
     "text_less_than_total": langArr[53] || createInvoice_text["text_less_than_total"],
     "text_less_than_subtotal_and_tax": langArr[54] || createInvoice_text["text_less_than_subtotal_and_tax"],
     "text_terms_and_conditions": langArr[55] || createInvoice_text["text_terms_and_conditions"],
+    "text_error": langArr[56] || createInvoice_text["text_error"],
+    "text_payment_term": langArr[57] || createInvoice_text["text_payment_term"],
+    "text_pl_payment_term": langArr[58] || createInvoice_text["text_pl_payment_term"],
+    "text_previous": langArr[59] || invoice_text["text_previous"],
+    "text_next": langArr[60] || invoice_text["text_next"],
+    "text_discount_before_tax": langArr[61] || invoice_text["text_discount_before_tax"],
   }
   return data;
 }
@@ -319,6 +326,9 @@ export async function paymentTranslate(language: any) {
     "text_tips": langArr[20] || payment_text["text_tips"],
     "text_pay_now": langArr[21] || payment_text["text_pay_now"],
     "text_amount_paid": langArr[22] || payment_text["text_amount_paid"],
+    "text_error": langArr[23] || payment_text["text_error"],
+    "text_system_error": langArr[24] || payment_text["text_system_error"],
+    "text_payment_success": langArr[25] || payment_text["text_payment_success"],
   }
   return data;
 }

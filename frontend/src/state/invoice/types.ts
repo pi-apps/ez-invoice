@@ -48,6 +48,7 @@ export interface ItemsDetails {
     updateAt: string,
     __v: number,
     id: string
+    tip: number,
 }
 
 export interface ListSentItems {

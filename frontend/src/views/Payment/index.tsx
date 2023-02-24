@@ -34,6 +34,7 @@ const Payment = () => {
     const userData = getUser()
     const [ tips, setTips ] = useState("0")
     const token = getAccessToken()
+    console.log('tokensdasdas', token)
     const dispatch = useDispatch<AppDispatch>();
     const [ isLoading, setLoading ] = useState(false)
     const onIncompletePaymentFound = (payment: PaymentDTO) => {
@@ -45,13 +46,12 @@ const Payment = () => {
     };
     const signIn = async () => {
         try {
-            const scopes = ["username", "payments"];
+            const scopes = ["username", "payments", "wallet_address"];
             setLoading(true)
             const resultLogin = await  window.Pi.authenticate(scopes, onIncompletePaymentFound)
             
             if( resultLogin ) {
                 const loginUser = await signInUser(resultLogin);
-                
                 if (loginUser?.data.message.accessToken.length) {
                     await dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
                     const userInfor = await axiosClient.get("user/info", {
@@ -61,6 +61,24 @@ const Payment = () => {
                     });
                   
                     if (userInfor) {
+                        const submitReqInvoiceId = await axiosClient.get(`payments/get-invoice-id/${signature}`, {
+                            headers: {
+                                'Authorization': loginUser?.data?.message.accessToken,
+                            }
+                        });
+                        if(submitReqInvoiceId.status == 200){
+                            await axiosClient.post('/payments/update-receiver', 
+                                {
+                                    "invoiceId": submitReqInvoiceId?.data,
+                                    "signature": signature
+                                }, 
+                                {
+                                    headers: {
+                                        'Authorization': loginUser?.data?.message.accessToken,
+                                    }
+                                }
+                            );
+                        }
                         dispatch(setUser(userInfor.data));
                     }
                     setLoading(false)

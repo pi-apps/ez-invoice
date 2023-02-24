@@ -23,4 +23,8 @@ export const payment_text:any = {
     "text_tips": "Tips",
     "text_pay_now": "Pay now",
     "text_amount_paid": "Amount Paid",
+
+    "text_error": "Error",
+    "text_system_error": "System error",
+    "text_payment_success": "Payment successfully",
 }
