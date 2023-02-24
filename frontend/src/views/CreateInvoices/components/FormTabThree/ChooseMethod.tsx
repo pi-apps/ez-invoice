@@ -81,7 +81,7 @@ const ChooseMethod = ({
                                       )}
                                   />
                               </WrapInput>
-                              <CsCloseIcon role="presentation" onClick={() => {setTypeTax(false); setValue("tax", 0)} }>
+                              <CsCloseIcon role="presentation" onClick={() => {setTypeTax(false); setValue("tax", "0")} }>
                                   <CloseIcon />
                               </CsCloseIcon>
                           </CsRowTaxRight>
@@ -114,13 +114,12 @@ const ChooseMethod = ({
                                               value={field.value}
                                               onChange={field.onChange}
                                               type='number'
-                                              min={0}
                                           />
                                       </>
                                   )}
                               />
                           </WrapInput>
-                          <CsCloseIcon onClick={() => { setTypeDiscount(false); setValue("discount", 0)}}>
+                          <CsCloseIcon onClick={() => { setTypeDiscount(false); setValue("discount", "0")}}>
                           <CloseIcon />
                           </CsCloseIcon>
                       </CsRowTaxRight>
@@ -148,7 +147,6 @@ const ChooseMethod = ({
                                   value={field.value}
                                   onChange={field.onChange}
                                   type='number'
-                                  min={0}
                               />
                               )}
                           />
