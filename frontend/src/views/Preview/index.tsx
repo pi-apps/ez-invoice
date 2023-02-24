@@ -216,7 +216,7 @@ const Preview = () => {
                                     </Row>
                                     { ( Number(items?.tax) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.text_tax}: ({items?.tax}{Number( items?.taxType ) === 1 && "%" })</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_tax}{Number(items?.taxType ) === 1 && <>({items?.tax}%)</> }</CsTextLeft>
                                             <CsTextRight bold>{Number(items?.taxType) === 1 ? 
                                             <>
                                                 {Number(taxAmount.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
@@ -230,7 +230,7 @@ const Preview = () => {
                                     
                                     {( Number(items?.discount) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.text_discount}: ({items?.discount}{items?.discountType === 1 && "%"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_discount}{items?.discountType === 1 && <>({items?.discount}%)</>}</CsTextLeft>
                                             <CsTextRight bold>{items?.discountType === 1 ? 
                                             <>
                                                 {(Number(disCountAmount.toString())).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})}
