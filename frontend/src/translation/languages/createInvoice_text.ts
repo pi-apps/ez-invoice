@@ -27,7 +27,6 @@ export const createInvoice_text:any = {
        "text_amount": "Amount",
        "text_add_your_logo": 'Add your logo',
        "text_update": "Update",
-
        "text_notes": "Notes",
        "text_terms": "Terms",
        "text_subtotal": "Subtotal",
@@ -39,11 +38,9 @@ export const createInvoice_text:any = {
        "text_balance_due": "Balance Due",
        "text_preview": "Preview",
        "text_pl_notes": "Description of service or product",
-
        "text_histoty": "History",
        "text_download": "Download",
        "text_send": "Send",
-
        "text_issue_date": "Issue Date",
        "text_payment_terms": "Payment Terms",
        "text_quanlity": "Quanlity",
@@ -55,8 +52,8 @@ export const createInvoice_text:any = {
        "text_create_invoice": "Create Invoice",
        "text_create_success": "Create invoice successfully!!!",
        "text_create_failed": "System error!!!",
-       
        "text_less_than_total":"Please input number less than total",
        "text_less_than_subtotal_and_tax":"Please input number less than (subtotal+tax)",
        "text_terms_and_conditions": "Terms and conditions - late fees, payment methods, delivery schedule",
+       "text_error": "Error",
 }

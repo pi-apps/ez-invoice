@@ -243,12 +243,11 @@ console.log('totalAndTax', totalAndTax)
                     navigate(`/createDetail/${submitReq?.data?.invoiceId}`)
                     setLoadingPreview(false)
                 }else {
-                    toastError('error', <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
+                    toastError(stateText.text_error, <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
                     setLoadingPreview(false)
             }
         } catch (error) {
-            console.log("error", error)
-            toastError('Error', <Text style={{justifyContent: 'center'}}>{stateText.create_failed}</Text>)
+            toastError(stateText.text_error, <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
         } finally {
             setLoadingPreview(false)
         }

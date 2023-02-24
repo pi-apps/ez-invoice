@@ -1,15 +1,48 @@
 import BigNumber from 'bignumber.js';
 import { PaymentDTO } from 'components/Menu/UserMenu/type';
 import { axiosClient } from 'config/htttp';
+import { GetTranslateHolder } from 'hooks/TranSlateHolder';
 import useToast from 'hooks/useToast';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUser } from 'state/user';
+import { payment_text } from 'translation/languages/payment_text';
+import { paymentTranslate } from 'translation/translateArrayObjects';
 
 export const usePayment = (signature:string, token:string, language:string, tips:string) => {
     const [ pendingPayment, setPendingPayment ] = useState(false)
     const { toastError, toastSuccess } = useToast()
     const config = {headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Authorization': token,}};
     const navigate = useNavigate();
+
+    // Translate
+    const DataAb = getUser();
+    const languageUserApi = DataAb?.language
+    const [stateText, setStateText] = useState(payment_text);
+    const fcTransLateText = async (logerror,language) => {
+        const resErorText = await GetTranslateHolder(
+        logerror,
+        language
+        );
+        toastError(resErorText)
+    };
+
+   const requestTrans = async () => {
+     try {
+       const resData = await paymentTranslate(languageUserApi);
+       setStateText(resData)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+   useEffect(() => {
+     if (languageUserApi) {
+       requestTrans();
+     } else if (!languageUserApi) {
+       setStateText(payment_text);
+     }
+   }, [languageUserApi]);
+
     const handlePayment = useCallback(async () => {
         setPendingPayment(true)
         try {
@@ -52,7 +85,7 @@ export const usePayment = (signature:string, token:string, language:string, tips
                     console.log("onReadyForServerCompletion", paymentId, txid);
                     const resultComplete = await axiosClient.post('/payments/complete', {paymentId, txid, language}, config);
                     if (resultComplete?.status === 200) {
-                        toastSuccess("Payment successfully")
+                        toastSuccess(stateText.text_payment_success)
                         navigate('/invoice')
                     }
                   } 
@@ -85,11 +118,18 @@ export const usePayment = (signature:string, token:string, language:string, tips
                     await window.Pi.createPayment(paymentData, callbacks);
                 }             
             } else {
-                toastError('error', "System error!!!")
+                toastError(stateText.text_error, stateText.text_system_error!!!)
             }
         } catch (e:any) {
-            toastError('Error', e?.response?.data?.message)
-            console.log("error", e)
+            // setStateTextVariable({
+            //     errorTexVariable: e?.response?.data?.message
+            // })
+            // setGetTextError(e?.response?.data?.message)
+            // if (stateTextVariable) {
+            //     toastError(stateText.text_error, stateTextVariable.errorTexVariable)
+            // }
+            const errorText = `Error, ${e?.response?.data?.message}`
+            fcTransLateText(errorText, languageUserApi)
         } finally {
             setPendingPayment(false)
         }

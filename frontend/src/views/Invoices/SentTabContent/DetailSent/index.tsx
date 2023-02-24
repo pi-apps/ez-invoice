@@ -126,7 +126,7 @@ const DetailSent = () => {
                                         <ColFirstth width="20%">{stateText.text_item}</ColFirstth>
                                         <Colth width="20%">{stateText.text_quanlity}</Colth>
                                         <Colth width="20%">{stateText.text_unit_price}</Colth>
-                                        <Colth width="20%">{stateText.text_text_total}</Colth>
+                                        <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
                                         return(
