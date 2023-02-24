@@ -41,6 +41,7 @@ services:
       PAYMENT_GATEWAY_URL: ${PAYMENT_GATEWAY_URL}
       PAYMENT_URL: ${PAYMENT_URL}
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      SEED_PI: ${SEED_PI}
 
   # mongo:
   #   image: mongo:5.0
