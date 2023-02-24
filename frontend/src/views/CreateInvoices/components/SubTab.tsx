@@ -326,6 +326,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const renderScreens = ( isActive) => {
         if(isActive === 1){
             return <FormTabOne 
+                isActive={isActive}
                 startDueDate={startDueDate} 
                 setStartDueDate={setStartDueDate} 
                 startDate={startDate} 
@@ -339,7 +340,14 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             />
         }
         if(isActive === 2){
-            return <FormTabTwo formState={formState} controlledFields={controlledFields} append={append} remove={remove} register={register} control={control} />
+            return <FormTabTwo 
+            isActive={isActive}
+            formState={formState} 
+            controlledFields={controlledFields} 
+            append={append} 
+            remove={remove} 
+            register={register} 
+            control={control} />
         }
         if(isActive === 3){
             return <FormTabThree 

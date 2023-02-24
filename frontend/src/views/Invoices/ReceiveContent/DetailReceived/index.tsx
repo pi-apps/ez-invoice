@@ -28,6 +28,8 @@ const DetailReceived = () => {
     const items = GetAnInvoice()
     const details = items?.details
 
+    console.log('details',details)
+
     function convertDate(date: any) {
         if (date) {
           const today = new Date(date)
@@ -71,6 +73,7 @@ const DetailReceived = () => {
     const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
     const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
     const convertTips = new BigNumber(details?.tip).decimalPlaces(2,1)
+    const convertTotalAmountDueTips = new BigNumber(details?.amountDue).plus(details?.tip).decimalPlaces(2,1)
    
 //    console.log('isTaxValue',item?.price)
 
@@ -154,8 +157,8 @@ const DetailReceived = () => {
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>
-                                        <ColFirstth width="20%">{stateText.text_item}</ColFirstth>
-                                        <Colth width="20%">{stateText.text_quanlity}</Colth>
+                                        <ColFirstth width="50%">{stateText.text_item}</ColFirstth>
+                                        <Colth width="10%">{stateText.text_quanlity}</Colth>
                                         <Colth width="20%">{stateText.text_unit_price}</Colth>
                                         <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
@@ -164,8 +167,8 @@ const DetailReceived = () => {
                                         const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(2,1)
                                         return(
                                             <CsRow>
-                                            <ColFirst width="20%">{item?.name}</ColFirst>   
-                                            <Col width="20%">{item?.quantity}</Col>
+                                            <ColFirst width="50%">{item?.name}</ColFirst>   
+                                            <Col width="10%">{item?.quantity}</Col>
                                             <Col width="20%">{Number(convertPrice.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                             <Col width="20%">{Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</Col>
                                         </CsRow>
@@ -248,7 +251,15 @@ const DetailReceived = () => {
                                         :
                                             <CsTextRight bold>{details?.amountDue &&  Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
-                                    </Row>  
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_amount_due} + {stateText.text_tips}</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.amountDue &&  Number(convertTotalAmountDueTips.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                        }
+                                    </Row>    
                                 </CsContentInfo>
                             </WContent>
                             <WAction>
