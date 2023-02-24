@@ -14,6 +14,7 @@ const UpdateInvoices = () => {
     const isActive = dataTabActive?.isActive
     const [invoice, setInvoice] = useState('')
     let { invoiceId } = useParams()
+    
     return (
         <TranSlatorModal>
             <PageFullWidth>

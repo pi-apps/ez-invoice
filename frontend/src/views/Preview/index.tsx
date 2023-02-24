@@ -17,6 +17,7 @@ import { previewInvoice_text } from 'translation/languages/previewInvoice';
 import { AppDispatch } from 'state';
 import { useDispatch } from 'react-redux';
 import { getDataImages } from 'state/preview/actions';
+import { GetHistory } from 'state/history';
 
 const Preview = () => {
     const data = GetDataPreview()
@@ -52,7 +53,7 @@ const Preview = () => {
         return totalPrice(listItems)
     },[listItems]);
 
-
+    const dataHistory = GetHistory()
     const taxValue = Number(items?.tax)
     const shippingValue =  Number(items?.shipping)
     const discountValue =  Number(items?.discount)
@@ -84,9 +85,14 @@ const Preview = () => {
     const dispatch = useDispatch<AppDispatch>()
 
     async function handleClick() {
-        navigate(`/newInvoice`)
+        if( items?.invoiceId !== null || items?.invoiceId?.length) {
+            navigate(`/updateinvoice/${items?.invoiceId}`)
+        } else {
+            navigate(`/newInvoice`)
+        }
+        
     }
-
+    
     // Calculate the total amount due
     const [ taxAmount, setTaxAmount ] = useState("0")
     const [ disCountAmount, setDisCountAmout ] = useState("0")    
@@ -125,7 +131,7 @@ const Preview = () => {
     const subTotalConvert = new BigNumber(subTotal).decimalPlaces(2,1)
     const convertShipping = new BigNumber(shippingValue).decimalPlaces(2,1)
     const convertAmountPaid = new BigNumber(amountPaidValue).decimalPlaces(2,1)
-    
+    console.log("dataHistory", dataHistory)
     return (
         <PageFullWidth>
             <CsContainer>
@@ -135,10 +141,34 @@ const Preview = () => {
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
-                                        { !images ?
-                                            <UndefineIcon width="30px" height="30px"/>
-                                        :
-                                            <Image width={59} height={57} src={images[0]?.data_url} alt='logo' />
+                                        { items?.invoiceId === null || dataHistory?.isChangeImgHistory === true &&
+                                            <Fragment>
+                                                { !images ?
+                                                    <UndefineIcon width="30px" height="30px"/>
+                                                :
+                                                    <Image width={59} height={57} src={images[0]?.data_url} alt='logo' />
+                                                }
+                                            </Fragment>
+                                        }
+                                        
+                                        { ( items?.invoiceId && dataHistory?.isChangeImgHistory === false ) && 
+                                            <Fragment>
+                                                { items?.logoUrl ?
+                                                    <Image width={59} height={57} src={items?.logoUrl} alt='logo' />
+
+                                                :
+                                                    <UndefineIcon width="30px" height="30px"/>
+                                                }
+                                            </Fragment>
+                                        }
+                                        { items?.invoiceId === null || dataHistory?.isChangeImgHistory === false &&
+                                            <Fragment>
+                                                { !images ?
+                                                    <UndefineIcon width="30px" height="30px"/>
+                                                :
+                                                    <Image width={59} height={57} src={images[0]?.data_url} alt='logo' />
+                                                }
+                                            </Fragment>
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>

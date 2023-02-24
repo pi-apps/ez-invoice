@@ -19,8 +19,9 @@ import { createInvoice_text } from "translation/languages/createInvoice_text"
 import { createInvoiceTranslate, downloadTranslate } from "translation/translateArrayObjects"
 import { AppDispatch } from "state"
 import { tabActiveNewInvoice } from "state/invoice/actions"
+import ReactImageUploadForHistory from "./ReactImageUploadForHistory"
 
-const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate, getValues}) => {
+const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate, getValues, imagesInvoice}) => {
     const [checkError, setCheckError] = useState(false)
     const [getMessageError, setMessageError] = useState()
     const dispatch = useDispatch<AppDispatch>()
@@ -84,10 +85,19 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
                     </ContainerInput>
 
                     {/* Add your logo */}
-                    <ReactImageUpload 
-                        images={images} 
-                        setValue={setValue}
-                    />
+                    { imagesInvoice?.length ?
+                        <ReactImageUploadForHistory 
+                            images={images} 
+                            setValue={setValue}
+                            imagesInvoice={imagesInvoice}
+                        />
+                    : 
+                        <ReactImageUpload 
+                            images={images} 
+                            setValue={setValue}
+                        />
+                    }
+                   
                     
                     {/* Sender Email */}
                     <Flex width='100%'>

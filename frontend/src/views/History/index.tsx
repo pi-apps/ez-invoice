@@ -13,12 +13,13 @@ import Footer from "components/Footer";
 import DeleteModal from "components/DeleteModal";
 import { getAccessToken, getUser } from "state/user";
 import { GetHistory, UseGetAllInvoiceHistoryCore } from "state/history";
-import { fetchStatusPreview, getDataImages } from "state/preview/actions";
+import { fetchStatusPreview, getDataImages, getDataPreview } from "state/preview/actions";
 import { AppDispatch } from "state";
 import { useDispatch } from "react-redux";
 import { history_text } from "translation/languages/history_text";
 import { historyTranslate } from "translation/translateArrayObjects";
 import { getActiveDiscount, getActiveTax } from "state/invoice/actions";
+import { fectchChangeImgHistory, getImageFileHistory } from "state/history/actions";
 
 const History = () => {
     const [openDeleteModal] = useModal(<DeleteModal/>);
@@ -35,6 +36,10 @@ const History = () => {
         ))
         dispatch(getActiveDiscount({ isDiscountPercent:1 }))
         dispatch(getActiveTax({ isTaxPercent:1 }))
+        dispatch(fectchChangeImgHistory({ isChangeImgHistory: false })); 
+        dispatch(fetchStatusPreview({isPreview: false}))
+        dispatch(getDataPreview({dataPreview:null}))
+        dispatch(getImageFileHistory({ imageFile: null }));
     }, [])
 
     // Translate

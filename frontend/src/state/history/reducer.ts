@@ -1,15 +1,19 @@
 import { createReducer } from "@reduxjs/toolkit"
-import { getHistory, fetchLoadingHistory } from "./actions"
+import { getHistory, fetchLoadingHistory, getImageFileHistory, fectchChangeImgHistory } from "./actions"
 import { ItemsDetails } from "./type"
 
 interface globalStateHistory {
     isLoading:boolean,
-    listItems: ItemsDetails[]   
+    listItems: ItemsDetails[],
+    imageFile: any,
+    isChangeImgHistory: boolean
 }
 
 export const initialState: globalStateHistory = {
     isLoading:false,
-    listItems: null 
+    listItems: null,
+    imageFile: null,
+    isChangeImgHistory:false
 }
 
 export default createReducer(initialState, (builder) =>
@@ -17,7 +21,13 @@ export default createReducer(initialState, (builder) =>
     .addCase(fetchLoadingHistory, (state, action) => {
       state.isLoading = action.payload.isLoading
     })
-     .addCase(getHistory, (state, action) => {
+    .addCase(getHistory, (state, action) => {
       state.listItems = action.payload.listItems
+    })
+    .addCase(getImageFileHistory, (state, action) => {
+      state.imageFile = action.payload.imageFile
+    })
+    .addCase(fectchChangeImgHistory, (state, action) => {
+      state.isChangeImgHistory = action.payload.isChangeImgHistory
     })
 )
