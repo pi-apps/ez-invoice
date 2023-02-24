@@ -28,11 +28,13 @@ const schema = new Schema({
     total: { type: Number, required: true },
     amountPaid: { type: Number, default: 0 },
     amountDue: { type: Number, required: true },
+    tip: { type: Number, default: 0 },
     status: { type: String, default: "draft" },
     paid: { type: Boolean, default: false },
     downloadUrl: { type: String, default: "" },
     logoUrl: { type: String, default: "" },
     pi_payment_id: { type: String, default: "" },
+    pi_payment_id_server: { type: String, default: "" },
     signature: { type: String, default: "" },
 }, schemaOptions);
 

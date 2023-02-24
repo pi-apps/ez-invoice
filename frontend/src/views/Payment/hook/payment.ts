@@ -39,7 +39,7 @@ export const payment = async (memo: string, amount: number, invoiceId:string) =>
     const result = await window.Pi.authenticate(scopes, onIncompletePaymentFound)
     
     if ( result ) {
-      const paymentData = { amount, memo, metadata: {invoiceId: invoiceId} };        
+      const paymentData = { amount, memo, metadata: {invoiceId: invoiceId} };              
       const callbacks = {
           onReadyForServerApproval,
           onReadyForServerCompletion,

@@ -102,13 +102,15 @@ export const usePayment = (signature:string, token:string, language:string, tips
                       // handle the error accordingly
                     }
                 }
-                const scopes = ["username", "payments"];
+                const scopes = ["username", "payments", "wallet_address"];
                 const result = await window.Pi.authenticate(scopes, onIncompletePaymentFound)
                
                 if ( result ) {
                     const amount = tips.length > 0 ? new BigNumber(submitReqDetails?.data?.amountDue).plus(new BigNumber(tips)) : new BigNumber(submitReqDetails?.data?.amountDue).plus(new BigNumber(0))
                     const memo = submitReqInvoiceId?.data
-                    const paymentData = { amount, memo, metadata: {invoiceId: submitReqInvoiceId?.data} };        
+                    const paymentData = { amount, memo, metadata: {invoiceId: submitReqInvoiceId?.data, tip:tips},uid: submitReqDetails?.data?.uid };
+                    console.log("paymentData", paymentData);
+
                     const callbacks = {
                         onReadyForServerApproval,
                         onReadyForServerCompletion,

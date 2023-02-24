@@ -253,6 +253,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                     setLoadingPreview(false)
             }
         } catch (error) {
+            console.log(error);
+            
             toastError(stateText.text_error, <Text style={{justifyContent: 'center'}}>{stateText.text_create_failed}</Text>)
         } finally {
             setLoadingPreview(false)

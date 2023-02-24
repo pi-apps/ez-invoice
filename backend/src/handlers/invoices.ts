@@ -34,9 +34,9 @@ export default function mountInvoiceEndpoints(router: Router) {
             const discountType = req.body.discountType;
             const shipping = req.body.shipping;
             const amountTax = taxType == 1 ? new BigNumber(subTotal).multipliedBy(tax).dividedBy(100) : new BigNumber(tax);
-            const amountAfterTax = new BigNumber(subTotal).plus(amountTax);            
-            const amountDiscount = discountType == 1 ? new BigNumber(amountAfterTax).multipliedBy(discount).dividedBy(100) : new BigNumber(discount);            
-            const total = new BigNumber(amountAfterTax).minus(amountDiscount).plus(shipping);
+            // const amountAfterTax = new BigNumber(subTotal).plus(amountTax);            
+            const amountDiscount = discountType == 1 ? new BigNumber(amountTax).multipliedBy(discount).dividedBy(100) : new BigNumber(discount);            
+            const total = new BigNumber(amountTax).minus(amountDiscount).plus(shipping);
             const amountPaid = req.body.amountPaid;
             const amountDue = new BigNumber(total).minus(amountPaid);
             if (amountDue.isLessThanOrEqualTo(0)) {

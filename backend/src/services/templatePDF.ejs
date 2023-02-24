@@ -146,7 +146,7 @@
           <% } %>
         </td>
         <td class="third-column">
-          <% if (discountType == 1) { %> <% if (discount != 0) {%><%= ((subTotal + (subTotal * tax / 100)) * discount / 100) %> Pi<% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><%= discount %> Pi<% } %> <% } %>
+          <% if (discountType == 1) { %> <% if (discount != 0) {%><%= (subTotal * discount / 100) %> Pi<% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><%= discount %> Pi<% } %> <% } %>
         </td>
       </tr>
       <tr style="border: none;">
