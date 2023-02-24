@@ -314,7 +314,7 @@ const Payment = () => {
                                         </Flex>
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_total}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_total_incl_tips}</CsTextLeft>
                                         <CsTextRight>{Number(converTotal.toString()).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2})} Pi </CsTextRight>
                                     </Row>
                                 </CsContentInfo>

@@ -237,14 +237,6 @@ const DetailReceived = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_tips}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.tip &&  Number(convertTips.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
-                                        }
-                                    </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
@@ -253,7 +245,15 @@ const DetailReceived = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_amount_due} + {stateText.text_tips}</CsTextLeft>
+                                        <CsTextLeft>{stateText.text_tips}</CsTextLeft>
+                                        { items?.isLoading ?
+                                            <Skeleton width={60} />
+                                        :
+                                            <CsTextRight bold>{details?.tip &&  Number(convertTips.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
+                                        }
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_total_incl_tips}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :

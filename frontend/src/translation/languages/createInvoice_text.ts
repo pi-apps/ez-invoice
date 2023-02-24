@@ -43,7 +43,7 @@ export const createInvoice_text:any = {
        "text_send": "Send",
        "text_issue_date": "Issue Date",
        "text_payment_terms": "Payment Terms",
-       "text_quanlity": "Quanlity",
+       "text_quanlity": "Quantity",
        "text_unit_price": "Unit Price",
        "text_allowances": "Allowances",
        "text_back": "Back",

@@ -234,14 +234,6 @@ const DetailSent = () => {
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_tips}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.tip &&  Number(convertTips.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
-                                        }
-                                    </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
@@ -249,14 +241,6 @@ const DetailSent = () => {
                                             <CsTextRight bold>{details?.amountDue &&  Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
                                         }
                                     </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                        <CsTextLeft>{stateText.text_amount_due} + {stateText.text_tips}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.amountDue &&  Number(convertTotalAmountDueTips.toString()).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2,})} Pi</CsTextRight>
-                                        }
-                                    </Row>  
                                 </CsContentInfo>
                             </WContent>
                             <WAction>
