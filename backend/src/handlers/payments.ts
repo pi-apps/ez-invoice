@@ -1,5 +1,5 @@
 import axios from "axios";
-// const StellarSdk = require('stellar-sdk');
+import PiNetwork from 'pi-backend';
 import { Router } from "express";
 import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
@@ -9,10 +9,8 @@ import utils from "../services/utils";
 
 // DO NOT expose these values to public
 const apiKey = process.env.PI_API_KEY || "";
-const walletPrivateSeed = process.env.SEED_PI || ""
-const myPublicKey = process.env.PUBLIC_KEY_PI || "";
-// const piTestnet = new StellarSdk.Server('https://api.testnet.minepi.com');
-// const pi = new PiNetwork(apiKey, walletPrivateSeed);
+const walletPrivateSeed = process.env.SEED_PI || "";
+const pi = new PiNetwork(apiKey, walletPrivateSeed);
 
 export default function mountPaymentsEndpoints(router: Router) {
     // payment deep link in email
@@ -153,7 +151,7 @@ export default function mountPaymentsEndpoints(router: Router) {
             // let Pi server know that the payment is completed
             await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
             // create a payment from server to user
-            // await createPayment(invoice.invoiceId, payment.data?.amount, invoice.receiverId);
+            await createPayment(invoice.invoiceId, payment.data?.amount, invoice.receiverId);
             // send mail if the payment is completed
             const senderEmail = invoice.senderEmail;
             await utils.sendEmailPaymentSuccess(invoice, senderEmail, currentUser.username, language);
@@ -199,50 +197,29 @@ export default function mountPaymentsEndpoints(router: Router) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });
         }
     });
-    // router.post('/create_payment', async (req, res) => {
-    //     try {
-    //         await createPayment(req.body.invoiceId, req.body.amount, req.body.uid);
-    //         return res.status(200).json({ message: "Created payment" });
-    //     } catch (error: any) {
-    //         return res.status(500).json({ error: 'internal_server_error', message: error.message });
-    //     }
-    // });
-    // // Create a payment (A2U):
-    // async function createPayment(invoiceId: any, amount: any, uid: string) {
-    //     try {
-    //         let myAccount = await piTestnet.loadAccount(myPublicKey)
-    //         let baseFee = await piTestnet.fetchBaseFee();
-
-    //         const paymentData = {
-    //             "amount": amount,
-    //             "memo": invoiceId,
-    //             "metadata": {"invoiceId": invoiceId},
-    //             "uid": uid
-    //         }
-    //         const paymentCreate = await platformAPIClient.post(`/v2/payments`, paymentData);
-    //         console.log(paymentCreate.data);
-    //         const paymentId = paymentCreate.data?.identifier;
-    //         const recipientAddress = paymentCreate.data?.recipient;
-    //         let payment = StellarSdk.Operation.payment({
-    //             destination: recipientAddress,
-    //             asset: StellarSdk.Asset.native(),
-    //             amount: paymentData.amount.toString()
-    //         });
-    //         // 180 seconds timeout
-    //         let timebounds = piTestnet.fetchTimebounds(180);
-
-    //         let transaction = new StellarSdk.TransactionBuilder(myAccount, {
-    //             fee: baseFee,
-    //             networkPassphrase: "Pi Testnet", // use "Pi Network" for mainnet transaction
-    //             timebounds: timebounds
-    //         })
-    //         .addOperation(payment)
-    //         // IMPORTANT! DO NOT forget to include the payment id as memo
-    //         .addMemo(StellarSdk.Memo.text(paymentId));
-    //         transaction = transaction.build();
-
-    //     } catch (error: any) {
-    //         throw new Error(error.message);
-    //     } 
-    // }
+    router.post('/create_payment', async (req, res) => {
+        try {
+            await createPayment(req.body.invoiceId, req.body.amount, req.body.uid);
+            return res.status(200).json({ message: "Created payment" });
+        } catch (error: any) {
+            return res.status(500).json({ error: 'internal_server_error', message: error.message });
+        }
+    });
+    // Create a payment (A2U):
+    async function createPayment(invoiceId: any, amount: any, uid: string) {
+        try {
+            const paymentData = {
+                "amount": amount,
+                "memo": invoiceId,
+                "metadata": {"invoiceId": invoiceId},
+                "uid": uid
+            }
+            const paymentId = await pi.createPayment(paymentData);
+            const txid = await pi.submitPayment(paymentId);
+            const completedPayment = await pi.completePayment(paymentId, txid);
+            return completedPayment;
+        } catch (error: any) {
+            throw new Error(error.message);
+        } 
+    }
 }
