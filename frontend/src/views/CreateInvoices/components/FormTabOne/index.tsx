@@ -90,7 +90,7 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
         const dueDate = Date.parse(getDateNow(startDueDate));
         const date = Date.parse(evt);
         if( date > dueDate ) {
-            toastError("The date must be greater than or equal to the due date. Please try again");
+            toastError(stateText.text_the_date_must_be_greater_than);
             setStartDate(new Date())
         } else {
             setStartDate(event) 
@@ -101,7 +101,7 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
         const date = Date.parse(getDateNow(startDate));
         const dueDate = Date.parse(evt);
         if( dueDate < date ) {
-            toastError("The due date must be greater than or equal to the date. Please try again");
+            toastError(stateText.text_due_date_must_be_greater_than);
             setStartDueDate(new Date())
         } else {
             setStartDueDate(event) 

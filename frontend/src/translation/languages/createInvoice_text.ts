@@ -63,4 +63,7 @@ export const createInvoice_text:any = {
        "text_next": "Next",
        "text_discount_before_tax": "Discount before tax",
        "text_only_png": "Only *.png images can be used",
+       "text_the_date_must_be_greater_than": "The date must be greater than or equal to the due date. Please try again",
+       "text_due_date_must_be_greater_than": "The due date must be greater than or equal to the date. Please try again",
+       "text_max_length_is_500_characters": "Max length is 500 characters.",
 }

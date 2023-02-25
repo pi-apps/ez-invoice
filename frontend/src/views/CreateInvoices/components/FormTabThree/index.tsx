@@ -209,7 +209,7 @@ const FormTabThree = ({
                           />
                       </WrapInput>
                       { isMaxLengthTerms &&
-                        <Text color="red" fontSize='12px' mt="10px">Max length is 500 characters.</Text>
+                        <Text color="red" fontSize='12px' mt="10px">{stateText.text_max_length_is_500_characters}</Text>
                       }
                   </ContainerInput>
 
