@@ -15,6 +15,7 @@ import { createInvoiceTranslate } from 'translation/translateArrayObjects';
 import BigNumber from 'bignumber.js';
 import NumberFormat from 'react-number-format';
 import { totalPrice } from 'utils/sumTotalItems';
+import { MAX_LENGTH_TERMS } from 'config';
 
 const FormTabThree = ({
   loadingPreview, 
@@ -32,7 +33,9 @@ const FormTabThree = ({
   isMaxAmountPaid,
   setIsMaxAmountPaid,
   isPositive,
-  setIsPositive
+  setIsPositive,
+  isMaxLengthTerms,
+  setMaxLengthTerms
 }) => {
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
@@ -42,7 +45,7 @@ const FormTabThree = ({
     const shippingValue = Number(watch('shipping'))
     const discountValue = Number(watch('discount')) 
     const amountPaidValue = Number(watch('amountPaid'))
-    // const isPositive = new BigNumber(watch('tax')).isLessThan(0) || new BigNumber(watch('shipping')).isLessThan(0) || new BigNumber(watch('discount')).isLessThan(0) || new BigNumber(watch('amountPaid')).isLessThan(0)
+    const termsValue = watch("terms")
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
     
@@ -63,6 +66,15 @@ const FormTabThree = ({
        setStateText(createInvoice_text);
      }
    }, [languageUserApi]);
+  //  for check max length terms 
+  useEffect(() => {
+    if (termsValue?.length > MAX_LENGTH_TERMS) {
+      setMaxLengthTerms(true)
+    } else {
+      setMaxLengthTerms(false)
+    }
+    }, [termsValue, MAX_LENGTH_TERMS]);
+
   //  for check Positive
     useEffect(() => {
       const tax = watch('tax')
@@ -145,6 +157,7 @@ const FormTabThree = ({
 
     const converTotal = new BigNumber(total).decimalPlaces(4,1)
     const convertAmountDue = new BigNumber(amountDue).decimalPlaces(4,1)
+    const convertSubtotal = new BigNumber(subTotal).decimalPlaces(4,1)
     // end
     return (
       <CsWrapperForm>
@@ -195,7 +208,9 @@ const FormTabThree = ({
                               )}
                           />
                       </WrapInput>
-                      <ErrorMessages errors={errors} name="terms" />
+                      { isMaxLengthTerms &&
+                        <Text color="red" fontSize='12px' mt="10px">{stateText.text_max_length_is_500_characters}</Text>
+                      }
                   </ContainerInput>
 
                   <hr style={{marginTop: '2rem'}}/>
@@ -203,10 +218,10 @@ const FormTabThree = ({
                   <CsContentInfo>
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
                           <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
-                          { Number(subTotal) < 0 ?
-                              "0.00 Pi"
+                          { isNaN(Number(convertSubtotal.toString())) ?
+                              "0.0000 Pi"
                           :
-                              `${Number(subTotal).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi`
+                              `${Number(convertSubtotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi`
                           }
                       </Row>
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
@@ -252,8 +267,8 @@ const FormTabThree = ({
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
                           <CsTextLeft>{stateText.text_total}</CsTextLeft>
                           <Text style={{wordBreak: 'break-all'}} fontSize='14px'>
-                            { Number(total) < 0 ?
-                              "0.00 Pi"
+                            { isNaN(Number(converTotal.toString())) ?
+                              "0.0000 Pi"
                             :
                               Number(converTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})
                             }
@@ -291,7 +306,7 @@ const FormTabThree = ({
                           {tooltipVisible && tooltip}
                           </CsTextLeft>
                           <Text fontSize='14px'>
-                            {new BigNumber(amountDue).isLessThanOrEqualTo(0) ? 
+                            {isNaN(Number(convertAmountDue.toString())) ? 
                                 "0.0000 Pi"
                             : 
                               <>
@@ -305,7 +320,7 @@ const FormTabThree = ({
         </CsContainer>
         <CsSubTotal>
           <CsButtonAdd
-            disabled={isMaxDiscount || isMaxAmountPaid || isPositive}
+            disabled={isMaxDiscount || isMaxAmountPaid || isPositive || isMaxLengthTerms}
           >
             <CsText>{stateText.text_preview} </CsText>
           </CsButtonAdd>

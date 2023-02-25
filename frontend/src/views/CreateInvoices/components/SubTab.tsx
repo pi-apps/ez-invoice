@@ -33,7 +33,6 @@ interface PropsSubTab{
 }
 
 const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
-    console.log('invoiceId', invoiceId)
     const navigate = useNavigate();
     const { toastSuccess, toastError } = useToast()
     const dataHistory = GetHistory()
@@ -43,6 +42,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     const [ totalAndTax, setTotalAndTax ] = useState(0)
     const [ isMaxDiscount, setDiscount ] = useState(false)
     const [ isMaxAmountPaid, setIsMaxAmountPaid ] = useState(false)
+    const [ isMaxLengthTerms, setMaxLengthTerms ] = useState(false)
     const accessToken = getAccessToken()
     UseGetAnInvoiceCore(invoiceId, accessToken)
     UseGetAllInvoice(accessToken)
@@ -97,14 +97,19 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         poNumber: Yup.string().max(20, 'Max length is 20 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().max(500, 'Max length is 500 characters'),
+        items: Yup.lazy(() => Yup.array().of(Yup.object({
+            name: Yup.string().required("Name is required"),
+            quantity: Yup.string().required("Quantity is required"),
+            price:Yup.string().required("Price is required"),
+        })))
     });
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
-    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, reValidateMode:"onSubmit"});
+    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, mode:"onSubmit", reValidateMode:"onSubmit"});
     const { fields, append, remove } = useFieldArray({
         control,
-        name: "items"
+        name: "items",
     });
     const watchFieldArray = watch("items");
 
@@ -395,6 +400,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                         setIsMaxAmountPaid={setIsMaxAmountPaid}
                         isPositive={isPositive}
                         setIsPositive={setIsPositive}
+                        isMaxLengthTerms={isMaxLengthTerms}
+                        setMaxLengthTerms={setMaxLengthTerms}
                     />
         }
     }
@@ -402,23 +409,22 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     // transLanguage
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
-  const [stateText, setStateText] = useState(createInvoice_text);
-  const requestTrans = async () => {
-    try {
-      const resData = await createInvoiceTranslate(languageUserApi);
-      setStateText(resData)
-    } catch (error) {
-      console.log(error)
+    const [stateText, setStateText] = useState(createInvoice_text);
+    const requestTrans = async () => {
+        try {
+        const resData = await createInvoiceTranslate(languageUserApi);
+        setStateText(resData)
+        } catch (error) {
+        console.log(error)
+        }
     }
-  }
-  useEffect(() => {
-    if (languageUserApi) {
-      requestTrans();
-    } else if (!languageUserApi) {
-      setStateText(createInvoice_text);
-    }
-  }, [languageUserApi]);
-
+    useEffect(() => {
+        if (languageUserApi) {
+        requestTrans();
+        } else if (!languageUserApi) {
+        setStateText(createInvoice_text);
+        }
+    }, [languageUserApi]);
     
     return (
         <>
@@ -455,6 +461,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                 isMaxDiscount={isMaxDiscount}
                 isMaxAmountPaid={isMaxAmountPaid}
                 isPositive={isPositive}
+                isMaxLengthTerms={isMaxLengthTerms}
             />
         </>
     )

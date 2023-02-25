@@ -230,10 +230,13 @@ export async function createInvoiceTranslate(language: any) {
     "text_error": langArr[56] || createInvoice_text["text_error"],
     "text_payment_term": langArr[57] || createInvoice_text["text_payment_term"],
     "text_pl_payment_term": langArr[58] || createInvoice_text["text_pl_payment_term"],
-    "text_previous": langArr[59] || invoice_text["text_previous"],
-    "text_next": langArr[60] || invoice_text["text_next"],
-    "text_discount_before_tax": langArr[61] || invoice_text["text_discount_before_tax"],
-    "text_only_png": langArr[62] || invoice_text["text_only_png"],
+    "text_previous": langArr[59] || createInvoice_text["text_previous"],
+    "text_next": langArr[60] || createInvoice_text["text_next"],
+    "text_discount_before_tax": langArr[61] || createInvoice_text["text_discount_before_tax"],
+    "text_only_png": langArr[62] || createInvoice_text["text_only_png"],
+    "text_the_date_must_be_greater_than": langArr[63] || createInvoice_text["text_the_date_must_be_greater_than"],
+    "text_due_date_must_be_greater_than": langArr[64] || createInvoice_text["text_due_date_must_be_greater_than"],
+    "text_max_length_is_500_characters": langArr[65] || createInvoice_text["text_max_length_is_500_characters"],
   }
   return data;
 }

@@ -1,14 +1,17 @@
 import { Flex, Text } from '@devfedeltalabs/pibridge_uikit'
 import CloseIcon from 'components/Svg/Icons/CloseIcon'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import styled from 'styled-components'
 import { getUser } from 'state/user'
 import { createInvoice_text } from 'translation/languages/createInvoice_text'
 import { createInvoiceTranslate } from 'translation/translateArrayObjects'
+import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
+import { TranslateText } from 'utils/translateText'
+import { GetTranslateHolder } from 'hooks/TranSlateHolder'
 
-const Card = ({index,item, remove, fields, register, control } ) => {
+const Card = ({index,item, remove, fields, register, control, errors } ) => {
     const priceNumber = Number(item?.price)
     const quantityNumber = Number(item?.quantity)
     const handleCloseItem = () => {
@@ -36,12 +39,28 @@ const Card = ({index,item, remove, fields, register, control } ) => {
        setStateText(createInvoice_text);
      }
    }, [languageUserApi]);
+
+  //  Translate variable Text
+  // const fcTransLateText = async (language, textVariable) => {
+  //   if (language === 'en') {
+  //     return (
+  //       <Text color='#ff592c' fontSize='12px'>{language}</Text>
+  //     )
+  //   } else {
+  //     const resText = await GetTranslateHolder(
+  //       textVariable,
+  //       language
+  //     );
+  //     return (
+  //       <Text color='#ff592c' fontSize='12px'>{resText}</Text>
+  //     )
+  //   }
+  // };
     
     
   const total = useMemo(() => {
     return Number(fields[index].price)*Number(fields[index].quantity)
   },[fields]);
-
   return (
     <CsWrapperCard>
         <CsHeading>
@@ -59,42 +78,42 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                     control={control}
                     name={`items[${index}].name`}
                     defaultValue=""
-                    render={({ field }) => (
-                        <CsTextArea
-                          onChange={field.onChange} 
-                          onBlur={field.onBlur} 
-                          placeholder={`${stateText.text_pl_name}`} 
-                          {...register(`items.${index}.name` as const)} 
-                        />
+                    render={({ field, fieldState: {invalid, error} }) => (
+                      <Flex width="100%" flexDirection="column" style={{gap:"10px"}}>
+                          <CsTextArea
+                            onChange={field.onChange} 
+                            onBlur={field.onBlur} 
+                            placeholder={`${stateText.text_pl_name}`} 
+                            {...register(`items.${index}.name` as const, {required:true})} 
+                          />
+                          {invalid && 
+                            <Text color='#ff592c' fontSize='12px'>{TranslateText(languageUserApi,error.message)}</Text>
+                          }
+                      </Flex>
+                        
                     )}
                   />
                 </WrapInput>
             </ContainerInput>
-            {(item.name.split(' ').length >= 2 && !item.name.trim()) ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_please_input_alphabet}</Text> : (item.name.length > 100) && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_max_character_100}</Text> 
-            ||
-            <>
-              {(control?._formState?.touchedFields?.items?.[0]?.name === true && item.name === '') && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_description_requeried}</Text>}
-            </>
-            }
             <CsRowInput>
               <ContainerInputQuantity>
                 <WrapInput>
                     <Controller
                       control={control}
                       name={`items[${index}].quantity`}
-                      render={({field}) => (
-                        <CsInput type='number'
-                          onBlur={field.onBlur}
-                          placeholder='1' {...register(`items.${index}.quantity` as const, 
-                        )} />
+                      render={({ field, fieldState: {invalid, error} }) => (
+                          <Flex width="100%" flexDirection="column" style={{gap:"10px"}}>
+                              <CsInput type='number'
+                                onBlur={field.onBlur}
+                                placeholder='1' {...register(`items.${index}.quantity` as const, {required:true}
+                              )} />
+                              {invalid && 
+                                <Text color='#ff592c' fontSize='12px'>{TranslateText(languageUserApi,error.message)}</Text>
+                              }
+                          </Flex>
                         )}
                         />
                 </WrapInput>
-                {(control?._formState?.touchedFields?.items?.[0]?.quantity === true && item.quantity === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_please_input_number}</Text> : 
-                  <>
-                    {(Number(item.quantity) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_greater_than_0}</Text>}
-                  </>
-                }
               </ContainerInputQuantity>
 
               <ContainerInputQuantity>
@@ -102,20 +121,23 @@ const Card = ({index,item, remove, fields, register, control } ) => {
                     <Controller
                         control={control}
                         name={`items[${index}].price`}
-                        render={({field}) => (
-                          <CsInput type='number' onBlur={field.onBlur} placeholder='0.00 Pi' {...register(`items.${index}.price` as const,
-                          {
-                            // valueAsNumber: true,
-                            pattern: "^[0-9\b]+$",
-                          }
-                          )} />
+                        render={({ field, fieldState: {invalid, error} })  => (
+                          <Flex width="100%" flexDirection="column" style={{gap:"10px"}}>
+                              <CsInput type='number' onBlur={field.onBlur} placeholder='0.00 Pi' {...register(`items.${index}.price` as const,
+                              {
+                                required:true,
+                                pattern: "^[0-9\b]+$",
+                              }
+                              )} />
+                              {invalid && 
+                                <Text color='#ff592c' fontSize='12px'>{TranslateText(languageUserApi,error.message)}</Text>
+                              }
+                          </Flex>
+                          
                         )}
                       />
                 </WrapInput>
-                  {(control?._formState?.touchedFields?.items?.[0]?.price === true && item.price === '') ? <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_please_input_number}</Text> : 
-                  <>
-                    {(Number(item.price) < 0) && <Text mt='6px' color='#ff592c' fontSize='12px'>{stateText.text_greater_than_0}</Text>}
-                  </>}
+                <ErrorMessages errors={errors} name={`items.${index}.price`} />
               </ContainerInputQuantity>
             </CsRowInput>
         </CsContent>
@@ -176,7 +198,6 @@ const ContainerInput = styled(Flex)`
 
 const WrapInput = styled(Flex)`
   position: relative;
-  background-color:#F8F9FD;
   border-radius: 10px;
   height: auto;
   width: 100%;

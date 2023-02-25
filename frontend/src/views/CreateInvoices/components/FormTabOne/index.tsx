@@ -20,6 +20,7 @@ import { createInvoiceTranslate, downloadTranslate } from "translation/translate
 import { AppDispatch } from "state"
 import { tabActiveNewInvoice } from "state/invoice/actions"
 import ReactImageUploadForHistory from "./ReactImageUploadForHistory"
+import useToast from "hooks/useToast"
 
 const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate, getValues, imagesInvoice}) => {
     const [checkError, setCheckError] = useState(false)
@@ -27,7 +28,8 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
     const dispatch = useDispatch<AppDispatch>()
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
-    
+    const { toastSuccess, toastError } = useToast()
+
    // Translate
     const [stateText, setStateText] = useState(createInvoice_text);
     const requestTrans = async () => {
@@ -64,7 +66,47 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
         </Flex>,
         { placement: 'top-end', tooltipOffset: [5, 5] },
     )
-
+    // validate for date or due date
+    function getDateNow(event?: any) {
+        let today: any
+        if(event) {
+            today = new Date(event);
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+            const yyyy = today.getFullYear();
+            today = `${yyyy}-${mm}-${dd}`;
+        }
+        else {
+            today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+            const yyyy = today.getFullYear();
+            today = `${yyyy}-${mm}-${dd}`;
+        }    
+        return today;
+    }
+    const handleStartDate = (event:any) => {
+        const evt = getDateNow(event);
+        const dueDate = Date.parse(getDateNow(startDueDate));
+        const date = Date.parse(evt);
+        if( date > dueDate ) {
+            toastError(stateText.text_the_date_must_be_greater_than);
+            setStartDate(new Date())
+        } else {
+            setStartDate(event) 
+        }
+    }
+    const handleDueDate = (event:any) => {
+        const evt = getDateNow(event);
+        const date = Date.parse(getDateNow(startDate));
+        const dueDate = Date.parse(evt);
+        if( dueDate < date ) {
+            toastError(stateText.text_due_date_must_be_greater_than);
+            setStartDueDate(new Date())
+        } else {
+            setStartDueDate(event) 
+        }
+    }
     return (
         <CsContainer >
                 <CsFlex>
@@ -226,8 +268,9 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
                                                 id="issueDate"
                                                 value={field.value}
                                                 onBlur={field.onBlur}
-                                                selected={startDate} onChange={(date:any) => {
-                                                    setStartDate(date)
+                                                selected={startDate} 
+                                                onChange={(date:any) => {
+                                                    handleStartDate(date)
                                                 }} />
                                                 <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('issueDate')?.focus() }}/>
                                             </>
@@ -280,7 +323,8 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
                                             <CsDatePicker
                                             id="dueDate"
                                             value={field.value}
-                                            selected={startDueDate} onChange={(date:any) => setStartDueDate(date)} />
+                                            selected={startDueDate} 
+                                            onChange={handleDueDate}/>
                                             <CsImageDatePicker role="presentation" onClick={() => {document.getElementById('dueDate')?.focus() }}/>
                                         </>
                                     )}
