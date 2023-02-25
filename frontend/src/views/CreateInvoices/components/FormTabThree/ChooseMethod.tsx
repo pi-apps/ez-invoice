@@ -66,7 +66,7 @@ const ChooseMethod = ({
                       <CsRowTax>
                           <CsRowTaxLeft>
                               <CsButton isActive={activeTax === 1 ? !false : false } onClick={() => dispatch(getActiveTax({ isTaxPercent:1 }))}>%</CsButton>
-                              <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => dispatch(getActiveTax({ isTaxPercent:2 }))}>Pi</CsButton>
+                              <CsButton isActive={activeTax  === 2 ? !false : false} onClick={() => dispatch(getActiveTax({ isTaxPercent:2 }))}>PI</CsButton>
                           </CsRowTaxLeft>
                           <CsRowTaxRight>
                               <WrapInput>
@@ -78,7 +78,7 @@ const ChooseMethod = ({
                                               <CsInput
                                                   name="tax"
                                                   onBlur={field.onBlur}
-                                                  placeholder={`0.00 ${(activeTax === 1) ? '%' : 'Pi'} `}
+                                                  placeholder={`0.00 ${(activeTax === 1) ? '%' : 'PI'} `}
                                                   value={field.value}
                                                   onChange={field.onChange}
                                                   type='number'
@@ -109,7 +109,7 @@ const ChooseMethod = ({
                   <CsRowTax>
                       <CsRowTaxLeft>
                           <CsButton isActive={activeDiscount === 1 ? !false : false } onClick={() => dispatch(getActiveDiscount({ isDiscountPercent:1 })) }>%</CsButton>
-                          <CsButton isActive={activeDiscount  === 2 ? !false : false} onClick={() => dispatch(getActiveDiscount({ isDiscountPercent:2 })) }>Pi</CsButton>
+                          <CsButton isActive={activeDiscount  === 2 ? !false : false} onClick={() => dispatch(getActiveDiscount({ isDiscountPercent:2 })) }>PI</CsButton>
                       </CsRowTaxLeft>
                       <CsRowTaxRight>
                           <WrapInput>
@@ -121,7 +121,7 @@ const ChooseMethod = ({
                                           <CsInput
                                               name="discount"
                                               onBlur={field.onBlur}
-                                              placeholder={`0.00 ${(activeDiscount  === 1) ? '%' : 'Pi'} `}
+                                              placeholder={`0.00 ${(activeDiscount  === 1) ? '%' : 'PI'} `}
                                               value={field.value}
                                               onChange={field.onChange}
                                               type='number'

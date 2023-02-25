@@ -43,7 +43,6 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
     return new BigNumber(Number(fields[index].price)).multipliedBy(Number(fields[index].quantity)).toString()
   },[fields]);
 
-  
   return (
     <CsWrapperCard>
         <CsHeading>
@@ -106,7 +105,7 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
                         name={`items[${index}].price`}
                         render={({ field })  => (
                           <Flex width="100%" flexDirection="column" style={{gap:"10px"}}>
-                              <CsInput type='number' onBlur={field.onBlur} placeholder='0.00 Pi' {...register(`items.${index}.price` as const,
+                              <CsInput type='number' onBlur={field.onBlur} placeholder='0.00 PI' {...register(`items.${index}.price` as const,
                               {
                                 required:true,
                                 valueAsNumber: true,
@@ -128,9 +127,9 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
             <Cstitle>{stateText.text_amount}:</Cstitle>
             <CsAmount>
               { Number(total) > 0 ?
-                  `${Number(total).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi`
+                  `${Number(total).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI`
               :
-                  "0.0000 pi"
+                  "0.0000 PI"
               }
             </CsAmount>
         </Flex>

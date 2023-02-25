@@ -219,9 +219,9 @@ const FormTabThree = ({
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
                           <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
                           { isNaN(Number(convertSubtotal.toString())) ?
-                              "0.0000 Pi"
+                              "0.0000 PI"
                           :
-                              `${Number(convertSubtotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi`
+                              `${Number(convertSubtotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI`
                           }
                       </Row>
                       <Row mt="1rem" style={{justifyContent: "space-between"}}>
@@ -268,7 +268,7 @@ const FormTabThree = ({
                           <CsTextLeft>{stateText.text_total}</CsTextLeft>
                           <Text style={{wordBreak: 'break-all'}} fontSize='14px'>
                             { isNaN(Number(converTotal.toString())) ?
-                              "0.0000 Pi"
+                              "0.0000 PI"
                             :
                               Number(converTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})
                             }
@@ -285,7 +285,7 @@ const FormTabThree = ({
                                     render={({ field }) => (
                                       <CsInput  style={{textAlign: 'right', width: '100%', padding: 0}}
                                           name="amountPaid"
-                                          placeholder="0.00 Pi"
+                                          placeholder="0.00 PI"
                                           value={field.value}
                                           onBlur={field.onBlur}
                                           onChange={field.onChange}
@@ -307,10 +307,10 @@ const FormTabThree = ({
                           </CsTextLeft>
                           <Text fontSize='14px'>
                             {isNaN(Number(convertAmountDue.toString())) ? 
-                                "0.0000 Pi"
+                                "0.0000 PI"
                             : 
                               <>
-                                {`${Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi`}
+                                {`${Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI`}
                               </> 
                             }
                           </Text>
