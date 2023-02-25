@@ -252,7 +252,7 @@ const Preview = () => {
                                     { ( Number(items?.shipping) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
-                                            <CsTextRight bold>{Number(convertShipping.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{Number(convertShipping.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         </Row>
                                     }
  
@@ -260,7 +260,7 @@ const Preview = () => {
                                         <CsTextLeft>{stateText.text_total}</CsTextLeft>
                                         { Number(subTotal) <= 0 ?
                                         <CsTextRight>
-                                            {Number(0).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi
+                                            {Number(0).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI
                                         </CsTextRight>
                                         :
                                         <CsTextRight bold>{Number(converTotal?.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
