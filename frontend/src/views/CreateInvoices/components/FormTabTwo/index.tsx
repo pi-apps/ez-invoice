@@ -13,6 +13,8 @@ import { createInvoiceTranslate } from 'translation/translateArrayObjects'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import { tabActiveNewInvoice } from 'state/invoice/actions'
+import { totalPrice } from 'utils/sumTotalItems'
+import BigNumber from 'bignumber.js'
 
 const FormTabTwo = ({
   isActive, 
@@ -44,15 +46,7 @@ const FormTabTwo = ({
      }
    }, [languageUserApi]);
  
-  const totalPrice = (fields) => {
-    return fields.reduce((sum, i) => {
-      if(i.price === undefined || i.quantity === undefined){
-        return 0
-      } else{
-        return sum + i.price * i.quantity
-      }
-    },0)
-  }
+
 
   const total = useMemo(() => {
       return totalPrice(controlledFields)
@@ -68,7 +62,7 @@ const FormTabTwo = ({
           dispatch(tabActiveNewInvoice({isActive: isActive + 1}))
       }
   }
-    
+  const convertTotal = new BigNumber(total).decimalPlaces(4,1)
   return (
     <CsWrapperForm>
       <CsContainer>
@@ -90,7 +84,7 @@ const FormTabTwo = ({
         <Row mt="16px" style={{justifyContent: "space-between"}}>
             <CsTextLeft>{stateText.text_subtotal}:</CsTextLeft>
             <CsTextRight bold>
-              {total && typeof total === 'number' ? `${total.toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi` : '0 Pi'}
+              {Number(convertTotal) > 0 ? `${Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi` : '0 Pi'}
               </CsTextRight>
         </Row>
       </CsSubTotal>
