@@ -215,6 +215,8 @@ export default function mountPaymentsEndpoints(router: Router) {
                 "uid": uid
             }
             const paymentId = await pi.createPayment(paymentData);
+            // update paymentId
+            await InvoicesModel.updateOne({ invoiceId: invoiceId }, { $set: { pi_payment_id_server: paymentId } })
             const txid = await pi.submitPayment(paymentId);
             const completedPayment = await pi.completePayment(paymentId, txid);
             return completedPayment;
