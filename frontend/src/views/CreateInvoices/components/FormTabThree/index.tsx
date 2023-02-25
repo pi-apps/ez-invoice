@@ -15,6 +15,7 @@ import { createInvoiceTranslate } from 'translation/translateArrayObjects';
 import BigNumber from 'bignumber.js';
 import NumberFormat from 'react-number-format';
 import { totalPrice } from 'utils/sumTotalItems';
+import { MAX_LENGTH_TERMS } from 'config';
 
 const FormTabThree = ({
   loadingPreview, 
@@ -32,7 +33,9 @@ const FormTabThree = ({
   isMaxAmountPaid,
   setIsMaxAmountPaid,
   isPositive,
-  setIsPositive
+  setIsPositive,
+  isMaxLengthTerms,
+  setMaxLengthTerms
 }) => {
     const [typeTax, setTypeTax] = useState(true)
     const [typeDiscount, setTypeDiscount] = useState(false)
@@ -42,7 +45,7 @@ const FormTabThree = ({
     const shippingValue = Number(watch('shipping'))
     const discountValue = Number(watch('discount')) 
     const amountPaidValue = Number(watch('amountPaid'))
-    // const isPositive = new BigNumber(watch('tax')).isLessThan(0) || new BigNumber(watch('shipping')).isLessThan(0) || new BigNumber(watch('discount')).isLessThan(0) || new BigNumber(watch('amountPaid')).isLessThan(0)
+    const termsValue = watch("terms")
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
     
@@ -63,6 +66,15 @@ const FormTabThree = ({
        setStateText(createInvoice_text);
      }
    }, [languageUserApi]);
+  //  for check max length terms 
+  useEffect(() => {
+    if (termsValue?.length > MAX_LENGTH_TERMS) {
+      setMaxLengthTerms(true)
+    } else {
+      setMaxLengthTerms(false)
+    }
+    }, [termsValue, MAX_LENGTH_TERMS]);
+
   //  for check Positive
     useEffect(() => {
       const tax = watch('tax')
@@ -196,7 +208,9 @@ const FormTabThree = ({
                               )}
                           />
                       </WrapInput>
-                      <ErrorMessages errors={errors} name="terms" />
+                      { isMaxLengthTerms &&
+                        <Text color="red" fontSize='12px' mt="10px">Max length is 500 characters.</Text>
+                      }
                   </ContainerInput>
 
                   <hr style={{marginTop: '2rem'}}/>
@@ -306,7 +320,7 @@ const FormTabThree = ({
         </CsContainer>
         <CsSubTotal>
           <CsButtonAdd
-            disabled={isMaxDiscount || isMaxAmountPaid || isPositive}
+            disabled={isMaxDiscount || isMaxAmountPaid || isPositive || isMaxLengthTerms}
           >
             <CsText>{stateText.text_preview} </CsText>
           </CsButtonAdd>

@@ -68,7 +68,15 @@ const FormTabTwo = ({
       <CsContainer>
       {controlledFields.map((item, index) => {
           return (
-              <Card item={item} index={index} remove={remove} fields={controlledFields} register={register} control={control} />
+              <Card 
+                item={item} 
+                index={index} 
+                remove={remove} 
+                fields={controlledFields} 
+                register={register} 
+                control={control} 
+                errors={errors}
+              />
           );
         })}
       </CsContainer>

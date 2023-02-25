@@ -42,6 +42,7 @@ const Footer = ({
   isMaxDiscount,
   isMaxAmountPaid,
   isPositive,
+  isMaxLengthTerms
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -102,7 +103,7 @@ const Footer = ({
 
       <Nav.Item style={styles.navItem}>
           <CsButton
-            disabled={(isActive === 1 || isActive === 2) || loadingPreview || isMaxDiscount || isMaxAmountPaid || isPositive}
+            disabled={(isActive === 1 || isActive === 2) || loadingPreview || isMaxDiscount || isMaxAmountPaid || isPositive || isMaxLengthTerms}
             onClick={onHandleCreate}
             endIcon={loadingPreview ? < AutoRenewIcon color="textDisabled" spin/> : null}
 
