@@ -46,7 +46,7 @@ const Card = ({index,item, remove, fields, register, control } ) => {
     <CsWrapperCard>
         <CsHeading>
             <CsFlexHeading>
-                <CsTextHeading>{stateText.text_item} # {index + 1}</CsTextHeading>
+                <CsTextHeading>{stateText.text_item} # {index + 1} <span style={{color: 'red'}}>*</span></CsTextHeading>
                 <CsCloseIcon role="presentation" onClick={handleCloseItem}>
                   <CloseIcon />
                 </CsCloseIcon>
