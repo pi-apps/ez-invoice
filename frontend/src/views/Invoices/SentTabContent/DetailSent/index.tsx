@@ -63,7 +63,7 @@ const DetailSent = () => {
     const convertPercentTax = new BigNumber(details?.subTotal*details?.tax/100).decimalPlaces(4,1)
     const convertTax = new BigNumber(details?.tax).decimalPlaces(4,1)
     const convertDiscount = new BigNumber(details?.discount).decimalPlaces(4,1)
-    const convertDiscountPercent = new BigNumber(details?.discount*(details?.subTotal + details?.tax)/100).decimalPlaces(4,1)
+    const convertDiscountPercent = new BigNumber(details?.discount*(details?.subTotal)/100).decimalPlaces(4,1)
     const convertShipping = new BigNumber(details?.shipping).decimalPlaces(4,1)
     const convertTotal = new BigNumber(details?.total).decimalPlaces(4,1)
     const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(4,1)
