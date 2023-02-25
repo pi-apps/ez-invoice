@@ -86,10 +86,10 @@ const CreateDetail = () => {
         }
     }, [languageUserApi]);
     const [openLoginModal] = useModal(<DownloadModal invoiceId={details?.invoiceId}/>);
-    const converTotal = new BigNumber(details?.total).decimalPlaces(2,1)
-    const convertShipping = new BigNumber(details?.shipping).decimalPlaces(2,1)
-    const converAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
-    const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
+    const converTotal = new BigNumber(details?.total).decimalPlaces(4,1)
+    const convertShipping = new BigNumber(details?.shipping).decimalPlaces(4,1)
+    const converAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(4,1)
+    const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(4,1)
     
     return (
         <PageFullWidth>
@@ -178,8 +178,8 @@ const CreateDetail = () => {
                                         <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
-                                        const convertPrice = new BigNumber(item?.price).decimalPlaces(2,1)
-                                        const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(2,1)
+                                        const convertPrice = new BigNumber(item?.price).decimalPlaces(4,1)
+                                        const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(4,1)
                                         return(
                                             <CsRow>
                                             <ColFirst paddingRight="15px" width="50%">{item?.name}</ColFirst>

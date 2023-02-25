@@ -18,6 +18,7 @@ import { AppDispatch } from 'state';
 import { useDispatch } from 'react-redux';
 import { getDataImages } from 'state/preview/actions';
 import { GetHistory } from 'state/history';
+import { totalPrice } from 'utils/sumTotalItems';
 
 const Preview = () => {
     const data = GetDataPreview()
@@ -38,16 +39,6 @@ const Preview = () => {
         }
         return <Skeleton width={60} />
     }
-
-    const totalPrice = (fields) => {
-        return fields.reduce((sum, i) => {
-          if(i.price === undefined || i.quantity === undefined){
-            return 0
-          } else{
-            return sum + i.price * i.quantity
-          }
-        },0)
-      }
     
     const subTotal = useMemo(() => {
         return totalPrice(listItems)
@@ -125,13 +116,14 @@ const Preview = () => {
       return new BigNumber(total).minus(amountPaidValue).toString()
     },[total, amountPaidValue, activeDiscount, activeTax ]);
 
-    const converTotal = new BigNumber(total).decimalPlaces(2,1)
-    const convertAmountDue = new BigNumber(amountDue).decimalPlaces(2,1)
+    const converTotal = new BigNumber(total).decimalPlaces(4,1)
+    const convertAmountDue = new BigNumber(amountDue).decimalPlaces(4,1)
 
-    const subTotalConvert = new BigNumber(subTotal).decimalPlaces(2,1)
-    const convertShipping = new BigNumber(shippingValue).decimalPlaces(2,1)
-    const convertAmountPaid = new BigNumber(amountPaidValue).decimalPlaces(2,1)
-    console.log("dataHistory", dataHistory)
+    const subTotalConvert = new BigNumber(subTotal).decimalPlaces(4,1)
+    const convertShipping = new BigNumber(shippingValue).decimalPlaces(4,1)
+    const convertAmountPaid = new BigNumber(amountPaidValue).decimalPlaces(4,1)
+    console.log("dataHistory?.isChangeImgHistory", dataHistory?.isChangeImgHistory)
+    console.log("items?.invoiceId", items?.invoiceId)
     return (
         <PageFullWidth>
             <CsContainer>
@@ -141,34 +133,19 @@ const Preview = () => {
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
-                                        { items?.invoiceId === null || dataHistory?.isChangeImgHistory === true &&
-                                            <Fragment>
-                                                { !images ?
-                                                    <UndefineIcon width="30px" height="30px"/>
-                                                :
-                                                    <Image width={59} height={57} src={images[0]?.data_url} alt='logo' />
-                                                }
-                                            </Fragment>
+                                        { ( ( items?.invoiceId == null || dataHistory?.isChangeImgHistory === true ) && images?.length > 0 ) &&
+                                            <Image width={59} height={57} src={images[0]?.data_url} alt='logo' />
                                         }
                                         
                                         { ( items?.invoiceId && dataHistory?.isChangeImgHistory === false ) && 
                                             <Fragment>
-                                                { items?.logoUrl ?
+                                                { items?.logoUrl &&
                                                     <Image width={59} height={57} src={items?.logoUrl} alt='logo' />
-
-                                                :
-                                                    <UndefineIcon width="30px" height="30px"/>
                                                 }
                                             </Fragment>
                                         }
-                                        { items?.invoiceId === null || dataHistory?.isChangeImgHistory === false &&
-                                            <Fragment>
-                                                { !images ?
-                                                    <UndefineIcon width="30px" height="30px"/>
-                                                :
-                                                    <Image width={59} height={57} src={images[0]?.data_url} alt='logo' />
-                                                }
-                                            </Fragment>
+                                        { ( items?.invoiceId === null || items?.invoiceId !== undefined && dataHistory?.isChangeImgHistory === false && images?.length > 0 ) &&
+                                            <Image width={59} height={57} src={images[0]?.data_url} alt='logo' />
                                         }
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
@@ -225,8 +202,8 @@ const Preview = () => {
                                         <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {listItems.map((item) => {
-                                        const convertPrice = new BigNumber(item?.price).decimalPlaces(2,1)
-                                        const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(2,1)
+                                        const convertPrice = new BigNumber(item?.price).decimalPlaces(4,1)
+                                        const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(4,1)
                                         return(
                                             <CsRow>
                                             <ColFirst paddingRight="15px" width="50%">{item?.name}</ColFirst>   

@@ -73,6 +73,7 @@ function ReactImageUploadForHistory({images , setValue, imagesInvoice }) {
         onChange={onChange}
         maxNumber={maxNumber}
         dataURLKey="data_url"
+        acceptType={["png"]}
       >
         {({
           imageList,

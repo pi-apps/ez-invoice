@@ -59,17 +59,17 @@ const DetailSent = () => {
     }
   }, [languageUserApi]);
         
-    const subTotal = new BigNumber(details?.subTotal).decimalPlaces(2,1)
-    const convertPercentTax = new BigNumber(details?.subTotal*details?.tax/100).decimalPlaces(2,1)
-    const convertTax = new BigNumber(details?.tax).decimalPlaces(2,1)
-    const convertDiscount = new BigNumber(details?.discount).decimalPlaces(2,1)
-    const convertDiscountPercent = new BigNumber(details?.discount*(details?.subTotal + details?.tax)/100).decimalPlaces(2,1)
-    const convertShipping = new BigNumber(details?.shipping).decimalPlaces(2,1)
-    const convertTotal = new BigNumber(details?.total).decimalPlaces(2,1)
-    const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
-    const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(2,1)
-    const convertTips = new BigNumber(details?.tip).decimalPlaces(2,1)
-    const convertTotalAmountDueTips = new BigNumber(details?.amountDue).plus(details?.tip).decimalPlaces(2,1)
+    const subTotal = new BigNumber(details?.subTotal).decimalPlaces(4,1)
+    const convertPercentTax = new BigNumber(details?.subTotal*details?.tax/100).decimalPlaces(4,1)
+    const convertTax = new BigNumber(details?.tax).decimalPlaces(4,1)
+    const convertDiscount = new BigNumber(details?.discount).decimalPlaces(4,1)
+    const convertDiscountPercent = new BigNumber(details?.discount*(details?.subTotal + details?.tax)/100).decimalPlaces(4,1)
+    const convertShipping = new BigNumber(details?.shipping).decimalPlaces(4,1)
+    const convertTotal = new BigNumber(details?.total).decimalPlaces(4,1)
+    const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(4,1)
+    const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(4,1)
+    const convertTips = new BigNumber(details?.tip).decimalPlaces(4,1)
+    const convertTotalAmountDueTips = new BigNumber(details?.amountDue).plus(details?.tip).decimalPlaces(4,1)
 
     return (
         <PageFullWidth>
@@ -158,8 +158,8 @@ const DetailSent = () => {
                                         <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
-                                        const convertPrice = new BigNumber(item?.price).decimalPlaces(2,1)
-                                        const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(2,1)
+                                        const convertPrice = new BigNumber(item?.price).decimalPlaces(4,1)
+                                        const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(4,1)
                                         return(
                                             <CsRow>
                                             <ColFirst paddingRight="15px" width="50%"><Translate>{item?.name}</Translate></ColFirst>

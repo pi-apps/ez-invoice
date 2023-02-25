@@ -57,6 +57,7 @@ function ReactImageUpload({images , setValue }) {
         onChange={onChange}
         maxNumber={maxNumber}
         dataURLKey="data_url"
+        acceptType={["png"]}
       >
         {({
           imageList,

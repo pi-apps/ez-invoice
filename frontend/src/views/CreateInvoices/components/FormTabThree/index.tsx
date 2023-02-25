@@ -14,6 +14,7 @@ import { createInvoice_text } from 'translation/languages/createInvoice_text';
 import { createInvoiceTranslate } from 'translation/translateArrayObjects';
 import BigNumber from 'bignumber.js';
 import NumberFormat from 'react-number-format';
+import { totalPrice } from 'utils/sumTotalItems';
 
 const FormTabThree = ({
   loadingPreview, 
@@ -84,17 +85,7 @@ const FormTabThree = ({
     { placement: 'top-end', tooltipOffset: [5, 5] },
   )
     
-    const totalPrice = (fields) => {
-      return fields?.reduce((sum, i) => {
-        if(i.price === undefined || i.quantity === undefined){
-          return 0
-        } else{
-          return (
-            sum + i.price * i.quantity
-          )
-        }
-      },0)
-    }
+
 
     const subTotal = useMemo(() => {
       return totalPrice(controlledFields)
@@ -152,8 +143,8 @@ const FormTabThree = ({
       }
     },[ amountPaidValue, total ])
 
-    const converTotal = new BigNumber(total).decimalPlaces(2,1)
-    const convertAmountDue = new BigNumber(amountDue).decimalPlaces(2,1)
+    const converTotal = new BigNumber(total).decimalPlaces(4,1)
+    const convertAmountDue = new BigNumber(amountDue).decimalPlaces(4,1)
     // end
     return (
       <CsWrapperForm>
