@@ -233,6 +233,7 @@ export async function createInvoiceTranslate(language: any) {
     "text_previous": langArr[59] || invoice_text["text_previous"],
     "text_next": langArr[60] || invoice_text["text_next"],
     "text_discount_before_tax": langArr[61] || invoice_text["text_discount_before_tax"],
+    "text_only_png": langArr[62] || invoice_text["text_only_png"],
   }
   return data;
 }

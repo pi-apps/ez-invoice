@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from "@devfedeltalabs/pibridge_uikit"
+import { Button, Flex, HelpIcon, Text, useTooltip } from "@devfedeltalabs/pibridge_uikit"
 import ErrorMessages from "components/ErrorMessages/ErrorMessage"
 import { useEffect, useState } from 'react'
 import DatePicker from "react-datepicker"
@@ -58,6 +58,12 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
             dispatch(tabActiveNewInvoice({isActive: isActive + 1}))
         }
     }
+    const { targetRef, tooltip, tooltipVisible } = useTooltip(
+        <Flex flexDirection="column">
+          <Text fontSize='9px'>{stateText.text_only_png}</Text>
+        </Flex>,
+        { placement: 'top-end', tooltipOffset: [5, 5] },
+    )
 
     return (
         <CsContainer >
@@ -85,19 +91,26 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
                     </ContainerInput>
 
                     {/* Add your logo */}
-                    { imagesInvoice?.length ?
-                        <ReactImageUploadForHistory 
-                            images={images} 
-                            setValue={setValue}
-                            imagesInvoice={imagesInvoice}
-                        />
-                    : 
-                        <ReactImageUpload 
-                            images={images} 
-                            setValue={setValue}
-                        />
-                    }
-                   
+                    <Flex alignItems='center' height='auto'>
+                        { imagesInvoice?.length ?
+                        <>
+                            <ReactImageUploadForHistory 
+                                images={images} 
+                                setValue={setValue}
+                                imagesInvoice={imagesInvoice}
+                            />
+                        </>
+                        : 
+                            <ReactImageUpload 
+                                images={images} 
+                                setValue={setValue}
+                            />
+                        }
+                        <ReferenceElement ref={targetRef}>
+                            <HelpIcon color="#94A3B8" />
+                        </ReferenceElement> 
+                        {tooltipVisible && tooltip}
+                    </Flex>
                     
                     {/* Sender Email */}
                     <Flex width='100%'>
@@ -313,6 +326,17 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
         </CsContainer>
   )
 }
+
+const ReferenceElement = styled.div`
+  display: inline-block;
+  align-items:baseline;
+  margin-left:15px; 
+  cursor: pointer;
+  color: text;
+  svg{
+    width: 17px;
+  }
+`
 
 const TabButton = styled(Flex)<{isActive:boolean}>`
     cursor: pointer;
