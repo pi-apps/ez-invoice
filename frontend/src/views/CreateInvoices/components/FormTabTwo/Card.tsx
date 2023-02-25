@@ -8,6 +8,7 @@ import { getUser } from 'state/user'
 import { createInvoice_text } from 'translation/languages/createInvoice_text'
 import { createInvoiceTranslate } from 'translation/translateArrayObjects'
 import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
+import { TranslateText } from 'utils/translateText'
 import { GetTranslateHolder } from 'hooks/TranSlateHolder'
 
 const Card = ({index,item, remove, fields, register, control, errors } ) => {
@@ -40,21 +41,21 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
    }, [languageUserApi]);
 
   //  Translate variable Text
-  const fcTransLateText = async (language, textVariable) => {
-    if (language === 'en') {
-      return (
-        <Text color='#ff592c' fontSize='12px'>{language}</Text>
-      )
-    } else {
-      const resText = await GetTranslateHolder(
-        textVariable,
-        language
-      );
-      return (
-        <Text color='#ff592c' fontSize='12px'>{resText}</Text>
-      )
-    }
-  };
+  // const fcTransLateText = async (language, textVariable) => {
+  //   if (language === 'en') {
+  //     return (
+  //       <Text color='#ff592c' fontSize='12px'>{language}</Text>
+  //     )
+  //   } else {
+  //     const resText = await GetTranslateHolder(
+  //       textVariable,
+  //       language
+  //     );
+  //     return (
+  //       <Text color='#ff592c' fontSize='12px'>{resText}</Text>
+  //     )
+  //   }
+  // };
     
     
   const total = useMemo(() => {
@@ -85,7 +86,9 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
                             placeholder={`${stateText.text_pl_name}`} 
                             {...register(`items.${index}.name` as const, {required:true})} 
                           />
-                          {invalid && fcTransLateText(languageUserApi, error.message)}
+                          {invalid && 
+                            <Text color='#ff592c' fontSize='12px'>{TranslateText(languageUserApi,error.message)}</Text>
+                          }
                       </Flex>
                         
                     )}
@@ -104,7 +107,9 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
                                 onBlur={field.onBlur}
                                 placeholder='1' {...register(`items.${index}.quantity` as const, {required:true}
                               )} />
-                              {invalid && fcTransLateText(languageUserApi, error.message)}
+                              {invalid && 
+                                <Text color='#ff592c' fontSize='12px'>{TranslateText(languageUserApi,error.message)}</Text>
+                              }
                           </Flex>
                         )}
                         />
@@ -124,9 +129,8 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
                                 pattern: "^[0-9\b]+$",
                               }
                               )} />
-
-                              {invalid && fcTransLateText(languageUserApi, error.message)
-                                // <Text color='#ff592c' fontSize='12px'>{error.message}</Text>
+                              {invalid && 
+                                <Text color='#ff592c' fontSize='12px'>{TranslateText(languageUserApi,error.message)}</Text>
                               }
                           </Flex>
                           
