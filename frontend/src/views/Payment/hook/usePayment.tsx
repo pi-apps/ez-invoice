@@ -74,6 +74,7 @@ export const usePayment = (signature:string, token:string, language:string, tips
                     console.log("onReadyForServerCompletion", paymentId, txid);
                     const resultComplete = await axiosClient.post('/payments/complete', {paymentId, txid, language}, config);
                     if (resultComplete?.status === 200) {
+                        setPendingPayment(false)
                         toastSuccess(stateText.text_payment_success)
                         navigate('/invoice')
                     }
@@ -97,7 +98,7 @@ export const usePayment = (signature:string, token:string, language:string, tips
                 if ( result ) {
                     const amount = tips.length > 0 ? new BigNumber(submitReqDetails?.data?.amountDue).plus(new BigNumber(tips)) : new BigNumber(submitReqDetails?.data?.amountDue).plus(new BigNumber(0))
                     const memo = submitReqInvoiceId?.data
-                    const paymentData = { amount, memo, metadata: {invoiceId: submitReqInvoiceId?.data, tip:tips},uid: submitReqDetails?.data?.uid };
+                    const paymentData = { amount, memo, metadata: {invoiceId: submitReqInvoiceId?.data, tip:tips}};
                     console.log("paymentData", paymentData);
 
                     const callbacks = {
@@ -112,17 +113,10 @@ export const usePayment = (signature:string, token:string, language:string, tips
                 toastError(stateText.text_error, stateText.text_system_error!!!)
             }
         } catch (e:any) {
-            // setStateTextVariable({
-            //     errorTexVariable: e?.response?.data?.message
-            // })
-            // setGetTextError(e?.response?.data?.message)
-            // if (stateTextVariable) {
-            //     toastError(stateText.text_error, stateTextVariable.errorTexVariable)
-            // }
             const errorText = `Error, ${e?.response?.data?.message}`
             fcTransLateText(errorText, languageUserApi)
         } finally {
-            setPendingPayment(false)
+            // setPendingPayment(false)
         }
     }, [signature, token, language, tips])
 
