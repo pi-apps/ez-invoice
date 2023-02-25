@@ -114,7 +114,7 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
                     
                     {/* Sender Email */}
                     <Flex width='100%'>
-                        <CsLabel mt="1rem" color="#64748B">{stateText.text_sender_email}</CsLabel>
+                        <CsLabel mt="1rem" color="#64748B">{stateText.text_sender_email} <span style={{color: 'red'}}>*</span></CsLabel>
                     </Flex>
                     <ContainerInput>
                         <WrapInput>
@@ -143,7 +143,7 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
 
                     {/* Bill From */}
                     <Flex width='100%'>
-                        <CsLabel mt="1rem" color="#64748B">{stateText.text_bill_from}</CsLabel>
+                        <CsLabel mt="1rem" color="#64748B">{stateText.text_bill_from} <span style={{color: 'red'}}>*</span></CsLabel>
                     </Flex>
                     <ContainerInput>
                         <WrapInput>
@@ -166,7 +166,7 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
 
                     {/* Bill To */}
                     <Flex width='100%'>
-                        <CsLabel mt="1rem" color="#64748B">{stateText.text_bill_to}</CsLabel>
+                        <CsLabel mt="1rem" color="#64748B">{stateText.text_bill_to} <span style={{color: 'red'}}>*</span></CsLabel>
                     </Flex>
                     <ContainerInput>
                         <WrapInput>
