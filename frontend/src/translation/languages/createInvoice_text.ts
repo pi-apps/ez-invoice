@@ -51,7 +51,7 @@ export const createInvoice_text:any = {
        "text_send_mail":"Send mail",
        "text_create_invoice": "Create Invoice",
        "text_create_success": "Create invoice successfully!!!",
-       "text_create_failed": "System error!!!",
+       "text_create_failed": "Something wrong! Please check required fields!",
        "text_less_than_total":"Invalid amount",
        "text_less_than_subtotal_and_tax":"Invalid amount",
        "text_terms_and_conditions": "Terms and conditions - late fees, payment methods, delivery schedule",
