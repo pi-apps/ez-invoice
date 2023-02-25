@@ -169,7 +169,7 @@ const ButtonChooseLg = styled(Button)`
 `;
 
 const FlexButtonChooseLg = styled(Flex)`
-  width: 90px;
+  width: auto;
   height: 28px;
   background: #f8f5ff;
   border-radius: 6px;
