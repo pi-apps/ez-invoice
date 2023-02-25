@@ -125,8 +125,8 @@ const Payment = () => {
         
     }
     const total = tips.length > 0 ? new BigNumber(details?.amountDue).plus(new BigNumber(tips)) : new BigNumber(details?.amountDue).plus(new BigNumber(0))
-    const converTotal = new BigNumber(total).decimalPlaces(2,1) 
-    const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(2,1)
+    const converTotal = new BigNumber(total).decimalPlaces(4,1) 
+    const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(4,1)
 
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
@@ -227,8 +227,8 @@ const Payment = () => {
                                         <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
-                                        const convertPrice = new BigNumber(item?.price).decimalPlaces(2,1)
-                                        const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(2,1)
+                                        const convertPrice = new BigNumber(item?.price).decimalPlaces(4,1)
+                                        const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(4,1)
                                         return(
                                             <CsRow>
                                             <ColFirst paddingRight="15px" width="50%">{item?.name}</ColFirst>

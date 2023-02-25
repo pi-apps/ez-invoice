@@ -73,6 +73,7 @@ function ReactImageUploadForHistory({images , setValue, imagesInvoice }) {
         onChange={onChange}
         maxNumber={maxNumber}
         dataURLKey="data_url"
+        acceptType={["png"]}
       >
         {({
           imageList,
@@ -86,7 +87,7 @@ function ReactImageUploadForHistory({images , setValue, imagesInvoice }) {
           // write your building UI
           <div className="upload__image-wrapper">
             { (  history?.isChangeImgHistory === true && ( images?.length === 0 || images === null ) ) &&
-              <CsButtonAdd onClick={onImageUpload} {...dragProps}>
+              <CsButtonAdd style={{marginTop: '1rem'}} onClick={onImageUpload} {...dragProps}>
                   <CsAddIcon color="white" />
                   <CsText ml="10px">{stateText.text_add_your_logo}</CsText>
               </CsButtonAdd>
@@ -139,7 +140,7 @@ const CsAvatar = styled.img`
 `
 
 const CsButtonAdd = styled.div`
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   display: flex;
   flex-direction:row;
   align-items: center;

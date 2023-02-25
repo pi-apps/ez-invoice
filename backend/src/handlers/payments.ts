@@ -78,11 +78,17 @@ export default function mountPaymentsEndpoints(router: Router) {
             if (!userInfo) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
+            const currentUser = userInfo;
+            const language = req.body.language;
             const payment: any = req.body.payment;
             const paymentId: any = payment?.identifier;
             const txid = payment?.transaction && payment?.transaction.txid;
             const txURL = payment?.transaction && payment?.transaction._link;
-
+            const invoiceId = payment?.metadata && payment?.metadata.invoiceId;
+            const invoice = await InvoicesModel.findOne({ invoiceId: invoiceId });
+            if (!invoice) {
+                return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
+            }
             // find the incomplete order
             const order = await InvoicesModel.findOne({ pi_payment_id: paymentId });
 
@@ -104,7 +110,11 @@ export default function mountPaymentsEndpoints(router: Router) {
 
             // mark the order as paid
             await InvoicesModel.updateOne({ pi_payment_id: paymentId }, { $set: { txid, paid: true } });
-
+            // create a payment from server to user
+            await createPayment(invoice.invoiceId, payment?.amount, invoice.receiverId);
+            // send mail if the payment is completed
+            const senderEmail = invoice.senderEmail;
+            await utils.sendEmailPaymentSuccess(invoice, senderEmail, currentUser.username, language);
             return res.status(200).json({ message: `Handled the incomplete payment ${paymentId}` });
         } catch (error: any) {
             return res.status(500).json({ error: 'internal_server_error', message: error.message });

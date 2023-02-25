@@ -62,4 +62,5 @@ export const createInvoice_text:any = {
        "text_previous": "Previous",
        "text_next": "Next",
        "text_discount_before_tax": "Discount before tax",
+       "text_only_png": "Only *.png images can be used",
 }
