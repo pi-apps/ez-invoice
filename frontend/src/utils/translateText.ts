@@ -6,7 +6,7 @@ export const TranslateText = (codeLanguage, text) => {
     useEffect(()=>{
         const fcTransLateText = async (language, textVariable) => {
             if (language === 'en') {
-                setText( language )
+                setText( textVariable )
             } else {
               const resText = await GetTranslateHolder(
                 textVariable,
