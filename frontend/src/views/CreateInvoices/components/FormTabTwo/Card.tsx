@@ -7,9 +7,8 @@ import styled from 'styled-components'
 import { getUser } from 'state/user'
 import { createInvoice_text } from 'translation/languages/createInvoice_text'
 import { createInvoiceTranslate } from 'translation/translateArrayObjects'
-import ErrorMessages from 'components/ErrorMessages/ErrorMessage'
-import { TranslateText } from 'utils/translateText'
-import { GetTranslateHolder } from 'hooks/TranSlateHolder'
+import { ErrorMessagesV2 } from 'components/ErrorMessages/ErrorMessage'
+import BigNumber from 'bignumber.js'
 
 const Card = ({index,item, remove, fields, register, control, errors } ) => {
     const priceNumber = Number(item?.price)
@@ -39,28 +38,12 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
        setStateText(createInvoice_text);
      }
    }, [languageUserApi]);
-
-  //  Translate variable Text
-  // const fcTransLateText = async (language, textVariable) => {
-  //   if (language === 'en') {
-  //     return (
-  //       <Text color='#ff592c' fontSize='12px'>{language}</Text>
-  //     )
-  //   } else {
-  //     const resText = await GetTranslateHolder(
-  //       textVariable,
-  //       language
-  //     );
-  //     return (
-  //       <Text color='#ff592c' fontSize='12px'>{resText}</Text>
-  //     )
-  //   }
-  // };
-    
-    
+  
   const total = useMemo(() => {
-    return Number(fields[index].price)*Number(fields[index].quantity)
+    return new BigNumber(Number(fields[index].price)).multipliedBy(Number(fields[index].quantity)).toString()
   },[fields]);
+
+  
   return (
     <CsWrapperCard>
         <CsHeading>
@@ -78,7 +61,7 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
                     control={control}
                     name={`items[${index}].name`}
                     defaultValue=""
-                    render={({ field, fieldState: {invalid, error} }) => (
+                    render={({ field }) => (
                       <Flex width="100%" flexDirection="column" style={{gap:"10px"}}>
                           <CsTextArea
                             onChange={field.onChange} 
@@ -86,14 +69,14 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
                             placeholder={`${stateText.text_pl_name}`} 
                             {...register(`items.${index}.name` as const, {required:true})} 
                           />
-                          {invalid && 
-                            <Text color='#ff592c' fontSize='12px'>{TranslateText(languageUserApi,error.message)}</Text>
-                          }
                       </Flex>
                         
                     )}
                   />
                 </WrapInput>
+                { errors?.items?.length > 0 &&
+                    <ErrorMessagesV2 message={errors?.items[index]?.name} />
+                }
             </ContainerInput>
             <CsRowInput>
               <ContainerInputQuantity>
@@ -101,19 +84,19 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
                     <Controller
                       control={control}
                       name={`items[${index}].quantity`}
-                      render={({ field, fieldState: {invalid, error} }) => (
+                      render={({ field }) => (
                           <Flex width="100%" flexDirection="column" style={{gap:"10px"}}>
                               <CsInput type='number'
                                 onBlur={field.onBlur}
-                                placeholder='1' {...register(`items.${index}.quantity` as const, {required:true}
+                                placeholder='1' {...register(`items.${index}.quantity` as const, {required:true, valueAsNumber: true}
                               )} />
-                              {invalid && 
-                                <Text color='#ff592c' fontSize='12px'>{TranslateText(languageUserApi,error.message)}</Text>
-                              }
                           </Flex>
                         )}
                         />
                 </WrapInput>
+                { errors?.items?.length > 0 &&
+                  <ErrorMessagesV2 message={errors?.items[index]?.quantity} />
+                }
               </ContainerInputQuantity>
 
               <ContainerInputQuantity>
@@ -121,23 +104,22 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
                     <Controller
                         control={control}
                         name={`items[${index}].price`}
-                        render={({ field, fieldState: {invalid, error} })  => (
+                        render={({ field })  => (
                           <Flex width="100%" flexDirection="column" style={{gap:"10px"}}>
                               <CsInput type='number' onBlur={field.onBlur} placeholder='0.00 Pi' {...register(`items.${index}.price` as const,
                               {
                                 required:true,
-                                pattern: "^[0-9\b]+$",
+                                valueAsNumber: true,
                               }
                               )} />
-                              {invalid && 
-                                <Text color='#ff592c' fontSize='12px'>{TranslateText(languageUserApi,error.message)}</Text>
-                              }
                           </Flex>
                           
                         )}
                       />
                 </WrapInput>
-                <ErrorMessages errors={errors} name={`items.${index}.price`} />
+                { errors?.items?.length > 0 &&
+                  <ErrorMessagesV2 message={errors?.items[index]?.price} />
+                }
               </ContainerInputQuantity>
             </CsRowInput>
         </CsContent>
@@ -145,7 +127,11 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
         <Flex mt="24px">
             <Cstitle>{stateText.text_amount}:</Cstitle>
             <CsAmount>
-              {total && typeof total === 'number' ? `${total.toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi` : '0 Pi'}  
+              { Number(total) > 0 ?
+                  `${Number(total).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi`
+              :
+                  "0.0000 pi"
+              }
             </CsAmount>
         </Flex>
   </CsWrapperCard>
