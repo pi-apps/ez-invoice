@@ -148,6 +148,9 @@ const Payment = () => {
      }
    }, [languageUserApi]);
 
+   const discoutAmount = new BigNumber(details?.discount).multipliedBy(new BigNumber(details?.subTotal)).dividedBy(100).toString()
+
+
     return (
         <PageFullWidth>
             <CsContainer>
@@ -264,7 +267,7 @@ const Payment = () => {
                                             <CsTextLeft>{stateText.text_discount}: ({details?.discount} {details?.discountType === 1 ? "%" : "PI"})</CsTextLeft>
                                             <CsTextRight bold>{details?.discountType === 1 ? 
                                             <>
-                                                {(details?.subTotal && details?.discount && details?.tax) && (details?.discount*(details?.subTotal + details?.tax)/100).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})}
+                                                {(details?.subTotal && details?.discount) && Number(discoutAmount).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})}
                                             </> : 
                                             <>
                                                 {details?.discount.toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})}

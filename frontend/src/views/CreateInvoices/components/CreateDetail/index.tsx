@@ -28,7 +28,6 @@ const CreateDetail = () => {
         const { setInvoiceId } = useContext(InvoiceIdContext);
         const items = GetAnInvoice()
         const details = items?.details
-        console.log('details', details)
         function convertDate(date: any) {
             if (date) {
             const today = new Date(date)
@@ -90,7 +89,8 @@ const CreateDetail = () => {
     const convertShipping = new BigNumber(details?.shipping).decimalPlaces(4,1)
     const converAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(4,1)
     const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(4,1)
-    
+
+    const discoutAmount = new BigNumber(details?.discount).multipliedBy(new BigNumber(details?.subTotal)).dividedBy(100).toString()
     return (
         <PageFullWidth>
             <CsContainer>
@@ -212,10 +212,10 @@ const CreateDetail = () => {
                                     }
                                     {( Number(details?.discount) > 0 && items?.isLoading === false ) &&
                                         <Row mt="16px" style={{justifyContent: "space-between"}}>
-                                            <CsTextLeft>{stateText.text_discount} ({details?.discount}{details?.discountType === 1 ? "%" : "PI"})</CsTextLeft>
+                                            <CsTextLeft>{stateText.text_discount} ({details?.discount} {details?.discountType === 1 ? "%" : "PI"})</CsTextLeft>
                                             <CsTextRight bold>{details?.discountType === 1 ? 
                                             <>
-                                                {(details?.subTotal && details?.discount && details?.tax) && (details?.discount*(details?.subTotal + details?.tax)/100).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})}
+                                                {(details?.subTotal && details?.discount) && Number(discoutAmount).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4})}
                                             </> : 
                                             <>
                                                 {details?.discount.toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})}
