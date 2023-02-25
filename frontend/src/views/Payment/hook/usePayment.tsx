@@ -61,7 +61,7 @@ export const usePayment = (signature:string, token:string, language:string, tips
                 
                 const onIncompletePaymentFound = (payment: PaymentDTO) => {
                     console.log("onIncompletePaymentFound", payment);
-                    return axiosClient.post('/payments/incomplete', {payment}, config);
+                    return axiosClient.post('/payments/incomplete', {payment,language}, config);
                   }
                 
                 const onReadyForServerApproval = (paymentId: string) => {
