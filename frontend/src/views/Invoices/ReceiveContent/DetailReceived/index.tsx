@@ -99,19 +99,25 @@ const DetailReceived = () => {
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_bill_from}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.billFrom}</CsTextRight>
-                                        }
+                                        <Flex width="60%">
+                                            { items?.isLoading ?
+                                                <Skeleton width={60} />
+                                            :
+                                                <CsTextRight bold style={{wordBreak:"break-word"}}>{details?.billFrom}</CsTextRight>
+                                            }
+                                        </Flex>
+                                        
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_bill_to}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.billTo}</CsTextRight>
-                                        }
+                                        <Flex width="60%">
+                                            { items?.isLoading ?
+                                                <Skeleton width={60} />
+                                            :
+                                                <CsTextRight bold style={{wordBreak:"break-word"}} >{details?.billTo}</CsTextRight>
+                                            }
+                                        </Flex>
+                                        
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_issue_date}</CsTextLeft>
@@ -139,19 +145,24 @@ const DetailReceived = () => {
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_notes}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.notes}</CsTextRight>
-                                        }
+                                        <Flex width="60%">
+                                            { items?.isLoading ?
+                                                <Skeleton width={60} />
+                                            :
+                                                <CsTextRight bold style={{wordBreak:"break-word"}} >{details?.notes}</CsTextRight>
+                                            }
+                                        </Flex>
+                                       
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_terms}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.terms}</CsTextRight>
-                                        }
+                                        <Flex width="60%">
+                                            { items?.isLoading ?
+                                                <Skeleton width={60} />
+                                            :
+                                                <CsTextRight bold style={{wordBreak:"break-word"}} >{details?.terms}</CsTextRight>
+                                            }
+                                        </Flex>
                                     </Row>
                                     
                                 </CsContentInfo>

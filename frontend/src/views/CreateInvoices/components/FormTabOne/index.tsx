@@ -90,7 +90,7 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
         const dueDate = Date.parse(getDateNow(startDueDate));
         const date = Date.parse(evt);
         if( date > dueDate ) {
-            toastError(stateText.text_the_date_must_be_greater_than);
+            toastError(stateText.text_due_date_must_be_greater_than);
             setStartDate(new Date())
         } else {
             setStartDate(event) 
