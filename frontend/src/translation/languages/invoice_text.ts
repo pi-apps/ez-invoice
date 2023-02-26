@@ -30,4 +30,5 @@ export const invoice_text:any = {
     "text_terms": "Terms",
     "text_tips": "Tip",
     "text_total_incl_tips": "Total (incl. Tip)",
+    "text_shipto": "Ship to",
 }

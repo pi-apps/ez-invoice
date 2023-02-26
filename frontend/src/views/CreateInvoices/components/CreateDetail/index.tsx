@@ -176,7 +176,16 @@ const CreateDetail = () => {
                                                 <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}} >{details?.terms}</CsTextRight>
                                             }
                                         </Flex>
-                                       
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_shipto}</CsTextLeft>
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.isLoading ?
+                                                <Skeleton width={60} />
+                                            :
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}} >{details?.shipTo}</CsTextRight>
+                                            }
+                                        </Flex>
                                     </Row>
                                 </CsContentInfo>
                                 <CsContentBill>

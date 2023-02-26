@@ -122,8 +122,8 @@ const Preview = () => {
     const subTotalConvert = new BigNumber(subTotal).decimalPlaces(4,1)
     const convertShipping = new BigNumber(shippingValue).decimalPlaces(4,1)
     const convertAmountPaid = new BigNumber(amountPaidValue).decimalPlaces(4,1)
-    console.log("dataHistory?.isChangeImgHistory", dataHistory?.isChangeImgHistory)
-    console.log("items?.invoiceId", items?.invoiceId)
+    // console.log("dataHistory?.isChangeImgHistory", dataHistory?.isChangeImgHistory)
+    // console.log("items?.invoiceId", items?.invoiceId)
     return (
         <PageFullWidth>
             <CsContainer>
@@ -200,6 +200,14 @@ const Preview = () => {
                                         <Flex width="60%" justifyContent="flex-end">
                                             { items?.terms && 
                                                 <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.terms}</CsTextRight>
+                                            }
+                                        </Flex>
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_shipto}</CsTextLeft>
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.terms && 
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.shipTo}</CsTextRight>
                                             }
                                         </Flex>
                                     </Row>

@@ -67,5 +67,6 @@ export const createInvoice_text:any = {
        "text_due_date_must_be_greater_than": "The due date must be greater than or equal to the date. Please try again",
        "text_max_length_is_500_characters": "Max length is 500 characters.",
        "text_quantity":"Quantity",
-       "text_price":"Unit price"
+       "text_price":"Unit price",
+       "text_shipto":"Ship to"
 }

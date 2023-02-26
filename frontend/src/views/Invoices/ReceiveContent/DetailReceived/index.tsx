@@ -28,7 +28,7 @@ const DetailReceived = () => {
     const items = GetAnInvoice()
     const details = items?.details
 
-    console.log('details',details)
+    // console.log('details',details)
 
     function convertDate(date: any) {
         if (date) {
@@ -164,7 +164,16 @@ const DetailReceived = () => {
                                             }
                                         </Flex>
                                     </Row>
-                                    
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_shipto}</CsTextLeft>
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.isLoading ?
+                                                <Skeleton width={60} />
+                                            :
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}} >{details?.shipTo}</CsTextRight>
+                                            }
+                                        </Flex>
+                                    </Row>
                                 </CsContentInfo>
                                 <CsContentBill>
                                     <CsRowth>

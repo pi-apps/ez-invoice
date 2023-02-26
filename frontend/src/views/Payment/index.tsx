@@ -34,7 +34,7 @@ const Payment = () => {
     const userData = getUser()
     const [ tips, setTips ] = useState("0")
     const token = getAccessToken()
-    console.log('tokensdasdas', token)
+    // console.log('tokensdasdas', token)
     const dispatch = useDispatch<AppDispatch>();
     const [ isLoading, setLoading ] = useState(false)
     const onIncompletePaymentFound = (payment: PaymentDTO) => {
@@ -244,6 +244,16 @@ const Payment = () => {
                                                 <Skeleton width={60} />
                                             :
                                                 <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}} >{details?.terms}</CsTextRight>
+                                            }
+                                        </Flex>
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_shipto}</CsTextLeft>
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.isLoading ?
+                                                <Skeleton width={60} />
+                                            :
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}} >{details?.shipTo}</CsTextRight>
                                             }
                                         </Flex>
                                     </Row>
