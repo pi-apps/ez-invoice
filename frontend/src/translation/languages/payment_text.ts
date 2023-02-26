@@ -20,12 +20,12 @@ export const payment_text:any = {
     "text_invoice": "Invoice",
     "text_issue_date": "Issue Date",
     "text_amount_due": "Amount Due",
-    "text_tips": "Tips",
+    "text_tips": "Tip",
     "text_pay_now": "Pay now",
     "text_amount_paid": "Amount Paid",
 
     "text_error": "Error",
     "text_system_error": "System error",
     "text_payment_success": "Payment successfully",
-    "text_total_incl_tips": "Total (incl. Tips)",
+    "text_total_incl_tips": "Total (incl. Tip)",
 }

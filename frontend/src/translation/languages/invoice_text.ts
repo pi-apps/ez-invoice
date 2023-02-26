@@ -28,6 +28,6 @@ export const invoice_text:any = {
     "text_amount_paid": "Amount Paid",
     "text_notes": "Notes",
     "text_terms": "Terms",
-    "text_tips": "Tips",
-    "text_total_incl_tips": "Total (incl. Tips)",
+    "text_tips": "Tip",
+    "text_total_incl_tips": "Total (incl. Tip)",
 }

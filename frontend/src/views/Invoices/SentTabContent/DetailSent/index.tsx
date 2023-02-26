@@ -63,7 +63,7 @@ const DetailSent = () => {
     const convertPercentTax = new BigNumber(details?.subTotal*details?.tax/100).decimalPlaces(4,1)
     const convertTax = new BigNumber(details?.tax).decimalPlaces(4,1)
     const convertDiscount = new BigNumber(details?.discount).decimalPlaces(4,1)
-    const convertDiscountPercent = new BigNumber(details?.discount*(details?.subTotal + details?.tax)/100).decimalPlaces(4,1)
+    const convertDiscountPercent = new BigNumber(details?.discount*(details?.subTotal)/100).decimalPlaces(4,1)
     const convertShipping = new BigNumber(details?.shipping).decimalPlaces(4,1)
     const convertTotal = new BigNumber(details?.total).decimalPlaces(4,1)
     const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(4,1)
@@ -164,8 +164,8 @@ const DetailSent = () => {
                                             <CsRow>
                                             <ColFirst paddingRight="15px" width="50%"><Translate>{item?.name}</Translate></ColFirst>
                                             <Col width="10%"><Translate>{item?.quantity}</Translate></Col>
-                                            <Col width="20%">{Number(convertPrice.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</Col>
-                                            <Col width="20%">{Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</Col>
+                                            <Col width="20%">{Number(convertPrice.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>
+                                            <Col width="20%">{Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>
                                         </CsRow>
                                         )
                                     })}
@@ -177,7 +177,7 @@ const DetailSent = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{Number(subTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{Number(subTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         }
                                         
                                     </Row>
@@ -194,7 +194,7 @@ const DetailSent = () => {
                                                 {(details?.subTotal && details?.tax) && Number(convertPercentTax.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})}
                                             </> : <>
                                                 {Number(convertTax.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})}
-                                            </> } Pi</CsTextRight>
+                                            </> } PI</CsTextRight>
                                         </Row>
                                     }
 
@@ -211,14 +211,14 @@ const DetailSent = () => {
                                             <>
                                                 {Number(convertDiscount.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})}
                                             </>
-                                            } Pi</CsTextRight>
+                                            } PI</CsTextRight>
                                         </Row>
                                     }
                                     
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
-                                            <CsTextRight bold>{details?.shipping && Number(convertShipping.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.shipping && Number(convertShipping.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         </Row>
                                     }
  
@@ -227,7 +227,7 @@ const DetailSent = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.total && Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.total && Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
@@ -235,7 +235,7 @@ const DetailSent = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>-{Number(convertAmountPaid.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight bold>-{Number(convertAmountPaid.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
@@ -243,7 +243,7 @@ const DetailSent = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>{details?.amountDue &&  Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{details?.amountDue &&  Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         }
                                     </Row>
                                 </CsContentInfo>

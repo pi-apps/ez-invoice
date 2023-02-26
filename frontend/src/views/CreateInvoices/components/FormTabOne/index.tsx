@@ -255,7 +255,7 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
                     <Row className="mb-1 mt-1">
                         <Flex width="50%" flexDirection="column">
                             <Flex width='100%'>
-                                <CsLabel mt="1rem" color="#64748B">{stateText.text_date}</CsLabel>
+                                <CsLabel mt="1rem" color="#64748B">{stateText.text_date} <span style={{color: 'red'}}>*</span></CsLabel>
                             </Flex>
                             <ContainerInput>
                                 <WrapInput>
@@ -312,7 +312,7 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
                     <Row className="mb-1 mt-1">
                         <Flex width="50%" flexDirection="column">
                             <Flex width='100%'>
-                                <CsLabel mt="1rem" color="#64748B">{stateText.text_due_date}</CsLabel>
+                                <CsLabel mt="1rem" color="#64748B">{stateText.text_due_date} <span style={{color: 'red'}}>*</span></CsLabel>
                             </Flex>
                             <WrapInput>
                                 <Controller 

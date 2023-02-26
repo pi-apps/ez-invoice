@@ -89,24 +89,33 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     }
 
     const validationSchema = Yup.object().shape({
-        senderEmail: Yup.string().required('Sender email is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').email('Invalid email address'),
-        billFrom: Yup.string().required('Bill from is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
-        billTo: Yup.string().required('Bill to is required').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
+        senderEmail: Yup.string().required('Sender email is required').min(1, 'Please input alphabet').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').email('Invalid email address'),
+        billFrom: Yup.string().required('Bill from is required').min(1, 'Please input alphabet').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
+        billTo: Yup.string().required('Bill to is required').min(1, 'Please input alphabet').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         shipTo: Yup.string().max(200, 'Max length is 200 characters'),
-        paymentTerms: Yup.string().max(20, 'Max length is 20 characters'),
+        paymentTerms: Yup.string().max(50, 'Max length is 50 characters'),
         poNumber: Yup.string().max(20, 'Max length is 20 characters'),
         terms: Yup.string().max(500, 'Max length is 500 characters'),
         notes: Yup.string().max(500, 'Max length is 500 characters'),
         items: Yup.lazy(() => Yup.array().of(Yup.object({
-            name: Yup.string().required("Name is required"),
-            quantity: Yup.string().required("Quantity is required"),
-            price:Yup.string().required("Price is required"),
+            name: Yup.string()
+                .required("Name is required")
+                .matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet')
+                .max(100, 'Max length is 100 characters'),
+            quantity: Yup.number()
+                .typeError('Amount must be a number')
+                .required("Please provide plan cost.")
+                .min(0, "Number must be great than 0"),
+            price:Yup.number()
+                .typeError('Amount must be a number')
+                .required("Please provide plan cost.")
+                .min(0, "Number must be great than 0"),
         })))
     });
 
     const formOptions = { resolver: yupResolver(validationSchema), defaultValues: InitValues };
 
-    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, mode:"onSubmit", reValidateMode:"onSubmit"});
+    const {register, handleSubmit, formState, control, getValues, setValue, watch } = useForm({...formOptions, mode:"onTouched", reValidateMode:"onSubmit"});
     const { fields, append, remove } = useFieldArray({
         control,
         name: "items",

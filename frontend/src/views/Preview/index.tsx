@@ -208,8 +208,8 @@ const Preview = () => {
                                             <CsRow>
                                             <ColFirst paddingRight="15px" width="50%">{item?.name}</ColFirst>   
                                             <Col width="10%">{item?.quantity}</Col>
-                                            <Col width="20%">{Number(convertPrice.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</Col>
-                                            <Col width="20%">{Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</Col>
+                                            <Col width="20%">{Number(convertPrice.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>
+                                            <Col width="20%">{Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>
                                         </CsRow>
                                         )
                                     })}
@@ -218,7 +218,7 @@ const Preview = () => {
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_subtotal}</CsTextLeft>
                                         { subTotal &&
-                                            <CsTextRight bold>{Number(subTotalConvert.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{Number(subTotalConvert.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         }
                                     </Row>
                                     { ( Number(items?.tax) > 0 ) &&
@@ -231,7 +231,7 @@ const Preview = () => {
                                             : 
                                             <>
                                                 {Number(taxAmount.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})}
-                                            </> } Pi</CsTextRight>
+                                            </> } PI</CsTextRight>
                                         </Row>
                                     }
                                     
@@ -245,14 +245,14 @@ const Preview = () => {
                                             <>
                                                 {Number(disCountAmount.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})}
                                             </>
-                                            } Pi</CsTextRight>
+                                            } PI</CsTextRight>
                                         </Row>
                                     }
                                     
                                     { ( Number(items?.shipping) > 0 ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
-                                            <CsTextRight bold>{Number(convertShipping.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{Number(convertShipping.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         </Row>
                                     }
  
@@ -260,10 +260,10 @@ const Preview = () => {
                                         <CsTextLeft>{stateText.text_total}</CsTextLeft>
                                         { Number(subTotal) <= 0 ?
                                         <CsTextRight>
-                                            {Number(0).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi
+                                            {Number(0).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI
                                         </CsTextRight>
                                         :
-                                        <CsTextRight bold>{Number(converTotal?.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                        <CsTextRight bold>{Number(converTotal?.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         }
                                     </Row>
 
@@ -279,9 +279,9 @@ const Preview = () => {
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_amount_due}</CsTextLeft>
                                         { Number(amountDue) < 0 ?
-                                            <CsTextRight>{Number(0).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight>{Number(0).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         :
-                                            <CsTextRight bold>{ Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight bold>{ Number(convertAmountDue.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         }
                                     </Row>
                                 </CsContentInfo>

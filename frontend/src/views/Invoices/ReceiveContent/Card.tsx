@@ -97,7 +97,7 @@ const Card: React.FC<Props> = ({
           </CsCol>
           <CsColBill>
             <CsText bold>{billFrom}</CsText>
-            <CsText>{amountDue} Pi</CsText>
+            <CsText>{amountDue} PI</CsText>
           </CsColBill>
           <CsCol>
             { !paid  ? (
