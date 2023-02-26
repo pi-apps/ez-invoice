@@ -53,7 +53,6 @@ const Payment = () => {
             if( resultLogin ) {
                 const loginUser = await signInUser(resultLogin);
                 if (loginUser?.data.message.accessToken.length) {
-                    await dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
                     const userInfor = await axiosClient.get("user/info", {
                         headers: {
                         'Authorization': `${loginUser?.data?.message.accessToken}`,
@@ -78,8 +77,10 @@ const Payment = () => {
                                     }
                                 }
                             );
+                            
                         }
-                        dispatch(setUser(userInfor.data));
+                        await dispatch(accessToken({accessToken:loginUser?.data?.message.accessToken}));
+                        await dispatch(setUser(userInfor.data));
                     }
                     setLoading(false)
                 } else {
