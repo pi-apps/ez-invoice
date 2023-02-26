@@ -270,7 +270,7 @@ const Preview = () => {
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_amount_paid}</CsTextLeft>
                                         { !items?.amountPaid ?
-                                            <CsTextRight>- {Number(0).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
+                                            <CsTextRight>- {Number(0).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         :
                                             <CsTextRight bold>-{Number(convertAmountPaid.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} Pi</CsTextRight>
                                         }
