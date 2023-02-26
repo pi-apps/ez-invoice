@@ -177,7 +177,7 @@ async function sendEmailPaymentSuccess(invoice: any, email: string, username: st
   }
   const langArr = lang.split(":");
   const templatePath = "send-invoice-success.html";
-  const text_tip = await translateText(`(with ${invoice.tip} PI for tips)`, "en", language);
+  const text_tip = language !== "en" ? await translateText(`(with ${invoice.tip} PI for tips)`, "en", language) : `(with ${invoice.tip} PI for tips)`;
   const params = {
     "text_new_invoice": langArr[0] || lang_email_success["text_new_invoice"],
     "text_sent_invoice": langArr[1] || lang_email_success["text_sent_invoice"],
