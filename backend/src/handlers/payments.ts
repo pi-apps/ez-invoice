@@ -161,7 +161,7 @@ export default function mountPaymentsEndpoints(router: Router) {
             // let Pi server know that the payment is completed
             await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
             // create a payment from server to user
-            await createPayment(invoice.invoiceId, payment.data?.amount, invoice.receiverId);
+            await createPayment(invoice.invoiceId, payment.data?.amount, invoice.uid);
             // send mail if the payment is completed
             const senderEmail = invoice.senderEmail;
             await utils.sendEmailPaymentSuccess(invoice, senderEmail, currentUser.username, language);
