@@ -270,8 +270,7 @@ const FormTabThree = ({
                             { isNaN(Number(converTotal.toString())) ?
                               "0.0000 PI"
                             :
-                              Number(converTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})
-                            }
+                              `${Number(converTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI`                            }
 
                           </Text>
                       </Row>

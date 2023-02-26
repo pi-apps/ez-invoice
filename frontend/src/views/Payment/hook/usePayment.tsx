@@ -116,7 +116,7 @@ export const usePayment = (signature:string, token:string, language:string, tips
             const errorText = `Error, ${e?.response?.data?.message}`
             fcTransLateText(errorText, languageUserApi)
         } finally {
-            // setPendingPayment(false)
+            setPendingPayment(false)
         }
     }, [signature, token, language, tips])
 

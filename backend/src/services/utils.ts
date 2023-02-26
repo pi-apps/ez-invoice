@@ -9,6 +9,7 @@ import sesService from "./aws-ses-service";
 import { lang_pdf } from "./languages/lang_pdf";
 import { lang_email } from "./languages/lang_email";
 import { lang_email_success } from "./languages/lang_email_success";
+import BigNumber from "bignumber.js";
 // import createInvoice from "./createInvoice";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
@@ -176,17 +177,19 @@ async function sendEmailPaymentSuccess(invoice: any, email: string, username: st
   }
   const langArr = lang.split(":");
   const templatePath = "send-invoice-success.html";
+  const text_tip = await translateText(`(with ${invoice.tip} PI for tips)`, "en", language);
   const params = {
     "text_new_invoice": langArr[0] || lang_email_success["text_new_invoice"],
     "text_sent_invoice": langArr[1] || lang_email_success["text_sent_invoice"],
     "text_invoice_no": langArr[2] || lang_email_success["text_invoice_no"],
     "text_invoice_total": langArr[3] || lang_email_success["text_invoice_total"],
     "text_pay": langArr[4] || lang_email_success["text_pay"],
+    "text_tip": text_tip,
     "title": `[EZ Invoice] Invoice #${invoice.invoiceNumber}`,
     "username": username,
     "invoiceId": invoice.invoiceId,
     "invoiceNumber": invoice.invoiceNumber,
-    "amountDue": invoice.amountDue,
+    "amountDue": new BigNumber(invoice.amountDue).plus(invoice.tip).toString(),
     "paymentUrl": "",
   }
   // Send otp via email
