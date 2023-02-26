@@ -29,5 +29,6 @@ export const payment_text:any = {
     "text_payment_success": "Payment successfully",
     "text_total_incl_tips": "Total (incl. Tip)",
     "text_notes":"Notes",
-    "text_terms": "Terms"
+    "text_terms": "Terms",
+    "text_shipto": "Ship to"
 }
