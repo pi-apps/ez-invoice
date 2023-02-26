@@ -76,6 +76,7 @@ const CsImg = styled.img`
 const WrapperImg = styled.div`
   width: 30px;
   height: 30px;
+  object-fit:contain;
 `
 
 const WrapperCard = styled.div`
