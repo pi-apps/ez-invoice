@@ -100,7 +100,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         items: Yup.lazy(() => Yup.array().of(Yup.object({
             name: Yup.string()
                 .required("Name is required")
-                .matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet')
+                .matches(/[abcdefghijklmnopqrstuvwxyz0123456789]+/ , 'Please input alphabet')
                 .max(100, 'Max length is 100 characters'),
             quantity: Yup.number()
                 .typeError('Amount must be a number')
