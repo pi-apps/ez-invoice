@@ -72,7 +72,6 @@ const CsButtonDelete = styled(Flex)`
 const CsImg = styled.img`
   width: 30px;
   height: 30px;
-  object-fit: contain;
 `
 const WrapperImg = styled.div`
   width: 30px;
