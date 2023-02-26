@@ -150,18 +150,18 @@ const Preview = () => {
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_bill_from}</CsTextLeft>
-                                        <Flex width="60%">
+                                        <Flex width="60%" justifyContent="flex-end">
                                             { items?.billFrom &&
-                                                <CsTextRight bold style={{wordBreak:"break-word"}}>{items?.billFrom}</CsTextRight>
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.billFrom}</CsTextRight>
                                             }
                                         </Flex>
                                        
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_bill_to}</CsTextLeft>
-                                        <Flex width="60%">
+                                        <Flex width="60%" justifyContent="flex-end">
                                             { items?.billTo &&
-                                                <CsTextRight bold style={{wordBreak:"break-word"}}>{items?.billTo}</CsTextRight>
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.billTo}</CsTextRight>
                                             }
                                         </Flex>
                                        
@@ -189,17 +189,17 @@ const Preview = () => {
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_notes}</CsTextLeft>
-                                        <Flex width="60%">
+                                        <Flex width="60%" justifyContent="flex-end">
                                             { items?.notes && 
-                                                <CsTextRight bold style={{wordBreak:"break-word"}}>{items?.notes}</CsTextRight>
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.notes}</CsTextRight>
                                             }
                                         </Flex>
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_terms}</CsTextLeft>
-                                        <Flex width="60%">
+                                        <Flex width="60%" justifyContent="flex-end">
                                             { items?.terms && 
-                                                <CsTextRight bold style={{wordBreak:"break-word"}}>{items?.terms}</CsTextRight>
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.terms}</CsTextRight>
                                             }
                                         </Flex>
                                     </Row>

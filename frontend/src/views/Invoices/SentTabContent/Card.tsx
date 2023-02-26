@@ -95,7 +95,7 @@ const Card: React.FC<Props> = ({
             </CsText>
           </CsCol>
           <CsColBill>
-            <CsText bold>{billTo}</CsText>
+            <CsText style={{wordBreak: 'break-all'}} bold>{billTo}</CsText>
             <CsText>{amountDue} Pi</CsText>
           </CsColBill>
           <CsCol>

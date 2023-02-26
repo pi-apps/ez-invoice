@@ -239,9 +239,11 @@ export async function createInvoiceTranslate(language: any) {
     "text_the_date_must_be_greater_than": langArr[63] || createInvoice_text["text_the_date_must_be_greater_than"],
     "text_due_date_must_be_greater_than": langArr[64] || createInvoice_text["text_due_date_must_be_greater_than"],
     "text_max_length_is_500_characters": langArr[65] || createInvoice_text["text_max_length_is_500_characters"],
+    "text_quantity":langArr[66] || createInvoice_text["text_quantity"],
+    "text_price":langArr[67] || createInvoice_text["text_price"],
   }
   return data;
-}
+} 
 
 export async function previewInvoiceTranslate(language: any) {
   let lang = "";
@@ -337,6 +339,8 @@ export async function paymentTranslate(language: any) {
     "text_system_error": langArr[24] || payment_text["text_system_error"],
     "text_payment_success": langArr[25] || payment_text["text_payment_success"],
     "text_total_incl_tips": langArr[26] || payment_text["text_total_incl_tips"],
+    "text_notes": langArr[27] || payment_text["text_notes"],
+    "text_terms": langArr[28] || payment_text["text_terms"]
   }
   return data;
 }
