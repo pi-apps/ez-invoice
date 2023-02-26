@@ -87,7 +87,8 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
                           <Flex width="100%" flexDirection="column" style={{gap:"10px"}}>
                               <CsInput type='number'
                                 onBlur={field.onBlur}
-                                placeholder='1' {...register(`items.${index}.quantity` as const, {required:true, valueAsNumber: true}
+                                placeholder='Quantity' 
+                                {...register(`items.${index}.quantity` as const, {required:true, valueAsNumber: true}
                               )} />
                           </Flex>
                         )}
@@ -105,7 +106,7 @@ const Card = ({index,item, remove, fields, register, control, errors } ) => {
                         name={`items[${index}].price`}
                         render={({ field })  => (
                           <Flex width="100%" flexDirection="column" style={{gap:"10px"}}>
-                              <CsInput type='number' onBlur={field.onBlur} placeholder='0.00 PI' {...register(`items.${index}.price` as const,
+                              <CsInput type='number' onBlur={field.onBlur} placeholder='Unit price' {...register(`items.${index}.price` as const,
                               {
                                 required:true,
                                 valueAsNumber: true,
