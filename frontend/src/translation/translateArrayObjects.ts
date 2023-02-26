@@ -83,6 +83,7 @@ export async function useMenuTranslate(language: any) {
     "text_are_your_sure_logout": langArr[5] || useMenu_text["text_are_your_sure_logout"],
     "text_cancel": langArr[6] || useMenu_text["text_cancel"],
     "text_confirm": langArr[7] || useMenu_text["text_confirm"],
+    "text_error": langArr[8] || useMenu_text["text_error"],
   }
   return data;
 }
@@ -156,6 +157,7 @@ export async function downloadTranslate(language: any) {
     "text_sent_invoice_success": langArr[9] || download_text["text_sent_invoice_success"],
     "text_done": langArr[10] || download_text["text_done"],
     "text_back":langArr[11] || download_text["text_back"],
+    "text_error":langArr[12] || download_text["text_error"],
   }
   return data;
 }
