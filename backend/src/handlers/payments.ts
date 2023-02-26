@@ -154,7 +154,7 @@ export default function mountPaymentsEndpoints(router: Router) {
             const paymentId = req.body.paymentId;
             const txid = req.body.txid;
             const payment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
-            const invoice = await InvoicesModel.findOneAndUpdate({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true, tip: payment.data?.metadata?.tip } });
+            const invoice = await InvoicesModel.findOneAndUpdate({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true, tip: payment.data?.metadata?.tip } }, { new: true });
             if (!invoice) {
                 return res.status(404).json({ error: 'not_found', message: "Invoice not found" });
             }
