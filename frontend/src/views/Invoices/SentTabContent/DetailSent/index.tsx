@@ -121,7 +121,7 @@ const DetailSent = () => {
                                         <CsTextLeft>{stateText.text_due_date}</CsTextLeft>
                                         {convertDate(details?.dueDate)}
                                     </Row>
-                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                    {/* <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
@@ -129,6 +129,16 @@ const DetailSent = () => {
                                             <CsTextRight bold>{details?.paymentTerms}</CsTextRight>
                                         }
                                         
+                                    </Row> */}
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.isLoading ?
+                                                <Skeleton width={60} />
+                                            :
+                                                <CsTextRight bold width="100%" textAlign="right" style={{wordBreak:"break-word"}}>{details?.paymentTerms}</CsTextRight>
+                                            }
+                                        </Flex>
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_po_number}</CsTextLeft>

@@ -141,12 +141,13 @@ const CreateDetail = () => {
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
-                                        { items?.isLoading ?
-                                            <Skeleton width={60} />
-                                        :
-                                            <CsTextRight bold>{details?.paymentTerms}</CsTextRight>
-                                        }
-                                        
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.isLoading ?
+                                                <Skeleton width={60} />
+                                            :
+                                                <CsTextRight bold width="100%" textAlign="right" style={{wordBreak:"break-word"}}>{details?.paymentTerms}</CsTextRight>
+                                            }
+                                        </Flex>
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_po_number}</CsTextLeft>
