@@ -9,8 +9,8 @@ import LoginModal from "../LoginModal";
 import AccountIcon from "../Svg/Icons/AccountIcon";
 import HomeIcon from "../Svg/Icons/Home";
 import InvoiceIcon from "../Svg/Icons/Invoice";
-import { useLocation, useNavigate } from "react-router-dom";
-import _ from "lodash";
+import { matchPath, useLocation, useMatch, useNavigate } from "react-router-dom";
+import _, { toLower } from "lodash";
 import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import { footerMenu_text } from "translation/languages/footerMenu_text";
 import { FooterMenuTranslate } from "translation/translateArrayObjects";
@@ -74,7 +74,8 @@ const Footer = () => {
     home: true,
     invoice: false,
   });
-
+  const getPathName = location.pathname.split("/", 2);
+  
   useEffect(() => {
     switch (location.pathname) {
       case "/":
@@ -174,6 +175,57 @@ const Footer = () => {
           },
         });
         break;
+    }
+    
+    if(getPathName?.length > 1){
+      if(getPathName[1]?.toLowerCase() === "detailReceived".toLowerCase()){
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+      }
+    }
+    if(getPathName?.length > 1){
+      if(getPathName[1]?.toLowerCase() === "payment".toLowerCase()){
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+      }
+    }
+    if(getPathName?.length > 1){
+      if(getPathName[1]?.toLowerCase() === "send".toLowerCase()){
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+      }
+    }
+    if(getPathName?.length > 1){
+      if(getPathName[1]?.toLowerCase() === "updateinvoice".toLowerCase()){
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+      }
+    }
+    if(getPathName?.length > 1){
+      if(getPathName[1]?.toLowerCase() === "detailSent".toLowerCase()){
+        setActiveTab({
+          ...{
+            home: false,
+            invoice: true,
+          },
+        });
+      }
     }
   }, [location.pathname]);
 
