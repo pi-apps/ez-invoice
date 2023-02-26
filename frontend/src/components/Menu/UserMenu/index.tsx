@@ -70,7 +70,7 @@ const UserMenu = () => {
           dispatch(isLoading({isLoading:false}))
           toastSuccess(null, <Text style={{justifyContent: 'center'}}>{stateText.text_login_success}</Text>)
       } else {
-        toastError('Error', <Text style={{justifyContent: 'center'}}>{stateText.text_login_failed}</Text>)
+        toastError(stateText.text_error, <Text style={{justifyContent: 'center'}}>{stateText.text_login_failed}</Text>)
         dispatch(isLoading({isLoading:false}))
       }
     } catch (error) {
@@ -90,7 +90,7 @@ const UserMenu = () => {
       toastSuccess(null, <Text style={{justifyContent: 'center'}}>{stateText.text_logout_success}</Text>)
       navigate("/");
     } else {
-      toastError('Error')
+      toastError(stateText.text_error)
     }
    
   };

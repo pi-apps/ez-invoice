@@ -7,4 +7,5 @@ export const useMenu_text:any = {
     "text_are_your_sure_logout": "Are you sure want to log out?",
     "text_cancel": "Cancel",
     "text_confirm": "Confirm",
+    "text_error": "Error",
 }

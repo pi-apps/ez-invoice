@@ -67,7 +67,7 @@ const FormSendInvoice: React.FC<
     } catch (error: any) {
       setIsSentSuccessfully(false);
       // setErrorSentText("Invoice not found",);
-      toastError('Error', error?.response?.data?.message)
+      toastError(stateText.text_error, error?.response?.data?.message)
       setIsLoading(false)
     }
   };
