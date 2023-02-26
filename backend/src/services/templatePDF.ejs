@@ -94,7 +94,7 @@
       <tr style="border: none;">
         <td class="first-column"></td>
         <td class="second-column" style="font-weight:bold;" ><%= text_balance_due %>:</td>
-        <td class="third-column" style="font-weight:bold;"><%= amountDue %> PI</td>
+        <td class="third-column" style="font-weight:bold;"><%= amountDue.toFixed(4) %> PI</td>
       </tr>
     </table>
     <table style="margin-bottom: 10px;">
@@ -108,8 +108,8 @@
         <tr>
           <td><%= items[i].name %></td>
           <td style="text-align: right;"><%= items[i].quantity %></td>
-          <td style="text-align: right;"><%= items[i].price %> PI</td>
-          <td style="text-align: right;"><%= items[i].total %> PI</td>
+          <td style="text-align: right;"><%= Number(items[i].price).toFixed(4) %> PI</td>
+          <td style="text-align: right;"><%= Number(items[i].total).toFixed(4) %> PI</td>
         </tr>
       <% } %>
     </table>
@@ -120,7 +120,7 @@
           <%= text_subtotal %>:
         </th>
         <th class="third-column">
-          <%= subTotal %> PI
+          <%= subTotal.toFixed(4) %> PI
         </th>
       </tr>
       <tr style="border: none; padding: 0px;">
@@ -133,7 +133,7 @@
           <% } %>
         </td>
         <td class="third-column">
-          <% if (taxType != 0) {%><%= taxType == 1 ? (subTotal * tax / 100) : tax %> PI<% } %>
+          <% if (taxType != 0) {%><%= taxType == 1 ? (subTotal * tax / 100).toFixed(4) : tax.toFixed(4) %> PI<% } %>
         </td>
       </tr>
       <tr style="border: none; padding: 0px;">
@@ -146,7 +146,7 @@
           <% } %>
         </td>
         <td class="third-column">
-          <% if (discountType == 1) { %> <% if (discount != 0) {%><%= (subTotal * discount / 100) %> PI<% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><%= discount %> PI<% } %> <% } %>
+          <% if (discountType == 1) { %> <% if (discount != 0) {%><%= (subTotal * discount / 100).toFixed(4) %> PI<% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><%= discount.toFixed(4) %> PI<% } %> <% } %>
         </td>
       </tr>
       <tr style="border: none;">
@@ -155,7 +155,7 @@
           <%= text_shipping %>:
         </td>
         <td class="third-column">
-          <%= shipping %> PI
+          <%= shipping.toFixed(4) %> PI
         </td>
       </tr>
       <tr style="border: none;">
@@ -164,7 +164,7 @@
           <%= text_total %>:
         </td>
         <td class="third-column">
-          <%= total %> PI
+          <%= total.toFixed(4) %> PI
         </td>
       </tr>
       <tr style="border: none;">
@@ -173,7 +173,7 @@
           <%= text_amount_paid %>:
         </td>
         <td class="third-column">
-          <%= amountPaid %> PI
+          <%= amountPaid.toFixed(4) %> PI
         </td>
       </tr>
       <tr style="border: none;">
@@ -182,7 +182,7 @@
           <%= text_amount_due %>:
         </td>
         <td class="third-column" style="font-weight:bold;">
-          <%= amountDue %> PI
+          <%= amountDue.toFixed(4) %> PI
         </td>
       </tr>
     </table>
