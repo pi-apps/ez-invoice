@@ -280,9 +280,10 @@ export async function previewInvoiceTranslate(language: any) {
     "text_notes": langArr[19] || previewInvoice_text["text_notes"],
     "text_terms": langArr[20] || previewInvoice_text["text_terms"],
     "text_shipto": langArr[21] || previewInvoice_text["text_shipto"],
+    "text_invoiceNumber": langArr[22] || previewInvoice_text["text_invoiceNumber"],
   }
   return data;
-}
+} 
 
 export async function historyTranslate(language: any) {
   let lang = "";

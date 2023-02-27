@@ -18,7 +18,7 @@ interface Props {
   billFrom:string
   amountDue:string
   paid:boolean
-  invoiceNumber:number 
+  invoiceNumber:string, 
   onClick: () => void;
   isOpen: boolean;
   textPaid: string;
@@ -90,11 +90,11 @@ const Card: React.FC<Props> = ({
               }
             </CsButton>
           </CsCol>
-          <CsCol>
+          <CsColInvoiceNumber>
             <CsText bold>
               #{invoiceNumber} 
             </CsText>
-          </CsCol>
+          </CsColInvoiceNumber>
           <CsColBill>
             <CsText style={{wordBreak: 'break-all'}} bold>{billFrom}</CsText>
             <CsText>{amountDue} PI</CsText>
@@ -138,11 +138,18 @@ const CsCol = styled(Flex)`
     width: 17.5%;
 `;
 
+const CsColInvoiceNumber = styled(Flex)`
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 30%;
+`;
+
 const CsColBill = styled(Flex)`
     flex-direction: column;
     align-items: center;
     height: 100%;
-    width: 47.5%;
+    width: 40%;
 `;
 
 const CsButton = styled(Button)`
