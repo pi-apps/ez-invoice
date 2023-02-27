@@ -1,3 +1,5 @@
+require("dotenv").config();
+const Moralis = require("moralis").default;
 import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
@@ -6,25 +8,19 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import logger from 'morgan';
 import MongoStore from 'connect-mongo';
-import { MongoClient } from 'mongodb';
 import env from './environments';
 import mountPaymentsEndpoints from './handlers/payments';
 import mountUserEndpoints from './handlers/users';
+import mountInvoiceEndpoints from './handlers/invoices';
+import sesService from "./services/aws-ses-service";
+import mongoose from 'mongoose';
 
 // We must import typedefs for ts-node-dev to pick them up when they change (even though tsc would supposedly
 // have no problem here)
 // https://stackoverflow.com/questions/65108033/property-user-does-not-exist-on-type-session-partialsessiondata#comment125163548_65381085
 import "./types/session";
 
-const dbName = env.mongo_db_name;
-const mongoUri = `mongodb://${env.mongo_host}/${dbName}`;
-const mongoClientOptions = {
-  authSource: "admin",
-  auth: {
-    username: env.mongo_user,
-    password: env.mongo_password,
-  },
-}
+const mongoUri = env.mongoUri;
 
 
 //
@@ -45,10 +41,11 @@ app.use(logger('common', {
 app.use(express.json())
 
 // Handle CORS:
-app.use(cors({
-  origin: env.frontend_url,
-  credentials: true
-}));
+// app.use(cors({
+//   origin: env.frontend_url,
+//   credentials: true
+// }));
+app.use(cors({ origin: true, credentials: true }));
 
 // Handle cookies 🍪
 app.use(cookieParser());
@@ -60,10 +57,8 @@ app.use(session({
   saveUninitialized: false,
   store: MongoStore.create({
     mongoUrl: mongoUri,
-    mongoOptions: mongoClientOptions,
-    dbName: dbName,
     collectionName: 'user_sessions'
-  }),
+  })
 }));
 
 
@@ -81,6 +76,11 @@ const userRouter = express.Router();
 mountUserEndpoints(userRouter);
 app.use('/user', userRouter);
 
+// Invoice endpoints under /invoice:
+const invoiceRouter = express.Router();
+mountInvoiceEndpoints(invoiceRouter);
+app.use('/invoice', invoiceRouter);
+
 // Hello World page to check everything works:
 app.get('/', async (_, res) => {
   res.status(200).send({ message: "Hello, World!" });
@@ -91,11 +91,14 @@ app.get('/', async (_, res) => {
 
 app.listen(8000, async () => {
   try {
-    const client = await MongoClient.connect(mongoUri, mongoClientOptions)
-    const db = client.db(dbName);
-    app.locals.orderCollection = db.collection('orders');
-    app.locals.userCollection = db.collection('users');
+    mongoose.set('strictQuery', false);
+    const db = await mongoose.connect(mongoUri);
     console.log('Connected to MongoDB on: ', mongoUri)
+    const MORALIS_API_KEY = process.env.MORALIS_API_KEY;
+    await Moralis.start({
+      apiKey: MORALIS_API_KEY,
+    });
+    sesService.init();
   } catch (err) {
     console.error('Connection to MongoDB failed: ', err)
   }

@@ -1,4 +1,4 @@
-import { BoxProps, ChevronDownIcon, Text } from '@phamphu19498/pibridge_uikit'
+import { BoxProps, ChevronDownIcon, Text } from '@devfedeltalabs/pibridge_uikit'
 import { useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -47,7 +47,8 @@ const DropDownContainer = styled.div<{ isOpen: boolean; width: number; height: n
   width: ${({ width }) => width}px;
   position: relative;
   width: 220px;
-  height: 48px;
+  height: 52px;
+  border-radius: 10px;
   box-sizing: border-box;
   @media only screen and (max-width: 600px) {
     width: 160px;
@@ -57,6 +58,7 @@ const DropDownContainer = styled.div<{ isOpen: boolean; width: number; height: n
   }
   ${({ theme }) => theme.mediaQueries.sm} {
     min-width: 100px;
+    width: 100%;
   }
 
   ${(props) =>
@@ -84,7 +86,7 @@ const DropDownContainer = styled.div<{ isOpen: boolean; width: number; height: n
   }
   @media only screen and (max-width: 600px) {
     width: 100%;
-    margin-top:1rem;
+    /* margin-top:1rem; */
   }
 `
 
@@ -100,9 +102,10 @@ const ListItem = styled.li`
   padding: 8px 16px;
   border-radius:6px;
   &:hover {
-    background: #ff592c;
+    background: #F8F9FD;
     > div {
-      color: #fff !important;
+      color: #0F172A;
+      /* color: #fff !important; */
     }
   }
 `

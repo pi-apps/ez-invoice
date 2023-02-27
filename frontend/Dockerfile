@@ -2,7 +2,7 @@
 ## BUILDER CONTAINER
 ##
 
-FROM node:12.20.0 as builder
+FROM node:18.14.0 as builder
 
 RUN mkdir /app
 
@@ -11,7 +11,7 @@ COPY ./yarn.lock /app/yarn.lock
 
 WORKDIR /app
 
-RUN yarn install
+RUN yarn install --frozen-lockfile --network-timeout 100000
 
 # Copy the resources needed to build the app
 # We could copy ./ but it weigh more and bust cache more often
@@ -29,7 +29,7 @@ RUN rm -rf ./build/static/js/*.map
 ## RUNNER CONTAINER
 ##
 
-FROM nginx:1.15.7
+FROM nginx:1.23.3
 
 COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY ./docker/entrypoint.sh /var/entrypoint.sh

@@ -22,6 +22,8 @@ services:
     build: ./frontend
     environment:
       BACKEND_URL: ${BACKEND_URL}
+      SANDBOX_SDK: "false"
+      APIKEY_GOOGLE: ${APIKEY_GOOGLE}
 
   backend:
     build: ./backend
@@ -30,18 +32,23 @@ services:
       SESSION_SECRET: ${SESSION_SECRET}
       PI_API_KEY: ${PI_API_KEY}
       PLATFORM_API_URL: ${PLATFORM_API_URL}
-      MONGO_HOST: mongo
-      MONGODB_DATABASE_NAME: ${MONGODB_DATABASE_NAME}
-      MONGODB_USERNAME: ${MONGODB_USERNAME}
-      MONGODB_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_URI: ${MONGO_URI}
       FRONTEND_URL: ${FRONTEND_URL}
+      MORALIS_API_KEY: ${MORALIS_API_KEY}
+      AWS_REGION: ${AWS_REGION}
+      AWS_SES_ID: ${AWS_SES_ID}
+      AWS_SES_SECRET: ${AWS_SES_SECRET}
+      PAYMENT_GATEWAY_URL: ${PAYMENT_GATEWAY_URL}
+      PAYMENT_URL: ${PAYMENT_URL}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      SEED_PI: ${SEED_PI}
 
-  mongo:
-    image: mongo:5.0
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
-    ports:
-      - 27027:27017
-    volumes:
-      - ${DATA_DIRECTORY}/mongo/data:/data/db
+  # mongo:
+  #   image: mongo:5.0
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+  #     MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+  #   ports:
+  #     - 27027:27017
+  #   volumes:
+  #     - ${DATA_DIRECTORY}/mongo/data:/data/db

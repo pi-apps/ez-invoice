@@ -1,9 +1,7 @@
 import { createGlobalStyle } from 'styled-components'
-// eslint-disable-next-line import/no-unresolved
-import { PancakeTheme } from '@phamphu19498/pibridge_uikit/dist/theme'
+import { PancakeTheme } from '@devfedeltalabs/pibridge_uikit/dist/theme'
 
 declare module 'styled-components' {
-  /* eslint-disable @typescript-eslint/no-empty-interface */
   export interface DefaultTheme extends PancakeTheme {}
 }
 

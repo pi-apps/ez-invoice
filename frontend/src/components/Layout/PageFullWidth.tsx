@@ -5,17 +5,17 @@ import MetaTags from 'react-meta-tags'
 const PageMeta = () => {
   return (
     <MetaTags>
-     <title>PiBridge - Together we build Pi’s world</title>
-      <meta property="og:title" content="PiBridge - Together we build Pi’s world" />
-      <meta property="og:description" content="PiBridge is a trustless gateway that unleashes the barrier between Pi network and other blockchains." />
-      <meta property="og:image" content="https://pibridge.org/wp-content/uploads/2022/09/Preview.png" />
+     <title>EZ Invoice</title>
+      <meta property="og:title" content="EZ Invoice" />
+      <meta property="og:description" content="The easiest way to do invoicing" />
+      <meta property="og:image" content="https://ipfs.moralis.io:2053/ipfs/QmYQ19pa3dWr3JSFbSVTPRTVBXEdiKcTpMTMCRNrjvn1NW/73ddc551ac93fba3dcee8bb3483dcd54" />
     </MetaTags>
   )
 }
 
 const PageFullWidth: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, ...props }) => {
   return (
-        <Wrapper className='Test'>
+        <Wrapper>
             <PageMeta />
             {children}
         </Wrapper>
@@ -30,5 +30,5 @@ const Wrapper = styled.div`
     justify-content:center;
     align-items:center;
     flex-direction: column;
-    margin-top: 90px;
+    margin-bottom: 100px;
 `

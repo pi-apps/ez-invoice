@@ -1,7 +1,7 @@
 
 import styled from "styled-components";
 import React from "react";
-import { Flex, Text, Button } from "@phamphu19498/pibridge_uikit";
+import { Flex, Text, Button } from "@devfedeltalabs/pibridge_uikit";
 
 export interface Props {
   isAuthencation:boolean

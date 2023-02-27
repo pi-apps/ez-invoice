@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Input, ModalHeader, Text } from '@phamphu19498/pibridge_uikit'
+import { Box, Button, Flex, Input, ModalHeader, Text } from '@devfedeltalabs/pibridge_uikit'
 import styled from 'styled-components'
 
 export const ButtonSignIn = styled.button`
@@ -37,7 +37,6 @@ export const TransferModal = styled(Button)`
 export const ContainerInput = styled(Flex)`
   flex-direction: column;
   width: 100%;
-  background-color:#F8F9FD;
   border-radius:8px;
   margin-bottom:1rem;
 `
@@ -81,6 +80,7 @@ export const CsInputVerify = styled(Input)`
 
 export const WrapInput = styled(Flex)`
   position: relative;
+  background-color:#F8F9FD;
   width: 100%;
 `
 

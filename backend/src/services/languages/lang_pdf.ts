@@ -1,0 +1,23 @@
+export const lang_pdf:any = {
+    "text_title": "INVOICE",
+    "text_bill_from": "Bill From",
+    "text_bill_to": "Bill To",
+    "text_issue_date": "Issue Date",
+    "text_due_date": "Due Date",
+    "text_payment_terms": "Payment Terms",
+    "text_po_number": "PO Number",
+    "text_balance_due": "Balance Due",
+    "text_item": "Item",
+    "text_quantity": "Quantity",
+    "text_price": "Price",
+    "text_total": "Total",
+    "text_subtotal": "Subtotal",
+    "text_tax": "Tax",
+    "text_discount": "Discount",
+    "text_shipping": "Shipping",
+    "text_amount_paid": "Amount Paid",
+    "text_amount_due": "Amount Due",
+    "text_ship_to": "Ship To",
+    "text_notes": "Notes",
+    "text_terms": "Terms"
+}

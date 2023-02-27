@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        padding: 20px;
+    }
+    table, td, th {  
+        border: 1px solid #ddd;
+        text-align: left;
+        font-size: 12px;
+    }
+    th {
+      font-weight: normal;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        padding: 8px;
+    }
+    .first-column {
+        width: 50%;
+        border: none;
+        padding: 6px;
+    }
+    .second-column, .third-column {
+        width: 25%;
+        border: none;
+        padding: 6px;
+        text-align: right;
+    }
+    .first-column-2 {
+        width: 50%;
+        border: none;
+        padding: 6px;
+    }
+    .second-column-2 {
+        width: 50%;
+        border: none;
+        padding: 6px;
+        text-align: right;
+    }
+  </style>
+  <body>
+    <table style="border-collapse: collapse; border: none;">
+      <tr style="border: none; padding: 0px;">
+        <th class="first-column-2">
+          <% if (logoUrl) { %>
+            <img src="<%= logoUrl %>" height="80px" width="80px" />
+            <% } %>
+        </th>
+        <th class="second-column-2">
+          <h1 style="text-align: right;"><%= text_title %></h1>
+        </th>
+      </tr>
+      <tr style="border: none; padding: 0px;">
+        <td class="first-column-2"></td>
+        <th class="second-column-2">
+          <h3 style="text-align: right;">#<%= invoiceNumber %></h3>
+        </th>
+      </tr>
+     </table>
+    <table style="border-collapse: collapse; border: none; margin-bottom: 10px;">
+      <tr style="border: none; padding: 0px;">
+        <th class="first-column" style="word-wrap: break-word;"><%= text_bill_from %>:</th>
+        <th class="second-column" style="word-wrap: break-word;"><%= text_issue_date %>:</th>
+        <th class="third-column" style="word-wrap: break-word;"><%= issueDate %></th>
+      </tr>
+      <tr style="border: none; padding: 0px;">
+        <td class="first-column" style="font-weight:bold;word-wrap: break-word;"><%= billFrom %></td>
+        <td class="second-column" style="word-wrap: break-word;"><%= text_due_date %>:</td>
+        <td class="third-column" style="word-wrap: break-word;"><%= dueDate %></td>
+      </tr>
+      <tr style="border: none; padding: 0px;">
+        <td class="first-column" style="word-wrap: break-word;"><%= text_bill_to %>:</td>
+        <td class="second-column" style="word-wrap: break-word;"> 
+            <%= text_payment_terms %>:
+        </td>
+        <td class="third-column" style="word-wrap: break-word;"><%= paymentTerms %></td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column" style="font-weight:bold;word-wrap: break-word;"><%= billTo %></td>
+        <td class="second-column" style="word-wrap: break-word;">
+            <%= text_po_number %>:
+        </td>
+        <td class="third-column" style="word-wrap: break-word;"><%= poNumber %></td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"></td>
+        <td class="second-column" style="font-weight:bold;word-wrap: break-word;" ><%= text_balance_due %>:</td>
+        <td class="third-column" style="font-weight:bold;word-wrap: break-word;"><%= amountDue.toFixed(4) %> PI</td>
+      </tr>
+    </table>
+    <table style="margin-bottom: 10px;">
+      <tr style="text-align: left;">
+        <th style="text-transform:uppercase;"><%= text_item %></th>
+        <th style="text-transform:uppercase;"><%= text_quantity %></th>
+        <th style="text-transform:uppercase;"><%= text_price %></th>
+        <th style="text-transform:uppercase;"><%= text_total %></th>
+      </tr>
+      <% for (let i = 0; i < items.length; i++) { %>
+        <tr>
+          <td style="word-wrap: break-word;"><%= items[i].name %></td>
+          <td style="text-align: right;"><%= items[i].quantity %></td>
+          <td style="text-align: right;"><%= Number(items[i].price).toFixed(4) %> PI</td>
+          <td style="text-align: right;"><%= Number(items[i].total).toFixed(4) %> PI</td>
+        </tr>
+      <% } %>
+    </table>
+    <table style="border-collapse: collapse; border: none;">
+      <tr style="border: none; padding: 0px;">
+        <th class="first-column"></th>
+        <th class="second-column">
+          <%= text_subtotal %>:
+        </th>
+        <th class="third-column">
+          <%= subTotal.toFixed(4) %> PI
+        </th>
+      </tr>
+      <tr style="border: none; padding: 0px;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <% if (taxType == 1) { %>
+          <%= text_tax %> (<%= tax %>%):
+          <% } else if (taxType == 2) { %>
+          <%= text_tax %>:
+          <% } %>
+        </td>
+        <td class="third-column">
+          <% if (taxType != 0) {%><%= taxType == 1 ? (subTotal * tax / 100).toFixed(4) : tax.toFixed(4) %> PI<% } %>
+        </td>
+      </tr>
+      <tr style="border: none; padding: 0px;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <% if (discountType == 1) { %>
+            <% if (discount != 0) {%><%= text_discount %> (<%= discount %>%):<% } %>
+          <% } else if (discountType == 2) { %>
+            <% if (discount != 0) {%><%= text_discount %>:<% } %>
+          <% } %>
+        </td>
+        <td class="third-column">
+          <% if (discountType == 1) { %> <% if (discount != 0) {%><%= (subTotal * discount / 100).toFixed(4) %> PI<% } %> <% } else if (discountType == 2) { %> <% if (discount != 0) {%><%= discount.toFixed(4) %> PI<% } %> <% } %>
+        </td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <%= text_shipping %>:
+        </td>
+        <td class="third-column">
+          <%= shipping.toFixed(4) %> PI
+        </td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <%= text_total %>:
+        </td>
+        <td class="third-column">
+          <%= total.toFixed(4) %> PI
+        </td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"></td>
+        <td class="second-column">
+          <%= text_amount_paid %>:
+        </td>
+        <td class="third-column">
+          <%= amountPaid.toFixed(4) %> PI
+        </td>
+      </tr>
+      <tr style="border: none;">
+        <td class="first-column"></td>
+        <td class="second-column" style="font-weight:bold;">
+          <%= text_amount_due %>:
+        </td>
+        <td class="third-column" style="font-weight:bold;">
+          <%= amountDue.toFixed(4) %> PI
+        </td>
+      </tr>
+    </table>
+    <p>
+      <div style="font-weight:bold;"><%= text_ship_to %>:</div>
+      <p style="word-wrap: break-word;"><%= shipTo %></p>
+    </p>
+    <p>
+      <div style="font-weight:bold;"><%= text_notes %>:</div>
+      <p style="word-wrap: break-word;"><%= notes %></p>
+    </p>
+    <p>
+      <div style="font-weight:bold;"><%= text_terms %>:</div>
+      <p style="word-wrap: break-word;"><%= terms %></p>
+    </p>
+  </body>
+</html>

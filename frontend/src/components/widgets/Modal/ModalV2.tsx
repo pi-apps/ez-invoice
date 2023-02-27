@@ -1,6 +1,6 @@
 import { AnimatePresence, domMax, LazyMotion } from "framer-motion";
 import React, { useRef } from "react";
-import { Overlay } from "@phamphu19498/pibridge_uikit"
+import { Overlay } from "@devfedeltalabs/pibridge_uikit"
 import { BoxProps } from "components/Box/types";
 import { createPortal } from "react-dom";
 import { animationHandler, animationMap, animationVariants } from "utils/animationToolkit";

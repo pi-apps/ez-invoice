@@ -2,7 +2,7 @@
 import { ElementType, SVGAttributes } from "react";
 import { DefaultTheme } from "styled-components";
 import { SpaceProps } from "styled-system";
-import { Colors } from "@phamphu19498/pibridge_uikit";
+import { Colors } from "@devfedeltalabs/pibridge_uikit";
 
 export interface SvgProps extends SVGAttributes<HTMLOrSVGElement>, SpaceProps {
   theme?: DefaultTheme;
