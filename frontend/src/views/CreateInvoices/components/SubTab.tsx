@@ -86,9 +86,11 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         shipping: 0,
         amountPaid: 0,
         logo: "",
+        invoiceNumber:""
     }
 
     const validationSchema = Yup.object().shape({
+        invoiceNumber:Yup.string().required().max(12, 'Max length is 12 characters'),
         senderEmail: Yup.string().required('Sender email is required').min(1, 'Please input alphabet').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet').email('Invalid email address'),
         billFrom: Yup.string().required('Bill from is required').min(1, 'Please input alphabet').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
         billTo: Yup.string().required('Bill to is required').min(1, 'Please input alphabet').max(100, 'Max length is 100 characters').matches(/[abcdefghijklmnopqrstuvwxyz]+/ , 'Please input alphabet'),
@@ -191,6 +193,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             setValue("shipping", itemInvoice?.shipping);
             setValue("amountPaid", itemInvoice?.amountPaid);
             setValue("logo", itemInvoice?.logoUrl);
+            setValue("invoiceNumber", itemInvoice?.invoiceNumber);
             setStartDate(new Date(itemInvoice?.issueDate))
             setStartDueDate(new Date(itemInvoice?.dueDate))
             dispatch(getActiveTax({ isTaxPercent:itemInvoice?.taxType }))
@@ -221,8 +224,9 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         setValue("taxType", dataDefault?.taxType);
         setValue("discount", dataDefault?.discount);
         setValue("shipping", dataDefault?.shipping);
-        setValue("amountPaid", dataDefault?.amountPaid);
+        setValue("amountPaid", dataDefault?.amountPaid); 
         setValue("logo", "");
+        setValue("invoiceNumber", dataDefault?.invoiceNumber);
         setStartDate(new Date(dataDefault?.issueDate))
         setStartDueDate(new Date(dataDefault?.dueDate))
     }
@@ -233,6 +237,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
     },[dataPreviewDetails, dataPreview?.isPreview])
     
     const onCreate = async data => {
+        
         setLoadingPreview(true)
         function renderImages(){
             if( itemInvoice?.logoUrl?.length ){
@@ -254,6 +259,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         
         try {
             const formData = new FormData();
+            formData.append("invoiceNumber", `${data.invoiceNumber}`);
             formData.append("senderEmail", `${data.senderEmail}`);
             formData.append("billFrom", `${data.billFrom}`);
             formData.append("billTo", `${data.billTo}`);
@@ -333,7 +339,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                 taxType: activeTax,
                 discountType: activeDiscount,
                 invoiceId: itemInvoice?.invoiceId,
-                logoUrl:itemInvoice?.logoUrl
+                logoUrl:itemInvoice?.logoUrl,
+                invoiceNumber:getValues("invoiceNumber"),
             }
         }));
         setValue("senderEmail", data?.senderEmail);
@@ -353,8 +360,8 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
         setValue("shipping", data?.shipping);
         setValue("amountPaid", data?.amountPaid);
         setValue("logo", data?.logoUrl);
+        setValue("invoiceNumber", data?.invoiceNumber);
         await dispatch(fetchStatusPreview({isPreview: true}))
-        
         navigate("/preview")
     }
     
@@ -385,6 +392,7 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
                 control={control} 
                 getValues={getValues} 
                 imagesInvoice={itemInvoice?.logoUrl}
+                watch={watch}
             />
         }
         if(isActive === 2){

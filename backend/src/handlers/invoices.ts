@@ -16,7 +16,8 @@ export default function mountInvoiceEndpoints(router: Router) {
                 return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
             }
             const currentUser = userInfo;
-            const numOfInvoices = await InvoicesModel.countDocuments({ uid: currentUser.uid });
+            // const numOfInvoices = await InvoicesModel.countDocuments({ uid: currentUser.uid });
+            const invoiceNumber = req.body.invoiceNumber;
             const file = req.file;
             let logoUrl = "";
             if (file) {
@@ -43,7 +44,7 @@ export default function mountInvoiceEndpoints(router: Router) {
             }
             const invoice: any = {
                 invoiceId: `EZ_${Date.now()}`,
-                invoiceNumber: numOfInvoices + 1,
+                invoiceNumber: invoiceNumber,
                 uid: currentUser.uid,
                 senderEmail: req.body.senderEmail,
                 billFrom: req.body.billFrom,

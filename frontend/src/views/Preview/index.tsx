@@ -26,7 +26,7 @@ const Preview = () => {
     const items = data?.dataPreview
     const images = data?.images
     const listItems = data?.dataPreview.items
-    
+    console.log('listItems', items)
     function convertDate(date: any) {
         if (date) {
           const today = new Date(date)
@@ -147,6 +147,14 @@ const Preview = () => {
                                         { ( items?.invoiceId === null || items?.invoiceId !== undefined && dataHistory?.isChangeImgHistory === false && images?.length > 0 ) &&
                                             <Image width={59} height={57} src={images[0]?.data_url} alt='logo' />
                                         }
+                                    </Row>
+                                    <Row mt="30px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_invoiceNumber}</CsTextLeft>
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.invoiceNumber &&
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.invoiceNumber}</CsTextRight>
+                                            }
+                                        </Flex>
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_bill_from}</CsTextLeft>

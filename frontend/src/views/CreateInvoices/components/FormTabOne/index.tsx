@@ -22,14 +22,13 @@ import { tabActiveNewInvoice } from "state/invoice/actions"
 import ReactImageUploadForHistory from "./ReactImageUploadForHistory"
 import useToast from "hooks/useToast"
 
-const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate, getValues, imagesInvoice}) => {
+const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setValue, images, invoicelength, startDueDate , setStartDueDate, startDate, setStartDate, getValues, imagesInvoice, watch}) => {
     const [checkError, setCheckError] = useState(false)
     const [getMessageError, setMessageError] = useState()
     const dispatch = useDispatch<AppDispatch>()
     const DataAb = getUser();
     const languageUserApi = DataAb?.language
     const { toastSuccess, toastError } = useToast()
-
    // Translate
     const [stateText, setStateText] = useState(createInvoice_text);
     const requestTrans = async () => {
@@ -118,18 +117,23 @@ const FormTabOne = ({isActive, formState:{errors, touchedFields}, control, setVa
                         <WrapInput>
                             <Controller
                                 control={control}
-                                name="invoicenumber"
+                                name="invoiceNumber"
+                                defaultValue={getValues("invoiceNumber")}
                                 render={({ field }) => (
-                                <CsInput
-                                    name="invoicenumber"
-                                    type="text"
-                                    readOnly
-                                    value={invoiceNumber}
-                                />
+                                    <>
+                                        <CsInput
+                                            name="invoiceNumber"
+                                            value={field.value}
+                                            onBlur={field.onBlur}
+                                            placeholder={`${stateText.text_invoice_number}`}
+                                            type="text"
+                                            onChange={field.onChange}
+                                        />
+                                    </>
                                 )}
                             />
                         </WrapInput>
-                        <ErrorMessages errors={errors} name="invoicenumber" />
+                        <ErrorMessages errors={errors} name="invoiceNumber" />
                     </ContainerInput>
 
                     {/* Add your logo */}

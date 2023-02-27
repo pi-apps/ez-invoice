@@ -9,7 +9,7 @@ export interface ItemsDetails {
     discountType: number,
     _id: string,
     invoiceId: string,
-    invoiceNumber: number,
+    invoiceNumber: string,
     uid: string,
     receiverId: string,
     senderEmail: string,

@@ -89,7 +89,7 @@ const CreateDetail = () => {
     const convertShipping = new BigNumber(details?.shipping).decimalPlaces(4,1)
     const converAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(4,1)
     const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(4,1)
-
+    
     const discoutAmount = new BigNumber(details?.discount).multipliedBy(new BigNumber(details?.subTotal)).dividedBy(100).toString()
     return (
         <PageFullWidth>

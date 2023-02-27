@@ -5,7 +5,7 @@ const schemaOptions = {
 };
 const schema = new Schema({
     invoiceId: { type: String, required: true },
-    invoiceNumber: { type: Number, required: true },
+    invoiceNumber: { type: String, required: true },
     uid: { type: String, required: true },
     receiverId: { type: String, default: "" },
     senderEmail: { type: String, required: true },
