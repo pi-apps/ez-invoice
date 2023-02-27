@@ -83,7 +83,7 @@ const DetailReceived = () => {
                 <Header />
                     <CsWrapContainer>
                         <Flex width="100%" flexDirection="column" mb="30px">
-                            <CsHeading>{stateText.text_invoide} #{details?.invoiceNumber}</CsHeading>
+                            <CsHeading>{stateText.text_invoice} #{details?.invoiceNumber}</CsHeading>
                             <WContent>
                                 <CsContentInfo>
                                     <Row>
