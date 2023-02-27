@@ -21,4 +21,5 @@ export const previewInvoice_text:any = {
     "text_amount_paid": "Amount Paid",
     "text_notes": "Notes",
     "text_terms": "Terms",
+    "text_shipto": "Ship to",
 }

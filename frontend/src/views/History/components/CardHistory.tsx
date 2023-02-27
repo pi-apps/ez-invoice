@@ -31,15 +31,15 @@ const CardHistory: React.FC<Props> = ({ items, loading }) => {
     <WrapperCard>
       <NavLink to={`/updateinvoice/${items?.invoiceId}`}>
         <CsWrapCard>
-          <Flex style={{gap: '14px'}} alignItems="center">
+          <Flex style={{gap: '6px'}} alignItems="center">
             <WrapperImg>
               { items?.logoUrl ?
-                <CsImg src={items?.logoUrl} alt="Get some help"/>
+                <CsImg src={items?.logoUrl} alt="logo invoice"/>
                 :
                 <UndefineIcon width="30px" height="30px"/>
               }
             </WrapperImg>
-            <Flex flexDirection='column'>
+            <Flex flexDirection='column' width="75%">
                 { loading ?
                   <Skeleton width="60px"/>
                 :
@@ -72,11 +72,13 @@ const CsButtonDelete = styled(Flex)`
 const CsImg = styled.img`
   width: 30px;
   height: 30px;
-  object-fit: contain;
+  object-fit:contain;
+
 `
 const WrapperImg = styled.div`
   width: 30px;
   height: 30px;
+  width: 25%;
 `
 
 const WrapperCard = styled.div`

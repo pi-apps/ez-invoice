@@ -193,6 +193,12 @@ const SubTab:React.FC<PropsSubTab> = ({isActive, setInvoiceId, invoiceId}) => {
             setValue("logo", itemInvoice?.logoUrl);
             setStartDate(new Date(itemInvoice?.issueDate))
             setStartDueDate(new Date(itemInvoice?.dueDate))
+            dispatch(getActiveTax({ isTaxPercent:itemInvoice?.taxType }))
+            dispatch(getActiveDiscount({ isDiscountPercent:itemInvoice?.discountType }))
+        }
+        if( !itemInvoice && !invoiceId?.length && dataPreview?.isPreview === false ) {
+            dispatch(getActiveTax({ isTaxPercent:1 }))
+            dispatch(getActiveDiscount({ isDiscountPercent:1 }))
         }
     },[itemInvoice, dataDefault?.isLoading])
 

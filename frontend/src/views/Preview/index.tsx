@@ -122,8 +122,8 @@ const Preview = () => {
     const subTotalConvert = new BigNumber(subTotal).decimalPlaces(4,1)
     const convertShipping = new BigNumber(shippingValue).decimalPlaces(4,1)
     const convertAmountPaid = new BigNumber(amountPaidValue).decimalPlaces(4,1)
-    console.log("dataHistory?.isChangeImgHistory", dataHistory?.isChangeImgHistory)
-    console.log("items?.invoiceId", items?.invoiceId)
+    // console.log("dataHistory?.isChangeImgHistory", dataHistory?.isChangeImgHistory)
+    // console.log("items?.invoiceId", items?.invoiceId)
     return (
         <PageFullWidth>
             <CsContainer>
@@ -150,15 +150,21 @@ const Preview = () => {
                                     </Row>
                                     <Row mt="30px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_bill_from}</CsTextLeft>
-                                        { items?.billFrom &&
-                                            <CsTextRight bold>{items?.billFrom}</CsTextRight>
-                                        }
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.billFrom &&
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.billFrom}</CsTextRight>
+                                            }
+                                        </Flex>
+                                       
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_bill_to}</CsTextLeft>
-                                        { items?.billTo &&
-                                            <CsTextRight bold>{items?.billTo}</CsTextRight>
-                                        }
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.billTo &&
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.billTo}</CsTextRight>
+                                            }
+                                        </Flex>
+                                       
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_date}</CsTextLeft>
@@ -170,10 +176,11 @@ const Preview = () => {
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_payment_terms}</CsTextLeft>
-                                        { items?.paymentTerms &&
-                                            <CsTextRight bold>{items?.paymentTerms}</CsTextRight>
-                                        }
-                                        
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.paymentTerms &&
+                                                <CsTextRight bold width="100%" textAlign="right" style={{wordBreak:"break-word"}}>{items?.paymentTerms}</CsTextRight>
+                                            }
+                                        </Flex>
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_po_number}</CsTextLeft>
@@ -183,15 +190,27 @@ const Preview = () => {
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_notes}</CsTextLeft>
-                                        { items?.notes && 
-                                            <CsTextRight bold>{items?.notes}</CsTextRight>
-                                        }
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.notes && 
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.notes}</CsTextRight>
+                                            }
+                                        </Flex>
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
                                         <CsTextLeft>{stateText.text_terms}</CsTextLeft>
-                                        { items?.terms && 
-                                            <CsTextRight bold>{items?.terms}</CsTextRight>
-                                        }
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.terms && 
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.terms}</CsTextRight>
+                                            }
+                                        </Flex>
+                                    </Row>
+                                    <Row mt="16px" style={{justifyContent: "space-between"}}>
+                                        <CsTextLeft>{stateText.text_shipto}</CsTextLeft>
+                                        <Flex width="60%" justifyContent="flex-end">
+                                            { items?.terms && 
+                                                <CsTextRight width="100%" textAlign="right" bold style={{wordBreak:"break-word"}}>{items?.shipTo}</CsTextRight>
+                                            }
+                                        </Flex>
                                     </Row>
                                 </CsContentInfo>
                                 <CsContentBill>
