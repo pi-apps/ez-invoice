@@ -192,7 +192,7 @@ const DetailSent = () => {
                                         const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(4,1)
                                         return(
                                             <CsRow>
-                                            <ColFirst paddingRight="15px" width="50%"><Translate>{item?.name}</Translate></ColFirst>
+                                            <ColFirst paddingRight="15px" width="50%" style={{wordBreak:"break-word"}}><Translate>{item?.name}</Translate></ColFirst>
                                             <Col width="10%"><Translate>{item?.quantity}</Translate></Col>
                                             <Col width="20%">{Number(convertPrice.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>
                                             <Col width="20%">{Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>

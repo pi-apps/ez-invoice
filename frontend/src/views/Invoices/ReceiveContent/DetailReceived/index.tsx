@@ -197,7 +197,7 @@ const DetailReceived = () => {
                                         const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(4,1)
                                         return(
                                             <CsRow>
-                                            <ColFirst paddingRight="15px" width="50%">{item?.name}</ColFirst>   
+                                            <ColFirst paddingRight="15px" width="50%" style={{wordBreak:"break-word"}} >{item?.name}</ColFirst>   
                                             <Col width="10%">{item?.quantity}</Col>
                                             <Col width="20%">{Number(convertPrice.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>
                                             <Col width="20%">{Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>
