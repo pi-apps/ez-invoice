@@ -68,33 +68,33 @@
      </table>
     <table style="border-collapse: collapse; border: none; margin-bottom: 10px;">
       <tr style="border: none; padding: 0px;">
-        <th class="first-column"><%= text_bill_from %>:</th>
-        <th class="second-column"><%= text_issue_date %>:</th>
-        <th class="third-column"><%= issueDate %></th>
+        <th class="first-column" style="word-wrap: break-word;"><%= text_bill_from %>:</th>
+        <th class="second-column" style="word-wrap: break-word;"><%= text_issue_date %>:</th>
+        <th class="third-column" style="word-wrap: break-word;"><%= issueDate %></th>
       </tr>
       <tr style="border: none; padding: 0px;">
-        <td class="first-column" style="font-weight:bold;"><%= billFrom %></td>
-        <td class="second-column"><%= text_due_date %>:</td>
-        <td class="third-column"><%= dueDate %></td>
+        <td class="first-column" style="font-weight:bold;word-wrap: break-word;"><%= billFrom %></td>
+        <td class="second-column" style="word-wrap: break-word;"><%= text_due_date %>:</td>
+        <td class="third-column" style="word-wrap: break-word;"><%= dueDate %></td>
       </tr>
       <tr style="border: none; padding: 0px;">
-        <td class="first-column"><%= text_bill_to %>:</td>
-        <td class="second-column"> 
+        <td class="first-column" style="word-wrap: break-word;"><%= text_bill_to %>:</td>
+        <td class="second-column" style="word-wrap: break-word;"> 
             <%= text_payment_terms %>:
         </td>
-        <td class="third-column"><%= paymentTerms %></td>
+        <td class="third-column" style="word-wrap: break-word;"><%= paymentTerms %></td>
       </tr>
       <tr style="border: none;">
-        <td class="first-column" style="font-weight:bold;"><%= billTo %></td>
-        <td class="second-column">
+        <td class="first-column" style="font-weight:bold;word-wrap: break-word;"><%= billTo %></td>
+        <td class="second-column" style="word-wrap: break-word;">
             <%= text_po_number %>:
         </td>
-        <td class="third-column"><%= poNumber %></td>
+        <td class="third-column" style="word-wrap: break-word;"><%= poNumber %></td>
       </tr>
       <tr style="border: none;">
         <td class="first-column"></td>
-        <td class="second-column" style="font-weight:bold;" ><%= text_balance_due %>:</td>
-        <td class="third-column" style="font-weight:bold;"><%= amountDue.toFixed(4) %> PI</td>
+        <td class="second-column" style="font-weight:bold;word-wrap: break-word;" ><%= text_balance_due %>:</td>
+        <td class="third-column" style="font-weight:bold;word-wrap: break-word;"><%= amountDue.toFixed(4) %> PI</td>
       </tr>
     </table>
     <table style="margin-bottom: 10px;">
@@ -106,7 +106,7 @@
       </tr>
       <% for (let i = 0; i < items.length; i++) { %>
         <tr>
-          <td><%= items[i].name %></td>
+          <td style="word-wrap: break-word;"><%= items[i].name %></td>
           <td style="text-align: right;"><%= items[i].quantity %></td>
           <td style="text-align: right;"><%= Number(items[i].price).toFixed(4) %> PI</td>
           <td style="text-align: right;"><%= Number(items[i].total).toFixed(4) %> PI</td>
