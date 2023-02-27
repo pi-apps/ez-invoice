@@ -16,5 +16,8 @@ export const lang_pdf:any = {
     "text_discount": "Discount",
     "text_shipping": "Shipping",
     "text_amount_paid": "Amount Paid",
-    "text_amount_due": "Amount Due"
+    "text_amount_due": "Amount Due",
+    "text_ship_to": "Ship To",
+    "text_notes": "Notes",
+    "text_terms": "Terms"
 }
