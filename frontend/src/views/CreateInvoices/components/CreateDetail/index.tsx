@@ -193,7 +193,7 @@ const CreateDetail = () => {
                                     <CsRowth>
                                         <ColFirstth paddingRight="15px" width="50%">{stateText.text_item}</ColFirstth>
                                         <Colth width="10%">{stateText.text_quanlity}</Colth>
-                                        <Colth width="15%">{stateText.text_unit_price}</Colth>
+                                        <Colth width="20%">{stateText.text_unit_price}</Colth>
                                         <Colth width="20%">{stateText.text_total}</Colth>
                                     </CsRowth>
                                     {details?.items.map((item) => {
@@ -203,7 +203,7 @@ const CreateDetail = () => {
                                             <CsRow>
                                             <ColFirst paddingRight="15px" width="50%" style={{wordBreak:"break-word"}}>{item?.name}</ColFirst>
                                             <Col width="10%">{item?.quantity}</Col>
-                                            <Col width="15%">{Number(convertPrice.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>
+                                            <Col width="20%">{Number(convertPrice.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>
                                             <Col width="20%">{Number(convertTotal.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</Col>
                                         </CsRow>
                                         )
@@ -247,7 +247,7 @@ const CreateDetail = () => {
                                     { ( Number(details?.shipping) > 0 && items?.isLoading === false ) &&
                                          <Row mt="16px" style={{justifyContent: "space-between"}}>
                                             <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
-                                            <CsTextRight bold>{Number(convertShipping.toString()).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
+                                            <CsTextRight bold>{Number(convertShipping.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         </Row>
                                     }
  
@@ -264,7 +264,7 @@ const CreateDetail = () => {
                                         { items?.isLoading ?
                                             <Skeleton width={60} />
                                         :
-                                            <CsTextRight bold>-{Number(converAmountPaid.toString()).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
+                                            <CsTextRight bold>-{Number(converAmountPaid.toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsTextRight>
                                         }
                                     </Row>
                                     <Row mt="16px" style={{justifyContent: "space-between"}}>
