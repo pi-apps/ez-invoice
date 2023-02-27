@@ -4,8 +4,8 @@ const schemaOptions = {
     timestamps: { createdAt: 'createAt', updatedAt: 'updateAt' },
 };
 const schema = new Schema({
-    invoiceId: { type: String, required: true },
-    invoiceNumber: { type: String, required: true },
+    invoiceId: { type: String, required: true, unique: true },
+    invoiceNumber: { type: String, required: true, unique: true },
     uid: { type: String, required: true },
     receiverId: { type: String, default: "" },
     senderEmail: { type: String, required: true },
