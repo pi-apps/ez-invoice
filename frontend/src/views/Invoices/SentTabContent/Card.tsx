@@ -9,6 +9,7 @@ import { GetTranslateHolder } from "hooks/TranSlateHolder";
 import { UndefineIcon } from "components/Svg";
 import { invoice_text } from "translation/languages/invoice_text";
 import { invoiceTranslate } from "translation/translateArrayObjects";
+import BigNumber from "bignumber.js";
 
 interface Props {
   images:string
@@ -96,7 +97,7 @@ const Card: React.FC<Props> = ({
           </CsColInvoiceNumber>
           <CsColBill>
             <CsText style={{wordBreak: 'break-all'}} bold>{billTo}</CsText>
-            <CsText>{amountDue} Pi</CsText>
+            <CsText>{Number(new BigNumber(amountDue).decimalPlaces(4,1).toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsText>
           </CsColBill>
           <CsCol>
             { !paid  ? (
