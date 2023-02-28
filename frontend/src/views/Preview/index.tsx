@@ -230,7 +230,7 @@ const Preview = () => {
                                     </CsRowth>
                                     {listItems.map((item) => {
                                         const convertPrice = new BigNumber(item?.price).decimalPlaces(4,1)
-                                        const convertTotal = new BigNumber((item?.quantity)*(item?.price)).decimalPlaces(4,1)
+                                        const convertTotal = new BigNumber(item?.quantity).multipliedBy(item?.price).decimalPlaces(4,1)
                                         return(
                                             <CsRow>
                                             <ColFirst paddingRight="15px" width="50%" style={{wordBreak:"break-word"}}>{item?.name}</ColFirst>   
