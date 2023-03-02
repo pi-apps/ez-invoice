@@ -99,7 +99,7 @@ const Card: React.FC<Props> = ({
           <CsColBill>
             <CsText style={{wordBreak: 'break-all'}} bold>{billFrom}</CsText>
             {/* <CsText>{amountDue} PI</CsText> */}
-            <CsText>{Number(new BigNumber(amountDue).decimalPlaces(4,1).toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsText>
+            <CsText>{Number(new BigNumber(amountDue).toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4,})} PI</CsText>
           </CsColBill>
           <CsCol>
             { !paid  ? (
