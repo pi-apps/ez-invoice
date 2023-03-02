@@ -61,7 +61,7 @@ const ChooseMethod = ({
       <Flex flexDirection="column" width="100%">
           {typeTax === true && (
               <Flex width="100%" alignItems="center" justifyContent="space-between">
-                  <CsTextLeft>{stateText.text_tax}</CsTextLeft>
+                  <CsTextLeft>{stateText.text_tax} <span style={{color: 'red'}}>*</span></CsTextLeft>
                   <ContainerInput>
                       <CsRowTax>
                           <CsRowTaxLeft>
@@ -99,7 +99,7 @@ const ChooseMethod = ({
 
           {typeDiscount === true && (
           <Flex alignItems="baseline" justifyContent="space-between" mt='1rem'>
-              <CsTextLeft>{stateText.text_discount}
+              <CsTextLeft>{stateText.text_discount} <span style={{color: 'red'}}>*</span>
                 <ReferenceElement ref={targetRef}>
                     <HelpIcon color="#94A3B8" />
                 </ReferenceElement> 
@@ -142,7 +142,7 @@ const ChooseMethod = ({
 
       {typeShipping === true && (
           <Flex alignItems="center" justifyContent="space-between" mt='1rem'>
-              <CsTextLeft>{stateText.text_shipping}</CsTextLeft>
+              <CsTextLeft>{stateText.text_shipping} <span style={{color: 'red'}}>*</span></CsTextLeft>
               <ContainerInput>
                   <CsRowTax>
                       <WrapInputShipping>
