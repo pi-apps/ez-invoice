@@ -54,7 +54,7 @@ const Home = () => {
               url="https://youtu.be/UJASg_3arsA"
               width="100%"
               height="100%"
-              light="/images/preview.jpg"
+              light="/images/ImgPi/demo_videos.png"
               playing={true}
               controls={true}
             />
