@@ -275,7 +275,7 @@ const FormTabThree = ({
                           </Text>
                       </Row>
                       <Row mt="1rem" style={{justifyContent: "space-between" , alignItems: 'baseline'}}>
-                          <CsTextLeft >{stateText.text_amount_paid}</CsTextLeft>
+                          <CsTextLeft >{stateText.text_amount_paid} <span style={{color: 'red'}}>*</span></CsTextLeft>
                             <CsAmountPaid>
                               <WrapInputAmountPaid>
                                 <Controller
