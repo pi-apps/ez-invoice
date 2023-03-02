@@ -51,10 +51,10 @@ const Home = () => {
         <CsCardVideo>
           <ContainerPlayVideo>
             <ReactPlayer
-              url="https://youtu.be/OvpOC6bsv2U"
+              url="https://youtu.be/UJASg_3arsA"
               width="100%"
               height="100%"
-              light="/images/ImgPi/demo_videos.png"
+              light="/images/preview.jpg"
               playing={true}
               controls={true}
             />
