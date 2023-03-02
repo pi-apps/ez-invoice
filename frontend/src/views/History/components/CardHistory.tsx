@@ -54,7 +54,7 @@ const CardHistory: React.FC<Props> = ({ items, loading }) => {
           </Flex>
           <CsButtonDelete role="presentation">
             <Text style={{wordBreak: 'break-all'}} fontWeight={700} fontSize='12px' color='#0F172A' width="100%" textAlign="center">
-              { Number(items?.amountDue) > 0 ? Number(new BigNumber(items?.amountDue).decimalPlaces(4,1).toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4 }) : 0} PI
+              { Number(items?.amountDue) > 0 ? Number(new BigNumber(items?.amountDue).toString()).toLocaleString('en', { minimumFractionDigits: 4, maximumFractionDigits: 4 }) : 0} PI
             </Text>
           </CsButtonDelete>
         </CsWrapCard>

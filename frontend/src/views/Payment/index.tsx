@@ -126,7 +126,7 @@ const Payment = () => {
         
     }
     const total = tips.length > 0 ? new BigNumber(details?.amountDue).plus(new BigNumber(tips)) : new BigNumber(details?.amountDue).plus(new BigNumber(0))
-    const converTotal = new BigNumber(total).decimalPlaces(4,1) 
+    const converTotal = new BigNumber(total)
     const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(4,1)
 
     const DataAb = getUser();
