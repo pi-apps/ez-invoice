@@ -67,7 +67,7 @@ const DetailSent = () => {
     const convertShipping = new BigNumber(details?.shipping).decimalPlaces(4,1)
     const convertTotal = new BigNumber(details?.total).decimalPlaces(4,1)
     const convertAmountPaid = new BigNumber(details?.amountPaid).decimalPlaces(4,1)
-    const convertAmountDue = new BigNumber(details?.amountDue).decimalPlaces(4,1)
+    const convertAmountDue = new BigNumber(details?.amountDue)
     const convertTips = new BigNumber(details?.tip).decimalPlaces(4,1)
     const convertTotalAmountDueTips = new BigNumber(details?.amountDue).plus(details?.tip).decimalPlaces(4,1)
 
