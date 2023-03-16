@@ -2,7 +2,7 @@ import { Button, Flex, Text, useModal } from "@devfedeltalabs/pibridge_uikit";
 import PageFullWidth from "components/Layout/PageFullWidth";
 import styled from "styled-components";
 import ReactPlayer from "react-player";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import LoginModal from "../../components/LoginModal";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -81,6 +81,14 @@ const Home = () => {
           }
          
         </Flex>
+        <Flex width="100%" mt="1.5rem" justifyContent="center">
+          <NavLink to="/policy">
+            <CsText>
+                  Read Private Policy
+            </CsText>
+          </NavLink>
+           
+        </Flex>
       </CsContainer>
     </PageFullWidth>
   );
@@ -121,3 +129,7 @@ const ContainerPlayVideo = styled(Flex)`
   border-radius: 8px;
   overflow: hidden;
 `;
+const CsText = styled(Text)`
+    cursor: pointer;
+    text-decoration: underline;
+`

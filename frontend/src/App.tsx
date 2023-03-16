@@ -14,6 +14,7 @@ import { ToastListener } from "./contexts/ToastsContext";
 import Register from "views/Register";
 import UpdateInvoice from "views/UpdateInvoice"
 import Invoices from "views/Invoices";
+import Policy from "views/Policy"
 import History from "views/History";
 import CreateDetail from "views/CreateInvoices/components/CreateDetail";
 import Preview from "views/Preview";
@@ -51,6 +52,7 @@ const App: React.FC = () => {
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
           </Route>
+          <Route path="/policy" element={<Policy />} />
           <Route path="invoice" element={<Invoices />} />
           <Route path="newInvoice" element={<CreateInvoices />} />
           <Route path="detailSent/:slug" element={<DetailSent />} />
