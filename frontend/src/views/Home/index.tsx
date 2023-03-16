@@ -84,7 +84,7 @@ const Home = () => {
         <Flex width="100%" mt="1.5rem" justifyContent="center">
           <NavLink to="/policy">
             <CsText>
-                  Read Private Policy
+                  Read Privacy Policy
             </CsText>
           </NavLink>
            
